@@ -71,6 +71,10 @@ var _battle_victory := false
 var _lord_unit: Unit = null
 var _lord_alive := true
 var _support_state := SupportState.new()
+var _houses: Dictionary = {}        # house_id -> HouseDef
+## The player's active house — drives UI theming. Swap this resource to re-theme.
+@export var player_house_id: String = "emberwing"
+@export var enemy_house_id: String = "tidemark"
 var _save_system := SaveSystem.new()
 var _defeated_unit_ids: Array[String] = []
 var _permadead_unit_ids: Array[String] = []
@@ -83,6 +87,7 @@ func _ready() -> void:
 	_terrain_db = TerrainDB.create_default()
 	_grid = chapter.make_grid()
 	_rng = CombatRNG.new(combat_seed if combat_seed >= 0 else int(Time.get_ticks_usec()))
+	_setup_houses()
 	_setup_supports()
 	_setup_overlay()
 	_setup_range_overlay()
@@ -149,6 +154,9 @@ func add_unit(def: UnitDef, cell: Vector2i) -> Unit:
 	var u := Unit.new()
 	_units_root.add_child(u)
 	u.setup(def, _grid, cell)
+	var house: HouseDef = _houses.get(def.house_id, null)
+	if house != null:
+		u.set_house_color(house.primary_color)  # §4 unit tinting from HouseDef
 	_units.append(u)
 	return u
 
@@ -990,6 +998,43 @@ func _movement_type(u: Unit) -> ClassDef.MovementType:
 
 # --- supports -----------------------------------------------------------------
 
+func _setup_houses() -> void:
+	_houses = {}
+	for id in ["emberwing", "tidemark", "thornrook"]:
+		var h: HouseDef = _try_load("res://data/houses/%s.tres" % id)
+		if h != null:
+			_houses[id] = h
+
+
+func player_house() -> HouseDef:
+	return _houses.get(player_house_id, null)
+
+
+func enemy_house() -> HouseDef:
+	return _houses.get(enemy_house_id, null)
+
+
+func _house_for(unit: Unit) -> HouseDef:
+	if unit.unit_def == null:
+		return null
+	return _houses.get(unit.unit_def.house_id, null)
+
+
+## House Camaraderie bonus (§4) for a unit standing at `cell`: +hit/+avoid if a
+## living housemate is within range. Returns the combat-bonus dict shape.
+func _camaraderie_bonus_for(unit: Unit, cell: Vector2i) -> Dictionary:
+	var house := _house_for(unit)
+	if house == null:
+		return Camaraderie.ZERO.duplicate()
+	var housemate_cells: Array = []
+	for other in _units:
+		if other == unit or not other.is_alive() or other.unit_def == null:
+			continue
+		if other.unit_def.house_id == unit.unit_def.house_id:
+			housemate_cells.append(other.cell)
+	return Camaraderie.bonus(house, cell, housemate_cells)
+
+
 func _setup_supports() -> void:
 	var chain: SupportChainDef = _try_load("res://data/supports/ash_kael.tres")
 	_support_state = SupportState.new()
@@ -998,7 +1043,15 @@ func _setup_supports() -> void:
 
 func _combatant_for(unit: Unit, assumed_cell: Vector2i) -> Combatant:
 	var c := unit.to_combatant(_terrain_def_at(assumed_cell), _terrain_avoid_at(assumed_cell))
-	c.apply_support_bonus(_support_bonus_for(unit, assumed_cell))
+	# Support and House Camaraderie bonuses fold into the same combat inputs.
+	var bonus := _support_bonus_for(unit, assumed_cell)
+	var cam := _camaraderie_bonus_for(unit, assumed_cell)
+	c.apply_support_bonus({
+		"hit": int(bonus["hit"]) + int(cam["hit"]),
+		"avoid": int(bonus["avoid"]) + int(cam["avoid"]),
+		"damage": int(bonus["damage"]) + int(cam["damage"]),
+		"crit": int(bonus["crit"]) + int(cam["crit"]),
+	})
 	return c
 
 
@@ -1120,6 +1173,19 @@ func _setup_ui() -> void:
 	_menu.chosen.connect(_on_menu_chosen)
 	_menu.cancelled.connect(_on_menu_cancelled)
 	_ui_layer.add_child(_menu)
+	_apply_house_theme()
+
+
+## Pull every themed UI element's colors from the active HouseDefs. Swapping the
+## player/enemy house resources re-themes the whole UI with no code change (§4).
+func _apply_house_theme() -> void:
+	var p := player_house()
+	var e := enemy_house()
+	var p_primary := p.primary_color if p != null else Color(0.30, 0.55, 0.95)
+	var e_primary := e.primary_color if e != null else Color(0.90, 0.32, 0.30)
+	_turn_banner.set_house_accents(p_primary, e_primary)
+	if p != null:
+		_menu.accent = p.secondary_color
 
 
 func _on_result_dismissed() -> void:
@@ -1187,6 +1253,7 @@ func _demo_unit(
 	d.luck = overrides.get("lck", 4)
 	d.defense = overrides.get("def", 5)
 	d.resistance = overrides.get("res", 2)
+	d.house_id = player_house_id if team == 0 else enemy_house_id  # overridable per unit
 	return d
 
 

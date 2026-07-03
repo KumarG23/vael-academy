@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="HouseDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/house_def.gd" id="1_k2djr"]
+
+[resource]
+script = ExtResource("1_k2djr")
+id = "thornrook"
+display_name = "Thornrook"
+banner_animal = "Stag"
+primary_color = Color(0.18, 0.42, 0.24, 1)
+secondary_color = Color(0.72, 0.55, 0.3, 1)
+theme_tint = Color(0.94, 0.98, 0.93, 1)

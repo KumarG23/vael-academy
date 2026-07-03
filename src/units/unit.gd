@@ -323,11 +323,26 @@ func move_along_path(path: Array) -> void:
 	move_finished.emit()
 
 
+## House tint for the token/HP bar (§4). Unset (alpha 0) falls back to team color.
+var house_color := Color(0, 0, 0, 0)
+
+
+func set_house_color(c: Color) -> void:
+	house_color = c
+	queue_redraw()
+
+
+func _team_color() -> Color:
+	if house_color.a > 0.0:
+		return house_color
+	return PLAYER_COLOR if team == 0 else ENEMY_COLOR
+
+
 func _draw() -> void:
 	if _grid == null:
 		return
 	var r: float = _grid.cell_size * 0.34
-	var base := PLAYER_COLOR if team == 0 else ENEMY_COLOR
+	var base := _team_color()
 	if has_acted:
 		base = base.darkened(0.4)  # greyed-out once the unit has acted this turn
 	# House/team base ring (§8 art rule 3).
@@ -355,6 +370,6 @@ func _draw_hp_bar(r: float) -> void:
 	var frac := float(current_hp) / float(max_hp()) if max_hp() > 0 else 0.0
 	var origin := Vector2(-w * 0.5, y)
 	draw_rect(Rect2(origin, Vector2(w, h)), Color(0, 0, 0, 0.7), true)
-	var fill := Color(0.35, 0.85, 0.4) if team == 0 else Color(0.9, 0.5, 0.3)
+	var fill := house_color.lightened(0.2) if house_color.a > 0.0 else (Color(0.35, 0.85, 0.4) if team == 0 else Color(0.9, 0.5, 0.3))
 	draw_rect(Rect2(origin, Vector2(w * frac, h)), fill, true)
 	draw_rect(Rect2(origin, Vector2(w, h)), Color(0, 0, 0, 0.9), false, 1.0)

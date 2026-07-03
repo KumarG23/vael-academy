@@ -25,6 +25,23 @@ func _on_battle_won() -> void:
 	_won = true
 
 
+## Equip a sure-hit copy of the unit's weapon so a strike can't miss. Keeps the
+## original might so only the 1-HP lord is a one-shot kill (inflating might would
+## make everyone killable and change which target the AI prefers).
+func _sure_hit(u: Unit) -> void:
+	var cur := u.weapon()
+	if cur == null:
+		return
+	var w := WeaponDef.new()
+	w.weapon_type = cur.weapon_type
+	w.might = cur.might
+	w.hit = 999
+	w.weight = cur.weight
+	w.min_range = cur.min_range
+	w.max_range = cur.max_range
+	u.equip_weapon(w)
+
+
 func _wait_idle(max_frames := 4000) -> void:
 	var n := 0
 	while _view._busy and n < max_frames:
@@ -68,6 +85,9 @@ func test_victory_by_rout_when_all_enemies_fall():
 func test_defeat_when_the_lord_is_slain_in_the_enemy_phase():
 	var kael: Unit = _view._lord_unit
 	kael.current_hp = 1  # one counter/strike will finish him
+	# Guarantee the blow lands despite any avoid bonus (support/camaraderie).
+	for enemy in _view._living_units_on_team(1):
+		_sure_hit(enemy)
 	# Hand the turn to the enemy; the Aggressor prefers the guaranteed kill on the lord.
 	_view._end_player_phase()
 	await _wait_idle()

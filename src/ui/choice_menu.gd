@@ -14,6 +14,8 @@ const WIDTH := 240.0
 var _title := ""
 var _options: Array = []
 var _index := 0
+## House-themed border/title accent (§4). Defaults to the original gold.
+var accent := Color(0.85, 0.78, 0.45)
 
 
 func _ready() -> void:
@@ -56,11 +58,11 @@ func _draw() -> void:
 	var h := PAD * 2 + ROW_H * (_options.size() + (1 if _title != "" else 0))
 	var rect := Rect2(Vector2.ZERO, Vector2(WIDTH, h))
 	draw_rect(rect, Color(0.08, 0.09, 0.13, 0.95), true)
-	draw_rect(rect, Color(0.85, 0.78, 0.45, 0.9), false, 2.0)
+	draw_rect(rect, Color(accent.r, accent.g, accent.b, 0.9), false, 2.0)
 	var font := ThemeDB.fallback_font
 	var y := PAD + 22.0
 	if _title != "":
-		draw_string(font, Vector2(PAD, y), _title, HORIZONTAL_ALIGNMENT_LEFT, WIDTH - PAD * 2, 18, Color(0.85, 0.78, 0.45))
+		draw_string(font, Vector2(PAD, y), _title, HORIZONTAL_ALIGNMENT_LEFT, WIDTH - PAD * 2, 18, accent)
 		y += ROW_H
 	for i in range(_options.size()):
 		if i == _index:

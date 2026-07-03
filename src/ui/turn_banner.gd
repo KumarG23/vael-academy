@@ -8,6 +8,14 @@ const SHOW_TIME := 1.1
 var _text := ""
 var _alpha := 0.0
 var _player := true
+## House-themed accents (§4). Set from the active HouseDefs; defaults are neutral.
+var player_accent := Color(0.30, 0.55, 0.95)
+var enemy_accent := Color(0.90, 0.32, 0.30)
+
+
+func set_house_accents(player: Color, enemy: Color) -> void:
+	player_accent = player
+	enemy_accent = enemy
 
 
 func announce(text: String, is_player: bool) -> void:
@@ -31,7 +39,7 @@ func _draw() -> void:
 	var vp := get_viewport_rect().size
 	var band_h := 84.0
 	var y := vp.y * 0.5 - band_h * 0.5
-	var accent := Color(0.30, 0.55, 0.95) if _player else Color(0.90, 0.32, 0.30)
+	var accent := player_accent if _player else enemy_accent
 	var edge := Color(accent.r, accent.g, accent.b, _alpha)
 	draw_rect(Rect2(0, y, vp.x, band_h), Color(0.05, 0.06, 0.09, 0.82 * _alpha), true)
 	draw_rect(Rect2(0, y, vp.x, 3), edge, true)
