@@ -22,7 +22,7 @@ EventBus="*res://src/core/event_bus.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/godot_mcp/plugin.cfg")
 
 [input]
 
