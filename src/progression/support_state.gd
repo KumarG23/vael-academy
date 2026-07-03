@@ -115,3 +115,27 @@ func unlocked_conversations_for_unit(unit_id: String) -> Array:
 
 func highest_rank_for_pair(pair_id: String) -> String:
 	return ranks.get(pair_id, "")
+
+
+func save_state() -> Dictionary:
+	return {
+		"points": points.duplicate(true),
+		"ranks": ranks.duplicate(true),
+	}
+
+
+func apply_save_state(state: Dictionary) -> void:
+	points.clear()
+	ranks.clear()
+	var saved_points: Dictionary = state.get("points", {})
+	for pair_id in saved_points:
+		points[pair_id] = int(saved_points[pair_id])
+	var saved_ranks: Dictionary = state.get("ranks", {})
+	for pair_id in saved_ranks:
+		ranks[pair_id] = str(saved_ranks[pair_id])
+	for chain in chains:
+		var pair := chain.pair_id()
+		if not points.has(pair):
+			points[pair] = 0
+		if not ranks.has(pair):
+			ranks[pair] = ""

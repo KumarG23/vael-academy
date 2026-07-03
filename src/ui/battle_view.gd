@@ -15,6 +15,9 @@ extends Node2D
 ## Fixed combat/level-up RNG seed for deterministic runs (§3 replayability). < 0
 ## means seed from the clock. Tests set this for reproducible outcomes.
 @export var combat_seed: int = -1
+## Casual mode revives non-lord player casualties after a chapter. Classic mode
+## records them as permadead in save data (§3 / WO-3.3).
+@export var casual_mode: bool = false
 
 const TERRAIN_TINTS := {
 	Terrain.Type.PLAINS: Color(0.0, 0.0, 0.0, 0.0),
@@ -64,9 +67,13 @@ var _menu_partners: Array[Unit] = []  # allies for trade_ally
 var _support_menu_entries: Array = []
 var _trade_partner: Unit = null
 var _battle_over := false
+var _battle_victory := false
 var _lord_unit: Unit = null
 var _lord_alive := true
 var _support_state := SupportState.new()
+var _save_system := SaveSystem.new()
+var _defeated_unit_ids: Array[String] = []
+var _permadead_unit_ids: Array[String] = []
 
 
 func _ready() -> void:
@@ -144,6 +151,13 @@ func add_unit(def: UnitDef, cell: Vector2i) -> Unit:
 	u.setup(def, _grid, cell)
 	_units.append(u)
 	return u
+
+
+func unit_by_id(id: String) -> Unit:
+	for u in _units:
+		if u.unit_id() == id and u.is_alive():
+			return u
+	return null
 
 
 func _terrain_def_at(cell: Vector2i) -> int:
@@ -633,6 +647,7 @@ func _play_strike(strike: StrikeResult, target: Unit) -> void:
 func _kill(unit: Unit) -> void:
 	_pop_text(unit.position, "X", Color(0.9, 0.2, 0.2))
 	EventBus.unit_died.emit(unit)
+	_record_defeat(unit)
 	if unit == _lord_unit:
 		_lord_alive = false
 	_units.erase(unit)
@@ -732,8 +747,11 @@ func _end_battle(victory: bool) -> void:
 	if _battle_over:
 		return
 	_battle_over = true
+	_battle_victory = victory
 	_deselect()
 	_range_overlay.clear()
+	if victory and casual_mode:
+		_apply_casual_post_chapter_revival()
 	if victory:
 		EventBus.battle_won.emit()
 		_result_screen.show_victory()
@@ -772,6 +790,163 @@ func _deselect() -> void:
 		_menu.close()
 	if _cursor != null:
 		_cursor.active = true
+
+
+# --- save / load ---------------------------------------------------------------
+
+func save_to_slot(slot: int) -> bool:
+	return _save_system.save_slot(slot, make_save_payload())
+
+
+func load_from_slot(slot: int) -> bool:
+	var payload := _save_system.load_slot(slot)
+	if payload.is_empty():
+		return false
+	apply_save_payload(payload)
+	return true
+
+
+func make_save_payload() -> Dictionary:
+	return {
+		"version": SaveSystem.VERSION,
+		"campaign": {
+			"current_chapter_id": chapter.id,
+			"casual_mode": casual_mode,
+			"rng_seed": str(_rng.seed_value()),
+			"rng_state": str(_rng.state_value()),
+			"hub_state": {},
+		},
+		"battle": {
+			"chapter_id": chapter.id,
+			"round_number": _turn.round_number,
+			"active_team": int(_turn.active_team),
+			"battle_over": _battle_over,
+			"battle_victory": _battle_victory,
+			"lord_alive": _lord_alive,
+			"defeated_unit_ids": _defeated_unit_ids.duplicate(),
+			"permadead_unit_ids": _permadead_unit_ids.duplicate(),
+			"objective": int(chapter.objective),
+			"seize_cell": {"x": chapter.seize_cell.x, "y": chapter.seize_cell.y},
+		},
+		"supports": _support_state.save_state(),
+		"roster": _roster_save_state(),
+	}
+
+
+func apply_save_payload(payload: Dictionary) -> void:
+	var campaign: Dictionary = payload.get("campaign", {})
+	var battle: Dictionary = payload.get("battle", {})
+	casual_mode = bool(campaign.get("casual_mode", casual_mode))
+	combat_seed = int(str(campaign.get("rng_seed", combat_seed)))
+	_rng = CombatRNG.new(combat_seed)
+	_rng.set_state(int(str(campaign.get("rng_state", _rng.state_value()))))
+
+	_turn.round_number = int(battle.get("round_number", 1))
+	var saved_team := int(battle.get("active_team", TurnManager.Team.PLAYER))
+	_turn.active_team = TurnManager.Team.ENEMY if saved_team == TurnManager.Team.ENEMY else TurnManager.Team.PLAYER
+	_battle_over = bool(battle.get("battle_over", false))
+	_battle_victory = bool(battle.get("battle_victory", false))
+	_lord_alive = bool(battle.get("lord_alive", true))
+	chapter.objective = int(battle.get("objective", chapter.objective))
+	var seize: Dictionary = battle.get("seize_cell", {})
+	chapter.seize_cell = Vector2i(int(seize.get("x", chapter.seize_cell.x)), int(seize.get("y", chapter.seize_cell.y)))
+	_defeated_unit_ids = _string_array(battle.get("defeated_unit_ids", []))
+	_permadead_unit_ids = _string_array(battle.get("permadead_unit_ids", []))
+
+	_setup_supports()
+	_support_state.apply_save_state(payload.get("supports", {}))
+	_rebuild_units_from_save(payload.get("roster", []))
+	_restore_post_load_ui()
+
+
+func _roster_save_state() -> Array:
+	var out: Array = []
+	for u in _units:
+		if u.is_alive():
+			out.append(u.save_state())
+	return out
+
+
+func _rebuild_units_from_save(roster: Array) -> void:
+	_clear_units()
+	_spawn_demo_units()
+	var state_by_id := {}
+	for entry in roster:
+		if entry is Dictionary:
+			state_by_id[str(entry.get("id", ""))] = entry
+	for id in _defeated_unit_ids:
+		var defeated := unit_by_id(id)
+		if defeated != null:
+			_remove_unit_without_events(defeated)
+	for id in state_by_id:
+		var unit := unit_by_id(id)
+		if unit != null:
+			unit.apply_save_state(state_by_id[id])
+	if not _lord_alive and _lord_unit != null and is_instance_valid(_lord_unit):
+		if _defeated_unit_ids.has(_lord_unit.unit_id()):
+			_remove_unit_without_events(_lord_unit)
+
+
+func _clear_units() -> void:
+	for u in _units.duplicate():
+		if is_instance_valid(u):
+			u.queue_free()
+	_units.clear()
+	_lord_unit = null
+
+
+func _remove_unit_without_events(unit: Unit) -> void:
+	_units.erase(unit)
+	if unit == _selected:
+		_selected = null
+	unit.queue_free()
+
+
+func _restore_post_load_ui() -> void:
+	_deselect()
+	if _threat_overlay.is_shown():
+		_refresh_threat_overlay()
+	if _battle_over:
+		if _battle_victory:
+			_result_screen.show_victory()
+		else:
+			_result_screen.show_defeat()
+	else:
+		_turn_banner.announce("%s — Round %d" % [_turn.phase_name(), _turn.round_number], _turn.is_player_phase())
+	queue_redraw()
+
+
+func _string_array(values: Array) -> Array[String]:
+	var out: Array[String] = []
+	for value in values:
+		out.append(str(value))
+	return out
+
+
+func _record_defeat(unit: Unit) -> void:
+	var id := unit.unit_id()
+	if id == "":
+		return
+	if not _defeated_unit_ids.has(id):
+		_defeated_unit_ids.append(id)
+	if unit.team == 0 and not casual_mode and not _permadead_unit_ids.has(id):
+		_permadead_unit_ids.append(id)
+
+
+func _apply_casual_post_chapter_revival() -> void:
+	var kept_defeated: Array[String] = []
+	for id in _defeated_unit_ids:
+		if not _is_player_unit_id(id) or id == (_lord_unit.unit_id() if _lord_unit != null and is_instance_valid(_lord_unit) else ""):
+			kept_defeated.append(id)
+	_defeated_unit_ids = kept_defeated
+
+
+func _is_player_unit_id(id: String) -> bool:
+	match id:
+		"ash", "kael", "brenna", "wren":
+			return true
+		_:
+			return false
 
 
 func _pop_text(world_pos: Vector2, text: String, color: Color) -> void:

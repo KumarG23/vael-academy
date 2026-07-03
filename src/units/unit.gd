@@ -120,6 +120,10 @@ func is_lord() -> bool:
 	return unit_def != null and unit_def.is_lord
 
 
+func unit_id() -> String:
+	return unit_def.id if unit_def != null else ""
+
+
 func ai_behavior() -> AIBrain.Behavior:
 	return unit_def.ai_behavior if unit_def != null else AIBrain.Behavior.AGGRESSOR
 
@@ -200,6 +204,86 @@ func heal(amount: int) -> int:
 		flash()
 		queue_redraw()
 	return current_hp - before
+
+
+func save_state() -> Dictionary:
+	return {
+		"id": unit_id(),
+		"cell": {"x": cell.x, "y": cell.y},
+		"team": team,
+		"current_hp": current_hp,
+		"level": level,
+		"xp": xp,
+		"has_acted": has_acted,
+		"ai_awake": ai_awake,
+		"stat_bonus": _stat_bonus.duplicate(true),
+		"class_override": _resource_path(_class_override),
+		"move_bonus": _move_bonus,
+		"inventory": _inventory_save_state(),
+	}
+
+
+func apply_save_state(state: Dictionary) -> void:
+	var saved_cell: Dictionary = state.get("cell", {})
+	cell = Vector2i(int(saved_cell.get("x", cell.x)), int(saved_cell.get("y", cell.y)))
+	position = _grid.cell_center(cell) if _grid != null else position
+	team = int(state.get("team", team))
+	level = int(state.get("level", level))
+	xp = int(state.get("xp", xp))
+	has_acted = bool(state.get("has_acted", has_acted))
+	ai_awake = bool(state.get("ai_awake", ai_awake))
+	_apply_stat_bonus(state.get("stat_bonus", {}))
+	_move_bonus = int(state.get("move_bonus", _move_bonus))
+	_apply_class_override(str(state.get("class_override", "")))
+	_apply_inventory_state(state.get("inventory", []))
+	current_hp = clampi(int(state.get("current_hp", current_hp)), 0, max_hp())
+	queue_redraw()
+
+
+func _apply_stat_bonus(saved: Dictionary) -> void:
+	for key in _stat_bonus:
+		_stat_bonus[key] = int(saved.get(key, 0))
+
+
+func _apply_class_override(path: String) -> void:
+	_class_override = null
+	if path != "" and ResourceLoader.exists(path):
+		_class_override = load(path)
+
+
+func _inventory_save_state() -> Array:
+	var out: Array = []
+	for item in inventory.items:
+		out.append({
+			"type": "weapon" if item.is_weapon() else "item",
+			"path": _resource_path(item.def),
+			"id": str(item.def.get("id")) if item.def != null else "",
+			"uses": item.uses,
+		})
+	return out
+
+
+func _apply_inventory_state(saved_items: Array) -> void:
+	var restored := Inventory.new()
+	for entry in saved_items:
+		if not entry is Dictionary:
+			continue
+		var path := str(entry.get("path", ""))
+		if path == "" or not ResourceLoader.exists(path):
+			continue
+		var def: Resource = load(path)
+		if not (def is WeaponDef or def is ItemDef):
+			continue
+		var item := InventoryItem.from_weapon(def as WeaponDef) if def is WeaponDef else InventoryItem.from_item(def as ItemDef)
+		item.uses = int(entry.get("uses", item.uses))
+		restored.add(item)
+	inventory = restored
+
+
+static func _resource_path(res: Resource) -> String:
+	if res == null:
+		return ""
+	return res.resource_path
 
 
 ## Apply a resolved HP value (from CombatResult), with a brief hit flash.

@@ -17,6 +17,14 @@ func seed_value() -> int:
 	return int(_rng.seed)
 
 
+func state_value() -> int:
+	return int(_rng.state)
+
+
+func set_state(value: int) -> void:
+	_rng.state = value
+
+
 ## One roll in [0, 99].
 func roll() -> int:
 	return _rng.randi() % 100
