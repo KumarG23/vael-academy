@@ -35,6 +35,8 @@ var _debug_label: Label
 var _forecast_panel: CombatForecastPanel
 var _rng: CombatRNG
 
+var _turn := TurnManager.new()
+var _turn_banner: TurnBanner
 var _units: Array[Unit] = []
 var _phase: Phase = Phase.IDLE
 var _selected: Unit = null
@@ -57,6 +59,7 @@ func _ready() -> void:
 	_setup_ui()
 	_spawn_demo_units()
 	queue_redraw()
+	_begin_player_phase()
 
 
 func _draw() -> void:
@@ -136,8 +139,17 @@ func _on_cell_changed(cell: Vector2i) -> void:
 			_show_forecast_for(enemy)
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	# End the player phase on 'T' (or Tab) when idle.
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_T or event.keycode == KEY_TAB:
+			if _turn.is_player_phase() and not _busy and _phase == Phase.IDLE:
+				_end_player_phase()
+				get_viewport().set_input_as_handled()
+
+
 func _on_cursor_confirmed(cell: Vector2i) -> void:
-	if _busy:
+	if _busy or not _turn.is_player_phase():
 		return
 	match _phase:
 		Phase.IDLE:
@@ -204,6 +216,7 @@ func _handle_targeting_confirm(cell: Vector2i) -> void:
 		_finish_action()  # confirming off-target = wait
 		return
 	await _execute_attack(_selected, enemy)
+	_finish_action()
 
 
 func _show_forecast_for(enemy: Unit) -> void:
@@ -216,6 +229,7 @@ func _show_forecast_for(enemy: Unit) -> void:
 
 
 func _execute_attack(attacker: Unit, defender: Unit) -> void:
+	var was_busy := _busy  # keep busy set if we're inside the enemy phase
 	_busy = true
 	_forecast_panel.hide_panel()
 	var dist := _manhattan(attacker.cell, defender.cell)
@@ -233,8 +247,7 @@ func _execute_attack(attacker: Unit, defender: Unit) -> void:
 		if not target.is_alive():
 			_kill(target)
 
-	_busy = false
-	_finish_action()
+	_busy = was_busy
 
 
 func _play_strike(strike: StrikeResult, target: Unit) -> void:
@@ -263,6 +276,66 @@ func _finish_action() -> void:
 		_selected.queue_redraw()
 	_forecast_panel.hide_panel()
 	_deselect()
+	if _turn.is_player_phase() and _all_player_units_acted():
+		_end_player_phase()
+
+
+# --- turn / phase loop --------------------------------------------------------
+
+func _living_units_on_team(team: int) -> Array[Unit]:
+	var out: Array[Unit] = []
+	for u in _units:
+		if u.team == team and u.is_alive():
+			out.append(u)
+	return out
+
+
+func _all_player_units_acted() -> bool:
+	for u in _living_units_on_team(0):
+		if not u.has_acted:
+			return false
+	return true
+
+
+func _begin_player_phase() -> void:
+	for u in _living_units_on_team(0):
+		u.has_acted = false
+		u.queue_redraw()
+	_deselect()
+	_turn_banner.announce("Player Phase — Round %d" % _turn.round_number, true)
+
+
+func _end_player_phase() -> void:
+	_deselect()
+	_turn.advance()  # -> enemy phase
+	await _run_enemy_phase()
+	_turn.advance()  # -> back to player, next round
+	_begin_player_phase()
+
+
+func _run_enemy_phase() -> void:
+	_busy = true
+	_turn_banner.announce("Enemy Phase", false)
+	# Deterministic acting order (§5): stable by board position.
+	var enemies := _living_units_on_team(1)
+	enemies.sort_custom(func(a, b): return AIBrain._cell_key(a.cell) < AIBrain._cell_key(b.cell))
+	for enemy in enemies:
+		if not is_instance_valid(enemy) or not enemy.is_alive():
+			continue
+		if _living_units_on_team(0).is_empty():
+			break  # nothing left to fight (WO-1.4 turns this into defeat)
+		await _execute_enemy_unit(enemy)
+	_busy = false
+
+
+func _execute_enemy_unit(enemy: Unit) -> void:
+	var decision := AIBrain.decide(enemy, _units, chapter, _terrain_db)
+	if decision.move_to != enemy.cell:
+		var path := Pathfinder.find_path(enemy.cell, decision.move_to, _make_context(enemy))
+		if not path.is_empty():
+			await enemy.move_along_path(path)
+	if decision.has_attack() and is_instance_valid(decision.target) and decision.target.is_alive():
+		await _execute_attack(enemy, decision.target)
 
 
 func _deselect() -> void:
@@ -367,6 +440,10 @@ func _setup_ui() -> void:
 	var vp := get_viewport_rect().size
 	_forecast_panel.position = Vector2(vp.x - CombatForecastPanel.PANEL_SIZE.x - 20, vp.y - CombatForecastPanel.PANEL_SIZE.y - 20)
 	_ui_layer.add_child(_forecast_panel)
+	_turn_banner = TurnBanner.new()
+	_turn_banner.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_turn_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ui_layer.add_child(_turn_banner)
 
 
 func _spawn_demo_units() -> void:
@@ -381,6 +458,7 @@ func _spawn_demo_units() -> void:
 	add_unit(_demo_unit("brenna", "Brenna", knight, lance, 0, 5, {"def": 10, "hp": 28, "spd": 5}), Vector2i(4, 9))
 	add_unit(_demo_unit("tide_a", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6}), Vector2i(6, 7))
 	add_unit(_demo_unit("tide_b", "Tidemark Soldier", soldier, sword, 1, 5, {"spd": 7, "hp": 22}), Vector2i(8, 8))
+	add_unit(_demo_unit("tide_c", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6, "hp": 24}), Vector2i(9, 6))
 
 
 func _demo_unit(

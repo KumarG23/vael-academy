@@ -50,6 +50,14 @@ func weapon() -> WeaponDef:
 	return unit_def.weapon if unit_def != null else null
 
 
+func movement_type() -> ClassDef.MovementType:
+	return unit_def.movement_type() if unit_def != null else ClassDef.MovementType.FOOT
+
+
+func move_points() -> int:
+	return unit_def.movement if unit_def != null else 5
+
+
 func can_attack() -> bool:
 	var w := weapon()
 	return w != null and w.can_attack()
