@@ -106,6 +106,17 @@ func test_seeded_determinism_full_exchange():
 	assert_eq(r1.defender_hp_after, r2.defender_hp_after)
 
 
+func test_attacking_an_unarmed_defender_does_not_crash_and_has_no_counter():
+	# A defender whose last weapon broke is unarmed — no triangle, no counter.
+	var atk := CombatTestHelpers.combatant("A", _sure(WeaponDef.WeaponType.SWORD, 10),
+		{"str": 10, "spd": 10, "hp": 30})
+	var unarmed := CombatTestHelpers.combatant("D", null, {"spd": 10, "def": 5, "hp": 30})
+	var res := CombatResolver.resolve(atk, unarmed, 1, CombatRNG.new(1))
+	assert_eq(res.strikes.size(), 1, "unarmed defender cannot counter")
+	assert_false(res.strikes[0].is_counter)
+	assert_eq(res.strikes[0].damage, 15, "10+10 - 5, no triangle")
+
+
 func test_result_damage_tallies_split_by_side():
 	var atk := CombatTestHelpers.combatant("A", _sure(WeaponDef.WeaponType.SWORD, 10),
 		{"str": 10, "spd": 10, "def": 5, "hp": 30})

@@ -20,6 +20,7 @@ var current_hp: int = 1
 var has_acted: bool = false
 var level: int = 1
 var xp: int = 0
+var inventory := Inventory.new()
 
 # Permanent stat gains from level-ups, added on top of the UnitDef base. Keeps the
 # shared UnitDef resource immutable while stats grow per-instance.
@@ -42,6 +43,10 @@ func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 	level = def.level if def != null else 1
 	xp = 0
 	current_hp = def.max_hp if def != null else 1
+	if def != null:
+		var weapons: Array = [def.weapon]
+		weapons.append_array(def.extra_weapons)
+		inventory = Inventory.from_starting(weapons, def.starting_items)
 	_grid = grid
 	cell = start_cell
 	position = _grid.cell_center(cell)
@@ -66,8 +71,25 @@ func is_moving() -> bool:
 	return _moving
 
 
+## The equipped weapon (first weapon in the inventory).
 func weapon() -> WeaponDef:
-	return unit_def.weapon if unit_def != null else null
+	return inventory.equipped_weapon()
+
+
+## Spend one use of the equipped weapon after an attack. Returns the item that
+## broke (removed from inventory), or null.
+func spend_weapon_use() -> InventoryItem:
+	return inventory.use_equipped_weapon()
+
+
+## Replace the equipped weapon (equip / test helper). Resets its uses.
+func equip_weapon(w: WeaponDef) -> void:
+	var it := inventory.equipped_weapon_item()
+	if it != null:
+		it.def = w
+		it.uses = w.max_uses
+	else:
+		inventory.add(InventoryItem.from_weapon(w))
 
 
 func movement_type() -> ClassDef.MovementType:

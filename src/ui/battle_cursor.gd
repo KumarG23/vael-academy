@@ -28,6 +28,8 @@ var _grid: Grid
 var _initialized := false
 var _held_dir := Vector2i.ZERO
 var _repeat_timer := 0.0
+## When false, the cursor ignores all input (e.g. while a menu is open).
+var active := true
 
 
 func setup(grid: Grid, start := Vector2i.ZERO) -> void:
@@ -75,7 +77,7 @@ func cancel() -> void:
 
 
 func _process(delta: float) -> void:
-	if _grid == null:
+	if _grid == null or not active:
 		return
 	step_repeat(_poll_direction(), delta)
 
@@ -109,7 +111,7 @@ func step_repeat(dir: Vector2i, delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _grid == null:
+	if _grid == null or not active:
 		return
 	if event is InputEventMouseMotion:
 		var hovered := _grid.world_to_cell(get_global_mouse_position())

@@ -46,6 +46,9 @@ func test_victory_by_seize_when_lord_reaches_the_tile():
 	while kael.is_moving() and guard < 240:
 		await wait_physics_frames(1)
 		guard += 1
+	# Finish the action via the command menu ("Wait"); the seize is checked then.
+	var idx: int = _view._menu_actions.find("wait")
+	await _view._on_menu_chosen(idx)
 
 	assert_eq(kael.cell, Vector2i(3, 4))
 	assert_true(_view._battle_over, "seizing ends the battle")

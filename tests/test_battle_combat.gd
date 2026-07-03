@@ -27,7 +27,7 @@ func _make_sure_hit(u: Unit) -> void:
 	w.weight = cur.weight
 	w.min_range = cur.min_range
 	w.max_range = cur.max_range
-	u.unit_def.weapon = w
+	u.equip_weapon(w)
 
 
 func after_each() -> void:
@@ -46,6 +46,21 @@ func _wait_until_idle(max_frames := 240) -> void:
 		n += 1
 
 
+## Move a unit to `dest`, wait for arrival, then pick a command-menu action by id.
+func _move_and_pick(select: Vector2i, dest: Vector2i, action_id: String, mover: Unit) -> void:
+	_view._on_cursor_confirmed(select)
+	_view._handle_selected_confirm(dest)
+	await _wait_until_idle()
+	var guard := 0
+	while mover.is_moving() and guard < 240:
+		await wait_physics_frames(1)
+		guard += 1
+	assert_eq(_view._phase, _view.Phase.MENU, "command menu opens after moving")
+	var idx: int = _view._menu_actions.find(action_id)
+	assert_true(idx >= 0, "menu offers '%s'" % action_id)
+	await _view._on_menu_chosen(idx)
+
+
 func test_full_player_attack_round_with_counter():
 	var kael: Unit = _view.unit_at(Vector2i(3, 7))
 	var enemy: Unit = _view.unit_at(Vector2i(6, 7))
@@ -57,21 +72,13 @@ func test_full_player_attack_round_with_counter():
 	var enemy_hp0 := enemy.current_hp
 	var kael_hp0 := kael.current_hp
 
-	# Select Kael and move adjacent to the enemy (land on (5,7)).
-	_view._on_cursor_confirmed(Vector2i(3, 7))
-	assert_eq(_view._selected, kael, "Kael selected")
-	_view._handle_selected_confirm(Vector2i(5, 7))
-	await _wait_until_idle()
-	# move tween may still be finishing
-	var guard := 0
-	while kael.is_moving() and guard < 240:
-		await wait_physics_frames(1)
-		guard += 1
+	# Select Kael, move adjacent to the enemy (land on (5,7)), choose Attack.
+	await _move_and_pick(Vector2i(3, 7), Vector2i(5, 7), "attack", kael)
 	assert_eq(kael.cell, Vector2i(5, 7), "Kael moved adjacent")
-	assert_eq(_view._phase, _view.Phase.TARGETING, "targeting phase after move")
+	assert_eq(_view._phase, _view.Phase.TARGETING, "attack -> targeting")
 	assert_true(_view._targets.has(enemy), "enemy is targetable")
 
-	# Attack.
+	# Confirm the attack on the enemy.
 	_view._handle_targeting_confirm(Vector2i(6, 7))
 	await _wait_until_idle()
 
@@ -90,14 +97,7 @@ func test_lethal_attack_removes_unit_and_emits_eventbus():
 	_make_sure_hit(kael)
 	enemy.current_hp = 1
 
-	_view._on_cursor_confirmed(Vector2i(3, 7))
-	_view._handle_selected_confirm(Vector2i(5, 7))
-	await _wait_until_idle()
-	var guard := 0
-	while kael.is_moving() and guard < 240:
-		await wait_physics_frames(1)
-		guard += 1
-
+	await _move_and_pick(Vector2i(3, 7), Vector2i(5, 7), "attack", kael)
 	_view._handle_targeting_confirm(Vector2i(6, 7))
 	await _wait_until_idle()
 

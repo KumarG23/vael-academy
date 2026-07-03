@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://src/items/item_def.gd" id="1_0k5a5"]
+
+[resource]
+script = ExtResource("1_0k5a5")
+id = "promotion_seal"
+display_name = "Master Seal"
+kind = 1
+power = 0

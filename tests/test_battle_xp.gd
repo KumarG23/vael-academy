@@ -21,6 +21,19 @@ func _wait_idle(max_frames := 400) -> void:
 		n += 1
 
 
+func _move_and_pick(select: Vector2i, dest: Vector2i, action_id: String, mover: Unit) -> void:
+	_view._on_cursor_confirmed(select)
+	_view._handle_selected_confirm(dest)
+	await _wait_idle()
+	var guard := 0
+	while mover.is_moving() and guard < 240:
+		await wait_physics_frames(1)
+		guard += 1
+	var idx: int = _view._menu_actions.find(action_id)
+	assert_true(idx >= 0, "menu offers '%s'" % action_id)
+	await _view._on_menu_chosen(idx)
+
+
 func _sure_hit(u: Unit) -> void:
 	var w := WeaponDef.new()
 	var cur := u.weapon()
@@ -30,7 +43,7 @@ func _sure_hit(u: Unit) -> void:
 	w.weight = cur.weight
 	w.min_range = cur.min_range
 	w.max_range = cur.max_range
-	u.unit_def.weapon = w
+	u.equip_weapon(w)
 
 
 func test_unit_levels_up_mid_battle_from_a_kill():
@@ -41,13 +54,7 @@ func test_unit_levels_up_mid_battle_from_a_kill():
 	kael.xp = 95                  # poised to level from this exchange
 	assert_eq(kael.level, 1)
 
-	_view._on_cursor_confirmed(Vector2i(3, 7))
-	_view._handle_selected_confirm(Vector2i(5, 7))
-	await _wait_idle()
-	var guard := 0
-	while kael.is_moving() and guard < 240:
-		await wait_physics_frames(1)
-		guard += 1
+	await _move_and_pick(Vector2i(3, 7), Vector2i(5, 7), "attack", kael)
 	_view._handle_targeting_confirm(Vector2i(6, 7))
 	await _wait_idle()
 
@@ -63,11 +70,8 @@ func test_healer_gains_xp_from_healing():
 	brenna.current_hp = 5         # damaged, so Wren can heal her
 	assert_eq(wren.xp, 0)
 
-	# Wren is already adjacent to Brenna; select, stay put, heal.
-	_view._on_cursor_confirmed(Vector2i(3, 9))
-	assert_eq(_view._selected, wren, "Wren selected")
-	_view._handle_selected_confirm(Vector2i(3, 9))  # wait in place -> heal targeting
-	await _wait_idle()
+	# Wren is already adjacent to Brenna; select, stay put, choose Heal from the menu.
+	await _move_and_pick(Vector2i(3, 9), Vector2i(3, 9), "heal", wren)
 	assert_true(_view._targeting_heal, "healer is in heal-targeting mode")
 	assert_true(_view._targets.has(brenna), "Brenna is a heal target")
 

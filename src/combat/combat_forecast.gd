@@ -10,9 +10,16 @@ extends RefCounted
 ## with weapon triangle and terrain folded in. Returns
 ## { "hit": int, "crit": int, "damage": int }.
 static func strike_stats(attacker: Combatant, defender: Combatant) -> Dictionary:
+	# Attacker must be armed to strike; a defender may be unarmed (e.g. its last
+	# weapon broke) — then there is no weapon-triangle interaction.
+	if attacker.weapon == null:
+		return {"hit": 0, "crit": 0, "damage": 0}
 	var magical := attacker.weapon.is_magical()
-	var tri_hit := WeaponTriangle.hit_bonus(attacker.weapon.weapon_type, defender.weapon.weapon_type)
-	var tri_dmg := WeaponTriangle.dmg_bonus(attacker.weapon.weapon_type, defender.weapon.weapon_type)
+	var tri_hit := 0
+	var tri_dmg := 0
+	if defender.weapon != null:
+		tri_hit = WeaponTriangle.hit_bonus(attacker.weapon.weapon_type, defender.weapon.weapon_type)
+		tri_dmg = WeaponTriangle.dmg_bonus(attacker.weapon.weapon_type, defender.weapon.weapon_type)
 
 	var hr := CombatMath.hit_rate(attacker.weapon.hit, attacker.skill, attacker.luck, tri_hit)
 	var av := CombatMath.avoid_rate(defender.attack_speed(), defender.luck, defender.terrain_avoid)

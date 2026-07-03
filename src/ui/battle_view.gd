@@ -25,7 +25,7 @@ const TERRAIN_TINTS := {
 	Terrain.Type.WATER: Color(0.15, 0.35, 0.60, 0.55),
 }
 
-enum Phase { IDLE, SELECTED, TARGETING }
+enum Phase { IDLE, SELECTED, MENU, TARGETING }
 
 var _grid: Grid
 var _terrain_db: TerrainDB
@@ -49,6 +49,13 @@ var _standable: Array = []
 var _targets: Array[Unit] = []
 var _targeting_heal := false
 var _busy := false
+
+var _menu: ChoiceMenu
+var _menu_context := ""
+var _menu_actions: Array = []      # action ids for the "action" context
+var _menu_items: Array = []        # InventoryItems for item/equip/trade_give
+var _menu_partners: Array[Unit] = []  # allies for trade_ally
+var _trade_partner: Unit = null
 var _battle_over := false
 var _lord_unit: Unit = null
 var _lord_alive := true
@@ -235,23 +242,195 @@ func _handle_selected_confirm(cell: Vector2i) -> void:
 	_arrive(mover)
 
 
-## After a unit lands, offer attack targets (weapons), heal targets (staves), or
-## just end the action.
+## After a unit lands, open its command menu (Attack / Heal / Item / Trade /
+## Equip / Wait), showing only the actions available from here.
 func _arrive(unit: Unit) -> void:
+	_open_action_menu()
+
+
+# --- command menu -------------------------------------------------------------
+
+func _open_action_menu() -> void:
+	var unit := _selected
+	var labels: Array = []
+	_menu_actions = []
+	if unit.can_attack() and not _attackable_targets(unit.cell, unit).is_empty():
+		_menu_actions.append("attack"); labels.append("Attack")
 	var w := unit.weapon()
-	if w != null and w.is_staff():
-		_targeting_heal = true
-		_targets = _heal_targets(unit.cell, unit)
-	else:
-		_targeting_heal = false
-		_targets = _attackable_targets(unit.cell, unit)
+	if w != null and w.is_staff() and not _heal_targets(unit.cell, unit).is_empty():
+		_menu_actions.append("heal"); labels.append("Heal")
+	if not _usable_consumables(unit).is_empty():
+		_menu_actions.append("item"); labels.append("Item")
+	if not _adjacent_allies(unit).is_empty():
+		_menu_actions.append("trade"); labels.append("Trade")
+	if _weapon_count(unit) > 1:
+		_menu_actions.append("equip"); labels.append("Equip")
+	_menu_actions.append("wait"); labels.append("Wait")
+	_open_menu("action", "Action", labels)
+
+
+func _open_menu(context: String, title: String, labels: Array) -> void:
+	_menu_context = context
+	_phase = Phase.MENU
+	_cursor.active = false
+	_menu.open(title, labels, Vector2(40, 110))
+
+
+func _on_menu_chosen(index: int) -> void:
+	if _busy:
+		return
+	match _menu_context:
+		"action":
+			await _do_action(_menu_actions[index])
+		"item":
+			await _use_consumable(index)
+		"equip":
+			_do_equip(index)
+		"trade_ally":
+			_pick_trade_ally(index)
+		"trade_give":
+			_do_give(index)
+
+
+func _on_menu_cancelled() -> void:
+	if _busy:
+		return
+	match _menu_context:
+		"action":
+			_menu.close()
+			_finish_action()          # cancel on the command menu = wait
+		"trade_give":
+			_menu.close()
+			_finish_action()          # done handing items over
+		_:
+			_open_action_menu()       # item / equip / trade_ally -> back to action
+
+
+func _do_action(id: String) -> void:
+	match id:
+		"attack":
+			_menu.close()
+			_cursor.active = true
+			_begin_targeting(false)
+		"heal":
+			_menu.close()
+			_cursor.active = true
+			_begin_targeting(true)
+		"item":
+			_open_item_menu()
+		"trade":
+			_open_trade_ally_menu()
+		"equip":
+			_open_equip_menu()
+		"wait":
+			_menu.close()
+			_finish_action()
+
+
+func _begin_targeting(heal: bool) -> void:
+	_targeting_heal = heal
+	_targets = _heal_targets(_selected.cell, _selected) if heal else _attackable_targets(_selected.cell, _selected)
 	if _targets.is_empty():
 		_finish_action()
 		return
 	_phase = Phase.TARGETING
 	_cursor.move_to(_targets[0].cell)
-	if not _targeting_heal:
+	if not heal:
 		_show_forecast_for(_targets[0])
+
+
+## Consumables the unit can meaningfully use right now (a Vulnerary only when
+## damaged; the Promotion item can't be used until WO-2.4).
+func _usable_consumables(unit: Unit) -> Array[InventoryItem]:
+	var out: Array[InventoryItem] = []
+	for it in unit.inventory.consumables():
+		if it.item().heals() and unit.current_hp < unit.max_hp():
+			out.append(it)
+	return out
+
+
+func _open_item_menu() -> void:
+	_menu_items = _usable_consumables(_selected)
+	var labels: Array = []
+	for it in _menu_items:
+		labels.append("%s (%d)" % [it.display_name(), it.uses])
+	_open_menu("item", "Item", labels)
+
+
+func _use_consumable(index: int) -> void:
+	var item: InventoryItem = _menu_items[index]
+	var def: ItemDef = item.item()
+	# Only usable items reach this menu; heal and consume.
+	var healed := _selected.heal(def.power)
+	_pop_text(_selected.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
+	_selected.inventory.use_consumable(item)
+	_menu.close()
+	_finish_action()
+
+
+func _open_equip_menu() -> void:
+	_menu_items = []
+	var labels: Array = []
+	for it in _selected.inventory.items:
+		if it.is_weapon():
+			_menu_items.append(it)
+			var eq := " *" if it == _selected.inventory.equipped_weapon_item() else ""
+			labels.append("%s (%d)%s" % [it.display_name(), it.uses, eq])
+	_open_menu("equip", "Equip", labels)
+
+
+func _do_equip(index: int) -> void:
+	_selected.inventory.equip(_menu_items[index])
+	_open_action_menu()  # equipping is free — return to the command menu
+
+
+func _open_trade_ally_menu() -> void:
+	_menu_partners = _adjacent_allies(_selected)
+	var labels: Array = []
+	for a in _menu_partners:
+		labels.append("%s (%d items)" % [a.unit_def.display_name, a.inventory.size()])
+	_open_menu("trade_ally", "Trade with", labels)
+
+
+func _pick_trade_ally(index: int) -> void:
+	_trade_partner = _menu_partners[index]
+	_open_trade_give_menu()
+
+
+func _open_trade_give_menu() -> void:
+	_menu_items = _selected.inventory.items.duplicate()
+	var labels: Array = []
+	for it in _menu_items:
+		labels.append("Give %s" % it.display_name())
+	_open_menu("trade_give", "Give to %s" % _trade_partner.unit_def.display_name, labels)
+
+
+func _do_give(index: int) -> void:
+	var item: InventoryItem = _menu_items[index]
+	if _selected.inventory.transfer_to(item, _trade_partner.inventory):
+		_pop_text(_trade_partner.position, "got %s" % item.display_name(), Color(0.7, 0.85, 1.0))
+	# Stay in the give menu so multiple items can be handed over; cancel finishes.
+	if _selected.inventory.is_empty():
+		_menu.close()
+		_finish_action()
+	else:
+		_open_trade_give_menu()
+
+
+func _adjacent_allies(unit: Unit) -> Array[Unit]:
+	var out: Array[Unit] = []
+	for u in _units:
+		if u != unit and u.team == unit.team and u.is_alive() and _manhattan(u.cell, unit.cell) == 1:
+			out.append(u)
+	return out
+
+
+func _weapon_count(unit: Unit) -> int:
+	var n := 0
+	for it in unit.inventory.items:
+		if it.is_weapon():
+			n += 1
+	return n
 
 
 func _handle_targeting_confirm(cell: Vector2i) -> void:
@@ -287,7 +466,9 @@ func _execute_attack(attacker: Unit, defender: Unit) -> void:
 	var result := CombatResolver.resolve(atk_c, def_c, dist, _rng)
 
 	for strike in result.strikes:
-		var target := defender if strike.defender_name == defender.unit_def.display_name else attacker
+		# Route by the counter flag, not the display name (names aren't unique —
+		# e.g. multiple "Tidemark Soldier"). A counter strike hits the attacker.
+		var target := attacker if strike.is_counter else defender
 		_play_strike(strike, target)
 		if strike_delay > 0.0:
 			await get_tree().create_timer(strike_delay).timeout
@@ -295,6 +476,19 @@ func _execute_attack(attacker: Unit, defender: Unit) -> void:
 			await get_tree().process_frame
 		if not target.is_alive():
 			_kill(target)
+
+	# Weapon durability: 1 use per combat per side that swung — GBA-accurate
+	# (a doubling unit still spends only one use, not one per strike). The attacker
+	# always swung; the defender swung only if it countered.
+	var defender_countered := false
+	for s in result.strikes:
+		if s.is_counter:
+			defender_countered = true
+			break
+	if is_instance_valid(attacker):
+		_spend_weapon(attacker)
+	if is_instance_valid(defender) and defender_countered:
+		_spend_weapon(defender)
 
 	# XP: attacker for its strikes, defender for its counter (players only, §3/§4).
 	# A slain combatant has been freed by now — guard before passing it on.
@@ -313,9 +507,17 @@ func _execute_heal(healer: Unit, ally: Unit) -> void:
 	var amount := healer.weapon().heal_amount + healer.stat("mag")
 	var healed := ally.heal(amount)
 	_pop_text(ally.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
+	_spend_weapon(healer)  # staves have uses too
 	await _award_heal_xp(healer, healed)
 	_busy = was_busy
 	_check_objective()
+
+
+## Spend one use of `unit`'s equipped weapon and announce a break.
+func _spend_weapon(unit: Unit) -> void:
+	var broke := unit.spend_weapon_use()
+	if broke != null:
+		_pop_text(unit.position, "%s broke!" % broke.display_name(), Color(0.9, 0.7, 0.3))
 
 
 ## Whether one side landed a hit. `counter_side` false = the initiating attacker's
@@ -481,6 +683,10 @@ func _deselect() -> void:
 	_targets = []
 	_range_overlay.clear()
 	_forecast_panel.hide_panel()
+	if _menu != null:
+		_menu.close()
+	if _cursor != null:
+		_cursor.active = true
 
 
 func _pop_text(world_pos: Vector2, text: String, color: Color) -> void:
@@ -588,6 +794,10 @@ func _setup_ui() -> void:
 	_level_up_screen = LevelUpScreen.new()
 	_level_up_screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ui_layer.add_child(_level_up_screen)
+	_menu = ChoiceMenu.new()
+	_menu.chosen.connect(_on_menu_chosen)
+	_menu.cancelled.connect(_on_menu_cancelled)
+	_ui_layer.add_child(_menu)
 
 
 func _on_result_dismissed() -> void:
@@ -601,13 +811,22 @@ func _spawn_demo_units() -> void:
 	var soldier: ClassDef = _try_load("res://data/classes/soldier.tres")
 	var sword: WeaponDef = _try_load("res://data/weapons/iron_sword.tres")
 	var lance: WeaponDef = _try_load("res://data/weapons/iron_lance.tres")
+	var axe: WeaponDef = _try_load("res://data/weapons/iron_axe.tres")
 	var heal_staff: WeaponDef = _try_load("res://data/weapons/heal.tres")
+	var vulnerary: ItemDef = _try_load("res://data/items/vulnerary.tres")
 	if myrmidon == null:
 		return
 	var kael_def := _demo_unit("kael", "Kael", myrmidon, sword, 0, 6, {"spd": 12, "skl": 12, "str": 8})
 	kael_def.is_lord = true  # demo lord: his death is a game over (§3)
+	if axe != null:
+		kael_def.extra_weapons = [axe]      # a second weapon so Equip is available
+	if vulnerary != null:
+		kael_def.starting_items = [vulnerary]
 	_lord_unit = add_unit(kael_def, Vector2i(3, 7))
-	add_unit(_demo_unit("brenna", "Brenna", knight, lance, 0, 5, {"def": 10, "hp": 28, "spd": 5}), Vector2i(4, 9))
+	var brenna_def := _demo_unit("brenna", "Brenna", knight, lance, 0, 5, {"def": 10, "hp": 28, "spd": 5})
+	if vulnerary != null:
+		brenna_def.starting_items = [vulnerary]
+	add_unit(brenna_def, Vector2i(4, 9))
 	if heal_staff != null:
 		add_unit(_demo_unit("wren", "Wren", _cleric(), heal_staff, 0, 5, {"mag": 6, "hp": 20, "def": 3}), Vector2i(3, 9))
 	add_unit(_demo_unit("tide_a", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6}), Vector2i(6, 7))
