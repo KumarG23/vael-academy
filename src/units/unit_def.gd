@@ -11,6 +11,8 @@ extends Resource
 @export var house_id: String = ""
 ## Team side for the slice: 0 = player, 1 = enemy.
 @export var team: int = 0
+## Equipped weapon (single slot until inventory lands in WO-2.2). Null = unarmed.
+@export var weapon: WeaponDef
 
 @export_group("Base Stats")
 @export var max_hp: int = 20
@@ -32,6 +34,20 @@ extends Resource
 @export var growth_lck: int = 30
 @export var growth_def: int = 30
 @export var growth_res: int = 20
+
+
+## Combat stat snapshot keyed for Combatant.make().
+func stats() -> Dictionary:
+	return {
+		"hp": max_hp,
+		"str": strength,
+		"mag": magic,
+		"skl": skill,
+		"spd": speed,
+		"lck": luck,
+		"def": defense,
+		"res": resistance,
+	}
 
 
 func movement_type() -> ClassDef.MovementType:

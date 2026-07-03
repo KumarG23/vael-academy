@@ -1,0 +1,88 @@
+extends GutTest
+## WO-1.2: integration — a full player attack round with counter through battle_view,
+## exercising forecast -> resolve -> HP update -> death -> EventBus on the test map.
+
+var _view: Node2D
+var _died: Array = []
+
+
+func before_each() -> void:
+	_died = []
+	EventBus.unit_died.connect(_on_unit_died)
+	var scene: PackedScene = load("res://scenes/battle/battle.tscn")
+	_view = scene.instantiate()
+	_view.strike_delay = 0.0  # resolve strikes without wall-clock pauses
+	add_child_autofree(_view)
+	await wait_physics_frames(2)
+
+
+func after_each() -> void:
+	if EventBus.unit_died.is_connected(_on_unit_died):
+		EventBus.unit_died.disconnect(_on_unit_died)
+
+
+func _on_unit_died(u: Unit) -> void:
+	_died.append(u.unit_def.display_name)
+
+
+func _wait_until_idle(max_frames := 240) -> void:
+	var n := 0
+	while _view._busy and n < max_frames:
+		await wait_physics_frames(1)
+		n += 1
+
+
+func test_full_player_attack_round_with_counter():
+	var kael: Unit = _view.unit_at(Vector2i(3, 7))
+	var enemy: Unit = _view.unit_at(Vector2i(6, 7))
+	assert_not_null(kael, "Kael present")
+	assert_not_null(enemy, "enemy present")
+	var enemy_hp0 := enemy.current_hp
+	var kael_hp0 := kael.current_hp
+
+	# Select Kael and move adjacent to the enemy (land on (5,7)).
+	_view._on_cursor_confirmed(Vector2i(3, 7))
+	assert_eq(_view._selected, kael, "Kael selected")
+	_view._handle_selected_confirm(Vector2i(5, 7))
+	await _wait_until_idle()
+	# move tween may still be finishing
+	var guard := 0
+	while kael.is_moving() and guard < 240:
+		await wait_physics_frames(1)
+		guard += 1
+	assert_eq(kael.cell, Vector2i(5, 7), "Kael moved adjacent")
+	assert_eq(_view._phase, _view.Phase.TARGETING, "targeting phase after move")
+	assert_true(_view._targets.has(enemy), "enemy is targetable")
+
+	# Attack.
+	_view._handle_targeting_confirm(Vector2i(6, 7))
+	await _wait_until_idle()
+
+	assert_lt(enemy.current_hp, enemy_hp0, "enemy took damage from Kael")
+	# Enemy wields a lance and is at range 1 -> it counters (it survives Kael's hit:
+	# 24 HP, sword can't one-round it here), so Kael should have taken counter damage.
+	assert_true(enemy.is_alive(), "enemy survives one round (counter fires)")
+	assert_lt(kael.current_hp, kael_hp0, "Kael took counter damage")
+	assert_true(kael.has_acted, "Kael's action is spent")
+
+
+func test_lethal_attack_removes_unit_and_emits_eventbus():
+	var kael: Unit = _view.unit_at(Vector2i(3, 7))
+	var enemy: Unit = _view.unit_at(Vector2i(6, 7))
+	# Weaken the enemy so Kael's strike is lethal.
+	enemy.current_hp = 1
+
+	_view._on_cursor_confirmed(Vector2i(3, 7))
+	_view._handle_selected_confirm(Vector2i(5, 7))
+	await _wait_until_idle()
+	var guard := 0
+	while kael.is_moving() and guard < 240:
+		await wait_physics_frames(1)
+		guard += 1
+
+	_view._handle_targeting_confirm(Vector2i(6, 7))
+	await _wait_until_idle()
+
+	assert_null(_view.unit_at(Vector2i(6, 7)), "dead enemy removed from the board")
+	assert_true(_died.has("Tidemark Soldier"), "EventBus.unit_died emitted")
+	assert_eq(kael.current_hp, kael.max_hp(), "no counter from a slain enemy")

@@ -1,20 +1,18 @@
 extends Node2D
-## Battle scene root. Renders a chapter map (flat placeholder backdrop until AW-2,
-## per-terrain debug tints, subtle grid overlay, fitted camera, cursor terrain
-## readout) and drives unit selection + movement (WO-0.4):
-##   select unit -> blue move range + red attack range -> pick tile -> unit walks.
+## Battle scene root. Renders a chapter map and drives the player action loop:
+##   select unit -> move range (blue) + attack range (red) -> pick a tile to move ->
+##   choose a target in range -> combat forecast -> confirm -> resolver runs ->
+##   HP bars update, hit/miss/crit feedback, death removes the unit + EventBus.
 ##
-## Presentation/orchestration only. Terrain numbers come from ChapterDef/TerrainDB;
-## reachability and paths come from the pure Pathfinder/MovementRange.
+## Orchestration/presentation only. Terrain numbers come from ChapterDef/TerrainDB;
+## reachability from Pathfinder/MovementRange; combat from the pure CombatResolver.
 
-## Chapter to render. Assigned in the scene; falls back to a plains map if unset.
 @export var chapter: ChapterDef
-## Flat placeholder fill until a painted backdrop exists (§8 art rule 2).
 @export var backdrop_color: Color = Color(0.16, 0.20, 0.15)
-## Attack range steps for the placeholder demo (melee). Real weapon ranges: WO-1.1.
 @export var demo_attack_ranges: Array = [1]
+## Pause between animated strikes (seconds). Tests set this to 0 for speed.
+@export var strike_delay: float = 0.45
 
-## Subtle per-terrain tints so the logical layer is legible before art lands.
 const TERRAIN_TINTS := {
 	Terrain.Type.PLAINS: Color(0.0, 0.0, 0.0, 0.0),
 	Terrain.Type.FOREST: Color(0.20, 0.45, 0.20, 0.35),
@@ -24,17 +22,25 @@ const TERRAIN_TINTS := {
 	Terrain.Type.WATER: Color(0.15, 0.35, 0.60, 0.55),
 }
 
+enum Phase { IDLE, SELECTED, TARGETING }
+
 var _grid: Grid
 var _terrain_db: TerrainDB
 var _overlay: GridOverlay
 var _range_overlay: RangeOverlay
 var _units_root: Node2D
 var _cursor: BattleCursor
+var _ui_layer: CanvasLayer
 var _debug_label: Label
+var _forecast_panel: CombatForecastPanel
+var _rng: CombatRNG
 
 var _units: Array[Unit] = []
+var _phase: Phase = Phase.IDLE
 var _selected: Unit = null
 var _standable: Array = []
+var _targets: Array[Unit] = []
+var _busy := false
 
 
 func _ready() -> void:
@@ -42,12 +48,13 @@ func _ready() -> void:
 		chapter = _build_fallback_chapter()
 	_terrain_db = TerrainDB.create_default()
 	_grid = chapter.make_grid()
+	_rng = CombatRNG.new(int(Time.get_ticks_usec()))
 	_setup_overlay()
 	_setup_range_overlay()
 	_setup_units_root()
 	_setup_cursor()
 	_setup_camera()
-	_setup_debug_label()
+	_setup_ui()
 	_spawn_demo_units()
 	queue_redraw()
 
@@ -70,20 +77,20 @@ func _draw_terrain_tints() -> void:
 				draw_rect(Rect2(x * cs, y * cs, cs, cs), tint, true)
 
 
-# --- unit / occupancy helpers -------------------------------------------------
+# --- unit / terrain helpers ---------------------------------------------------
 
 func unit_at(cell: Vector2i) -> Unit:
 	for u in _units:
-		if u.cell == cell:
+		if u.is_alive() and u.cell == cell:
 			return u
 	return null
 
 
-## cell -> team, for every occupied tile. Consumed by BattleMoveContext.
 func occupancy() -> Dictionary:
 	var occ := {}
 	for u in _units:
-		occ[u.cell] = u.team
+		if u.is_alive():
+			occ[u.cell] = u.team
 	return occ
 
 
@@ -95,75 +102,215 @@ func add_unit(def: UnitDef, cell: Vector2i) -> Unit:
 	return u
 
 
-# --- selection flow -----------------------------------------------------------
+func _terrain_def_at(cell: Vector2i) -> int:
+	return _terrain_db.defense(chapter.get_terrain(cell.x, cell.y))
+
+
+func _terrain_avoid_at(cell: Vector2i) -> int:
+	return _terrain_db.avoid(chapter.get_terrain(cell.x, cell.y))
+
+
+static func _manhattan(a: Vector2i, b: Vector2i) -> int:
+	return absi(a.x - b.x) + absi(a.y - b.y)
+
+
+## Living enemies of `unit` that it could strike from `from_cell`.
+func _attackable_targets(from_cell: Vector2i, unit: Unit) -> Array[Unit]:
+	var out: Array[Unit] = []
+	if not unit.can_attack():
+		return out
+	var w := unit.weapon()
+	for u in _units:
+		if u.team != unit.team and u.is_alive() and w.in_range(_manhattan(from_cell, u.cell)):
+			out.append(u)
+	return out
+
+
+# --- selection / action flow --------------------------------------------------
+
+func _on_cell_changed(cell: Vector2i) -> void:
+	_update_debug(cell)
+	if _phase == Phase.TARGETING:
+		var enemy := unit_at(cell)
+		if enemy != null and _targets.has(enemy):
+			_show_forecast_for(enemy)
+
 
 func _on_cursor_confirmed(cell: Vector2i) -> void:
-	if _selected == null:
-		_try_select(cell)
-	else:
-		_try_move_selected(cell)
+	if _busy:
+		return
+	match _phase:
+		Phase.IDLE:
+			_try_select(cell)
+		Phase.SELECTED:
+			await _handle_selected_confirm(cell)
+		Phase.TARGETING:
+			await _handle_targeting_confirm(cell)
 
 
 func _on_cursor_cancelled(_cell: Vector2i) -> void:
-	if _selected != null:
+	if _busy:
+		return
+	if _phase == Phase.TARGETING:
+		# Cancel the attack but keep the move: end the action as a "wait".
+		_finish_action()
+	elif _phase == Phase.SELECTED:
 		_deselect()
 
 
 func _try_select(cell: Vector2i) -> void:
 	var u := unit_at(cell)
-	if u == null:
+	if u == null or u.team != 0 or u.has_acted or not u.is_alive():
 		return
 	_selected = u
-	_standable = _compute_standable(u)
-	var attack := MovementRange.attack_tiles(_standable, demo_attack_ranges, _make_context(u))
+	_phase = Phase.SELECTED
+	_standable = MovementRange.standable_tiles(u.cell, _mov(u), _make_context(u))
+	var attack := MovementRange.attack_tiles(_standable, _weapon_ranges(u), _make_context(u))
 	_range_overlay.show_ranges(_standable, attack)
-	print("selected %s at (%d, %d) — %d move tiles" % [
-		_unit_name(u), cell.x, cell.y, _standable.size(),
-	])
 
 
-func _try_move_selected(cell: Vector2i) -> void:
+func _handle_selected_confirm(cell: Vector2i) -> void:
 	if _selected.is_moving():
 		return
-	if not _standable.has(cell):
-		# Clicking off-range cancels the selection (FE convention).
+	var occupied_by_other := unit_at(cell) != null and cell != _selected.cell
+	if not _standable.has(cell) or occupied_by_other:
 		_deselect()
 		return
+	_range_overlay.clear()
 	var mover := _selected
-	var path := Pathfinder.find_path(mover.cell, cell, _make_context(mover))
-	_deselect()
-	if path.is_empty():
+	if cell != mover.cell:
+		var path := Pathfinder.find_path(mover.cell, cell, _make_context(mover))
+		if not path.is_empty():
+			_busy = true
+			await mover.move_along_path(path)
+			_busy = false
+	_arrive(mover)
+
+
+## After a unit lands, decide whether to offer targets or end the action.
+func _arrive(unit: Unit) -> void:
+	_targets = _attackable_targets(unit.cell, unit)
+	if _targets.is_empty():
+		_finish_action()
 		return
-	await mover.move_along_path(path)
-	print("%s moved to (%d, %d)" % [_unit_name(mover), cell.x, cell.y])
+	_phase = Phase.TARGETING
+	_cursor.move_to(_targets[0].cell)
+	_show_forecast_for(_targets[0])
+
+
+func _handle_targeting_confirm(cell: Vector2i) -> void:
+	var enemy := unit_at(cell)
+	if enemy == null or not _targets.has(enemy):
+		_finish_action()  # confirming off-target = wait
+		return
+	await _execute_attack(_selected, enemy)
+
+
+func _show_forecast_for(enemy: Unit) -> void:
+	var attacker := _selected
+	var dist := _manhattan(attacker.cell, enemy.cell)
+	var atk_c := attacker.to_combatant(_terrain_def_at(attacker.cell), _terrain_avoid_at(attacker.cell))
+	var def_c := enemy.to_combatant(_terrain_def_at(enemy.cell), _terrain_avoid_at(enemy.cell))
+	var ex := CombatForecast.exchange(atk_c, def_c, dist)
+	_forecast_panel.show_forecast(attacker, enemy, ex)
+
+
+func _execute_attack(attacker: Unit, defender: Unit) -> void:
+	_busy = true
+	_forecast_panel.hide_panel()
+	var dist := _manhattan(attacker.cell, defender.cell)
+	var atk_c := attacker.to_combatant(_terrain_def_at(attacker.cell), _terrain_avoid_at(attacker.cell))
+	var def_c := defender.to_combatant(_terrain_def_at(defender.cell), _terrain_avoid_at(defender.cell))
+	var result := CombatResolver.resolve(atk_c, def_c, dist, _rng)
+
+	for strike in result.strikes:
+		var target := defender if strike.defender_name == defender.unit_def.display_name else attacker
+		_play_strike(strike, target)
+		if strike_delay > 0.0:
+			await get_tree().create_timer(strike_delay).timeout
+		else:
+			await get_tree().process_frame
+		if not target.is_alive():
+			_kill(target)
+
+	_busy = false
+	_finish_action()
+
+
+func _play_strike(strike: StrikeResult, target: Unit) -> void:
+	if not strike.connected:
+		_pop_text(target.position, "Miss", Color(0.85, 0.85, 0.9))
+		target.flash()
+		return
+	target.set_hp(strike.defender_hp_after)
+	var text := ("CRIT " + str(strike.damage)) if strike.was_crit else str(strike.damage)
+	var color := Color(1.0, 0.85, 0.2) if strike.was_crit else Color(1.0, 0.4, 0.35)
+	_pop_text(target.position, text, color)
+
+
+func _kill(unit: Unit) -> void:
+	_pop_text(unit.position, "X", Color(0.9, 0.2, 0.2))
+	EventBus.unit_died.emit(unit)
+	_units.erase(unit)
+	if unit == _selected:
+		_selected = null
+	unit.queue_free()
+
+
+func _finish_action() -> void:
+	if _selected != null and is_instance_valid(_selected):
+		_selected.has_acted = true
+		_selected.queue_redraw()
+	_forecast_panel.hide_panel()
+	_deselect()
 
 
 func _deselect() -> void:
 	_selected = null
+	_phase = Phase.IDLE
 	_standable = []
+	_targets = []
 	_range_overlay.clear()
+	_forecast_panel.hide_panel()
 
 
-func _compute_standable(u: Unit) -> Array:
-	return MovementRange.standable_tiles(u.cell, _mov(u), _make_context(u))
-
-
-func _make_context(u: Unit) -> BattleMoveContext:
-	return BattleMoveContext.new(
-		chapter, _terrain_db, _movement_type(u), occupancy(), u.team
-	)
+func _pop_text(world_pos: Vector2, text: String, color: Color) -> void:
+	var label := Label.new()
+	label.text = text
+	label.add_theme_font_size_override("font_size", int(_grid.cell_size * 0.5))
+	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_outline_color", Color.BLACK)
+	label.add_theme_constant_override("outline_size", 8)
+	label.position = world_pos + Vector2(-20, -_grid.cell_size * 0.5)
+	label.z_index = 100
+	_units_root.add_child(label)
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(label, "position:y", label.position.y - 60.0, 0.7)
+	tween.tween_property(label, "modulate:a", 0.0, 0.7).set_delay(0.2)
+	tween.chain().tween_callback(label.queue_free)
 
 
 func _mov(u: Unit) -> int:
 	return u.unit_def.movement if u.unit_def != null else 5
 
 
+func _weapon_ranges(u: Unit) -> Array:
+	var w := u.weapon()
+	if w == null or not w.can_attack():
+		return []
+	var ranges: Array = []
+	for r in range(w.min_range, w.max_range + 1):
+		ranges.append(r)
+	return ranges if not ranges.is_empty() else demo_attack_ranges
+
+
+func _make_context(u: Unit) -> BattleMoveContext:
+	return BattleMoveContext.new(chapter, _terrain_db, _movement_type(u), occupancy(), u.team)
+
+
 func _movement_type(u: Unit) -> ClassDef.MovementType:
 	return u.unit_def.movement_type() if u.unit_def != null else ClassDef.MovementType.FOOT
-
-
-func _unit_name(u: Unit) -> String:
-	return u.unit_def.display_name if u.unit_def != null else "unit"
 
 
 # --- setup --------------------------------------------------------------------
@@ -189,7 +336,7 @@ func _setup_units_root() -> void:
 func _setup_cursor() -> void:
 	_cursor = BattleCursor.new()
 	add_child(_cursor)
-	_cursor.cell_changed.connect(_update_debug)
+	_cursor.cell_changed.connect(_on_cell_changed)
 	_cursor.confirmed.connect(_on_cursor_confirmed)
 	_cursor.cancelled.connect(_on_cursor_cancelled)
 	_cursor.setup(_grid, Vector2i(_grid.width / 2, _grid.height / 2))
@@ -206,42 +353,53 @@ func _setup_camera() -> void:
 	camera.make_current()
 
 
-func _setup_debug_label() -> void:
-	var layer := CanvasLayer.new()
-	add_child(layer)
+func _setup_ui() -> void:
+	_ui_layer = CanvasLayer.new()
+	add_child(_ui_layer)
 	_debug_label = Label.new()
 	_debug_label.position = Vector2(12, 10)
 	_debug_label.add_theme_color_override("font_color", Color.WHITE)
 	_debug_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	_debug_label.add_theme_constant_override("outline_size", 6)
-	layer.add_child(_debug_label)
+	_ui_layer.add_child(_debug_label)
+	_forecast_panel = CombatForecastPanel.new()
+	_forecast_panel.visible = false
+	var vp := get_viewport_rect().size
+	_forecast_panel.position = Vector2(vp.x - CombatForecastPanel.PANEL_SIZE.x - 20, vp.y - CombatForecastPanel.PANEL_SIZE.y - 20)
+	_ui_layer.add_child(_forecast_panel)
 
 
-## Places a few demo units so the movement loop is playable on the test map.
-## Real deployment comes from ChapterDef in WO-1.4/WO-4.1.
 func _spawn_demo_units() -> void:
 	var myrmidon: ClassDef = _try_load("res://data/classes/myrmidon.tres")
 	var knight: ClassDef = _try_load("res://data/classes/knight.tres")
 	var soldier: ClassDef = _try_load("res://data/classes/soldier.tres")
+	var sword: WeaponDef = _try_load("res://data/weapons/iron_sword.tres")
+	var lance: WeaponDef = _try_load("res://data/weapons/iron_lance.tres")
 	if myrmidon == null:
-		return  # demo data not authored; map still renders + cursor works
-	var kael := _make_demo_unit("kael", "Kael", myrmidon, 0, 6)
-	var brenna := _make_demo_unit("brenna", "Brenna", knight, 0, 8)
-	var enemy := _make_demo_unit("tide_soldier", "Tidemark Soldier", soldier, 1, 4)
-	add_unit(kael, Vector2i(3, 7))
-	add_unit(brenna, Vector2i(4, 9))
-	add_unit(enemy, Vector2i(8, 7))
+		return
+	add_unit(_demo_unit("kael", "Kael", myrmidon, sword, 0, 6, {"spd": 12, "skl": 12, "str": 8}), Vector2i(3, 7))
+	add_unit(_demo_unit("brenna", "Brenna", knight, lance, 0, 5, {"def": 10, "hp": 28, "spd": 5}), Vector2i(4, 9))
+	add_unit(_demo_unit("tide_a", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6}), Vector2i(6, 7))
+	add_unit(_demo_unit("tide_b", "Tidemark Soldier", soldier, sword, 1, 5, {"spd": 7, "hp": 22}), Vector2i(8, 8))
 
 
-func _make_demo_unit(
-	id: String, disp: String, cls: ClassDef, team: int, mov: int
+func _demo_unit(
+	id: String, disp: String, cls: ClassDef, wpn: WeaponDef, team: int, mov: int, overrides: Dictionary
 ) -> UnitDef:
 	var d := UnitDef.new()
 	d.id = id
 	d.display_name = disp
 	d.char_class = cls
+	d.weapon = wpn
 	d.team = team
 	d.movement = mov
+	d.max_hp = overrides.get("hp", 24)
+	d.strength = overrides.get("str", 7)
+	d.skill = overrides.get("skl", 7)
+	d.speed = overrides.get("spd", 8)
+	d.luck = overrides.get("lck", 4)
+	d.defense = overrides.get("def", 5)
+	d.resistance = overrides.get("res", 2)
 	return d
 
 
@@ -258,12 +416,10 @@ func _update_debug(cell: Vector2i) -> void:
 	var info := _terrain_db.get_info(chapter.get_terrain(cell.x, cell.y))
 	var move_txt := "impassable" if info.impassable else "move %d" % info.move_cost
 	var occupant := unit_at(cell)
-	var who := "  <%s>" % _unit_name(occupant) if occupant != null else ""
-	var line := "(%d, %d)  %s  [%s, def +%d, avoid +%d]%s" % [
+	var who := "  <%s %d/%d>" % [occupant.unit_def.display_name, occupant.current_hp, occupant.max_hp()] if occupant != null else ""
+	_debug_label.text = "(%d, %d)  %s  [%s, def +%d, avoid +%d]%s" % [
 		cell.x, cell.y, info.display_name, move_txt, info.defense, info.avoid, who,
 	]
-	_debug_label.text = line
-	print(line)  # accept criterion: "hovering prints terrain stats"
 
 
 func _build_fallback_chapter() -> ChapterDef:
