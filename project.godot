@@ -7,7 +7,7 @@ config_version=5
 
 [application]
 
-config/name="Emberline Tactics"
+config/name="Vael Academy"
 config/description="A Fire Emblem-style tactics RPG. See MASTER_PLAN.md."
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
