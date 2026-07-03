@@ -11,6 +11,12 @@ func before_each() -> void:
 	_view.strike_delay = 0.0
 	add_child_autofree(_view)
 	await wait_physics_frames(2)
+	# This suite exercises the turn LOOP, not win/loss: make BOTH sides effectively
+	# unkillable (players also counter enemies) so no rout/lord-death ends the
+	# battle early (WO-1.4). Players still take damage, just never die.
+	for u in _view._units:
+		u.unit_def.max_hp = 9999
+		u.current_hp = 9999
 
 
 func _wait_idle(max_frames := 4000) -> void:

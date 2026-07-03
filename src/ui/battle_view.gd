@@ -37,12 +37,16 @@ var _rng: CombatRNG
 
 var _turn := TurnManager.new()
 var _turn_banner: TurnBanner
+var _result_screen: ResultScreen
 var _units: Array[Unit] = []
 var _phase: Phase = Phase.IDLE
 var _selected: Unit = null
 var _standable: Array = []
 var _targets: Array[Unit] = []
 var _busy := false
+var _battle_over := false
+var _lord_unit: Unit = null
+var _lord_alive := true
 
 
 func _ready() -> void:
@@ -69,6 +73,19 @@ func _draw() -> void:
 	else:
 		draw_rect(Rect2(Vector2.ZERO, size), backdrop_color, true)
 	_draw_terrain_tints()
+	_draw_seize_marker()
+
+
+func _draw_seize_marker() -> void:
+	if chapter.objective != ChapterDef.Objective.SEIZE:
+		return
+	var c := chapter.seize_cell
+	if not _grid.in_bounds(c):
+		return
+	var cs := _grid.cell_size
+	var rect := Rect2(c.x * cs + 6, c.y * cs + 6, cs - 12, cs - 12)
+	draw_rect(rect, Color(0.95, 0.82, 0.35, 0.18), true)
+	draw_rect(rect, Color(0.95, 0.82, 0.35, 0.9), false, 3.0)
 
 
 func _draw_terrain_tints() -> void:
@@ -143,13 +160,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	# End the player phase on 'T' (or Tab) when idle.
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_T or event.keycode == KEY_TAB:
-			if _turn.is_player_phase() and not _busy and _phase == Phase.IDLE:
+			if not _battle_over and _turn.is_player_phase() and not _busy and _phase == Phase.IDLE:
 				_end_player_phase()
 				get_viewport().set_input_as_handled()
 
 
 func _on_cursor_confirmed(cell: Vector2i) -> void:
-	if _busy or not _turn.is_player_phase():
+	if _busy or _battle_over or not _turn.is_player_phase():
 		return
 	match _phase:
 		Phase.IDLE:
@@ -248,6 +265,7 @@ func _execute_attack(attacker: Unit, defender: Unit) -> void:
 			_kill(target)
 
 	_busy = was_busy
+	_check_objective()
 
 
 func _play_strike(strike: StrikeResult, target: Unit) -> void:
@@ -264,6 +282,8 @@ func _play_strike(strike: StrikeResult, target: Unit) -> void:
 func _kill(unit: Unit) -> void:
 	_pop_text(unit.position, "X", Color(0.9, 0.2, 0.2))
 	EventBus.unit_died.emit(unit)
+	if unit == _lord_unit:
+		_lord_alive = false
 	_units.erase(unit)
 	if unit == _selected:
 		_selected = null
@@ -276,6 +296,9 @@ func _finish_action() -> void:
 		_selected.queue_redraw()
 	_forecast_panel.hide_panel()
 	_deselect()
+	_check_objective()  # a move onto the seize tile can win here
+	if _battle_over:
+		return
 	if _turn.is_player_phase() and _all_player_units_acted():
 		_end_player_phase()
 
@@ -309,6 +332,8 @@ func _end_player_phase() -> void:
 	_deselect()
 	_turn.advance()  # -> enemy phase
 	await _run_enemy_phase()
+	if _battle_over:
+		return
 	_turn.advance()  # -> back to player, next round
 	_begin_player_phase()
 
@@ -320,12 +345,46 @@ func _run_enemy_phase() -> void:
 	var enemies := _living_units_on_team(1)
 	enemies.sort_custom(func(a, b): return AIBrain._cell_key(a.cell) < AIBrain._cell_key(b.cell))
 	for enemy in enemies:
+		if _battle_over:
+			break
 		if not is_instance_valid(enemy) or not enemy.is_alive():
 			continue
-		if _living_units_on_team(0).is_empty():
-			break  # nothing left to fight (WO-1.4 turns this into defeat)
 		await _execute_enemy_unit(enemy)
 	_busy = false
+	_check_objective()
+
+
+# --- win / loss ---------------------------------------------------------------
+
+func _check_objective() -> void:
+	if _battle_over:
+		return
+	var has_lord := _lord_unit != null
+	var lord_cell := Vector2i(-1, -1)
+	if has_lord and _lord_alive and is_instance_valid(_lord_unit):
+		lord_cell = _lord_unit.cell
+	var outcome := ObjectiveResolver.evaluate(
+		chapter.objective, chapter.seize_cell,
+		has_lord, _lord_alive, lord_cell,
+		_living_units_on_team(0).size(), _living_units_on_team(1).size(),
+	)
+	if outcome == ObjectiveResolver.Outcome.VICTORY:
+		_end_battle(true)
+	elif outcome == ObjectiveResolver.Outcome.DEFEAT:
+		_end_battle(false)
+
+
+func _end_battle(victory: bool) -> void:
+	if _battle_over:
+		return
+	_battle_over = true
+	_deselect()
+	_range_overlay.clear()
+	if victory:
+		EventBus.battle_won.emit()
+		_result_screen.show_victory()
+	else:
+		_result_screen.show_defeat()
 
 
 func _execute_enemy_unit(enemy: Unit) -> void:
@@ -444,6 +503,16 @@ func _setup_ui() -> void:
 	_turn_banner.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_turn_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ui_layer.add_child(_turn_banner)
+	_result_screen = ResultScreen.new()
+	_result_screen.visible = false
+	_result_screen.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_result_screen.dismissed.connect(_on_result_dismissed)
+	_ui_layer.add_child(_result_screen)
+
+
+func _on_result_dismissed() -> void:
+	# Reload the battle for another attempt (title/hub flow arrives in WO-4.3).
+	get_tree().reload_current_scene()
 
 
 func _spawn_demo_units() -> void:
@@ -454,7 +523,9 @@ func _spawn_demo_units() -> void:
 	var lance: WeaponDef = _try_load("res://data/weapons/iron_lance.tres")
 	if myrmidon == null:
 		return
-	add_unit(_demo_unit("kael", "Kael", myrmidon, sword, 0, 6, {"spd": 12, "skl": 12, "str": 8}), Vector2i(3, 7))
+	var kael_def := _demo_unit("kael", "Kael", myrmidon, sword, 0, 6, {"spd": 12, "skl": 12, "str": 8})
+	kael_def.is_lord = true  # demo lord: his death is a game over (§3)
+	_lord_unit = add_unit(kael_def, Vector2i(3, 7))
 	add_unit(_demo_unit("brenna", "Brenna", knight, lance, 0, 5, {"def": 10, "hp": 28, "spd": 5}), Vector2i(4, 9))
 	add_unit(_demo_unit("tide_a", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6}), Vector2i(6, 7))
 	add_unit(_demo_unit("tide_b", "Tidemark Soldier", soldier, sword, 1, 5, {"spd": 7, "hp": 22}), Vector2i(8, 8))

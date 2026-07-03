@@ -54,6 +54,10 @@ func movement_type() -> ClassDef.MovementType:
 	return unit_def.movement_type() if unit_def != null else ClassDef.MovementType.FOOT
 
 
+func is_lord() -> bool:
+	return unit_def != null and unit_def.is_lord
+
+
 func move_points() -> int:
 	return unit_def.movement if unit_def != null else 5
 

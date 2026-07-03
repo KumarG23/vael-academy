@@ -4,8 +4,15 @@ extends Resource
 ## + optional backdrop. Objectives, deployed units, and dialogue attach in later
 ## work orders (WO-1.4, WO-4.1).
 
+## Victory condition for the chapter (§6). ROUT: defeat every enemy. SEIZE: the
+## lord occupies `seize_cell`.
+enum Objective { ROUT, SEIZE }
+
 @export var id: String = ""
 @export var display_name: String = ""
+@export var objective: Objective = Objective.ROUT
+## Tile the lord must seize for a SEIZE objective (ignored for ROUT).
+@export var seize_cell: Vector2i = Vector2i(-1, -1)
 @export var width: int = 20
 @export var height: int = 15
 ## Row-major terrain grid, length == width * height, each value a Terrain.Type.

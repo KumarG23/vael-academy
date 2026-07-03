@@ -11,6 +11,9 @@ extends Resource
 @export var house_id: String = ""
 ## Team side for the slice: 0 = player, 1 = enemy.
 @export var team: int = 0
+## The lord/house leader. Their death is an instant game over (§3 permadeath) and
+## they are the unit that seizes for a SEIZE objective.
+@export var is_lord: bool = false
 ## Equipped weapon (single slot until inventory lands in WO-2.2). Null = unarmed.
 @export var weapon: WeaponDef
 
