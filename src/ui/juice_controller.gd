@@ -23,6 +23,11 @@ func setup(config: JuiceConfig, camera: Camera2D, numbers_root: Node2D, splash: 
 	_splash = splash
 
 
+func _exit_tree() -> void:
+	# If we're freed mid-hit-stop, don't leave the engine frozen.
+	Engine.time_scale = 1.0
+
+
 func _process(delta: float) -> void:
 	if _shake_amount <= 0.0 or _camera == null:
 		return

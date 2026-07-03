@@ -68,6 +68,7 @@ var _lord_alive := true
 
 
 func _ready() -> void:
+	Engine.time_scale = 1.0  # defensive: never inherit a hit-stop freeze from before
 	if chapter == null:
 		chapter = _build_fallback_chapter()
 	_terrain_db = TerrainDB.create_default()
