@@ -21,6 +21,9 @@ var has_acted: bool = false
 var level: int = 1
 var xp: int = 0
 var inventory := Inventory.new()
+## Sentinels start asleep and wake when a player enters their threat range (§5).
+## Aggressors and bosses are always "awake".
+var ai_awake := true
 
 # Permanent stat gains from level-ups, added on top of the UnitDef base. Keeps the
 # shared UnitDef resource immutable while stats grow per-instance.
@@ -47,6 +50,7 @@ func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 		var weapons: Array = [def.weapon]
 		weapons.append_array(def.extra_weapons)
 		inventory = Inventory.from_starting(weapons, def.starting_items)
+		ai_awake = def.ai_behavior != AIBrain.Behavior.SENTINEL
 	_grid = grid
 	cell = start_cell
 	position = _grid.cell_center(cell)
@@ -98,6 +102,10 @@ func movement_type() -> ClassDef.MovementType:
 
 func is_lord() -> bool:
 	return unit_def != null and unit_def.is_lord
+
+
+func ai_behavior() -> AIBrain.Behavior:
+	return unit_def.ai_behavior if unit_def != null else AIBrain.Behavior.AGGRESSOR
 
 
 func move_points() -> int:

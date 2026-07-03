@@ -1,13 +1,19 @@
 class_name AIBrain
 extends RefCounted
-## Enemy AI (§5). WO-1.3 implements the Aggressor tier: each enemy phase, pick the
-## reachable target maximizing (expected damage dealt − expected damage received)
-## using the same CombatForecast the player sees. Prefer kills. If no target is
-## reachable, move toward the nearest one. Deterministic given a seed (this decision
-## layer is fully deterministic; only the combat rolls consume RNG).
+## Enemy AI (§5), deterministic given a seed (only combat rolls consume RNG).
+##
+## Behaviors:
+##  - AGGRESSOR: each phase, pick the reachable target maximizing expected
+##    (damage dealt − damage received) via CombatForecast; prefer kills; if none is
+##    reachable, advance toward the nearest.
+##  - SENTINEL: hold position until a player enters its threat range, then act as an
+##    Aggressor (waking is tracked on the Unit by the battle scene).
+##  - BOSS: never leaves its tile; only attacks what it can reach from where it stands.
 ##
 ## Tiebreakers (§5): kill > lowest counter-damage > lowest-HP target, then a stable
 ## positional tiebreak so runs are reproducible.
+
+enum Behavior { AGGRESSOR, SENTINEL, BOSS }
 
 
 ## Evaluate one attack option from a forecast exchange. `atk_strikes`/`def_strikes`
@@ -33,33 +39,18 @@ static func evaluate(exchange: Dictionary, target_hp: int) -> Dictionary:
 
 
 ## Decide this unit's action. `all_units` includes the actor and its enemies.
+## A BOSS is pinned to its tile; other behaviors may move.
 static func decide(
-	actor: Unit, all_units: Array, chapter: ChapterDef, terrain_db: TerrainDB
+	actor: Unit, all_units: Array, chapter: ChapterDef, terrain_db: TerrainDB,
+	behavior: Behavior = Behavior.AGGRESSOR
 ) -> AIDecision:
 	var enemies := _living_enemies(actor, all_units)
 	if enemies.is_empty():
 		return AIDecision.wait_at(actor.cell)
 
-	var occ := _occupancy(all_units)
-	var ctx := BattleMoveContext.new(chapter, terrain_db, actor.movement_type(), occ, actor.team)
-	var standable := MovementRange.standable_tiles(actor.cell, _mov(actor), ctx)
-
-	var best: Dictionary = {}
-	if actor.can_attack():
-		for target in enemies:
-			for tile in standable:
-				var dist := _manhattan(tile, target.cell)
-				if not actor.weapon().in_range(dist):
-					continue
-				var ex := _forecast(actor, tile, target, chapter, terrain_db, dist)
-				var ev := evaluate(ex, target.current_hp)
-				var cand := {
-					"tile": tile, "target": target,
-					"kills": ev["kills"], "score": ev["score"], "received": ev["received"],
-					"target_hp": target.current_hp,
-				}
-				if best.is_empty() or _is_better(cand, best):
-					best = cand
+	# A boss only ever attacks from where it stands; everyone else uses full movement.
+	var standable := _reachable_tiles(actor, all_units, chapter, terrain_db, behavior)
+	var best := _best_attack(actor, enemies, standable, chapter, terrain_db)
 
 	if not best.is_empty():
 		var d := AIDecision.new()
@@ -68,8 +59,79 @@ static func decide(
 		d.score = best["score"]
 		return d
 
-	# No target reachable — move toward the nearest enemy (Aggressor advance).
+	# No target reachable. A boss holds; an aggressor advances on the nearest foe.
+	if behavior == Behavior.BOSS:
+		return AIDecision.wait_at(actor.cell)
 	return _advance_toward_nearest(actor, enemies, standable)
+
+
+## Tiles the actor could attack this turn (its threat range). BOSS-aware: a boss
+## threatens only from its current tile. Used for the threat overlay and for
+## waking sentinels.
+static func threat_tiles(
+	actor: Unit, all_units: Array, chapter: ChapterDef, terrain_db: TerrainDB,
+	behavior: Behavior = Behavior.AGGRESSOR
+) -> Array:
+	if not actor.can_attack():
+		return []
+	var standable := _reachable_tiles(actor, all_units, chapter, terrain_db, behavior)
+	var ranges: Array = []
+	for r in range(actor.weapon().min_range, actor.weapon().max_range + 1):
+		ranges.append(r)
+	var occ := _occupancy(all_units)
+	var ctx := BattleMoveContext.new(chapter, terrain_db, actor.movement_type(), occ, actor.team)
+	return MovementRange.attack_tiles(standable, ranges, ctx)
+
+
+## True if any living enemy of `actor` stands within its threat range (sentinel wake).
+static func has_enemy_in_threat(
+	actor: Unit, all_units: Array, chapter: ChapterDef, terrain_db: TerrainDB,
+	behavior: Behavior = Behavior.AGGRESSOR
+) -> bool:
+	var threat := threat_tiles(actor, all_units, chapter, terrain_db, behavior)
+	if threat.is_empty():
+		return false
+	var threatened := {}
+	for t in threat:
+		threatened[t] = true
+	for e in _living_enemies(actor, all_units):
+		if threatened.has(e.cell):
+			return true
+	return false
+
+
+static func _reachable_tiles(
+	actor: Unit, all_units: Array, chapter: ChapterDef, terrain_db: TerrainDB, behavior: Behavior
+) -> Array:
+	if behavior == Behavior.BOSS:
+		return [actor.cell]
+	var occ := _occupancy(all_units)
+	var ctx := BattleMoveContext.new(chapter, terrain_db, actor.movement_type(), occ, actor.team)
+	return MovementRange.standable_tiles(actor.cell, _mov(actor), ctx)
+
+
+## Best (tile, target) attack option over `standable`, or {} if none.
+static func _best_attack(
+	actor: Unit, enemies: Array, standable: Array, chapter: ChapterDef, terrain_db: TerrainDB
+) -> Dictionary:
+	var best: Dictionary = {}
+	if not actor.can_attack():
+		return best
+	for target in enemies:
+		for tile in standable:
+			var dist := _manhattan(tile, target.cell)
+			if not actor.weapon().in_range(dist):
+				continue
+			var ex := _forecast(actor, tile, target, chapter, terrain_db, dist)
+			var ev := evaluate(ex, target.current_hp)
+			var cand := {
+				"tile": tile, "target": target,
+				"kills": ev["kills"], "score": ev["score"], "received": ev["received"],
+				"target_hp": target.current_hp,
+			}
+			if best.is_empty() or _is_better(cand, best):
+				best = cand
+	return best
 
 
 # --- selection -----------------------------------------------------------------

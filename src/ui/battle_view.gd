@@ -31,6 +31,7 @@ var _grid: Grid
 var _terrain_db: TerrainDB
 var _overlay: GridOverlay
 var _range_overlay: RangeOverlay
+var _threat_overlay: ThreatOverlay
 var _units_root: Node2D
 var _cursor: BattleCursor
 var _ui_layer: CanvasLayer
@@ -69,6 +70,7 @@ func _ready() -> void:
 	_rng = CombatRNG.new(combat_seed if combat_seed >= 0 else int(Time.get_ticks_usec()))
 	_setup_overlay()
 	_setup_range_overlay()
+	_setup_threat_overlay()
 	_setup_units_root()
 	_setup_cursor()
 	_setup_camera()
@@ -183,12 +185,35 @@ func _on_cell_changed(cell: Vector2i) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	# End the player phase on 'T' (or Tab) when idle.
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_T or event.keycode == KEY_TAB:
-			if not _battle_over and _turn.is_player_phase() and not _busy and _phase == Phase.IDLE:
-				_end_player_phase()
-				get_viewport().set_input_as_handled()
+	if not (event is InputEventKey and event.pressed and not event.echo):
+		return
+	# 'T'/Tab ends the player phase when idle.
+	if event.keycode == KEY_T or event.keycode == KEY_TAB:
+		if not _battle_over and _turn.is_player_phase() and not _busy and _phase == Phase.IDLE:
+			_end_player_phase()
+			get_viewport().set_input_as_handled()
+	# 'H' toggles the enemy threat-range overlay.
+	elif event.keycode == KEY_H:
+		_toggle_threat_overlay()
+		get_viewport().set_input_as_handled()
+
+
+func _toggle_threat_overlay() -> void:
+	var show_it := not _threat_overlay.is_shown()
+	if show_it:
+		_refresh_threat_overlay()
+	_threat_overlay.set_shown(show_it)
+
+
+## Recompute the union of every living enemy's threat range (boss-aware).
+func _refresh_threat_overlay() -> void:
+	var tiles := {}
+	for u in _units:
+		if u.team == 0 or not u.is_alive():
+			continue
+		for t in AIBrain.threat_tiles(u, _units, chapter, _terrain_db, u.ai_behavior()):
+			tiles[t] = true
+	_threat_overlay.set_tiles(tiles.keys())
 
 
 func _on_cursor_confirmed(cell: Vector2i) -> void:
@@ -604,6 +629,8 @@ func _begin_player_phase() -> void:
 		u.has_acted = false
 		u.queue_redraw()
 	_deselect()
+	if _threat_overlay.is_shown():
+		_refresh_threat_overlay()  # enemies moved last phase
 	_turn_banner.announce("Player Phase — Round %d" % _turn.round_number, true)
 
 
@@ -667,7 +694,17 @@ func _end_battle(victory: bool) -> void:
 
 
 func _execute_enemy_unit(enemy: Unit) -> void:
-	var decision := AIBrain.decide(enemy, _units, chapter, _terrain_db)
+	var behavior := enemy.ai_behavior()
+	# A sleeping sentinel holds until a player enters its threat range, then wakes
+	# and acts as an Aggressor from now on (§5).
+	if behavior == AIBrain.Behavior.SENTINEL and not enemy.ai_awake:
+		if AIBrain.has_enemy_in_threat(enemy, _units, chapter, _terrain_db, behavior):
+			enemy.ai_awake = true
+		else:
+			return  # stays asleep this turn
+	var effective := AIBrain.Behavior.AGGRESSOR if behavior == AIBrain.Behavior.SENTINEL else behavior
+
+	var decision := AIBrain.decide(enemy, _units, chapter, _terrain_db, effective)
 	if decision.move_to != enemy.cell:
 		var path := Pathfinder.find_path(enemy.cell, decision.move_to, _make_context(enemy))
 		if not path.is_empty():
@@ -740,6 +777,13 @@ func _setup_range_overlay() -> void:
 	_range_overlay = RangeOverlay.new()
 	add_child(_range_overlay)
 	_range_overlay.setup(_grid)
+
+
+func _setup_threat_overlay() -> void:
+	_threat_overlay = ThreatOverlay.new()
+	add_child(_threat_overlay)
+	_threat_overlay.setup(_grid)
+	_threat_overlay.set_shown(false)
 
 
 func _setup_units_root() -> void:
@@ -829,9 +873,15 @@ func _spawn_demo_units() -> void:
 	add_unit(brenna_def, Vector2i(4, 9))
 	if heal_staff != null:
 		add_unit(_demo_unit("wren", "Wren", _cleric(), heal_staff, 0, 5, {"mag": 6, "hp": 20, "def": 3}), Vector2i(3, 9))
+	# One of each AI tier (§5): an aggressor advances, a sentinel holds until
+	# threatened, a boss holds the fort at (16,4).
 	add_unit(_demo_unit("tide_a", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6}), Vector2i(6, 7))
-	add_unit(_demo_unit("tide_b", "Tidemark Soldier", soldier, sword, 1, 5, {"spd": 7, "hp": 22}), Vector2i(8, 8))
-	add_unit(_demo_unit("tide_c", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6, "hp": 24}), Vector2i(9, 6))
+	var sentinel := _demo_unit("tide_b", "Tidemark Sentinel", soldier, sword, 1, 5, {"spd": 7, "hp": 22})
+	sentinel.ai_behavior = AIBrain.Behavior.SENTINEL
+	add_unit(sentinel, Vector2i(11, 8))
+	var boss := _demo_unit("serra", "Serra", soldier, lance, 1, 5, {"spd": 6, "hp": 30, "def": 8})
+	boss.ai_behavior = AIBrain.Behavior.BOSS
+	add_unit(boss, Vector2i(16, 4))  # the fort tile
 
 
 func _demo_unit(

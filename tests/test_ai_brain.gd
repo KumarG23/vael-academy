@@ -121,6 +121,55 @@ func test_decide_waits_when_no_enemies():
 	assert_eq(d.move_to, lone.cell, "no enemies -> stay put")
 
 
+# --- boss / sentinel / threat (§5) --------------------------------------------
+
+func test_boss_attacks_only_from_its_tile_never_moving():
+	var boss := _spawn("boss", CombatTestHelpers.sword(6, 90), 1, Vector2i(5, 1), 5)
+	var player := _spawn("player", CombatTestHelpers.sword(5, 90), 0, Vector2i(4, 1), 5)  # adjacent
+	var d := AIBrain.decide(boss, _units, _chapter, _db, AIBrain.Behavior.BOSS)
+	assert_true(d.has_attack(), "boss strikes an adjacent foe")
+	assert_eq(d.move_to, boss.cell, "boss does not move to attack")
+
+
+func test_boss_holds_when_no_one_is_adjacent():
+	var boss := _spawn("boss", CombatTestHelpers.sword(6, 90), 1, Vector2i(5, 1), 5)
+	var player := _spawn("player", CombatTestHelpers.sword(5, 90), 0, Vector2i(10, 1), 5)  # reachable but far
+	var d := AIBrain.decide(boss, _units, _chapter, _db, AIBrain.Behavior.BOSS)
+	assert_false(d.has_attack(), "no adjacent target")
+	assert_eq(d.move_to, boss.cell, "boss holds the fort instead of advancing")
+
+
+func test_aggressor_would_advance_where_a_boss_holds():
+	# Same layout, but an aggressor closes in rather than holding.
+	var unit := _spawn("agg", CombatTestHelpers.sword(6, 90), 1, Vector2i(5, 1), 5)
+	var player := _spawn("player", CombatTestHelpers.sword(5, 90), 0, Vector2i(10, 1), 5)
+	var d := AIBrain.decide(unit, _units, _chapter, _db, AIBrain.Behavior.AGGRESSOR)
+	assert_gt(d.move_to.x, unit.cell.x, "aggressor advances toward the player")
+
+
+func test_threat_tiles_include_reachable_attack_squares():
+	var unit := _spawn("agg", CombatTestHelpers.sword(6, 90), 1, Vector2i(5, 1), 3)
+	var threat := AIBrain.threat_tiles(unit, _units, _chapter, _db)
+	# With move 3 + range 1, the tile 4 away in a straight line is threatened.
+	assert_true(threat.has(Vector2i(9, 1)), "move 3 then strike range 1 reaches x=9")
+	assert_false(threat.has(Vector2i(10, 1)), "one tile beyond reach is safe")
+
+
+func test_boss_threat_is_only_its_attack_range():
+	var boss := _spawn("boss", CombatTestHelpers.sword(6, 90), 1, Vector2i(5, 1), 5)
+	var threat := AIBrain.threat_tiles(boss, _units, _chapter, _db, AIBrain.Behavior.BOSS)
+	assert_true(threat.has(Vector2i(6, 1)), "adjacent tile threatened")
+	assert_false(threat.has(Vector2i(8, 1)), "boss doesn't move, so distant tiles are safe")
+
+
+func test_has_enemy_in_threat_detects_a_player_in_range():
+	var sentinel := _spawn("sent", CombatTestHelpers.sword(6, 90), 1, Vector2i(5, 1), 3)
+	var near := _spawn("near", CombatTestHelpers.sword(5, 90), 0, Vector2i(9, 1), 3)  # within reach
+	assert_true(AIBrain.has_enemy_in_threat(sentinel, _units, _chapter, _db))
+	near.cell = Vector2i(11, 1)  # step out of reach
+	assert_false(AIBrain.has_enemy_in_threat(sentinel, _units, _chapter, _db))
+
+
 ## Small local Manhattan helper (kept out of production API).
 func BattleView_manhattan(a: Vector2i, b: Vector2i) -> int:
 	return absi(a.x - b.x) + absi(a.y - b.y)

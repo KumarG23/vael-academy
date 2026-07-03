@@ -14,6 +14,8 @@ extends Resource
 ## The lord/house leader. Their death is an instant game over (§3 permadeath) and
 ## they are the unit that seizes for a SEIZE objective.
 @export var is_lord: bool = false
+## Enemy AI tier (§5). Ignored for player units.
+@export var ai_behavior: AIBrain.Behavior = AIBrain.Behavior.AGGRESSOR
 ## Primary/equipped weapon. Null = unarmed. Combined with `extra_weapons` and
 ## `starting_items` to build the unit's 5-slot inventory (WO-2.2).
 @export var weapon: WeaponDef
