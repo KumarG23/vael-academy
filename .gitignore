@@ -16,3 +16,20 @@ export_presets.cfg
 
 # Local, per-machine Claude Code settings
 .claude/settings.local.json
+
+# Secrets / environment (never commit)
+.env
+.env.*
+*.secret
+*.key
+*.pem
+*_token
+*credentials*
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
