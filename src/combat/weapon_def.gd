@@ -15,6 +15,8 @@ enum WeaponType { SWORD, AXE, LANCE, BOW, TOME, STAFF }
 @export var min_range: int = 1
 @export var max_range: int = 1
 @export var max_uses: int = 40
+## HP a staff restores (base, before the healer's MAG). Ignored by non-staves.
+@export var heal_amount: int = 0
 
 
 ## Tomes deal magical damage (MAG vs RES); everything else is physical (STR vs DEF).
@@ -25,6 +27,10 @@ func is_magical() -> bool:
 ## Staves never deal combat damage (healer support only, WO-2.1).
 func can_attack() -> bool:
 	return weapon_type != WeaponType.STAFF
+
+
+func is_staff() -> bool:
+	return weapon_type == WeaponType.STAFF
 
 
 ## True if this weapon can strike a target at Manhattan `distance`.

@@ -18,6 +18,7 @@ extends Resource
 @export var weapon: WeaponDef
 
 @export_group("Base Stats")
+@export var level: int = 1
 @export var max_hp: int = 20
 @export var strength: int = 5
 @export var magic: int = 0
@@ -50,6 +51,20 @@ func stats() -> Dictionary:
 		"lck": luck,
 		"def": defense,
 		"res": resistance,
+	}
+
+
+## Growth rates keyed to match LevelUp.STAT_ORDER / Combatant stats.
+func growths() -> Dictionary:
+	return {
+		"hp": growth_hp,
+		"str": growth_str,
+		"mag": growth_mag,
+		"skl": growth_skl,
+		"spd": growth_spd,
+		"lck": growth_lck,
+		"def": growth_def,
+		"res": growth_res,
 	}
 
 

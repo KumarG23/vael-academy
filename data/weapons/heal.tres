@@ -11,3 +11,4 @@ might = 0
 hit = 100
 weight = 3
 max_uses = 30
+heal_amount = 10

@@ -12,8 +12,22 @@ func before_each() -> void:
 	var scene: PackedScene = load("res://scenes/battle/battle.tscn")
 	_view = scene.instantiate()
 	_view.strike_delay = 0.0  # resolve strikes without wall-clock pauses
+	_view.combat_seed = 12345  # deterministic combat rolls
 	add_child_autofree(_view)
 	await wait_physics_frames(2)
+
+
+## Give a unit a sure-hit weapon so a specific strike/counter is guaranteed to land.
+func _make_sure_hit(u: Unit) -> void:
+	var w := WeaponDef.new()
+	var cur := u.weapon()
+	w.weapon_type = cur.weapon_type
+	w.might = cur.might
+	w.hit = 999
+	w.weight = cur.weight
+	w.min_range = cur.min_range
+	w.max_range = cur.max_range
+	u.unit_def.weapon = w
 
 
 func after_each() -> void:
@@ -37,6 +51,9 @@ func test_full_player_attack_round_with_counter():
 	var enemy: Unit = _view.unit_at(Vector2i(6, 7))
 	assert_not_null(kael, "Kael present")
 	assert_not_null(enemy, "enemy present")
+	# Guarantee both the attack and the counter land, so the assertions aren't RNG-flaky.
+	_make_sure_hit(kael)
+	_make_sure_hit(enemy)
 	var enemy_hp0 := enemy.current_hp
 	var kael_hp0 := kael.current_hp
 
@@ -69,7 +86,8 @@ func test_full_player_attack_round_with_counter():
 func test_lethal_attack_removes_unit_and_emits_eventbus():
 	var kael: Unit = _view.unit_at(Vector2i(3, 7))
 	var enemy: Unit = _view.unit_at(Vector2i(6, 7))
-	# Weaken the enemy so Kael's strike is lethal.
+	# Weaken the enemy so Kael's strike is lethal; guarantee the strike lands.
+	_make_sure_hit(kael)
 	enemy.current_hp = 1
 
 	_view._on_cursor_confirmed(Vector2i(3, 7))

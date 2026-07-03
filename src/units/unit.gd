@@ -18,6 +18,18 @@ var cell: Vector2i
 var team: int = 0
 var current_hp: int = 1
 var has_acted: bool = false
+var level: int = 1
+var xp: int = 0
+
+# Permanent stat gains from level-ups, added on top of the UnitDef base. Keeps the
+# shared UnitDef resource immutable while stats grow per-instance.
+var _stat_bonus := {"hp": 0, "str": 0, "mag": 0, "skl": 0, "spd": 0, "lck": 0, "def": 0, "res": 0}
+
+# UnitDef field name for each stat key.
+const _STAT_FIELD := {
+	"hp": "max_hp", "str": "strength", "mag": "magic", "skl": "skill",
+	"spd": "speed", "lck": "luck", "def": "defense", "res": "resistance",
+}
 
 var _grid: Grid
 var _moving := false
@@ -27,6 +39,8 @@ var _flash := 0.0
 func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 	unit_def = def
 	team = def.team if def != null else 0
+	level = def.level if def != null else 1
+	xp = 0
 	current_hp = def.max_hp if def != null else 1
 	_grid = grid
 	cell = start_cell
@@ -34,8 +48,14 @@ func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 	queue_redraw()
 
 
+## Effective value of a stat key (UnitDef base + level-up bonus).
+func stat(key: String) -> int:
+	var base: int = unit_def.get(_STAT_FIELD[key]) if unit_def != null else 0
+	return base + int(_stat_bonus.get(key, 0))
+
+
 func max_hp() -> int:
-	return unit_def.max_hp if unit_def != null else 1
+	return stat("hp")
 
 
 func is_alive() -> bool:
@@ -69,9 +89,48 @@ func can_attack() -> bool:
 
 ## Build a pure Combatant snapshot from this unit's live state + its tile's terrain.
 func to_combatant(terrain_def: int, terrain_avoid: int) -> Combatant:
-	var s := unit_def.stats()
-	s["current_hp"] = current_hp
+	var s := {
+		"hp": max_hp(), "current_hp": current_hp,
+		"str": stat("str"), "mag": stat("mag"), "skl": stat("skl"),
+		"spd": stat("spd"), "lck": stat("lck"), "def": stat("def"), "res": stat("res"),
+	}
 	return Combatant.make(unit_def.display_name, s, weapon(), terrain_def, terrain_avoid)
+
+
+## Award XP; roll and apply any level-ups that result (each 100 XP, capped at 20).
+## Rolls flow through the shared `rng` for replayability. Returns one result dict
+## per level gained: { "level": int, "gains": {stat->0/1} }.
+func gain_xp(amount: int, rng: CombatRNG) -> Array:
+	var results: Array = []
+	if amount <= 0 or unit_def == null:
+		return results
+	xp += amount
+	while xp >= CombatXP.XP_PER_LEVEL and level < CombatXP.LEVEL_CAP:
+		xp -= CombatXP.XP_PER_LEVEL
+		results.append(_apply_level_up(rng))
+	if level >= CombatXP.LEVEL_CAP:
+		xp = 0
+	return results
+
+
+func _apply_level_up(rng: CombatRNG) -> Dictionary:
+	var gains := LevelUp.roll(unit_def.growths(), rng)
+	for key in gains:
+		_stat_bonus[key] = int(_stat_bonus.get(key, 0)) + int(gains[key])
+	level += 1
+	current_hp += int(gains.get("hp", 0))  # HP growth also raises current HP
+	queue_redraw()
+	return {"level": level, "gains": gains}
+
+
+## Restore HP up to max; returns the amount actually healed.
+func heal(amount: int) -> int:
+	var before := current_hp
+	current_hp = clampi(current_hp + amount, 0, max_hp())
+	if current_hp != before:
+		flash()
+		queue_redraw()
+	return current_hp - before
 
 
 ## Apply a resolved HP value (from CombatResult), with a brief hit flash.

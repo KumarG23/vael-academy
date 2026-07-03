@@ -12,6 +12,9 @@ extends Node2D
 @export var demo_attack_ranges: Array = [1]
 ## Pause between animated strikes (seconds). Tests set this to 0 for speed.
 @export var strike_delay: float = 0.45
+## Fixed combat/level-up RNG seed for deterministic runs (§3 replayability). < 0
+## means seed from the clock. Tests set this for reproducible outcomes.
+@export var combat_seed: int = -1
 
 const TERRAIN_TINTS := {
 	Terrain.Type.PLAINS: Color(0.0, 0.0, 0.0, 0.0),
@@ -38,11 +41,13 @@ var _rng: CombatRNG
 var _turn := TurnManager.new()
 var _turn_banner: TurnBanner
 var _result_screen: ResultScreen
+var _level_up_screen: LevelUpScreen
 var _units: Array[Unit] = []
 var _phase: Phase = Phase.IDLE
 var _selected: Unit = null
 var _standable: Array = []
 var _targets: Array[Unit] = []
+var _targeting_heal := false
 var _busy := false
 var _battle_over := false
 var _lord_unit: Unit = null
@@ -54,7 +59,7 @@ func _ready() -> void:
 		chapter = _build_fallback_chapter()
 	_terrain_db = TerrainDB.create_default()
 	_grid = chapter.make_grid()
-	_rng = CombatRNG.new(int(Time.get_ticks_usec()))
+	_rng = CombatRNG.new(combat_seed if combat_seed >= 0 else int(Time.get_ticks_usec()))
 	_setup_overlay()
 	_setup_range_overlay()
 	_setup_units_root()
@@ -146,6 +151,20 @@ func _attackable_targets(from_cell: Vector2i, unit: Unit) -> Array[Unit]:
 	return out
 
 
+## Living, damaged allies (excluding self) a staff-user could heal from `from_cell`.
+func _heal_targets(from_cell: Vector2i, unit: Unit) -> Array[Unit]:
+	var out: Array[Unit] = []
+	var w := unit.weapon()
+	if w == null or not w.is_staff():
+		return out
+	for u in _units:
+		if u == unit or u.team != unit.team or not u.is_alive():
+			continue
+		if u.current_hp < u.max_hp() and w.in_range(_manhattan(from_cell, u.cell)):
+			out.append(u)
+	return out
+
+
 # --- selection / action flow --------------------------------------------------
 
 func _on_cell_changed(cell: Vector2i) -> void:
@@ -216,23 +235,34 @@ func _handle_selected_confirm(cell: Vector2i) -> void:
 	_arrive(mover)
 
 
-## After a unit lands, decide whether to offer targets or end the action.
+## After a unit lands, offer attack targets (weapons), heal targets (staves), or
+## just end the action.
 func _arrive(unit: Unit) -> void:
-	_targets = _attackable_targets(unit.cell, unit)
+	var w := unit.weapon()
+	if w != null and w.is_staff():
+		_targeting_heal = true
+		_targets = _heal_targets(unit.cell, unit)
+	else:
+		_targeting_heal = false
+		_targets = _attackable_targets(unit.cell, unit)
 	if _targets.is_empty():
 		_finish_action()
 		return
 	_phase = Phase.TARGETING
 	_cursor.move_to(_targets[0].cell)
-	_show_forecast_for(_targets[0])
+	if not _targeting_heal:
+		_show_forecast_for(_targets[0])
 
 
 func _handle_targeting_confirm(cell: Vector2i) -> void:
-	var enemy := unit_at(cell)
-	if enemy == null or not _targets.has(enemy):
+	var target := unit_at(cell)
+	if target == null or not _targets.has(target):
 		_finish_action()  # confirming off-target = wait
 		return
-	await _execute_attack(_selected, enemy)
+	if _targeting_heal:
+		await _execute_heal(_selected, target)
+	else:
+		await _execute_attack(_selected, target)
 	_finish_action()
 
 
@@ -250,6 +280,8 @@ func _execute_attack(attacker: Unit, defender: Unit) -> void:
 	_busy = true
 	_forecast_panel.hide_panel()
 	var dist := _manhattan(attacker.cell, defender.cell)
+	var atk_level := attacker.level
+	var def_level := defender.level
 	var atk_c := attacker.to_combatant(_terrain_def_at(attacker.cell), _terrain_avoid_at(attacker.cell))
 	var def_c := defender.to_combatant(_terrain_def_at(defender.cell), _terrain_avoid_at(defender.cell))
 	var result := CombatResolver.resolve(atk_c, def_c, dist, _rng)
@@ -264,8 +296,53 @@ func _execute_attack(attacker: Unit, defender: Unit) -> void:
 		if not target.is_alive():
 			_kill(target)
 
+	# XP: attacker for its strikes, defender for its counter (players only, §3/§4).
+	# A slain combatant has been freed by now — guard before passing it on.
+	if is_instance_valid(attacker):
+		await _award_combat_xp(attacker, def_level, _side_connected(result, false), result.defender_defeated())
+	if is_instance_valid(defender):
+		await _award_combat_xp(defender, atk_level, _side_connected(result, true), result.attacker_defeated())
+
 	_busy = was_busy
 	_check_objective()
+
+
+func _execute_heal(healer: Unit, ally: Unit) -> void:
+	var was_busy := _busy
+	_busy = true
+	var amount := healer.weapon().heal_amount + healer.stat("mag")
+	var healed := ally.heal(amount)
+	_pop_text(ally.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
+	await _award_heal_xp(healer, healed)
+	_busy = was_busy
+	_check_objective()
+
+
+## Whether one side landed a hit. `counter_side` false = the initiating attacker's
+## strikes; true = the defender's counter strikes.
+func _side_connected(result: CombatResult, counter_side: bool) -> bool:
+	for s in result.strikes:
+		if s.is_counter == counter_side and s.connected:
+			return true
+	return false
+
+
+func _award_combat_xp(unit: Unit, opponent_level: int, connected: bool, killed: bool) -> void:
+	if not is_instance_valid(unit) or not unit.is_alive() or unit.team != 0:
+		return
+	var amount := CombatXP.award(unit.level, opponent_level, connected, killed)
+	await _apply_xp(unit, amount)
+
+
+func _award_heal_xp(unit: Unit, healed: int) -> void:
+	if unit.team != 0:
+		return
+	await _apply_xp(unit, CombatXP.award_heal(healed))
+
+
+func _apply_xp(unit: Unit, amount: int) -> void:
+	for result in unit.gain_xp(amount, _rng):
+		await _level_up_screen.play(unit.unit_def.display_name, result)
 
 
 func _play_strike(strike: StrikeResult, target: Unit) -> void:
@@ -429,7 +506,7 @@ func _mov(u: Unit) -> int:
 
 func _weapon_ranges(u: Unit) -> Array:
 	var w := u.weapon()
-	if w == null or not w.can_attack():
+	if w == null:
 		return []
 	var ranges: Array = []
 	for r in range(w.min_range, w.max_range + 1):
@@ -508,6 +585,9 @@ func _setup_ui() -> void:
 	_result_screen.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_result_screen.dismissed.connect(_on_result_dismissed)
 	_ui_layer.add_child(_result_screen)
+	_level_up_screen = LevelUpScreen.new()
+	_level_up_screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ui_layer.add_child(_level_up_screen)
 
 
 func _on_result_dismissed() -> void:
@@ -521,12 +601,15 @@ func _spawn_demo_units() -> void:
 	var soldier: ClassDef = _try_load("res://data/classes/soldier.tres")
 	var sword: WeaponDef = _try_load("res://data/weapons/iron_sword.tres")
 	var lance: WeaponDef = _try_load("res://data/weapons/iron_lance.tres")
+	var heal_staff: WeaponDef = _try_load("res://data/weapons/heal.tres")
 	if myrmidon == null:
 		return
 	var kael_def := _demo_unit("kael", "Kael", myrmidon, sword, 0, 6, {"spd": 12, "skl": 12, "str": 8})
 	kael_def.is_lord = true  # demo lord: his death is a game over (§3)
 	_lord_unit = add_unit(kael_def, Vector2i(3, 7))
 	add_unit(_demo_unit("brenna", "Brenna", knight, lance, 0, 5, {"def": 10, "hp": 28, "spd": 5}), Vector2i(4, 9))
+	if heal_staff != null:
+		add_unit(_demo_unit("wren", "Wren", _cleric(), heal_staff, 0, 5, {"mag": 6, "hp": 20, "def": 3}), Vector2i(3, 9))
 	add_unit(_demo_unit("tide_a", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6}), Vector2i(6, 7))
 	add_unit(_demo_unit("tide_b", "Tidemark Soldier", soldier, sword, 1, 5, {"spd": 7, "hp": 22}), Vector2i(8, 8))
 	add_unit(_demo_unit("tide_c", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6, "hp": 24}), Vector2i(9, 6))
@@ -550,6 +633,16 @@ func _demo_unit(
 	d.defense = overrides.get("def", 5)
 	d.resistance = overrides.get("res", 2)
 	return d
+
+
+## Placeholder healer class (a real Cleric ClassDef .tres lands with the roster WOs).
+func _cleric() -> ClassDef:
+	var c := ClassDef.new()
+	c.id = "cleric"
+	c.display_name = "Cleric"
+	c.token_letter = "C"
+	c.movement_type = ClassDef.MovementType.FOOT
+	return c
 
 
 func _try_load(path: String) -> Resource:
