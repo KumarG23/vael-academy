@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_pptha"]
+
+[resource]
+script = ExtResource("1_pptha")
+id = "knight"
+display_name = "Knight"
+token_letter = "K"
+movement_type = 1

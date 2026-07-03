@@ -1,0 +1,42 @@
+class_name UnitDef
+extends Resource
+## Static definition of a unit: base stats, per-stat growth rates, class ref, and
+## house tag. Instances become a `Unit` node at battle start. Data-driven per §2
+## rule 4 — new units are new .tres files, not code.
+
+@export var id: String = ""
+@export var display_name: String = ""
+@export var char_class: ClassDef
+## House membership (Emberwing/Tidemark/Thornrook); "" until WO-3.4 wires HouseDef.
+@export var house_id: String = ""
+## Team side for the slice: 0 = player, 1 = enemy.
+@export var team: int = 0
+
+@export_group("Base Stats")
+@export var max_hp: int = 20
+@export var strength: int = 5
+@export var magic: int = 0
+@export var skill: int = 5
+@export var speed: int = 5
+@export var luck: int = 3
+@export var defense: int = 5
+@export var resistance: int = 0
+@export var movement: int = 5
+
+@export_group("Growth Rates (0-100)")
+@export var growth_hp: int = 60
+@export var growth_str: int = 40
+@export var growth_mag: int = 10
+@export var growth_skl: int = 40
+@export var growth_spd: int = 40
+@export var growth_lck: int = 30
+@export var growth_def: int = 30
+@export var growth_res: int = 20
+
+
+func movement_type() -> ClassDef.MovementType:
+	return char_class.movement_type if char_class != null else ClassDef.MovementType.FOOT
+
+
+func token_letter() -> String:
+	return char_class.token_letter if char_class != null else "?"

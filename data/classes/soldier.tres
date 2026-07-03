@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_kdm60"]
+
+[resource]
+script = ExtResource("1_kdm60")
+id = "soldier"
+display_name = "Soldier"
+token_letter = "S"

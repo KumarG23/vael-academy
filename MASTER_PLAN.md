@@ -278,7 +278,7 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 | 0.1 | ✅ done | Godot 4.7 project; §2 folder layout; EventBus autoload; GUT 9.7.0; 3 dummy tests green; git init. Test cmd: `godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit` |
 | 0.2 | ✅ done | `Grid` (128px cell↔world math), `Terrain`/`TerrainInfo`/`TerrainDB` (§3 table exact), `ChapterDef` (logical terrain array + backdrop). Battle scene: flat placeholder backdrop, per-terrain debug tints, subtle grid overlay, fitted camera, cursor terrain readout (prints stats). 20×15 `test_map.tres` with all 6 terrain types. 25 tests green. |
 | 0.3 | ✅ done | `BattleCursor`: cell-by-cell keyboard move (arrows+WASD, held-key repeat), mouse follow, confirm/cancel selection with signals (`cell_changed`/`confirmed`/`cancelled`/`selection_changed`) for WO-0.4 unit hookup. Visible reticle + selected-cell highlight. Custom input actions in project.godot. Terrain readout now driven by cursor. 41 tests green. |
-| 0.4 | ⬜ | depends 0.3 |
+| 0.4 | ✅ done | `ClassDef`/`UnitDef` resources; `Unit` node (placeholder token: team-ring disc + class letter, animated path move). Pure `Pathfinder` (Dijkstra reachable + A*), `BattleMoveContext` (terrain cost, occupancy, armored/mounted rough-terrain block), `MovementRange` (standable/attack tiles). `RangeOverlay` blue-move/red-attack. battle_view: select→range→click→walk, occupancy-aware. 56 tests green (15 pathfinding on fixtures); interactive flow verified headless. |
 | 1.1 | ⬜ | depends 0.1 |
 | 1.2 | ⬜ | depends 0.4, 1.1 |
 | 1.3 | ⬜ | depends 1.2 |
