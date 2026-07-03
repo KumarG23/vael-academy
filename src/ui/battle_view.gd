@@ -23,8 +23,8 @@ const TERRAIN_TINTS := {
 var _grid: Grid
 var _terrain_db: TerrainDB
 var _overlay: GridOverlay
+var _cursor: BattleCursor
 var _debug_label: Label
-var _last_cell := Vector2i(-9999, -9999)
 
 
 func _ready() -> void:
@@ -35,7 +35,7 @@ func _ready() -> void:
 	_setup_overlay()
 	_setup_camera()
 	_setup_debug_label()
-	_update_debug(Vector2i(-1, -1))
+	_setup_cursor()
 	queue_redraw()
 
 
@@ -57,18 +57,27 @@ func _draw_terrain_tints() -> void:
 				draw_rect(Rect2(x * cs, y * cs, cs, cs), tint, true)
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		var cell := _grid.world_to_cell(get_global_mouse_position())
-		if cell != _last_cell:
-			_last_cell = cell
-			_update_debug(cell)
-
-
 func _setup_overlay() -> void:
 	_overlay = GridOverlay.new()
 	add_child(_overlay)
 	_overlay.setup(_grid)
+
+
+func _setup_cursor() -> void:
+	_cursor = BattleCursor.new()
+	add_child(_cursor)
+	_cursor.cell_changed.connect(_update_debug)
+	_cursor.confirmed.connect(_on_cursor_confirmed)
+	_cursor.cancelled.connect(_on_cursor_cancelled)
+	_cursor.setup(_grid, Vector2i(_grid.width / 2, _grid.height / 2))
+
+
+func _on_cursor_confirmed(cell: Vector2i) -> void:
+	print("selected cell (%d, %d)" % [cell.x, cell.y])
+
+
+func _on_cursor_cancelled(_cell: Vector2i) -> void:
+	print("selection cleared")
 
 
 func _setup_camera() -> void:

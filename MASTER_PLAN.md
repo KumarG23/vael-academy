@@ -277,7 +277,7 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 |---|---|---|
 | 0.1 | ✅ done | Godot 4.7 project; §2 folder layout; EventBus autoload; GUT 9.7.0; 3 dummy tests green; git init. Test cmd: `godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit` |
 | 0.2 | ✅ done | `Grid` (128px cell↔world math), `Terrain`/`TerrainInfo`/`TerrainDB` (§3 table exact), `ChapterDef` (logical terrain array + backdrop). Battle scene: flat placeholder backdrop, per-terrain debug tints, subtle grid overlay, fitted camera, cursor terrain readout (prints stats). 20×15 `test_map.tres` with all 6 terrain types. 25 tests green. |
-| 0.3 | ⬜ | depends 0.2 |
+| 0.3 | ✅ done | `BattleCursor`: cell-by-cell keyboard move (arrows+WASD, held-key repeat), mouse follow, confirm/cancel selection with signals (`cell_changed`/`confirmed`/`cancelled`/`selection_changed`) for WO-0.4 unit hookup. Visible reticle + selected-cell highlight. Custom input actions in project.godot. Terrain readout now driven by cursor. 41 tests green. |
 | 0.4 | ⬜ | depends 0.3 |
 | 1.1 | ⬜ | depends 0.1 |
 | 1.2 | ⬜ | depends 0.4, 1.1 |
