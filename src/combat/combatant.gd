@@ -18,6 +18,10 @@ var resistance: int = 0
 var weapon: WeaponDef
 var terrain_def: int = 0
 var terrain_avoid: int = 0
+var support_hit: int = 0
+var support_avoid: int = 0
+var support_damage: int = 0
+var support_crit: int = 0
 
 
 static func make(
@@ -26,6 +30,7 @@ static func make(
 	weapon: WeaponDef,
 	terrain_def: int = 0,
 	terrain_avoid: int = 0,
+	support_bonus: Dictionary = {},
 ) -> Combatant:
 	var c := Combatant.new()
 	c.display_name = display_name
@@ -41,7 +46,15 @@ static func make(
 	c.weapon = weapon
 	c.terrain_def = terrain_def
 	c.terrain_avoid = terrain_avoid
+	c.apply_support_bonus(support_bonus)
 	return c
+
+
+func apply_support_bonus(bonus: Dictionary) -> void:
+	support_hit = int(bonus.get("hit", 0))
+	support_avoid = int(bonus.get("avoid", 0))
+	support_damage = int(bonus.get("damage", 0))
+	support_crit = int(bonus.get("crit", 0))
 
 
 func attack_speed() -> int:

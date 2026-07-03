@@ -42,7 +42,8 @@ static func evaluate(exchange: Dictionary, target_hp: int) -> Dictionary:
 ## A BOSS is pinned to its tile; other behaviors may move.
 static func decide(
 	actor: Unit, all_units: Array, chapter: ChapterDef, terrain_db: TerrainDB,
-	behavior: Behavior = Behavior.AGGRESSOR
+	behavior: Behavior = Behavior.AGGRESSOR,
+	support_state: SupportState = null,
 ) -> AIDecision:
 	var enemies := _living_enemies(actor, all_units)
 	if enemies.is_empty():
@@ -50,7 +51,7 @@ static func decide(
 
 	# A boss only ever attacks from where it stands; everyone else uses full movement.
 	var standable := _reachable_tiles(actor, all_units, chapter, terrain_db, behavior)
-	var best := _best_attack(actor, enemies, standable, chapter, terrain_db)
+	var best := _best_attack(actor, enemies, standable, all_units, chapter, terrain_db, support_state)
 
 	if not best.is_empty():
 		var d := AIDecision.new()
@@ -112,7 +113,13 @@ static func _reachable_tiles(
 
 ## Best (tile, target) attack option over `standable`, or {} if none.
 static func _best_attack(
-	actor: Unit, enemies: Array, standable: Array, chapter: ChapterDef, terrain_db: TerrainDB
+	actor: Unit,
+	enemies: Array,
+	standable: Array,
+	all_units: Array,
+	chapter: ChapterDef,
+	terrain_db: TerrainDB,
+	support_state: SupportState = null,
 ) -> Dictionary:
 	var best: Dictionary = {}
 	if not actor.can_attack():
@@ -122,7 +129,7 @@ static func _best_attack(
 			var dist := _manhattan(tile, target.cell)
 			if not actor.weapon().in_range(dist):
 				continue
-			var ex := _forecast(actor, tile, target, chapter, terrain_db, dist)
+			var ex := _forecast(actor, tile, target, all_units, chapter, terrain_db, dist, support_state)
 			var ev := evaluate(ex, target.current_hp)
 			var cand := {
 				"tile": tile, "target": target,
@@ -176,13 +183,44 @@ static func _advance_toward_nearest(
 # --- helpers -------------------------------------------------------------------
 
 static func _forecast(
-	actor: Unit, tile: Vector2i, target: Unit, chapter: ChapterDef, terrain_db: TerrainDB, dist: int
+	actor: Unit,
+	tile: Vector2i,
+	target: Unit,
+	all_units: Array,
+	chapter: ChapterDef,
+	terrain_db: TerrainDB,
+	dist: int,
+	support_state: SupportState = null,
 ) -> Dictionary:
-	var atk_c := actor.to_combatant(_tdef(chapter, terrain_db, tile), _tavoid(chapter, terrain_db, tile))
-	var def_c := target.to_combatant(
-		_tdef(chapter, terrain_db, target.cell), _tavoid(chapter, terrain_db, target.cell)
-	)
+	var atk_c := _combatant_for(actor, tile, all_units, chapter, terrain_db, support_state)
+	var def_c := _combatant_for(target, target.cell, all_units, chapter, terrain_db, support_state)
 	return CombatForecast.exchange(atk_c, def_c, dist)
+
+
+static func _combatant_for(
+	unit: Unit,
+	assumed_cell: Vector2i,
+	all_units: Array,
+	chapter: ChapterDef,
+	terrain_db: TerrainDB,
+	support_state: SupportState = null,
+) -> Combatant:
+	var c := unit.to_combatant(_tdef(chapter, terrain_db, assumed_cell), _tavoid(chapter, terrain_db, assumed_cell))
+	if support_state != null:
+		c.apply_support_bonus(_support_bonus_for(unit, assumed_cell, all_units, support_state))
+	return c
+
+
+static func _support_bonus_for(
+	unit: Unit, assumed_cell: Vector2i, all_units: Array, support_state: SupportState
+) -> Dictionary:
+	var nearby_partner_ids: Array = []
+	for other in all_units:
+		if other == unit or other.team != unit.team or not other.is_alive():
+			continue
+		if _manhattan(assumed_cell, other.cell) <= SupportState.BONUS_RANGE:
+			nearby_partner_ids.append(other.unit_def.id)
+	return support_state.bonus_for_unit(unit.unit_def.id, nearby_partner_ids)
 
 
 static func _living_enemies(actor: Unit, all_units: Array) -> Array:

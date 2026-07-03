@@ -50,3 +50,17 @@ func test_exchange_melee_cannot_counter_a_bow_at_range_2():
 	var ex := CombatForecast.exchange(archer, melee, 2)
 	assert_true(ex["attacker_can_attack"], "bow attacks at range 2")
 	assert_false(ex["defender_can_counter"], "sword cannot reach range 2")
+
+
+func test_support_bonus_changes_forecast_numbers():
+	var atk := CombatTestHelpers.combatant("A", CombatTestHelpers.sword(5, 90, 0, 5), {"str": 8, "skl": 8, "lck": 4})
+	var dfn := CombatTestHelpers.combatant("D", CombatTestHelpers.axe(8, 75, 0, 10), {"spd": 10, "str": 8, "lck": 4})
+	var base := CombatForecast.strike_stats(atk, dfn)
+
+	atk.apply_support_bonus({"hit": 5, "damage": 1, "crit": 5})
+	dfn.apply_support_bonus({"avoid": 5})
+	var boosted := CombatForecast.strike_stats(atk, dfn)
+
+	assert_eq(boosted["hit"], base["hit"], "attacker +5 hit and defender +5 avoid cancel out")
+	assert_eq(boosted["damage"], base["damage"] + 1, "support damage adds before defense")
+	assert_eq(boosted["crit"], base["crit"] + 5, "support crit changes displayed crit")

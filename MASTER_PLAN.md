@@ -31,6 +31,7 @@ A 2D grid-based tactics RPG in the spirit of GBA-era Fire Emblem and Dark Deity:
 | Data | Custom `Resource` classes saved as `.tres` | Units/classes/weapons/maps as data, not code |
 | Version control | Git, one branch per work order optional | Small commits, message = work order ID |
 | Tests | GUT (Godot Unit Test) for pure logic | Combat math and pathfinding MUST have tests |
+| Editor automation | Godot MCP Pro 1.15.0 (`.mcp.json` + `addons/godot_mcp`) | Inspect/edit scenes and project settings through the Godot editor API; playtest with screenshots and simulated input |
 
 ### Project layout (create in WO-0.1, never reorganize without a work order)
 
@@ -65,7 +66,9 @@ res://
 3. **One EventBus autoload** for cross-system signals (`unit_died`, `battle_won`, `support_rank_up`). No node reaches across the tree to find another system.
 4. **Data-driven.** Adding a unit, weapon, or map means adding `.tres` files, not code.
 5. **No premature abstraction.** Build for the slice. Refactor via explicit work orders.
-6. **Every WO ends with:** run the game (or tests), confirm acceptance criteria, update §10 STATUS in this file, commit.
+6. **Use Godot MCP Pro for editor-scoped work.** Start scene/project work with `get_project_info`, `get_filesystem_tree`, and `get_scene_tree`. Use MCP editor tools for scene nodes, inspector properties, project settings, autoloads, playtest screenshots, and simulated input. Direct file edits are still fine for pure GDScript, resources, tests, and plan updates.
+7. **Never hand-edit `project.godot` for editor-managed settings.** Use MCP tools such as `set_project_setting`, `set_input_action`, and `add_autoload` so Godot owns the serialization.
+8. **Every WO ends with:** run the game (or tests), confirm acceptance criteria, update §10 STATUS in this file, commit.
 
 ---
 
@@ -222,12 +225,14 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 **Setup (one time):**
 1. Create the repo; put this file at the root as `MASTER_PLAN.md`.
 2. Create a short `CLAUDE.md` next to it containing: *"Read MASTER_PLAN.md first. Implement exactly one work order per session — the lowest-numbered WO whose dependencies are ✅ in §10, unless told otherwise. Obey §2 coding rules and §3 formulas as written. Finish by running tests, updating §10, and committing."*
-3. Open the repo in **Claude Code** (this is the right harness — filesystem access, can run `godot --headless` for tests, persistent across the repo). Chat/Fable-in-browser is for design discussions and writing (e.g., WO-4.2); Claude Code is for implementation.
+3. Install and enable **Godot MCP Pro** for this repo: `.mcp.json` points to the local server build, `addons/godot_mcp/plugin.cfg` is present, `addons/godot_mcp/skills.md` is copied to `.claude/skills.md`, the `res://addons/godot_mcp/plugin.cfg` editor plugin is enabled, and the MCP autoload services (`MCPScreenshot`, `MCPInputService`, `MCPGameInspector`) are registered.
+4. Open the repo in **Claude Code** with Godot MCP Pro available (this is the right harness — filesystem access, MCP editor tools, can run `godot --headless` for tests, persistent across the repo). Chat/Fable-in-browser is for design discussions and writing (e.g., WO-4.2); Claude Code is for implementation.
+5. At the start of an implementation session, run a quick MCP smoke check before editing scenes/settings: `get_project_info` should return `Vael Academy`, `get_filesystem_tree` should see `res://src`, and the server should expose the Godot MCP Pro tool set. If MCP is down, restart the Godot editor/MCP server before doing editor-scoped work.
 
 **Per session:** `"Do the next work order"` is a complete prompt. For content WOs, co-write. If a WO turns out too big, Fable splits it into `WO-x.ya/x.yb` in this file before coding.
 
 **Godot headless test command** (Fable should verify the exact GUT invocation in WO-0.1):
-`godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit`
+`godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit`
 
 ---
 
@@ -270,11 +275,13 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 - **Combat feel > feature count.** If forced to choose, WO-4.4 polish beats any parked feature.
 - **Rescue/canto/skills/fog-of-war/trading-post/base camp:** all parked. The slice proves the loop first.
 - Godot version pinned at whatever WO-0.1 installs; upgrades are their own WO.
+- Godot MCP Pro is an editor/QA accelerator, not a scope expander. It does not justify starting unrelated WOs or changing the plan's one-work-order cadence.
 
 ## 10. STATUS (Fable updates this — never delete rows)
 
 | WO | Status | Notes |
 |---|---|---|
+| MCP-Pro | ✅ enabled | Godot MCP Pro 1.15.0 installed under `addons/godot_mcp`; `.mcp.json` points to `/Users/nealsharma/Downloads/godot-mcp-pro-v1.15.0/server/build/index.js`; editor plugin and MCP autoloads enabled. Verified 2026-07-03: stdio server exposed 175 tools (`serverInfo.version` reports 1.14.1 from this build), WebSocket bridge connected to Godot headless editor, and `get_project_info` returned `Vael Academy` with MCP autoloads. Full suite also green: 194/194 GUT tests. |
 | 0.1 | ✅ done | Godot 4.7 project; §2 folder layout; EventBus autoload; GUT 9.7.0; 3 dummy tests green; git init. Test cmd: `godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit` |
 | 0.2 | ✅ done | `Grid` (128px cell↔world math), `Terrain`/`TerrainInfo`/`TerrainDB` (§3 table exact), `ChapterDef` (logical terrain array + backdrop). Battle scene: flat placeholder backdrop, per-terrain debug tints, subtle grid overlay, fitted camera, cursor terrain readout (prints stats). 20×15 `test_map.tres` with all 6 terrain types. 25 tests green. |
 | 0.3 | ✅ done | `BattleCursor`: cell-by-cell keyboard move (arrows+WASD, held-key repeat), mouse follow, confirm/cancel selection with signals (`cell_changed`/`confirmed`/`cancelled`/`selection_changed`) for WO-0.4 unit hookup. Visible reticle + selected-cell highlight. Custom input actions in project.godot. Terrain readout now driven by cursor. 41 tests green. |
@@ -289,7 +296,7 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 | 2.4 | ✅ done | `ClassDef` gains `promoted_class` + flat promotion bonuses. Pure `Promotion.is_eligible` (level ≥10 + class has a path). `Unit.promote()`: per-instance class override (shared UnitDef stays immutable), applies stat + movement bonuses (HP bonus heals too), resets level→1 (cap stays 20). Master Seal usable from the Item menu only when eligible → promote; movement/class routed through promotion-aware helpers. Myrmidon→Swordmaster authored; Kael carries a Seal. 173 tests green incl. Kael-promotes-and-gains-bonuses integration. |
 | 2.5 | ✅ done | Combat juice (pure code, placeholder art): `JuiceController` does standee lunge/recoil, hit-stop (time-scale freeze, 60/120/140ms hit/crit/kill), damage-scaled screen shake (crit exceeds cap), white hit-flash, eased damage-number pop, miss whiff-slide, death dissolve, and `ClashSplash` cut-in on crit/kill (placeholder band+speed-lines until AW-5). All feel in one tunable `JuiceConfig` (data/config/juice.tres) — no code edits to retune. Gated on strike_delay>0 so tests use the instant path. 182 tests green incl. crit-3×-drama math + splash-fires / kill-dissolves integration. **Completes M2.** |
 | 3.1 | ✅ done | JSON dialogue engine (§4): pure `DialogueScript`/`DialogueStep` parser (lines vs event hooks, validation, terminal events). `DialogueScene` VN player — placeholder house-tinted portraits L/R, name plate, text box with typewriter reveal, advance on space/enter/click; fires `event_triggered(start_battle/give_item/…)` + `finished`. Sample `data/dialogue/sample.json` (Ash/Serra/Corin intro + give_item + start_battle) plays start→finish. `scenes/dialogue/dialogue.tscn`. 194 tests green incl. parser + full playback. Also fixed a hit-stop `time_scale` leak (reset on battle _ready + juice _exit_tree). |
-| 3.2 | ⬜ | depends 1.2, 2.1 |
+| 3.2 | ✅ done | `SupportChainDef` + pure `SupportState` (points/ranks; C/B/A thresholds 20/60/120; +10 points for ending an action within 2 tiles, +15 for healing). Ash+Kael support chain data authored; Ash added to the demo roster beside Kael. Rank-up emits `EventBus.support_rank_up` and shows a battle pop; unlocked conversations appear under a Supports command. Support bonuses (C/B/A: hit/avoid, dmg, crit) are carried on `Combatant` snapshots, so `CombatForecast`, `CombatResolver`, battle execution, and enemy AI forecasts use one support-aware math path. 200 tests green incl. Ash+Kael reaching C in a scripted battle test and forecast-panel hit/counter-hit changing visibly. |
 | 3.3 | ⬜ | depends 2.x complete |
 | 3.4 | ⬜ | houses — depends 1.2 (resolver inputs), 0.1 |
 | 3.5 | ⬜ | academy hub — depends 3.1, 3.2, 3.4, 2.2 |

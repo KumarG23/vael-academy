@@ -21,16 +21,16 @@ static func strike_stats(attacker: Combatant, defender: Combatant) -> Dictionary
 		tri_hit = WeaponTriangle.hit_bonus(attacker.weapon.weapon_type, defender.weapon.weapon_type)
 		tri_dmg = WeaponTriangle.dmg_bonus(attacker.weapon.weapon_type, defender.weapon.weapon_type)
 
-	var hr := CombatMath.hit_rate(attacker.weapon.hit, attacker.skill, attacker.luck, tri_hit)
-	var av := CombatMath.avoid_rate(defender.attack_speed(), defender.luck, defender.terrain_avoid)
+	var hr := CombatMath.hit_rate(attacker.weapon.hit, attacker.skill, attacker.luck, tri_hit + attacker.support_hit)
+	var av := CombatMath.avoid_rate(defender.attack_speed(), defender.luck, defender.terrain_avoid + defender.support_avoid)
 	var hit := CombatMath.displayed_hit(hr, av)
 
-	var cr := CombatMath.crit_rate(attacker.weapon.crit, attacker.skill)
+	var cr := CombatMath.crit_rate(attacker.weapon.crit + attacker.support_crit, attacker.skill)
 	var ca := CombatMath.crit_avoid(defender.luck)
 	var crit := CombatMath.displayed_crit(cr, ca)
 
 	var atk := CombatMath.attack_power(magical, attacker.strength, attacker.magic, attacker.weapon.might)
-	var dmg := CombatMath.damage(atk, tri_dmg, defender.defense_against(magical), defender.terrain_def)
+	var dmg := CombatMath.damage(atk, tri_dmg + attacker.support_damage, defender.defense_against(magical), defender.terrain_def)
 
 	return {"hit": hit, "crit": crit, "damage": dmg}
 

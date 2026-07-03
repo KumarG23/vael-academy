@@ -61,10 +61,12 @@ var _menu_context := ""
 var _menu_actions: Array = []      # action ids for the "action" context
 var _menu_items: Array = []        # InventoryItems for item/equip/trade_give
 var _menu_partners: Array[Unit] = []  # allies for trade_ally
+var _support_menu_entries: Array = []
 var _trade_partner: Unit = null
 var _battle_over := false
 var _lord_unit: Unit = null
 var _lord_alive := true
+var _support_state := SupportState.new()
 
 
 func _ready() -> void:
@@ -74,6 +76,7 @@ func _ready() -> void:
 	_terrain_db = TerrainDB.create_default()
 	_grid = chapter.make_grid()
 	_rng = CombatRNG.new(combat_seed if combat_seed >= 0 else int(Time.get_ticks_usec()))
+	_setup_supports()
 	_setup_overlay()
 	_setup_range_overlay()
 	_setup_threat_overlay()
@@ -297,6 +300,8 @@ func _open_action_menu() -> void:
 		_menu_actions.append("trade"); labels.append("Trade")
 	if _weapon_count(unit) > 1:
 		_menu_actions.append("equip"); labels.append("Equip")
+	if not _support_state.unlocked_conversations_for_unit(unit.unit_def.id).is_empty():
+		_menu_actions.append("supports"); labels.append("Supports")
 	_menu_actions.append("wait"); labels.append("Wait")
 	_open_menu("action", "Action", labels)
 
@@ -322,6 +327,8 @@ func _on_menu_chosen(index: int) -> void:
 			_pick_trade_ally(index)
 		"trade_give":
 			_do_give(index)
+		"supports":
+			_view_support_entry(index)
 
 
 func _on_menu_cancelled() -> void:
@@ -334,6 +341,8 @@ func _on_menu_cancelled() -> void:
 		"trade_give":
 			_menu.close()
 			_finish_action()          # done handing items over
+		"supports":
+			_open_action_menu()
 		_:
 			_open_action_menu()       # item / equip / trade_ally -> back to action
 
@@ -354,6 +363,8 @@ func _do_action(id: String) -> void:
 			_open_trade_ally_menu()
 		"equip":
 			_open_equip_menu()
+		"supports":
+			_open_support_menu()
 		"wait":
 			_menu.close()
 			_finish_action()
@@ -456,6 +467,23 @@ func _do_give(index: int) -> void:
 		_open_trade_give_menu()
 
 
+func _open_support_menu() -> void:
+	_support_menu_entries = _support_state.unlocked_conversations_for_unit(_selected.unit_def.id)
+	var labels: Array = []
+	for entry in _support_menu_entries:
+		labels.append(entry["label"])
+	if labels.is_empty():
+		_open_action_menu()
+	else:
+		_open_menu("supports", "Supports", labels)
+
+
+func _view_support_entry(index: int) -> void:
+	var entry: Dictionary = _support_menu_entries[index]
+	_pop_text(_selected.position, "%s ready" % entry["label"], Color(0.95, 0.75, 0.35))
+	_open_action_menu()
+
+
 func _adjacent_allies(unit: Unit) -> Array[Unit]:
 	var out: Array[Unit] = []
 	for u in _units:
@@ -487,8 +515,8 @@ func _handle_targeting_confirm(cell: Vector2i) -> void:
 func _show_forecast_for(enemy: Unit) -> void:
 	var attacker := _selected
 	var dist := _manhattan(attacker.cell, enemy.cell)
-	var atk_c := attacker.to_combatant(_terrain_def_at(attacker.cell), _terrain_avoid_at(attacker.cell))
-	var def_c := enemy.to_combatant(_terrain_def_at(enemy.cell), _terrain_avoid_at(enemy.cell))
+	var atk_c := _combatant_for(attacker, attacker.cell)
+	var def_c := _combatant_for(enemy, enemy.cell)
 	var ex := CombatForecast.exchange(atk_c, def_c, dist)
 	_forecast_panel.show_forecast(attacker, enemy, ex)
 
@@ -500,8 +528,8 @@ func _execute_attack(attacker: Unit, defender: Unit) -> void:
 	var dist := _manhattan(attacker.cell, defender.cell)
 	var atk_level := attacker.level
 	var def_level := defender.level
-	var atk_c := attacker.to_combatant(_terrain_def_at(attacker.cell), _terrain_avoid_at(attacker.cell))
-	var def_c := defender.to_combatant(_terrain_def_at(defender.cell), _terrain_avoid_at(defender.cell))
+	var atk_c := _combatant_for(attacker, attacker.cell)
+	var def_c := _combatant_for(defender, defender.cell)
 	var result := CombatResolver.resolve(atk_c, def_c, dist, _rng)
 
 	for strike in result.strikes:
@@ -550,6 +578,7 @@ func _execute_heal(healer: Unit, ally: Unit) -> void:
 	var amount := healer.weapon().heal_amount + healer.stat("mag")
 	var healed := ally.heal(amount)
 	_pop_text(ally.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
+	_accrue_support_points(healer, ally, SupportState.POINTS_HEAL)
 	_spend_weapon(healer)  # staves have uses too
 	await _award_heal_xp(healer, healed)
 	_busy = was_busy
@@ -614,6 +643,7 @@ func _kill(unit: Unit) -> void:
 
 func _finish_action() -> void:
 	if _selected != null and is_instance_valid(_selected):
+		_accrue_support_end_turn(_selected)
 		_selected.has_acted = true
 		_selected.queue_redraw()
 	_forecast_panel.hide_panel()
@@ -722,7 +752,7 @@ func _execute_enemy_unit(enemy: Unit) -> void:
 			return  # stays asleep this turn
 	var effective := AIBrain.Behavior.AGGRESSOR if behavior == AIBrain.Behavior.SENTINEL else behavior
 
-	var decision := AIBrain.decide(enemy, _units, chapter, _terrain_db, effective)
+	var decision := AIBrain.decide(enemy, _units, chapter, _terrain_db, effective, _support_state)
 	if decision.move_to != enemy.cell:
 		var path := Pathfinder.find_path(enemy.cell, decision.move_to, _make_context(enemy))
 		if not path.is_empty():
@@ -781,6 +811,47 @@ func _make_context(u: Unit) -> BattleMoveContext:
 
 func _movement_type(u: Unit) -> ClassDef.MovementType:
 	return u.movement_type()  # promotion-aware
+
+
+# --- supports -----------------------------------------------------------------
+
+func _setup_supports() -> void:
+	var chain: SupportChainDef = _try_load("res://data/supports/ash_kael.tres")
+	_support_state = SupportState.new()
+	_support_state.add_chain(chain)
+
+
+func _combatant_for(unit: Unit, assumed_cell: Vector2i) -> Combatant:
+	var c := unit.to_combatant(_terrain_def_at(assumed_cell), _terrain_avoid_at(assumed_cell))
+	c.apply_support_bonus(_support_bonus_for(unit, assumed_cell))
+	return c
+
+
+func _support_bonus_for(unit: Unit, assumed_cell: Vector2i) -> Dictionary:
+	var nearby_partner_ids: Array = []
+	for other in _units:
+		if other == unit or other.team != unit.team or not other.is_alive():
+			continue
+		if _manhattan(assumed_cell, other.cell) <= SupportState.BONUS_RANGE:
+			nearby_partner_ids.append(other.unit_def.id)
+	return _support_state.bonus_for_unit(unit.unit_def.id, nearby_partner_ids)
+
+
+func _accrue_support_end_turn(unit: Unit) -> void:
+	for other in _units:
+		if other == unit or other.team != unit.team or not other.is_alive():
+			continue
+		if _manhattan(unit.cell, other.cell) <= SupportState.ACCRUAL_RANGE:
+			_accrue_support_points(unit, other, SupportState.POINTS_END_TURN)
+
+
+func _accrue_support_points(a: Unit, b: Unit, amount: int) -> void:
+	var result := _support_state.add_points(a.unit_def.id, b.unit_def.id, amount)
+	if result.get("ranked_up", false):
+		var pair_id: String = result["pair_id"]
+		var rank: String = result["new_rank"]
+		EventBus.support_rank_up.emit(pair_id, rank)
+		_pop_text(a.position, "Support %s!" % rank, Color(0.95, 0.75, 0.35))
 
 
 # --- setup --------------------------------------------------------------------
@@ -893,7 +964,11 @@ func _spawn_demo_units() -> void:
 	var seal: ItemDef = _try_load("res://data/items/promotion_seal.tres")
 	if myrmidon == null:
 		return
+	var ash_def := _demo_unit("ash", "Ash", myrmidon, sword, 0, 6, {"spd": 10, "skl": 9, "str": 8, "hp": 26})
+	ash_def.house_id = "emberwing"
+	add_unit(ash_def, Vector2i(2, 7))
 	var kael_def := _demo_unit("kael", "Kael", myrmidon, sword, 0, 6, {"spd": 12, "skl": 12, "str": 8})
+	kael_def.house_id = "emberwing"
 	kael_def.is_lord = true  # demo lord: his death is a game over (§3)
 	if axe != null:
 		kael_def.extra_weapons = [axe]      # a second weapon so Equip is available
