@@ -24,6 +24,9 @@ var inventory := Inventory.new()
 ## Sentinels start asleep and wake when a player enters their threat range (§5).
 ## Aggressors and bosses are always "awake".
 var ai_awake := true
+## Set on promotion (WO-2.4) so the shared UnitDef resource stays immutable.
+var _class_override: ClassDef = null
+var _move_bonus := 0
 
 # Permanent stat gains from level-ups, added on top of the UnitDef base. Keeps the
 # shared UnitDef resource immutable while stats grow per-instance.
@@ -96,8 +99,21 @@ func equip_weapon(w: WeaponDef) -> void:
 		inventory.add(InventoryItem.from_weapon(w))
 
 
+## The unit's current class (promoted override if set, else the UnitDef's class).
+func current_class() -> ClassDef:
+	if _class_override != null:
+		return _class_override
+	return unit_def.char_class if unit_def != null else null
+
+
 func movement_type() -> ClassDef.MovementType:
-	return unit_def.movement_type() if unit_def != null else ClassDef.MovementType.FOOT
+	var c := current_class()
+	return c.movement_type if c != null else ClassDef.MovementType.FOOT
+
+
+func token_letter() -> String:
+	var c := current_class()
+	return c.token_letter if c != null else "?"
 
 
 func is_lord() -> bool:
@@ -109,7 +125,30 @@ func ai_behavior() -> AIBrain.Behavior:
 
 
 func move_points() -> int:
-	return unit_def.movement if unit_def != null else 5
+	return (unit_def.movement if unit_def != null else 5) + _move_bonus
+
+
+func can_promote() -> bool:
+	return Promotion.is_eligible(current_class(), level)
+
+
+## Promote to the current class's promoted class: apply flat stat bonuses, gain any
+## movement bonus, and reset level to 1 (cap stays 20). Returns a result dict
+## { "class_name": String, "bonuses": {stat->int}, "mov": int } or {} if ineligible.
+func promote() -> Dictionary:
+	if not can_promote():
+		return {}
+	var target := current_class().promoted_class
+	var bonuses := target.promotion_stat_bonuses()
+	for key in bonuses:
+		_stat_bonus[key] = int(_stat_bonus.get(key, 0)) + int(bonuses[key])
+	current_hp += int(bonuses.get("hp", 0))  # HP bonus also raises current HP
+	_move_bonus += target.promo_mov
+	_class_override = target
+	level = 1
+	xp = 0
+	queue_redraw()
+	return {"class_name": target.display_name, "bonuses": bonuses, "mov": target.promo_mov}
 
 
 func can_attack() -> bool:
@@ -218,7 +257,7 @@ func _draw() -> void:
 
 func _draw_letter() -> void:
 	var font := ThemeDB.fallback_font
-	var letter := unit_def.token_letter() if unit_def != null else "?"
+	var letter := token_letter()
 	var size := int(_grid.cell_size * 0.4)
 	var text_size := font.get_string_size(letter, HORIZONTAL_ALIGNMENT_CENTER, -1, size)
 	var pos := Vector2(-text_size.x * 0.5, text_size.y * 0.32)

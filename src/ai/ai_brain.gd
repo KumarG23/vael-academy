@@ -202,7 +202,7 @@ static func _occupancy(all_units: Array) -> Dictionary:
 
 
 static func _mov(u: Unit) -> int:
-	return u.unit_def.movement if u.unit_def != null else 5
+	return u.move_points()  # promotion-aware
 
 
 static func _tdef(chapter: ChapterDef, db: TerrainDB, cell: Vector2i) -> int:

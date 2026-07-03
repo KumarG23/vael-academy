@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="ClassDef" format=3]
 
 [ext_resource type="Script" path="res://src/units/class_def.gd" id="1_3orth"]
+[ext_resource type="Resource" path="res://data/classes/swordmaster.tres" id="1_dsn4k"]
 
 [resource]
 script = ExtResource("1_3orth")
 id = "myrmidon"
 display_name = "Myrmidon"
 token_letter = "M"
+promoted_class = ExtResource("1_dsn4k")

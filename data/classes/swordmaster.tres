@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_j21p1"]
+
+[resource]
+script = ExtResource("1_j21p1")
+id = "swordmaster"
+display_name = "Swordmaster"
+token_letter = "W"
+promo_hp = 3
+promo_str = 2
+promo_skl = 3
+promo_spd = 2
+promo_def = 2
+promo_res = 2
+promo_mov = 1

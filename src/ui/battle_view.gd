@@ -364,12 +364,15 @@ func _begin_targeting(heal: bool) -> void:
 		_show_forecast_for(_targets[0])
 
 
-## Consumables the unit can meaningfully use right now (a Vulnerary only when
-## damaged; the Promotion item can't be used until WO-2.4).
+## Consumables the unit can meaningfully use right now: a Vulnerary only when
+## damaged, a Promotion item only when the unit is eligible to promote (§3).
 func _usable_consumables(unit: Unit) -> Array[InventoryItem]:
 	var out: Array[InventoryItem] = []
 	for it in unit.inventory.consumables():
-		if it.item().heals() and unit.current_hp < unit.max_hp():
+		var def := it.item()
+		if def.heals() and unit.current_hp < unit.max_hp():
+			out.append(it)
+		elif def.is_promotion() and unit.can_promote():
 			out.append(it)
 	return out
 
@@ -385,9 +388,13 @@ func _open_item_menu() -> void:
 func _use_consumable(index: int) -> void:
 	var item: InventoryItem = _menu_items[index]
 	var def: ItemDef = item.item()
-	# Only usable items reach this menu; heal and consume.
-	var healed := _selected.heal(def.power)
-	_pop_text(_selected.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
+	# Only usable items reach this menu.
+	if def.is_promotion():
+		var result := _selected.promote()
+		_pop_text(_selected.position, "→ %s!" % result["class_name"], Color(0.95, 0.82, 0.35))
+	else:
+		var healed := _selected.heal(def.power)
+		_pop_text(_selected.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
 	_selected.inventory.use_consumable(item)
 	_menu.close()
 	_finish_action()
@@ -744,7 +751,7 @@ func _pop_text(world_pos: Vector2, text: String, color: Color) -> void:
 
 
 func _mov(u: Unit) -> int:
-	return u.unit_def.movement if u.unit_def != null else 5
+	return u.move_points()  # promotion-aware
 
 
 func _weapon_ranges(u: Unit) -> Array:
@@ -762,7 +769,7 @@ func _make_context(u: Unit) -> BattleMoveContext:
 
 
 func _movement_type(u: Unit) -> ClassDef.MovementType:
-	return u.unit_def.movement_type() if u.unit_def != null else ClassDef.MovementType.FOOT
+	return u.movement_type()  # promotion-aware
 
 
 # --- setup --------------------------------------------------------------------
@@ -858,14 +865,18 @@ func _spawn_demo_units() -> void:
 	var axe: WeaponDef = _try_load("res://data/weapons/iron_axe.tres")
 	var heal_staff: WeaponDef = _try_load("res://data/weapons/heal.tres")
 	var vulnerary: ItemDef = _try_load("res://data/items/vulnerary.tres")
+	var seal: ItemDef = _try_load("res://data/items/promotion_seal.tres")
 	if myrmidon == null:
 		return
 	var kael_def := _demo_unit("kael", "Kael", myrmidon, sword, 0, 6, {"spd": 12, "skl": 12, "str": 8})
 	kael_def.is_lord = true  # demo lord: his death is a game over (§3)
 	if axe != null:
 		kael_def.extra_weapons = [axe]      # a second weapon so Equip is available
+	kael_def.starting_items = []
 	if vulnerary != null:
-		kael_def.starting_items = [vulnerary]
+		kael_def.starting_items.append(vulnerary)
+	if seal != null:
+		kael_def.starting_items.append(seal)   # Master Seal — promote at level 10+
 	_lord_unit = add_unit(kael_def, Vector2i(3, 7))
 	var brenna_def := _demo_unit("brenna", "Brenna", knight, lance, 0, 5, {"def": 10, "hp": 28, "spd": 5})
 	if vulnerary != null:
