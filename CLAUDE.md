@@ -1,0 +1,1 @@
+Read MASTER_PLAN.md first. Implement exactly one work order per session — the lowest-numbered WO whose dependencies are ✅ in §10, unless told otherwise. Obey §2 coding rules and §3 formulas as written. Finish by running tests, updating §10, and committing.

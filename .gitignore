@@ -1,0 +1,18 @@
+# Godot 4+ import cache and editor state
+.godot/
+
+# Legacy import folder
+.import/
+
+# Export configs (per-machine)
+export.cfg
+export_presets.cfg
+
+# Auto-generated translations
+*.translation
+
+# GUT / editor user data
+*.tmp
+
+# Local, per-machine Claude Code settings
+.claude/settings.local.json

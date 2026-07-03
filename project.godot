@@ -1,0 +1,25 @@
+; Engine configuration file.
+; Emberline Tactics — see MASTER_PLAN.md
+;
+; Format documented at https://docs.godotengine.org/en/stable/classes/class_projectsettings.html
+
+config_version=5
+
+[application]
+
+config/name="Emberline Tactics"
+config/description="A Fire Emblem-style tactics RPG. See MASTER_PLAN.md."
+config/features=PackedStringArray("4.7", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+EventBus="*res://src/core/event_bus.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
