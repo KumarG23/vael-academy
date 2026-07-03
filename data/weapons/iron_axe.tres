@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="1_sih5q"]
+
+[resource]
+script = ExtResource("1_sih5q")
+id = "iron_axe"
+display_name = "Iron Axe"
+weapon_type = 1
+might = 8
+hit = 75
+weight = 10

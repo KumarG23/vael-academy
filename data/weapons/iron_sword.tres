@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="1_6bull"]
+
+[resource]
+script = ExtResource("1_6bull")
+id = "iron_sword"
+display_name = "Iron Sword"
