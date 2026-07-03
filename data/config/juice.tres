@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="JuiceConfig" format=3]
+
+[ext_resource type="Script" path="res://src/combat/juice_config.gd" id="1_516k0"]
+
+[resource]
+script = ExtResource("1_516k0")

@@ -51,6 +51,11 @@ var _targets: Array[Unit] = []
 var _targeting_heal := false
 var _busy := false
 
+var _camera: Camera2D
+var _juice: JuiceController
+var _juice_config: JuiceConfig
+var _splash: ClashSplash
+
 var _menu: ChoiceMenu
 var _menu_context := ""
 var _menu_actions: Array = []      # action ids for the "action" context
@@ -75,6 +80,7 @@ func _ready() -> void:
 	_setup_cursor()
 	_setup_camera()
 	_setup_ui()
+	_setup_juice()
 	_spawn_demo_units()
 	queue_redraw()
 	_begin_player_phase()
@@ -500,13 +506,17 @@ func _execute_attack(attacker: Unit, defender: Unit) -> void:
 	for strike in result.strikes:
 		# Route by the counter flag, not the display name (names aren't unique —
 		# e.g. multiple "Tidemark Soldier"). A counter strike hits the attacker.
+		var striker := defender if strike.is_counter else attacker
 		var target := attacker if strike.is_counter else defender
-		_play_strike(strike, target)
-		if strike_delay > 0.0:
-			await get_tree().create_timer(strike_delay).timeout
+		var lethal := strike.connected and strike.defender_hp_after <= 0
+		if strike_delay > 0.0 and _juice != null:
+			await _juice.play_strike(striker, target, strike, lethal)  # applies hp at impact
 		else:
+			_play_strike(strike, target)
 			await get_tree().process_frame
 		if not target.is_alive():
+			if strike_delay > 0.0 and _juice != null:
+				await _juice.play_death(target)
 			_kill(target)
 
 	# Weapon durability: 1 use per combat per side that swung — GBA-accurate
@@ -808,15 +818,29 @@ func _setup_cursor() -> void:
 	_cursor.setup(_grid, Vector2i(_grid.width / 2, _grid.height / 2))
 
 
+func _setup_juice() -> void:
+	_juice_config = _try_load("res://data/config/juice.tres")
+	if _juice_config == null:
+		_juice_config = JuiceConfig.new()
+	_splash = ClashSplash.new()
+	var layer := CanvasLayer.new()
+	layer.layer = 5  # above the battle, below menus
+	add_child(layer)
+	layer.add_child(_splash)
+	_juice = JuiceController.new()
+	add_child(_juice)
+	_juice.setup(_juice_config, _camera, _units_root, _splash)
+
+
 func _setup_camera() -> void:
-	var camera := Camera2D.new()
-	add_child(camera)
+	_camera = Camera2D.new()
+	add_child(_camera)
 	var map := _grid.pixel_size()
-	camera.position = map * 0.5
+	_camera.position = map * 0.5
 	var vp := get_viewport_rect().size
 	var fit := minf(vp.x / map.x, vp.y / map.y) * 0.96
-	camera.zoom = Vector2(fit, fit)
-	camera.make_current()
+	_camera.zoom = Vector2(fit, fit)
+	_camera.make_current()
 
 
 func _setup_ui() -> void:
