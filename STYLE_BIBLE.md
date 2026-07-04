@@ -1,4 +1,33 @@
-# STYLE_BIBLE.md — AW-1 v6.1 (sprite tier: GBA-FE register locked in practice)
+# STYLE_BIBLE.md — AW-1 v6.2 (sprite tier: derive from the sample bases)
+
+> **v6.2 (2026-07-04, AW-7 v3): SAMPLE REUSE CLEARED + DERIVATION PIPELINE.**
+> Neal's v2 review: walk cycle passed; hand-built battle sprite failed on
+> anatomy ("balloon head", "no arms", "sword sticking up weird"); chibi read
+> as two heads. He also **cleared the `sample/` sprites for direct reuse**
+> (shared in a Reddit channel for others to use) — *"steal pieces from them
+> if need be"*. This supersedes v6's reference-only rule. What v3 established:
+> - **Derivation pipeline** (`generators/kai_battle_v3.py`): descale the
+>   sample to true resolution (detect integer upscale by min block variance —
+>   beware webp noise making 2× look better than the true 4×; check for
+>   residual blocking visually), border-flood the background, classify pixels
+>   by HSV into materials (+ positional rules: skin only in the face box,
+>   steel only in the blade zone, hair split from same-hue armor by height),
+>   despeckle the material map (majority filter), then remap each material's
+>   luminance onto Kai/house ramps expanded to 6 stops. Identity edits
+>   (face redraw, temple mark, band recolor) are explicit px ops on top.
+> - **Anatomy comes from the base; identity comes from us.** Keep the base's
+>   pose/arms/weapon; redraw the head zone, swap palettes, mirror to face
+>   right (engine default — and it puts Kai's left-temple mark on camera).
+> - **The crimson headband is Kai's cross-tier identity device** (from the
+>   sample chibis): it welds hair to face on the map chibi (kills the
+>   two-heads read) and matches the battle tier. School/gatherer variants
+>   drop the band; the fringe row welds instead.
+> - **Outfit variants are data** (`OUTFITS` dict in `kai_map.py`): jacket
+>   ramp chars + flags (cape/band/sword/satchel/collar/trim). battle /
+>   school / gather exist; engine currently plays the battle set
+>   (`walk_f1-4.png`), variants live in `assets/sprites/units/kai/variants/`.
+> - **Art backlog Neal named:** other-house uniforms, terrain tiles,
+>   buildings, more cast — one subject at a time, derive where a base exists.
 
 > **v6.1 (2026-07-04, AW-7 v2): THE TWO-TIER TEMPLATE EXISTS.** Kai has both
 > tiers at GBA-FE fidelity (`assets/art_review/aw8_kai_v2/`). What v2 proved,

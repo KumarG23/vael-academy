@@ -154,61 +154,58 @@ def paint():
         (19, "kl"),
     ])
 
-    # ---------- SWORD ARM + HILT (one explicit patch, x28-37 / y17-25) ----------
-    # sleeve rises from the far shoulder; gloved fist wraps the grip;
-    # gold crossguard perpendicular to the blade; pommel below the fist.
-    # crossguard (gold diagonal bar, 2px thick)
-    c.px(33, 18, "j"); c.px(34, 18, "h")
-    c.px(34, 19, "j"); c.px(35, 19, "h")
-    c.px(35, 20, "g")
-    # grip + pommel
-    c.px(33, 20, "k"); c.px(31, 23, "h")
-    # gloved fist wrapping the grip
-    c.rows(20, [
-        (31, "mm"),
-        (30, "lmm"),
-        (30, "lm"),
+    # ---------- SWORD ARM + HILT (extended down-right, GBA Myrmidon style) ----------
+    # Sleeve angled down
+    c.rows(23, [(28, "xc"), (29, "xcy")])
+    c.rows(25, [(30, "xcy"), (31, "xcy")])
+    c.rows(27, [(32, "xcy"), (33, "xcy")])
+    c.rows(29, [(34, "tt")]) # crimson cuff
+    
+    # Gloved fist wrapping the grip
+    c.rows(30, [
+        (33, "lm"),
+        (33, "lmm"),
+        (34, "mm"),
     ])
-    # sleeve (short, nearly horizontal to the raised fist), crimson cuff at wrist
-    c.px(29, 20, "c")
-    c.rows(21, [(28, "xcy"), (28, "xcy")])
-    c.px(29, 23, "x"); c.px(30, 23, "x")
-    # blade: two-px wide diagonal from (35,19) to (46,7)
-    c.line(35, 18, 45, 8, "b")
-    c.line(36, 19, 46, 9, "p")
-    c.px(46, 8, "P"); c.px(47, 8, "P")
-    # glints along the lit edge
-    c.px(38, 16, "P"); c.px(39, 15, "P")
-    c.px(43, 11, "P")
+    
+    # Crossguard
+    c.px(33, 33, "j"); c.px(34, 34, "h")
+    c.px(36, 30, "j"); c.px(37, 31, "h")
+    c.px(35, 32, "g")
+    
+    # Grip + Pommel
+    c.px(33, 30, "k"); c.px(32, 29, "h")
+    
+    # Blade pointing down-right
+    c.line(36, 33, 44, 45, "b")
+    c.line(37, 34, 45, 46, "p")
+    c.px(45, 47, "P"); c.px(46, 48, "P")
+    
+    # Glints
+    c.px(39, 36, "P"); c.px(40, 37, "P")
+    c.px(42, 41, "P")
 
-    # ---------- HEAD (hand-drawn patch, x18-31 / y2-16, 3/4 facing right) ----------
+    # ---------- HEAD (hand-drawn patch, smaller GBA proportions) ----------
     # neck
-    c.rows(16, [(25, "qqw"), (25, "qq")])
+    c.rows(17, [(25, "qqw"), (25, "qq")])
     # collar (crimson band)
-    c.rows(17, [(22, " tyy t")])
-    c.rows(18, [(21, "tyyyyt")])
-    # one explicit grid, origin x19/y1. hair a/s/d/f, skin q/w/e, mark *.
-    # fringe = pointed locks at varying depths; near eye X pupil + W glint;
-    # mark = silver diagonal (29,8)-(30,9) on the temple skin.
-    c.rows(1, [
-        (19, "....s...d"),       # y1  crown spike tips
-        (19, "..sssdfds"),       # y2  lock tip catches light
-        (19, ".ssdsdffds"),      # y3  's' seams carve lock clusters
-        (19, "ssdfsdfffds"),     # y4
-        (19, "asdffsdfffds"),    # y5  sheen toward the light
-        (19, "assddsddsdfs"),    # y6  skull widest, lock seams
-        (19, "assdsdddsdss"),    # y7  fringe root
-        (19, "sssseesdes*e"),    # y8  locks over forehead + mark
-        (19, "assseaseaae*"),    # y9  lock tips, brows, mark
-        (19, ".asweXeeXWee"),    # y10 eye row
-        (19, "..sweweeXeeee"),   # y11 pupil bottom, nose bump x31
-        (19, "..sqweeeeeeee"),   # y12 cheek, nose tip x31
-        (19, "....qwweeeeq"),    # y13 under-nose shadow
-        (19, ".....qwweqe"),     # y14 mouth (q at x27)
-        (19, "......qwee"),      # y15 chin
+    c.rows(18, [(22, " tyy t")])
+    c.rows(19, [(21, "tyyyyt")])
+    # compact head
+    c.rows(7, [
+        (20, " sssdfds"),       # y7 hair top
+        (19, " asdffsdff"),     # y8
+        (19, " ssddsddsdf"),    # y9
+        (19, " sssseesdes*e"),  # y10 fringe and mark
+        (19, " asweXeeXWee"),   # y11 eye row
+        (19, " .sweweeXeeee"),  # y12 pupil, nose
+        (19, " .sqweeeeeeee"),  # y13 cheek, nose tip
+        (19, " ...qwweeeeq"),   # y14 under-nose shadow
+        (19, " ....qwweqe"),    # y15 mouth
+        (19, " .....qwee"),     # y16 chin
     ])
     # rim light along the lit (right) hair silhouette
-    c.px(28, 3, "f"); c.px(29, 4, "f"); c.px(30, 6, "f")
+    c.px(28, 8, "f"); c.px(29, 9, "f"); c.px(30, 10, "f")
 
     # ---------- OUTLINE + GROUND SHADOW ----------
     c.outline_sprite("X")
@@ -227,8 +224,4 @@ if __name__ == "__main__":
     out = os.path.dirname(os.path.abspath(__file__))
     render(g, PAL, os.path.join(out, "kai_battle_1x.png"), scale=8,
            path_big=os.path.join(out, "kai_battle_8x.png"))
-    compare_card(
-        [("sample", os.path.join(out, "study/lucina_big.png")),
-         ("kai", os.path.join(out, "kai_battle_1x.png"))],
-        os.path.join(out, "kai_vs_sample.png"))
     print("rendered")
