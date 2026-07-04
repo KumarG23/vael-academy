@@ -1,4 +1,35 @@
-# STYLE_BIBLE.md — AW-1 v6 (sprite pilot findings)
+# STYLE_BIBLE.md — AW-1 v6.1 (sprite tier: GBA-FE register locked in practice)
+
+> **v6.1 (2026-07-04, AW-7 v2): THE TWO-TIER TEMPLATE EXISTS.** Kai has both
+> tiers at GBA-FE fidelity (`assets/art_review/aw8_kai_v2/`). What v2 proved,
+> keep for AW-8:
+> - **Pipeline:** coordinate-paint Python (`assets/sprites/sources/generators/`)
+>   — a `Canvas` char-grid painted with rect/line/px/row-patch calls, rendered
+>   to PNG via a palette dict, iterated against 8×/16× zooms and side-by-side
+>   sample comparisons. Hand-counted full rows stay banned; small explicit
+>   row-patches (a head, a fist+hilt) are fine and are where the quality lives.
+>   `.aseprite` files are exports, not sources.
+> - **Battle tier (48×64) rules that made it read as GBA-FE:** ¾ posed figure
+>   (sword-over-shoulder; never symmetric standing), cape flared into a triangle
+>   with irregular fold streaks + zigzag hem, 3–4 shade ramps per material with
+>   tinted near-black outline (#160d12), gold accents (placket, buttons, buckle,
+>   boot-cuff tips), 1–2 px specular glints on the blade, face = fringe locks at
+>   varying depths + 1×2 dark pupil + 1 px white glint + nose as silhouette
+>   step. Kai's temple mark: 2 px silver diagonal on skin at the hairline.
+> - **Map tier (32×32, faces right, engine flips):** chibi ≈ 26 px tall, head
+>   ≈ 11 px, simple bold shapes — NO white eye glint at this scale (googly),
+>   1×2 chunky pupils; crimson mini-cape off the shoulders reads as "lord" at
+>   map zoom; 4-frame walk = contact A / passing / contact B (far leg forward,
+>   drawn darker) / passing, passing poses ride 1 px lower and double as the
+>   idle-bob pair (f2/f4); cape hem sways 1 px between passing frames.
+> - **Palette:** shared ramp dict in `kai_battle.py` (skin/hair/jacket/cape/
+>   gold/leather/steel/trousers + mark) — reuse it as the base cast palette;
+>   house palettes swap the cape/jacket/gold ramps only.
+> - **In-engine driving for validation:** MCP key events don't reach polled
+>   input — use `Input.action_press/release` taps and `InputEventAction` for
+>   confirm/cancel via `execute_game_script`; capture walk GIFs with an
+>   injected per-frame `save_png` node, never `capture_frames` (misses the
+>   window to MCP latency).
 
 > **v6 (2026-07-04, overnight AW-7 bake-off): SPRITE TIER SPEC — first real data.**
 > Neal reviewed the first pixel output mid-session: "already a thousand percent
