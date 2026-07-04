@@ -1,0 +1,26 @@
+status: completed
+id: 5c583261-55cd-400c-9396-72832caad015
+name: corin
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 60x60px
+view: low top-down
+style: -, -, -
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5c583261-55cd-400c-9396-72832caad015/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5c583261-55cd-400c-9396-72832caad015/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5c583261-55cd-400c-9396-72832caad015/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5c583261-55cd-400c-9396-72832caad015/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5c583261-55cd-400c-9396-72832caad015/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5c583261-55cd-400c-9396-72832caad015/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5c583261-55cd-400c-9396-72832caad015/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5c583261-55cd-400c-9396-72832caad015/rotations/south-west.png
+
+animations: none
+
+download: https://api.pixellab.ai/mcp/characters/5c583261-55cd-400c-9396-72832caad015/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="5c583261-55cd-400c-9396-72832caad015", ...) | create_character_state(character_id="5c583261-55cd-400c-9396-72832caad015", ...) | delete_character(character_id="5c583261-55cd-400c-9396-72832caad015")
+hint: animate_character(character_id="5c583261-55cd-400c-9396-72832caad015", template_animation_id="backflip")
