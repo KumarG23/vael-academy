@@ -1,128 +1,165 @@
-# STYLE_BIBLE.md — AW-1 (draft, awaiting Neal's sign-off)
+# STYLE_BIBLE.md — AW-1 v2 (draft, awaiting Neal's sign-off)
 
 The authoritative look for every production asset (MASTER_PLAN §8). **Consistency law:
 no production asset is generated except from these templates and params.** Exemplars
-live in `assets/art_review/aw1_style_bible/` (filenames carry their seeds); every
-exemplar reproduces from the recorded seed + template on the R16.
+live in `assets/art_review/aw1_style_bible/` (filenames carry their seeds).
 
-## 1. The look, in one paragraph
+> **v2 (2026-07-04), after Neal's review of v1:** v1's oil-painting realism read as
+> "real people," not game characters. v2 pivots characters to **stylized,
+> anime-influenced game art (Dark Deity register)** per Neal's six reference images
+> in `sample/`. Sample 5 (outlined cel archer) is the strongest character target;
+> samples 1–2 set the vivid storybook register for environments. Characters should
+> be attractive, stylized, *drawn* — never photoreal. v1's painterly-oil exemplars
+> remain in the folder as the rejected-for-characters / candidate-for-environments
+> record.
 
-**Full painted 2D. No pixel art, no anime cel, no photo-real.** Dark Deity's painted
-busts (rich saturated color, dramatic side light, visible brushwork) × The Banner
-Saga's painted landscapes (thick impasto oil, muted naturalistic palette, high-angle
-dioramas) × Darkest Dungeon's splash drama (chiaroscuro, radial energy, spectacle
-from a single still). Everything should look like it was painted by one studio hand:
-oil/gouache texture always visible, edges confident, light warm and directional.
+## 1. The look, in one paragraph (v2)
 
-## 2. Palettes
+**Stylized 2D game art.** Characters: anime-influenced faces (large expressive eyes,
+clean features), bold clean linework with cel-to-soft painted shading, vivid
+saturated color, attractive genre-standard designs — Fire Emblem / Dark Deity
+official-art energy. Environments: hand-painted stylized game backdrops — clean
+bold shapes, saturated storybook color (Runefall-vista energy), painterly but never
+photoreal. Nothing in the game should look like a photograph or a real person.
 
-**Master:** warm darks (never pure black — use deep warm browns/umbers `#1a1417`–`#2b2026`),
-candle-warm highlights, muted naturalistic greens/earths for landscapes.
+## 2. Battle presentation spec (locked — art is made to this)
+
+The engine draws a flat grid with upright unit chips (no perspective transform), so:
+- **Map backdrops** are painted at a **high oblique angle (~55–60°)** — steep enough
+  to read as a board, shallow enough to keep landmark silhouettes.
+- **Standees** are drawn **upright, full-body, ¾ view**, composited onto the map as
+  billboards with a house-color base ring (pipeline adds the ring).
+- Portraits/busts face the camera (VN framing); splashes are wide cut-ins.
+
+## 3. Palettes
+
+**Master:** vivid saturated color over warm darks (never pure black; deep warm
+umbers `#1a1417`–`#2b2026`). Environments: saturated storybook greens/earths.
 
 | House | Primary | Secondary | Light note |
 |---|---|---|---|
-| Emberwing | crimson `#C72929` | gold `#EDC24A` | warm side light, ember glow |
-| Tidemark | deep blue `#294F9E` | silver `#BFCCDB` | cool side light, storm grey |
+| Emberwing | crimson `#C72929` | gold `#EDC24A` | warm light, ember glow |
+| Tidemark | deep blue `#294F9E` | silver `#BFCCDB` | cool light, storm grey |
 | Thornrook | forest green `#2E6B3D` | bronze `#B88C4D` | dappled woodland light |
 
-(Values match `data/houses/*.tres`; art accents should sample these, not invent.)
+(Values match `data/houses/*.tres`; art accents sample these, not invent.)
 
-## 3. Fixed generation parameters (all templates)
+## 4. Models & fixed parameters
 
 - **Box:** R16 ComfyUI (`http://100.70.146.106:8188`, Tailnet only)
-- **Checkpoint:** `DreamShaperXL_Turbo_v2_1.safetensors`
-- **Sampler:** `euler` · scheduler `sgm_uniform` · **steps 6 · cfg 2.0 · denoise 1.0**
-- **Resolutions:** portrait 1024×1024 · standee 832×1216 · map backdrop / room /
-  splash / vista 1344×768 (upscale passes are AW-2/AW-3 work)
-- **Base negative (always):** `photo, photorealistic, 3d render, cgi, anime, cel
-  shading, pixel art, text, watermark, signature, logo, frame, border, blurry,
-  lowres, deformed, extra fingers, mutated hands`
-- Driver reference: the WO-AW-1 session used a 40-line stdlib script
-  (`POST /prompt` → poll `/history` → `GET /view`); AW-3 productionizes it.
+- **Pole A (recommended) — DreamShaperXL_Turbo_v2_1.safetensors:** euler /
+  sgm_uniform / **steps 6 / cfg 2.0** / denoise 1.0 (~2s per render)
+- **Pole B — animagine-xl-3.1.safetensors** (installed 2026-07-04 via Manager API):
+  euler_ancestral / **steps 28 / cfg 6** / quality tags `masterpiece, best quality,
+  very aesthetic` + danbooru-style `1girl/1boy` phrasing (~15s per render)
+- **Resolutions:** portrait 1024×1024 · standee 832×1216 · backdrop / room / splash
+  / vista 1344×768 (upscale passes are AW-2/AW-3 work)
+- **Base negative (always):** `photo, photorealistic, realistic face, real person,
+  3d render, cgi, oil painting, impasto, text, watermark, signature, logo, frame,
+  border, blurry, lowres, deformed, extra fingers, mutated hands`
 
-## 4. Prompt templates
+## 5. Prompt templates (v2)
 
-Substitute `[...]`; keep every fixed phrase — they carry the style.
+**CHARACTER PORTRAIT — POLE A "Dark Deity cel" (recommended; exemplars 703/704/706)**
+> 2D game character art, flat cel shading with bold clean ink outlines, anime
+> influenced tactical RPG portrait, waist-up bust, [attractive] [age] year old
+> [description], [house primary] and [house secondary] academy uniform, [expression],
+> vivid saturated colors, simple flat dark [house-tinted] background, stylized
+> official game art
 
-**PORTRAIT** (dialogue bust; expressions: neutral/happy/angry/hurt)
-> painted fantasy character portrait, waist-up bust, [age] year old [description],
-> [house primary] and [house secondary] academy uniform, [expression], **plain dark
-> background**, dramatic [warm/cool] side lighting, expressive visible oil-paint
-> brushwork, rich saturated color, strong clean silhouette, painted illustration
-
-**STANDEE** (map figure; rembg-friendly)
-> painted full-body fantasy character illustration, [description] standing [simple
-> pose] holding [weapon], [house colors] academy uniform, full figure head to feet,
-> **plain flat light grey studio background**, bold visible oil-paint brushwork,
-> strong clean silhouette, rich saturated color, stylized painted game art
+**CHARACTER PORTRAIT — POLE B "full anime" (Animagine; exemplars 801/802)**
+> masterpiece, best quality, very aesthetic, [1girl/1boy], waist-up portrait,
+> [description], [house colors] fantasy academy uniform, tactical rpg official
+> character art, painterly anime style, plain dark background
 >
-> extra negative: `figurine, statue, pedestal, display base, round base`
+> negative: `lowres, bad anatomy, bad hands, worst quality, low quality,
+> photorealistic, 3d, watermark, signature, text`
 
-**MAP BACKDROP** (battlefield painting; invisible grid goes on top)
-> impressionist oil painting of [battlefield description] viewed from high above at
-> a steep angle, thick impasto brushstrokes, visible canvas texture, [landmarks:
-> fort / forest grove / pond / road], hand-painted storybook illustration, muted
-> natural palette, [light], painterly, no people
+**STANDEE (Pole A; exemplar 705)**
+> 2D game character art, flat cel shading with bold clean ink outlines, anime
+> influenced full-body tactical RPG unit art, [description] standing [simple pose]
+> holding a single [weapon], full figure head to feet, vivid saturated colors,
+> simple flat pale grey background, stylized official game art, strong readable
+> silhouette
 >
-> extra negative: `photograph, aerial photo, satellite, drone, realistic photo,
-> tabletop map, cartoon, grid, car, truck, vehicle, modern`
+> extra negative: `figurine, statue, pedestal, display base, round base, multiple
+> weapons, two swords`
 
-**CASTLE ROOM** (walkable-castle backdrops, M6)
-> hand-painted castle interior, [room description], [light source], thick expressive
-> oil paint brushwork, storybook matte painting, [mood], no people
+**CLASH SPLASH (Pole A; exemplar 707)**
+> 2D game art, flat cel shading with bold clean ink outlines, dynamic anime attack
+> cut-in, [character] [attack action] toward the viewer, [house energy] wreathing
+> the [weapon], radial speed lines, dramatic foreshortening, vivid saturated colors,
+> dark smoky background, stylized official tactical RPG splash art
 
-**CLASH SPLASH** (crit/kill cut-in, WO-2.5 consumer)
-> dynamic painted attack cut-in illustration, close up of [character] [attack action]
-> toward the viewer, [house colors + energy type] trailing the [weapon], radial speed
-> lines, extreme foreshortening, dramatic chiaroscuro lighting, dark [smoky/stormy]
-> background, bold oil paint brushstrokes, high drama fantasy splash art
+**MAP BACKDROP — vivid stylized (recommended to match cel characters; exemplar 708)**
+> vibrant stylized fantasy battlefield seen from high above at a steep angle,
+> hand-painted game art, clean bold shapes, saturated storybook colors, [landmarks],
+> lush painterly rendering, no people, high quality game environment art
+>
+> extra negative: `photograph, aerial photo, satellite, drone, tabletop map, grid,
+> car, truck, vehicle, modern`
+>
+> *(v1's "impressionist oil" backdrop — exemplars 304/306/308 — stays a candidate
+> if Neal prefers muted maps under cel characters.)*
 
-**VISTA / BACKGROUND** (title, castle exteriors, cutscene wides)
-> gouache painting, [scene] , soft brush texture, storybook art, [palette note],
+**CASTLE ROOM — vivid stylized (exemplar 709; v1 painterly 401/402/403 also candidates)**
+> vibrant stylized fantasy castle interior, [room description], [light], hand-painted
+> game art, clean bold shapes, saturated storybook colors, [mood], no people, high
+> quality game environment art
+
+**VISTA / TITLE (v1 exemplars 305/601 remain the reference)**
+> gouache painting, [scene], soft brush texture, storybook art, [palette note],
 > [time of day], no people
+>
+> *Vael itself must read fortified war college on old Warder stone — heavy square
+> keep, three banners — not the fairy-tale palace of exemplar 601.*
 
-## 5. Known model behaviors (learned this session — don't relearn them)
+## 6. Known model behaviors (v1 + v2 — don't relearn these)
 
-1. **Landscapes drift photo-real** unless anchored by a named medium
-   ("impressionist oil painting", "gouache painting", "thick impasto") — "matte
-   painting" alone is NOT enough. Failure cases: seeds 301/303 (aerial photos).
-2. **"Standee" is a trap word** — produces a figurine on a display base (seed 201).
-   Say "full-body painted character illustration"; keep the pedestal negatives.
-3. **"Map" pulls toward VTT/tabletop clip-art** (seed 302). Describe a painted
-   *landscape from above*, never a "map".
-4. **Period drift:** "wagon" produced a 1950s pickup (seed 307) — say "wooden
-   hand-cart", keep `car, truck, vehicle, modern` in landscape negatives.
-5. **Oil paintings grow fake signatures** (seed 601 bottom-left) — negative includes
-   `signature`, but **QC every landscape corner** anyway.
-6. **Ages skew up**: say "16 year old academy student", not "young soldier" (seed 101
-   reads mid-20s; seed 102 reads right).
-7. **Backgrounds wander on portraits** (seed 104's forest) — production portraits
-   must keep "plain dark background" or compositing suffers; regenerate drifted ones.
-8. Uniform ornament gravitates Napoleonic (epaulettes/medals). Fine in moderation for
-   a war college; prune with "fitted tunic" when it dominates.
-9. Vael itself must read **fortified war college on old Warder stone** — heavy square
-   keep, three banners; the seed-601 fairy-tale spires are the wrong direction (kept
-   as a palette exemplar only).
+1. **DreamShaper drifts photo/semi-real on faces** — the full cel keyword stack
+   ("2D game character art, flat cel shading, bold clean ink outlines, anime
+   influenced") is what unlocks the style; softer phrasings collapse back to
+   realism, worst on female faces (v2 seeds 701/702).
+2. **Landscapes drift photoreal** without a named medium ("hand-painted game art",
+   "impressionist oil", "gouache"); "matte painting" alone is not enough.
+3. **"Standee" is a trap word** — figurine on a pedestal (seed 201). "Wagon" is a
+   period trap — produced a 1950s pickup (seed 307). Oil landscapes grow **fake
+   painter signatures** (seed 601) — QC corners.
+4. **"Map" pulls toward VTT clip-art** (seed 302). Describe a landscape from above.
+5. **Ages skew up** on DreamShaper ("young soldier" reads 25+; say "16 year old
+   academy student") and **down** on Animagine (everyone reads younger).
+6. **Ornament nouns get literal**: "antler ornament" grew antlers from Corin's head
+   (seeds 701/702/704-adjacent) — use "small golden stag brooch on her collar" and
+   negative `antlers, horns`.
+7. **Animagine is weak at full-body standees** (seed 803: faceless) — use Pole A for
+   standees regardless of the portrait pole.
+8. **ComfyUI model-switching bug (v0.26.0):** swapping checkpoints can crash
+   `CheckpointLoaderSimple` with `IndexError ... free_memory` — POST `/free`
+   `{"unload_models": true, "free_memory": true}`, wait ~5s, retry. Freshly
+   downloaded checkpoints also need ~20s to settle before first load.
 
-## 6. Exemplar index (all in `assets/art_review/aw1_style_bible/`)
+## 7. Exemplar index (`assets/art_review/aw1_style_bible/`)
 
-| Template | Exemplars (seed in filename) |
+**v2 (current direction):**
+| Template | Exemplars |
 |---|---|
-| Portrait | a_classic 101 · b_kai_archetype 102 · c_tidemark_heiress 103 · d_thornrook_scholar 104 · e_veteran_teacher 105 · f_happy_expression 106 · g_healer 107 |
-| Standee | a_emberwing_soldier 202 · b_tidemark_knight 203 · c_thornrook_archer 204 · d_battle_mage 205 |
-| Map backdrop | a_field_morning 304 · b_field_afternoon 306 · c_autumn_road 308 |
-| Castle room | a_feast_hall 401 · b_library 402 · c_training_yard 403 |
-| Clash splash | a_emberwing_sword 501 · b_tidemark_lance 502 · c_thornrook_bow 503 |
-| Vista | a_gouache_valley 305 · b_castle_lake 601 |
+| Portrait, Pole A (rec) | kai 703 · corin 704 · serra 706 |
+| Portrait, Pole B | corin 801 · kai 802 |
+| Standee (Pole A) | soldier 705 |
+| Splash (Pole A) | sword 707 |
+| Backdrop, vivid | field 708 |
+| Room, vivid | feast hall 709 |
 
-## 7. Open items for the sign-off review (Neal)
+**v1 (painterly-oil record; environments still candidates):** portraits 101–107,
+standees 202–205, oil backdrops 304/306/308, rooms 401–403, splashes 501–503,
+vistas 305/601.
 
-- Approve/redirect the overall look per template (the acceptance gate for AW-1).
-- Portrait brushwork range: seed 102 (chunky oil) vs 103 (smoother) — both in-range,
-  or pick one pole to enforce?
-- Map backdrop angle: seed 304's ~55° is the recommendation (steeper reads VTT,
-  shallower reads vista) — confirm.
-- Character-specific looks (real Kai, Serra, etc.) are AW-4's job via locked
-  reference sheets + img2img expression variants — these exemplars are archetypes.
-- LoRA/finetune consideration (AW-3): if style cohesion across hundreds of assets
-  needs tightening, a style LoRA trained on approved exemplars is the lever.
+## 8. Open items for sign-off (Neal)
+
+1. **Character pole: A (Dark Deity cel) or B (full anime)?** Recommendation: **A** —
+   closest to sample 5, holds gravitas, and DreamShaper Turbo iterates 8× faster.
+2. **Environment pole: vivid stylized (708/709) or painterly oil (v1)?**
+   Recommendation: **vivid stylized**, for cohesion with cel characters.
+3. Vista treatment (v1 gouache) — keep as-is?
+4. Once picked: AW-4 locks per-character reference sheets in the chosen pole;
+   fresh-seed reproduction check runs at sign-off.
