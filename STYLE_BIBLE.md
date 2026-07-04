@@ -1,4 +1,4 @@
-# STYLE_BIBLE.md — AW-1 v3 (draft, awaiting Neal's sign-off)
+# STYLE_BIBLE.md — AW-1 v3.1 (draft, awaiting Neal's sign-off)
 
 > **v3 (2026-07-04):** Neal picked Pole A with Corin seed 704 as the reference ("95%
 > perfect"), asked for the cast to be **normalized to her register** plus a **+5%
@@ -172,11 +172,27 @@ umbers `#1a1417`–`#2b2026`). Environments: saturated storybook greens/earths.
 standees 202–205, oil backdrops 304/306/308, rooms 401–403, splashes 501–503,
 vistas 305/601.
 
+## 7b. From concepts to game assets (the production path)
+
+In-game composite mocks live in `assets/art_review/aw1_style_bible/`
+(`mock_dialogue_ingame.jpg`, `mock_battle_ingame.jpg`). The engine hooks already
+exist — programmer art was built first precisely so these are art-only swaps:
+
+| Asset | Pipeline | Engine hook (already built) |
+|---|---|---|
+| Portraits | template render → QC vs 704 → rembg alpha → crop → `portrait_<unit>_<expression>.png`; expressions via img2img/inpaint off the locked base (AW-4) | `DialogueScene` carries a `portrait` id per line since WO-3.1; swap placeholder card → texture (AW-6) |
+| Standees | render 832×1216 → rembg → downscale ~96–128px | `Unit._draw` token → standee texture; house ring + tweens stay code (AW-6) |
+| Map backdrops | terrain blockout → img2img/ControlNet so landmarks land on cells → upscale ≥2560×1920 → touch-up (AW-2) | `ChapterDef.backdrop` exists since WO-0.2; battle already draws it |
+| Rooms / vistas / splashes | straight renders at spec → retouch | castle scenes (M6) / title (4.3) / `ClashSplash` texture swap |
+| Consistency | locked reference sheet per character; expressions inpainted, never regenerated fresh; optional character/style LoRA + IPAdapter when the cast scales | AW-4 |
+
 ## 8. Sign-off state
 
-- ~~Character pole~~ **DECIDED (v2 review): Pole A, Corin-704 register, +5% charm.**
-  v3 normalized the cast to it (901/902/904/905) — those fresh seeds double as the
-  reproduction check.
+- ~~Character pole~~ **DECIDED: Pole A, Corin-704 register, +5% charm.**
+  v3 normalized the cast (902 Serra and 904 Kai approved; 901 Corin REJECTED —
+  "riding the edge of anime-ish and realistic"). **Corin 704 is the canonical
+  face reference.** QC rule: every face must read *fully drawn*; anything sliding
+  semi-real is rerolled, no exceptions (901 is the kept out-of-range example).
 - ~~Environment pole~~ **DECIDED (v2 review): vivid stylized** (feast hall 709
   anchor; library 906; backdrop 708).
 - Vista treatment (v1 gouache) — unchallenged; stands.
