@@ -341,7 +341,7 @@ Reference triangle: **Dark Deity** (painted busts + pixel unit sprites) × **War
 | AW-4 | ⬜ | reference sheets + portraits (full cast; standees dropped → sprites) — depends AW-1, AW-3 |
 | AW-5 | ⬜ | splashes/house/UI art — depends AW-1 |
 | AW-6 | ⬜ | integration (incl. castle-room art) — depends AW-2/4/5 + gating code WOs |
-| AW-7 | ⬜ | **Sprite pilot**: scale/style pick + one animated class sheet (Kai) in-engine via AnimatedSprite2D — depends AW-1 sign-off; NEXT art session |
+| AW-7 | ⏳ bake-off delivered, awaiting style pick | Overnight bake-off (2026-07-04): four Kai sprite styles hand-pixeled via Aseprite MCP (S1 map-chibi 32px, S2 chunky 48px, S3 tall 32×48, S4 battle-tier 48×64 with cape — closest to Neal's new GBA-FE `sample/` refs, "more detail and flare" direction), endesga-32 palette. `Unit` now builds SpriteFrames from `assets/sprites/units/<id>/walk_f1-4.png` (AnimatedSprite2D, NEAREST, supersedes standee hook) — Kai walks the actual Mock Battle map in-engine; GIF + style card + map/campus mocks in `assets/art_review/aw7_bakeoff/`. 268 tests green. **On Neal's style pick → ✅, AW-8 unblocks (two-tier: map sprite + battle sprite per the samples).** |
 | AW-8 | ⬜ | full sprite set (classes + palettes + lords/bosses + campus idles) — depends AW-7 |
 
 ## 11. PARKING LOT (ideas land here, not in code)

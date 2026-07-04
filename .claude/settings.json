@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(godot --headless *)",
+      "mcp__godot-mcp-pro__get_game_screenshot",
+      "mcp__godot-mcp-pro__get_project_info",
+      "mcp__godot-mcp-pro__get_editor_errors",
+      "mcp__godot-mcp-pro__get_output_log",
+      "mcp__godot-mcp-pro__get_game_scene_tree",
+      "mcp__godot-mcp-pro__get_scene_tree",
+      "mcp__godot-mcp-pro__get_filesystem_tree",
+      "mcp__godot-mcp-pro__capture_frames",
+      "mcp__godot-mcp-pro__play_scene",
+      "mcp__godot-mcp-pro__stop_scene",
+      "mcp__godot-mcp-pro__simulate_sequence",
+      "mcp__godot-mcp-pro__simulate_action",
+      "mcp__godot-mcp-pro__simulate_key",
+      "mcp__godot-mcp-pro__simulate_mouse_click",
+      "WebSearch",
+
+      "Edit(**)",
+      "Write(**)",
+      "Edit(//private/tmp/claude-501/**)",
+      "Write(//private/tmp/claude-501/**)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git mv *)",
+      "Bash(git push origin main)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(sips *)",
+      "Bash(curl *)",
+      "Bash(python3 gen.py *)",
+      "Bash(python3 gen2.py *)",
+      "Bash(python3 /private/tmp/claude-501/*)",
+      "Bash(/Applications/Aseprite.app/Contents/MacOS/aseprite *)"
+    ]
+  }
+}

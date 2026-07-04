@@ -1,4 +1,30 @@
-# STYLE_BIBLE.md — AW-1 v5 (three-tier revision)
+# STYLE_BIBLE.md — AW-1 v6 (sprite pilot findings)
+
+> **v6 (2026-07-04, overnight AW-7 bake-off): SPRITE TIER SPEC — first real data.**
+> Neal reviewed the first pixel output mid-session: "already a thousand percent
+> better… but needs more detail and flare, needs more uniqueness." He replaced
+> `sample/` with GBA-FE-fidelity references (Marth GBA-style, Three Houses
+> fan-sprites, a Reddit artist's multi-year FE sprite set). **Reference only — do
+> not copy; use as the bar for detail/flare.** What the samples establish:
+> - **Two-tier sprite architecture** (exactly GBA FE): a small readable **map
+>   sprite** (chibi, big head, ~32px) and a detailed **battle/showcase sprite**
+>   (~48×64, realistic proportions, cape/cloth motion, 3–5 shade ramps per
+>   material, strong silhouette). AW-8 must produce both per class.
+> - **Flare checklist** for the battle tier: cape or cloth element, material
+>   ramps (not flat fills), 1–2 specular glints (weapon edge, temple mark),
+>   asymmetric details (sash, shoulder plate), readable face with eye whites.
+> - **Palette:** endesga-32 (Lospec) worked; stay palette-locked per sprite,
+>   ~16–21 colors on the battle tier, fewer on the map tier.
+> - **Pipeline that actually worked tonight:** Aseprite MCP `execute_script` Lua
+>   with **programmatically built** pixel grids (python char-matrix → putPixel
+>   loops — hand-counted rows are banned; they mis-align). R16 ComfyUI sprite
+>   diffusion remains untested for sprites; hand-pixel + palette-swap is the
+>   proven path so far.
+> - **Engine consumption (live):** `Unit` builds `SpriteFrames` from
+>   `assets/sprites/units/<id>/walk_f1-4.png` at runtime — walk 8fps, idle 2fps
+>   (frames 2/4), `TEXTURE_FILTER_NEAREST`, scale = cell/32, flip_h from travel
+>   direction. Supersedes the standee hook on the map.
+> Bake-off deliverables for the style pick live in `assets/art_review/aw7_bakeoff/`.
 
 > **v5 (2026-07-04): THE TIER SPLIT.** Neal's verdict after the in-engine test:
 > painted portraits in dialogue work ("looks good"); static standees on the map do

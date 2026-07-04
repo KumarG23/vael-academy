@@ -44,6 +44,9 @@ var _flash := 0.0
 ## Painted standee (AW-6 hook): drawn instead of the placeholder token when
 ## `assets/standees/standee_<id>.png` exists. Pure presentation.
 var _standee: Texture2D = null
+## Animated pixel sprite (AW-7): built from `assets/sprites/units/<id>/walk_f*.png`
+## when present — supersedes both the token and the standee. Pure presentation.
+var _anim: AnimatedSprite2D = null
 
 
 func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
@@ -66,7 +69,39 @@ func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 		if ResourceLoader.exists(standee_path):
 			_standee = load(standee_path)
 			texture_filter = TEXTURE_FILTER_LINEAR  # painted art, not pixel art
+	_setup_sprite_frames(def.id if def != null else "")
 	queue_redraw()
+
+
+## AW-7: build an AnimatedSprite2D from conventional walk frames if they exist.
+## idle = the two "passing" poses (subtle bob); walk = the 4-frame cycle.
+func _setup_sprite_frames(id: String) -> void:
+	if _anim != null:
+		_anim.queue_free()
+		_anim = null
+	if id == "":
+		return
+	var dir := "res://assets/sprites/units/%s" % id
+	if not ResourceLoader.exists(dir + "/walk_f1.png"):
+		return
+	var frames := SpriteFrames.new()
+	frames.add_animation("walk")
+	frames.set_animation_speed("walk", 8.0)
+	for i in range(1, 5):
+		var path := "%s/walk_f%d.png" % [dir, i]
+		if ResourceLoader.exists(path):
+			frames.add_frame("walk", load(path))
+	frames.add_animation("idle")
+	frames.set_animation_speed("idle", 2.0)
+	frames.add_frame("idle", load(dir + "/walk_f2.png"))
+	frames.add_frame("idle", load(dir + ("/walk_f4.png" if ResourceLoader.exists(dir + "/walk_f4.png") else "/walk_f2.png")))
+	_anim = AnimatedSprite2D.new()
+	_anim.sprite_frames = frames
+	_anim.texture_filter = TEXTURE_FILTER_NEAREST  # crisp pixels at any zoom
+	_anim.scale = Vector2.ONE * (float(_grid.cell_size) / 32.0)
+	_anim.position = Vector2(0, -_grid.cell_size * 0.06)
+	add_child(_anim)
+	_anim.play("idle")
 
 
 ## Effective value of a stat key (UnitDef base + level-up bonus).
@@ -346,8 +381,12 @@ func move_along_path(path: Array) -> void:
 		move_finished.emit()
 		return
 	_moving = true
+	if _anim != null:
+		_anim.play("walk")
 	for i in range(1, path.size()):
 		var target: Vector2 = _grid.cell_center(path[i])
+		if _anim != null and absf(target.x - position.x) > 1.0:
+			_anim.flip_h = target.x < position.x  # sprite faces right by default
 		while position.distance_to(target) > 1.0:
 			var delta: float = get_process_delta_time()
 			position = position.move_toward(target, MOVE_SPEED_PX * delta)
@@ -355,6 +394,8 @@ func move_along_path(path: Array) -> void:
 		position = target
 	cell = path[-1]
 	_moving = false
+	if _anim != null:
+		_anim.play("idle")
 	move_finished.emit()
 
 
@@ -376,6 +417,9 @@ func _team_color() -> Color:
 func _draw() -> void:
 	if _grid == null:
 		return
+	if _anim != null:
+		_draw_sprite_underlay()
+		return
 	if _standee != null:
 		_draw_standee()
 		return
@@ -390,6 +434,22 @@ func _draw() -> void:
 		draw_circle(Vector2.ZERO, r, Color(1, 1, 1, _flash))
 	_draw_letter()
 	_draw_hp_bar(r)
+
+
+## Ring + HP bar under the AW-7 animated sprite; the sprite child draws itself.
+func _draw_sprite_underlay() -> void:
+	var cs: float = float(_grid.cell_size)
+	var base := _team_color()
+	var ring := base.darkened(0.4) if has_acted else base
+	var foot_y := cs * 0.40
+	draw_set_transform(Vector2(0, foot_y), 0.0, Vector2(1.0, 0.42))
+	draw_circle(Vector2.ZERO, cs * 0.32, Color(ring.r, ring.g, ring.b, 0.28))
+	draw_arc(Vector2.ZERO, cs * 0.32, 0.0, TAU, 40, ring, 3.0)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	_anim.modulate = Color(0.55, 0.55, 0.58) if has_acted else Color.WHITE
+	if _flash > 0.0:
+		_anim.modulate = Color(1.0 + _flash, 1.0 + _flash, 1.0 + _flash)
+	_draw_hp_bar(cs * 0.32)
 
 
 ## Banner-Saga-style painted standee: house ring at the feet, figure ~1.5 cells
