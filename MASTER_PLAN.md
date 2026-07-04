@@ -324,7 +324,7 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 | 7.4 | ⬜ | Closing inter-house battle — depends 5.6, 7.1 |
 | 8.1 | ⬜ | Skill system (passive/stat-modifier scope) — depends 2.1, 2.4 |
 | 8.2 | ⬜ | Kai's cross-school magic — depends 8.1 |
-| AW-1 | ⬜ | style bible — no deps, start anytime |
+| AW-1 | ⏳ awaiting sign-off | `STYLE_BIBLE.md` drafted + 22 exemplars generated on the R16 in a closed-loop taste session (DreamShaperXL Turbo, euler/sgm_uniform/6 steps/cfg 2.0; all seeds recorded, reproducible). Six templates: portrait (7), standee (4), map backdrop (3), castle room (3), clash splash (3), vista (2) — all three house palettes exercised. Review copies in `assets/art_review/aw1_style_bible/`; sign-off gallery published (claude.ai artifact `5e694502`). Model failure modes documented in the bible (photo-drift on landscapes, "standee"→figurine, "map"→VTT, period drift → a pickup truck, fake painter signatures, age skew). **Blocked on Neal's approve/redirect per template (§8 acceptance); fresh-seed reproduction check runs at sign-off.** |
 | AW-2 | ⬜ | Mock Battle backdrop + terrain painter — depends AW-1 |
 | AW-3 | ⬜ | pipeline scripts — depends AW-1 |
 | AW-4 | ⬜ | reference sheets + standees (full cast) — depends AW-1, AW-3 |
