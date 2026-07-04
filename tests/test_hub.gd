@@ -6,6 +6,8 @@ var _hub: HubScene
 
 func before_each() -> void:
 	Campaign.reset_new_game(false, 7)
+	# Never let hub saves touch the player's real user://saves (WO-4.3 fix).
+	Campaign.save_system_override = SaveSystem.new("user://test_hub_saves")
 	var scene: PackedScene = load("res://scenes/hub/hub.tscn")
 	_hub = scene.instantiate()
 	add_child_autofree(_hub)
@@ -13,6 +15,7 @@ func before_each() -> void:
 
 
 func after_each() -> void:
+	Campaign.save_system_override = null
 	Campaign.reset_new_game(false)
 
 
@@ -48,4 +51,4 @@ func test_quartermaster_builds_a_unit_summary_without_error():
 
 func test_save_game_writes_a_slot():
 	_hub._save_game()
-	assert_true(SaveSystem.new().has_slot(0), "hub save writes slot 0")
+	assert_true(Campaign.save_system_override.has_slot(0), "hub save writes slot 0")

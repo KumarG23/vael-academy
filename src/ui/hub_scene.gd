@@ -66,7 +66,8 @@ func _open_main() -> void:
 		_info.append("")
 		_info.append("Last battle: " + last.to_upper())
 	_menu.open("Vael Academy — Emberwing", [
-		"Common Hall", "Training Grounds", "Quartermaster", "Mission Board", "Save Game",
+		"Common Hall", "Training Grounds", "Quartermaster", "Mission Board",
+		"Save Game", "Return to Title",
 	], _menu_pos())
 	queue_redraw()
 
@@ -97,6 +98,7 @@ func _do_main(index: int) -> void:
 		2: _open_quartermaster()
 		3: _open_mission()
 		4: _save_game()
+		5: _return_to_title()
 
 
 # --- Common Hall --------------------------------------------------------------
@@ -235,6 +237,10 @@ func _do_mission(index: int) -> void:
 func deploy() -> void:
 	Campaign.deploy()
 	get_tree().change_scene_to_file(BATTLE_SCENE)
+
+
+func _return_to_title() -> void:
+	get_tree().change_scene_to_file("res://scenes/title/title.tscn")
 
 
 # --- Save ---------------------------------------------------------------------

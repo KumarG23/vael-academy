@@ -21,6 +21,9 @@ var active: bool = false
 var training_used: bool = false
 
 var _training_rng := CombatRNG.new(1)
+## Set by load_from_slot so the first hub visit after loading keeps the saved
+## training_used instead of treating the load as a fresh visit (WO-4.3).
+var _skip_next_hub_reset := false
 
 
 ## Start a brand-new campaign (called from New Game / WO-4.3).
@@ -31,13 +34,18 @@ func reset_new_game(is_casual: bool, seed_value: int = 1) -> void:
 	last_result = ""
 	active = false
 	training_used = false
+	_skip_next_hub_reset = false
 	_training_rng = CombatRNG.new(seed_value)
 
 
 ## Enter the hub: refresh the once-per-visit training and leave deploy state.
+## The first visit after a load restores the saved visit instead.
 func begin_hub_visit() -> void:
-	training_used = false
 	active = false
+	if _skip_next_hub_reset:
+		_skip_next_hub_reset = false
+		return
+	training_used = false
 
 
 ## Mark the player as deployed so the next battle applies campaign state.
@@ -122,18 +130,29 @@ func from_dict(data: Dictionary) -> void:
 		_training_rng.set_state(int(str(data["rng_state"])))
 
 
+## Injectable slot IO so tests never write the player's real user://saves.
+var save_system_override: SaveSystem = null
+
+
 func save_to_slot(slot: int, save_system: SaveSystem = null) -> bool:
-	var sys := save_system if save_system != null else SaveSystem.new()
-	return sys.save_slot(slot, {"campaign": to_dict()})
+	return _sys(save_system).save_slot(slot, {"campaign": to_dict()})
 
 
 func load_from_slot(slot: int, save_system: SaveSystem = null) -> bool:
-	var sys := save_system if save_system != null else SaveSystem.new()
-	var data := sys.load_slot(slot)
+	var data := _sys(save_system).load_slot(slot)
 	if data.is_empty() or not data.has("campaign"):
 		return false
 	from_dict(data["campaign"])
+	_skip_next_hub_reset = true  # the next hub visit resumes the saved one
 	return true
+
+
+func _sys(explicit: SaveSystem) -> SaveSystem:
+	if explicit != null:
+		return explicit
+	if save_system_override != null:
+		return save_system_override
+	return SaveSystem.new()
 
 
 func _roster_def(id: String) -> UnitDef:

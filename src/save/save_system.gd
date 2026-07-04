@@ -60,8 +60,12 @@ func list_slots(max_slots: int = 3) -> Array:
 			out.append({
 				"slot": i,
 				"version": int(data.get("version", 0)),
-				"chapter_id": data.get("campaign", {}).get("current_chapter_id", ""),
-				"casual_mode": bool(data.get("campaign", {}).get("casual_mode", false)),
+				# Battle snapshots write current_chapter_id/casual_mode; campaign
+				# saves (hub/title) write chapter_id/casual — accept both.
+				"chapter_id": data.get("campaign", {}).get("current_chapter_id",
+					data.get("campaign", {}).get("chapter_id", "")),
+				"casual_mode": bool(data.get("campaign", {}).get("casual_mode",
+					data.get("campaign", {}).get("casual", false))),
 			})
 	return out
 

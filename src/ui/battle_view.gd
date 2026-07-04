@@ -1320,10 +1320,14 @@ func _apply_house_theme() -> void:
 
 
 func _on_result_dismissed() -> void:
-	# In the campaign flow, return to the hub with the roster changed; standalone,
-	# just reload for another attempt (title flow arrives in WO-4.3).
+	# Campaign flow (WO-4.3): victory returns to the hub with the roster changed;
+	# defeat is a game over — back to the title to load or start again. A battle
+	# scene run standalone (tests/dev) just reloads for another attempt.
 	if Campaign.active:
-		get_tree().change_scene_to_file("res://scenes/hub/hub.tscn")
+		if _battle_victory:
+			get_tree().change_scene_to_file("res://scenes/hub/hub.tscn")
+		else:
+			get_tree().change_scene_to_file("res://scenes/title/title.tscn")
 	else:
 		get_tree().reload_current_scene()
 
