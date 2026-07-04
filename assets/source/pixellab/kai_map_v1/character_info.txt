@@ -1,0 +1,29 @@
+status: completed
+id: 471c7fb8-afa9-4dd6-aaba-9b440a08427b
+name: Kai Emberwing
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 60x60px
+view: low top-down
+style: -, -, -
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/rotations/south-west.png
+
+animations (2):
+  attack_east (east, 9f) 2026-07-04
+    frames: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/d6e594aa-1308-415b-82a4-880c0cb85921/east/0.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/d6e594aa-1308-415b-82a4-880c0cb85921/east/1.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/d6e594aa-1308-415b-82a4-880c0cb85921/east/2.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/d6e594aa-1308-415b-82a4-880c0cb85921/east/3.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/d6e594aa-1308-415b-82a4-880c0cb85921/east/4.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/d6e594aa-1308-415b-82a4-880c0cb85921/east/5.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/d6e594aa-1308-415b-82a4-880c0cb85921/east/6.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/d6e594aa-1308-415b-82a4-880c0cb85921/east/7.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/d6e594aa-1308-415b-82a4-880c0cb85921/east/8.png
+  walking-4-frames (east, 4f) 2026-07-04
+    frames: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/0c8b9bc8-9742-47a8-92e2-50a9d1ce6b6b/east/0.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/0c8b9bc8-9742-47a8-92e2-50a9d1ce6b6b/east/1.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/0c8b9bc8-9742-47a8-92e2-50a9d1ce6b6b/east/2.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/471c7fb8-afa9-4dd6-aaba-9b440a08427b/animations/0c8b9bc8-9742-47a8-92e2-50a9d1ce6b6b/east/3.png
+
+download: https://api.pixellab.ai/mcp/characters/471c7fb8-afa9-4dd6-aaba-9b440a08427b/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="471c7fb8-afa9-4dd6-aaba-9b440a08427b", ...) | create_character_state(character_id="471c7fb8-afa9-4dd6-aaba-9b440a08427b", ...) | delete_animation(character_id="471c7fb8-afa9-4dd6-aaba-9b440a08427b", animation_type="...") | delete_character(character_id="471c7fb8-afa9-4dd6-aaba-9b440a08427b")

@@ -1,4 +1,36 @@
-# STYLE_BIBLE.md — AW-1 v6.2 (sprite tier: derive from the sample bases)
+# STYLE_BIBLE.md — AW-1 v6.3 (sprite tier: PixelLab-primary)
+
+> **v6.3 (2026-07-04, PixelLab pipeline test): PIXELLAB IS THE PRIMARY
+> GENERATOR** (Neal's call after his own tests; workflow skill in
+> `.claude/skills/`). Full path proven end-to-end on Kai: prompt →
+> `create_character` (v3 mode, 32px, 8 directions, 2 generations) →
+> `animate_character` (walk + two-handed sword slash, 1 gen/direction) →
+> engine-ready 32×32 crops → in-engine on Mock Battle → FE-style combat
+> pop-up mock from the attack frames. What matters for next time:
+> - **MCP access:** registered user-level (`~/.claude.json`) as HTTP MCP
+>   `https://api.pixellab.ai/mcp` + bearer token. If the server isn't loaded
+>   in-session, `assets/source/pixellab/tools/pixellab.py` speaks the
+>   protocol over curl-style HTTP (`call get_balance`, `schema <tool>`).
+> - **Costs (trial: 40 generations total):** v3 character 32px = 2 gens;
+>   animations = 1 gen/direction. **Template-mode walk went off-model —
+>   delete_animation + retry with mode="v3" / action_description fixed it.**
+>   Check `get_balance` before spending; report spend to Neal.
+> - **Canvas math:** PixelLab pads canvases (~40%) for animation room —
+>   32px character arrives on 60×60. Crop with ONE shared window per
+>   animation (union bbox, bottom-anchored) or frames jitter
+>   (`tools/pl_process.py`).
+> - **Downloads:** storage URLs 403 — use the authenticated
+>   `/mcp/characters/<id>/download` zip endpoint (bearer token).
+> - **Folders (per the workflow skill):** raw output →
+>   `assets/source/pixellab/<asset>/`; engine-ready → `assets/art/pixellab/`;
+>   `.aseprite` assembled via Aseprite MCP (frames + tags) as export.
+> - **Characters persist server-side** (Kai = id `471c7fb8-…`) — new
+>   animations and palette/outfit states (`create_character_state`) reuse
+>   the same identity without regenerating.
+> - **Tilesets:** `create_topdown_tileset` produces Wang autotile sets —
+>   the intended path for terrain when maps come up. Hand pipelines (v2
+>   coordinate-paint, v3/v4 sample derivation) remain as fallback/cleanup
+>   documentation below.
 
 > **v6.2 (2026-07-04, AW-7 v3): SAMPLE REUSE CLEARED + DERIVATION PIPELINE.**
 > Neal's v2 review: walk cycle passed; hand-built battle sprite failed on
