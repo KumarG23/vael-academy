@@ -240,9 +240,16 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 
 ## 8. Art Track (parallel to code — never blocks it)
 
-**Toolchain:** ComfyUI on the R16 (production) · Claude Code/Antigravity (pipeline scripting, ComfyUI API automation, Godot import) · Gemini (fast concepting/edit iterations only). **Art direction (locked): full painted 2D, no pixel art.** Reference triangle: **Dark Deity** (painted busts) × **The Banner Saga** (painted backdrops + standees, minimal motion) × **Darkest Dungeon** (spectacle from static art + juice).
+**Toolchain:** ComfyUI on the R16 (production) · Claude Code/Antigravity (pipeline scripting, ComfyUI API automation, Godot import) · Gemini (fast concepting/edit iterations only). Free editors for sprite cleanup: LibreSprite / Piskel.
 
-**Standing rules:** code never waits on art (programmer art ships first, real art swaps in); maps are single painted backdrops with an invisible logical grid; **castle rooms are painted backdrops too** (same pipeline, new asset class this revision); units are painted standees, motion tweened in code; combat spectacle is a code system + one static clash-splash per character; no production asset before the Style Bible (AW-1); consistency law — locked reference sheet per character before variants.
+**Art direction (REVISED 2026-07-04 — the three-tier hybrid, i.e. what Dark Deity actually does):**
+1. **Painted art** (Corin-704 register, STYLE_BIBLE) for dialogue busts, clash splashes, map backdrops, castle rooms, vistas/title — everything static by nature. *(Approved in AW-1.)*
+2. **Animated sprites** for everything that moves: battle-map units and castle-campus avatars/NPCs — chunky stylized sprites (~48–64px), short frame cycles (idle, 4-dir walk, attack, hit, KO), **class-based** on the map like Fire Emblem (≈10 class sheets for the slice, not 22 character sheets) with house palettes + unique heads for lords/bosses. The old "no pixel art" rule applied to *readable-scale* art; at unit scale, sprites ARE the genre (Dark Deity ships pixel map/battle sprites under its painted busts). Static standees for units are **retired** — Neal's playtest verdict: they don't work in motion.
+3. **Code juice** unchanged (WO-2.5): hit-stop, shake, splashes — spectacle stays a code system.
+
+Reference triangle: **Dark Deity** (painted busts + pixel unit sprites) × **Wargroove** (chunky readable map sprites on painted-ish terrain) × **Darkest Dungeon** (spectacle from stills + juice).
+
+**Standing rules:** code never waits on art (programmer art ships first, real art swaps in); maps are single painted backdrops with an invisible logical grid; **castle rooms are painted backdrops too**; **units and campus avatars are animated sprites** (AnimatedSprite2D + SpriteFrames; generated on the R16 via ComfyUI sprite workflows + Pixel-Art-XL-class LoRAs with locked palettes, cleaned in LibreSprite/Piskel — all free/local); combat spectacle is a code system + one static clash-splash per character; no production asset before the Style Bible (AW-1); consistency law — locked reference sheet per character before variants; low sprite resolution is deliberate: it hides AI frame-to-frame drift and is what makes AI-assisted animation practical.
 
 **Scaling note (this revision):** the cast is now **~22 named characters** (Kai + 3 heirs + 15 students + 3 teachers) vs. the slice's handful — a real portrait-volume step-up. Plus **castle-room backdrops** (per room, house-tint variants where relevant). Same pipeline, larger manifest.
 
@@ -250,7 +257,8 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 | Asset | Spec |
 |---|---|
 | Portraits | 1024² → transparent PNG → ~400px; `portrait_<unit>_<expression>.png`; expressions: neutral, happy, angry, hurt (slice) |
-| Map standees | ~512² → transparent PNG → ~96–128px/cell; per-class + unique lords/bosses; house-color base ring |
+| Unit sprites | 48–64px frames, transparent sheets (SpriteFrames): idle 2–4f · walk 4f × 4 dir · attack 4–6f · hit 2f · KO 3f; per-class + house palette swaps + unique lords/bosses; house-color base ring stays code |
+| Campus avatar sprites | same language as unit sprites; Kai 4-dir walk + idle; NPCs idle-only to start |
 | Map backdrops | ≥2560×1920 painted battlefield per map (20×15 @ 128px/cell) |
 | **Castle-room backdrops** | painted room per location, house-tint variants where relevant; NPC standees composited in |
 | Clash splashes | 1920×1080 cut-in, transparent-edge vignette; per named unit + per class generic |
@@ -261,11 +269,14 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 - **AW-1 Style Bible.** Painterly look, master + three house palettes, base prompt templates (portrait/standee/backdrop/**room**/splash) + negatives + fixed params, 4–6 exemplars per template. *Accept: Neal signs off; each template reproduces on a fresh seed batch.*
 - **AW-2 Map backdrop & terrain-authoring flow.** Mock Battle backdrop + touch-up + invisible terrain grid + tiny in-editor terrain painter. *Accept: map plays on the painted backdrop; hover shows correct terrain.*
 - **AW-3 Pipeline scripts.** Deterministic ComfyUI batch runner from YAML manifests (`/prompt`→poll→`/view`→rembg→resize→named PNGs→Godot import), Hermes-callable; interactive taste mode via Claude Code vision; Qwen3-VL first-pass QC. *Accept: one command regenerates any asset class from manifests.*
-- **AW-4 Character reference sheets & standees.** Locked base portrait per cast member, expression variants via inpaint/img2img, matching standees. *Accept: consistency review passes; standees read at 96px.*
+- **AW-4 Character reference sheets & portraits.** Locked base portrait per cast member (Corin-704 register), expression variants via inpaint/img2img. *Accept: consistency review passes; Neal signs off per character.* *(Standees removed — superseded by AW-7/AW-8 sprites.)*
 - **AW-5 Clash splashes, house & UI art.** Cut-ins per playable + bosses + per-class generic; three crests/banners; UI frame set; title art. *Accept: WO-2.5 consumes real splashes; WO-3.4 theming consumes real crests.*
 - **AW-6 Integration passes.** Swap-ins gated on code WOs: portraits→after 3.1; backdrop/standees→after 0.4; splashes→after 2.5; house/UI→after 3.4/3.5; **castle-room art→after 6.2**; title→after 4.3.
 
-**Dependency note:** AW-1 → AW-2/3/4/5 → AW-6. None gates any code WO.
+- **AW-7 Sprite pilot (the "does it move right" gate).** Pick the sprite scale/style against the painted maps; generate ONE full class sheet (Kai/myrmidon: idle + 4-dir walk + attack + hit) via the R16 ComfyUI sprite workflow; wire `AnimatedSprite2D` into `Unit` (supersedes the standee hook) and a walk-cycle avatar test scene. *Accept: Neal watches Kai walk/act on the actual map in-engine and approves the look.*
+- **AW-8 Full sprite set.** Every slice class + house palettes + unique lord/boss variants; battle hit/KO frames; campus NPC idles. *Accept: full Mock Battle plays with animated sprites; consistency review passes.*
+
+**Dependency note:** AW-1 → AW-2/3/4/5/7 → AW-6/8. None gates any code WO. **AW-7 is the next art session** — it answers the presentation question before any volume work.
 
 ## 9. Risks & standing decisions
 
@@ -327,9 +338,11 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 | AW-1 | ⏳ v4 — validated in-engine, awaiting final yes/no | **v3:** Neal decided both poles at the v2 review — Pole A with **Corin seed 704 as the register** ("95% perfect", +5% charm dial, capped at FE-official-art level per the bible) and **vivid environments** (feast hall). v3 normalized the cast to the 704 template: Corin 901, Serra 902, Kai 904 (skin tone fixed), archer standee 905 — fresh seeds that double as the reproduction check — plus the vivid Library 906. Bible updated to v3 (locked portrait template, charm rule, new traps: green palettes pull forest backgrounds; identity details like Kai's mark are AW-4 inpainting work). Gallery artifact updated. **v4:** static mocks failed review, so the AW-6 texture hooks landed early as validation — `Unit` standees + `DialogueScene` portraits are live in the engine (convention paths, no-op without art, 268 tests green), Kai proven with rembg-matted spike assets; unedited engine screenshots in the gallery/art_review. **On Neal's yes → ✅ and AW-2/3/4/5 unblock.** *(Prior history:* v1 painterly-oil rejected as too real; v2 pole comparison built on Neal's `sample/` references; Animagine XL 3.1 installed on R16; ComfyUI `/free` crash workaround documented.*)* |
 | AW-2 | ⬜ | Mock Battle backdrop + terrain painter — depends AW-1 |
 | AW-3 | ⬜ | pipeline scripts — depends AW-1 |
-| AW-4 | ⬜ | reference sheets + standees (full cast) — depends AW-1, AW-3 |
+| AW-4 | ⬜ | reference sheets + portraits (full cast; standees dropped → sprites) — depends AW-1, AW-3 |
 | AW-5 | ⬜ | splashes/house/UI art — depends AW-1 |
 | AW-6 | ⬜ | integration (incl. castle-room art) — depends AW-2/4/5 + gating code WOs |
+| AW-7 | ⬜ | **Sprite pilot**: scale/style pick + one animated class sheet (Kai) in-engine via AnimatedSprite2D — depends AW-1 sign-off; NEXT art session |
+| AW-8 | ⬜ | full sprite set (classes + palettes + lords/bosses + campus idles) — depends AW-7 |
 
 ## 11. PARKING LOT (ideas land here, not in code)
 

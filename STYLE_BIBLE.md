@@ -1,4 +1,24 @@
-# STYLE_BIBLE.md — AW-1 v4 (draft, awaiting Neal's sign-off)
+# STYLE_BIBLE.md — AW-1 v5 (three-tier revision)
+
+> **v5 (2026-07-04): THE TIER SPLIT.** Neal's verdict after the in-engine test:
+> painted portraits in dialogue work ("looks good"); static standees on the map do
+> NOT ("doesn't work for me at all") — anything that MOVES needs real animation.
+> Research confirmed the genre answer: Dark Deity itself ships **pixel/sprite map
+> and battle animations under its painted busts**. The bible therefore governs
+> three tiers:
+> 1. **Painted tier (this document, AW-1):** dialogue busts, splashes, map
+>    backdrops, rooms, vistas — approved register stands (Corin-704, vivid
+>    environments).
+> 2. **Sprite tier (spec finalized by AW-7 pilot):** battle units + campus
+>    avatars/NPCs — chunky stylized sprites ~48–64px, idle/walk×4-dir/attack/hit/KO
+>    cycles, class-based sheets + house palettes. Generated locally (R16 ComfyUI
+>    sprite workflows + pixel-art LoRA, palette-locked), cleaned in LibreSprite/
+>    Piskel (free), consumed by Godot `AnimatedSprite2D`. Low resolution is the
+>    feature: it hides AI frame drift and keeps animation tractable.
+> 3. **Juice tier (code, WO-2.5):** unchanged.
+> The static-standee template (§ below) is RETIRED for map use; the engine's
+> standee hook remains as a dev fallback only. Portrait/splash/environment
+> templates are unaffected.
 
 > **v4 (2026-07-04): validated IN THE ENGINE.** After static composite mocks failed
 > review, the AW-6 texture hooks were landed early as AW-1 validation: `Unit` draws
