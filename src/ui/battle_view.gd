@@ -69,6 +69,11 @@ var _menu_items: Array = []        # InventoryItems for item/equip/trade_give
 var _menu_partners: Array[Unit] = []  # allies for trade_ally
 var _support_menu_entries: Array = []
 var _trade_partner: Unit = null
+## Where the selected unit stood before moving — cancel on the command menu
+## undoes the move (FE semantics, WO-4.4).
+var _move_origin := Vector2i.ZERO
+var _stats_panel: UnitStatsPanel
+var _stats_from_menu := false
 var _battle_over := false
 var _battle_victory := false
 var _lord_unit: Unit = null
@@ -288,17 +293,22 @@ func _on_cursor_cancelled(_cell: Vector2i) -> void:
 	if _busy:
 		return
 	if _phase == Phase.TARGETING:
-		# Cancel the attack but keep the move: end the action as a "wait".
-		_finish_action()
+		# Cancel targeting: back to the command menu, nothing spent (WO-4.4).
+		_forecast_panel.hide_panel()
+		_open_action_menu()
 	elif _phase == Phase.SELECTED:
 		_deselect()
 
 
 func _try_select(cell: Vector2i) -> void:
 	var u := unit_at(cell)
-	if u == null or u.team != 0 or u.has_acted or not u.is_alive():
+	if u == null or not u.is_alive():
+		return
+	if u.team != 0 or u.has_acted:
+		_open_stats_for(u)  # anyone who can't act can still be inspected (WO-4.4)
 		return
 	_selected = u
+	_move_origin = u.cell
 	_phase = Phase.SELECTED
 	_standable = MovementRange.standable_tiles(u.cell, _mov(u), _make_context(u))
 	var attack := MovementRange.attack_tiles(_standable, _weapon_ranges(u), _make_context(u))
@@ -346,10 +356,21 @@ func _open_action_menu() -> void:
 		_menu_actions.append("trade"); labels.append("Trade")
 	if _weapon_count(unit) > 1:
 		_menu_actions.append("equip"); labels.append("Equip")
-	if not _support_state.unlocked_conversations_for_unit(unit.unit_def.id).is_empty():
+	if not _unviewed_conversations(unit.unit_def.id).is_empty():
 		_menu_actions.append("supports"); labels.append("Supports")
+	_menu_actions.append("stats"); labels.append("Stats")
 	_menu_actions.append("wait"); labels.append("Wait")
 	_open_menu("action", "Action", labels)
+
+
+## Unlocked support conversations this unit hasn't watched yet — the in-battle
+## Supports menu only offers new scenes; the Common Hall keeps the full archive.
+func _unviewed_conversations(unit_id: String) -> Array:
+	var out: Array = []
+	for entry in _support_state.unlocked_conversations_for_unit(unit_id):
+		if not bool(entry.get("viewed", false)):
+			out.append(entry)
+	return out
 
 
 func _open_menu(context: String, title: String, labels: Array) -> void:
@@ -382,15 +403,21 @@ func _on_menu_cancelled() -> void:
 		return
 	match _menu_context:
 		"action":
-			_menu.close()
-			_finish_action()          # cancel on the command menu = wait
-		"trade_give":
-			_menu.close()
-			_finish_action()          # done handing items over
-		"supports":
-			_open_action_menu()
+			_undo_move_and_deselect()  # cancel the command menu = take the move back
 		_:
-			_open_action_menu()       # item / equip / trade_ally -> back to action
+			_open_action_menu()       # any submenu -> back to the command menu
+
+
+## Cancel out of the command menu: the unit returns to where it stood before
+## moving and may act again this turn (FE semantics, WO-4.4). Items already
+## traded away stay traded — only the movement is undone.
+func _undo_move_and_deselect() -> void:
+	_menu.close()
+	if _selected != null and is_instance_valid(_selected) and _selected.cell != _move_origin:
+		_selected.cell = _move_origin
+		_selected.position = _grid.cell_center(_move_origin)
+	_forecast_panel.hide_panel()
+	_deselect()
 
 
 func _do_action(id: String) -> void:
@@ -411,6 +438,10 @@ func _do_action(id: String) -> void:
 			_open_equip_menu()
 		"supports":
 			_open_support_menu()
+		"stats":
+			_menu.close()
+			_stats_from_menu = true
+			_open_stats_for(_selected)
 		"wait":
 			_menu.close()
 			_finish_action()
@@ -514,7 +545,7 @@ func _do_give(index: int) -> void:
 
 
 func _open_support_menu() -> void:
-	_support_menu_entries = _support_state.unlocked_conversations_for_unit(_selected.unit_def.id)
+	_support_menu_entries = _unviewed_conversations(_selected.unit_def.id)
 	var labels: Array = []
 	for entry in _support_menu_entries:
 		labels.append(entry["label"])
@@ -526,15 +557,35 @@ func _open_support_menu() -> void:
 
 ## Play the chosen support conversation as a VN overlay (WO-4.2), then return to
 ## the command menu — viewing a conversation doesn't consume the unit's action.
+## Once watched it stops appearing in battle (WO-4.4); the Common Hall keeps it.
 func _view_support_entry(index: int) -> void:
 	var entry: Dictionary = _support_menu_entries[index]
 	var path := str(entry.get("path", ""))
 	_menu.close()
 	if dialogue_enabled and path != "" and FileAccess.file_exists(path):
 		await _play_dialogue(path)
+		_support_state.mark_viewed(str(entry["pair_id"]), str(entry["rank"]))
 	else:
 		_pop_text(_selected.position, "%s ready" % entry["label"], Color(0.95, 0.75, 0.35))
 	_open_action_menu()
+
+
+# --- unit inspection (WO-4.4) ------------------------------------------------------
+
+func _open_stats_for(unit: Unit) -> void:
+	_stats_panel.show_unit(unit)
+	if _cursor != null:
+		_cursor.active = false
+
+
+func _on_stats_closed() -> void:
+	if _stats_from_menu and _selected != null and is_instance_valid(_selected):
+		_stats_from_menu = false
+		_open_action_menu()
+	else:
+		_stats_from_menu = false
+		if _cursor != null and not _battle_over:
+			_cursor.active = true
 
 
 func _adjacent_allies(unit: Unit) -> Array[Unit]:
@@ -556,7 +607,9 @@ func _weapon_count(unit: Unit) -> int:
 func _handle_targeting_confirm(cell: Vector2i) -> void:
 	var target := unit_at(cell)
 	if target == null or not _targets.has(target):
-		_finish_action()  # confirming off-target = wait
+		# Confirming off-target: back to the command menu, nothing spent (WO-4.4).
+		_forecast_panel.hide_panel()
+		_open_action_menu()
 		return
 	if _targeting_heal:
 		await _execute_heal(_selected, target)
@@ -1287,6 +1340,10 @@ func _setup_ui() -> void:
 	_menu.chosen.connect(_on_menu_chosen)
 	_menu.cancelled.connect(_on_menu_cancelled)
 	_ui_layer.add_child(_menu)
+	_stats_panel = UnitStatsPanel.new()
+	_stats_panel.position = Vector2(40, vp.y * 0.5 - UnitStatsPanel.PANEL_SIZE.y * 0.5)
+	_stats_panel.closed.connect(_on_stats_closed)
+	_ui_layer.add_child(_stats_panel)
 	_apply_house_theme()
 
 

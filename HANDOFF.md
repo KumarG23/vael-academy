@@ -1,7 +1,7 @@
 # HANDOFF.md — agent handoff & project state
 
 For any coding agent picking this project up (Codex, a fresh Claude session, or a human).
-Updated at the end of every work order (MASTER_PLAN §2 rule 8). **Last updated: 2026-07-04, after WO-4.3.**
+Updated at the end of every work order (MASTER_PLAN §2 rule 8). **Last updated: 2026-07-04, after WO-4.4 (M4 complete).**
 
 ## What this is
 
@@ -9,9 +9,9 @@ A Fire Emblem–style 2D tactics RPG ("Emberline Tactics", working title) in **G
 
 ## Current state (keep this section fresh)
 
-- **Last completed WO:** 4.3 — title screen & game flow. `TitleScreen` is now the main scene: New (Classic/Casual) / Load / Quit; hub has Return to Title; campaign defeat exits to the title. Kai–Kael conversation drafts (WO-4.2) still pending Neal's edit.
-- **Next WO:** 4.4 (polish pass — Neal playtests and files issues). Then 4.5 battle_view refactor → 4.6 dialogue branches → M5. See §10 for the full ladder and dependencies.
-- **Tests:** 260/260 green, 43 scripts. The combat core (`src/combat/`) is the most-tested code; keep it that way. Tests must never write the real `user://saves` — inject `Campaign.save_system_override` (see test_hub) or pass an explicit `SaveSystem` with a test dir.
+- **Last completed WO:** 4.4 — polish pass from Neal's playtest (**M4 complete**). FE cancel semantics (cancel undoes the move), `UnitStatsPanel` (Stats command + select-to-inspect enemies), supports view-once in battle (`SupportState.viewed`), Serra/armor/guard tuned down, menu/hub text clipping fixed. Kai–Kael conversation drafts (WO-4.2) still pending Neal's edit; SFX hooks deferred until audio assets exist.
+- **Next WO:** 4.5 (battle_view refactor: extract UnitSpawner / action-menu controller / combat executor, zero behavior change). Then 4.6 dialogue branches → M5. The art track (AW-1 Style Bible) has no dependencies and can start any session. See §10 for the full ladder.
+- **Tests:** 268/268 green, 44 scripts. The combat core (`src/combat/`) is the most-tested code; keep it that way. Tests must never write the real `user://saves` — inject `Campaign.save_system_override` (see test_hub) or pass an explicit `SaveSystem` with a test dir.
 - **Protagonist:** Kai (id `kai`) — renamed from Ash in WO-4.1b. The lord flag lives on `data/units/kai.tres`; lord death = game over.
 - **Campaign flow today:** title (`scenes/title/title.tscn`, the main scene) → New/Load → hub (`scenes/hub/hub.tscn`) → deploy → `scenes/battle/mock_battle.tscn` (Chapter 1) → victory back to hub / defeat back to title → hub "Return to Title" closes the loop. The menu hub gets replaced by a walkable castle in M6; its systems (`Campaign` autoload, `Roster`) are the keepers.
 - **Dev saves:** JSON under `user://saves/` (macOS: `~/Library/Application Support/Godot/app_userdata/Vael Academy/saves/`). Considered disposable until the save payload stabilizes (M5–M7 grow it).

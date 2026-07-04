@@ -108,7 +108,8 @@ func _open_common_hall() -> void:
 	_hall_entries = _support_state.unlocked_conversations_for_unit("kai")
 	var labels: Array = []
 	for c in _hall_entries:
-		labels.append(c["label"])
+		# The hall is the archive: watched scenes stay replayable, marked read.
+		labels.append(str(c["label"]) + ("   ✓" if bool(c.get("viewed", false)) else ""))
 	if labels.is_empty():
 		labels = ["(no supports unlocked yet)"]
 	_info = ["Common Hall", "", _flavor_line, "", "Unlocked support conversations:"]
@@ -139,6 +140,9 @@ func _play_support_entry(index: int) -> void:
 		await scene.finished
 	layer.queue_free()
 	_dialogue_playing = false
+	# Mark it read and push the state back so battles stop re-offering it (WO-4.4).
+	_support_state.mark_viewed(str(_hall_entries[index]["pair_id"]), str(_hall_entries[index]["rank"]))
+	Campaign.support_save = _support_state.save_state()
 	_open_common_hall()
 
 
@@ -287,8 +291,10 @@ func _draw() -> void:
 	draw_rect(Rect2(0, 0, vp.x, 90), Color(accent.r, accent.g, accent.b, 0.55) * tint, true)
 	var font := ThemeDB.fallback_font
 	draw_string(font, Vector2(40, 60), "Vael Academy", HORIZONTAL_ALIGNMENT_LEFT, -1, 44, Color.WHITE)
-	# Info panel (left).
+	# Info panel (left). Long lines wrap instead of clipping (WO-4.4).
+	var wrap_w := vp.x * 0.5
 	var y := 170.0
 	for line in _info:
-		draw_string(font, Vector2(48, y), line, HORIZONTAL_ALIGNMENT_LEFT, vp.x * 0.5, 20, Color(0.92, 0.93, 0.97))
-		y += 30
+		draw_multiline_string(font, Vector2(48, y), line, HORIZONTAL_ALIGNMENT_LEFT, wrap_w, 20, -1, Color(0.92, 0.93, 0.97))
+		var sz := font.get_multiline_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, wrap_w, 20)
+		y += maxf(30.0, sz.y + 8.0)

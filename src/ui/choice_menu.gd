@@ -10,10 +10,13 @@ signal cancelled
 const ROW_H := 34.0
 const PAD := 14.0
 const WIDTH := 240.0
+const MAX_WIDTH := 460.0
 
 var _title := ""
 var _options: Array = []
 var _index := 0
+## Computed per open() so long labels never clip (WO-4.4).
+var _width := WIDTH
 ## House-themed border/title accent (§4). Defaults to the original gold.
 var accent := Color(0.85, 0.78, 0.45)
 
@@ -26,6 +29,7 @@ func open(title: String, options: Array, top_left: Vector2) -> void:
 	_title = title
 	_options = options
 	_index = 0
+	_width = _fit_width()
 	position = top_left
 	visible = true
 	queue_redraw()
@@ -33,6 +37,17 @@ func open(title: String, options: Array, top_left: Vector2) -> void:
 
 func close() -> void:
 	visible = false
+
+
+## Widest label (title at 18px, rows at 20px) plus padding, clamped sane.
+func _fit_width() -> float:
+	var font := ThemeDB.fallback_font
+	var w := WIDTH
+	if _title != "":
+		w = maxf(w, font.get_string_size(_title, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x + PAD * 2 + 8)
+	for opt in _options:
+		w = maxf(w, font.get_string_size(str(opt), HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x + PAD * 2 + 20)
+	return minf(w, MAX_WIDTH)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -56,17 +71,17 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _draw() -> void:
 	var h := PAD * 2 + ROW_H * (_options.size() + (1 if _title != "" else 0))
-	var rect := Rect2(Vector2.ZERO, Vector2(WIDTH, h))
+	var rect := Rect2(Vector2.ZERO, Vector2(_width, h))
 	draw_rect(rect, Color(0.08, 0.09, 0.13, 0.95), true)
 	draw_rect(rect, Color(accent.r, accent.g, accent.b, 0.9), false, 2.0)
 	var font := ThemeDB.fallback_font
 	var y := PAD + 22.0
 	if _title != "":
-		draw_string(font, Vector2(PAD, y), _title, HORIZONTAL_ALIGNMENT_LEFT, WIDTH - PAD * 2, 18, accent)
+		draw_string(font, Vector2(PAD, y), _title, HORIZONTAL_ALIGNMENT_LEFT, _width - PAD * 2, 18, accent)
 		y += ROW_H
 	for i in range(_options.size()):
 		if i == _index:
-			draw_rect(Rect2(6, y - 22, WIDTH - 12, ROW_H - 4), Color(0.30, 0.45, 0.85, 0.55), true)
+			draw_rect(Rect2(6, y - 22, _width - 12, ROW_H - 4), Color(0.30, 0.45, 0.85, 0.55), true)
 		draw_string(font, Vector2(PAD + 6, y), str(_options[i]), HORIZONTAL_ALIGNMENT_LEFT,
-			WIDTH - PAD * 2, 20, Color.WHITE)
+			_width - PAD * 2, 20, Color.WHITE)
 		y += ROW_H

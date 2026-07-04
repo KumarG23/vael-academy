@@ -19,6 +19,17 @@ const _BONUS_BY_RANK := {
 var chains: Array[SupportChainDef] = []
 var points: Dictionary = {}
 var ranks: Dictionary = {}
+## "pair_id:rank" -> true once the conversation has been watched (WO-4.4). The
+## in-battle menu offers only unwatched scenes; the Common Hall keeps the archive.
+var viewed: Dictionary = {}
+
+
+func mark_viewed(pair_id: String, rank: String) -> void:
+	viewed["%s:%s" % [pair_id, rank]] = true
+
+
+func is_viewed(pair_id: String, rank: String) -> bool:
+	return bool(viewed.get("%s:%s" % [pair_id, rank], false))
 
 
 func add_chain(chain: SupportChainDef) -> void:
@@ -109,6 +120,7 @@ func unlocked_conversations_for_unit(unit_id: String) -> Array:
 				"rank": rank,
 				"label": chain.conversation_label(rank),
 				"path": chain.conversation_path(rank),
+				"viewed": is_viewed(chain.pair_id(), rank),
 			})
 	return out
 
@@ -121,18 +133,23 @@ func save_state() -> Dictionary:
 	return {
 		"points": points.duplicate(true),
 		"ranks": ranks.duplicate(true),
+		"viewed": viewed.duplicate(true),
 	}
 
 
 func apply_save_state(state: Dictionary) -> void:
 	points.clear()
 	ranks.clear()
+	viewed.clear()
 	var saved_points: Dictionary = state.get("points", {})
 	for pair_id in saved_points:
 		points[pair_id] = int(saved_points[pair_id])
 	var saved_ranks: Dictionary = state.get("ranks", {})
 	for pair_id in saved_ranks:
 		ranks[pair_id] = str(saved_ranks[pair_id])
+	var saved_viewed: Dictionary = state.get("viewed", {})
+	for key in saved_viewed:
+		viewed[str(key)] = bool(saved_viewed[key])
 	for chain in chains:
 		var pair := chain.pair_id()
 		if not points.has(pair):
