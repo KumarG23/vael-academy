@@ -1,0 +1,27 @@
+status: completed
+id: c37316ce-faf2-4368-81fb-471a8f0d540e
+name: dain
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 60x60px
+view: low top-down
+style: -, -, -
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/rotations/south-west.png
+
+animations (1):
+  walk_east (east, 9f) 2026-07-04
+    frames: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/animations/5bd58abb-6046-481d-9ced-0e341cef4fac/east/0.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/animations/5bd58abb-6046-481d-9ced-0e341cef4fac/east/1.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/animations/5bd58abb-6046-481d-9ced-0e341cef4fac/east/2.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/animations/5bd58abb-6046-481d-9ced-0e341cef4fac/east/3.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/animations/5bd58abb-6046-481d-9ced-0e341cef4fac/east/4.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/animations/5bd58abb-6046-481d-9ced-0e341cef4fac/east/5.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/animations/5bd58abb-6046-481d-9ced-0e341cef4fac/east/6.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/animations/5bd58abb-6046-481d-9ced-0e341cef4fac/east/7.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/c37316ce-faf2-4368-81fb-471a8f0d540e/animations/5bd58abb-6046-481d-9ced-0e341cef4fac/east/8.png
+
+download: https://api.pixellab.ai/mcp/characters/c37316ce-faf2-4368-81fb-471a8f0d540e/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="c37316ce-faf2-4368-81fb-471a8f0d540e", ...) | create_character_state(character_id="c37316ce-faf2-4368-81fb-471a8f0d540e", ...) | delete_animation(character_id="c37316ce-faf2-4368-81fb-471a8f0d540e", animation_type="...") | delete_character(character_id="c37316ce-faf2-4368-81fb-471a8f0d540e")

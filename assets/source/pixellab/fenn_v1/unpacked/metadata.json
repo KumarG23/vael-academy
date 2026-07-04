@@ -1,0 +1,36 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "5afce77e-c05d-45d0-bca5-92a57ad8b87b",
+        "name": "fenn",
+        "prompt": "young male tactics-RPG skirmisher student, playful grin, messy sea-green hair, light deep blue uniform with silver trim and short cloak, javelin and small buckler, quick light stance, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:06:12.530236+00:00"
+      },
+      "folder": "fenn",
+      "frames": {
+        "rotations": {
+          "south": "fenn/rotations/south.png",
+          "south-east": "fenn/rotations/south-east.png",
+          "east": "fenn/rotations/east.png",
+          "north-east": "fenn/rotations/north-east.png",
+          "north": "fenn/rotations/north.png",
+          "north-west": "fenn/rotations/north-west.png",
+          "west": "fenn/rotations/west.png",
+          "south-west": "fenn/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T23:24:23.733223"
+}

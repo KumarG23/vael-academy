@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "25ae7348-73b0-48b3-9ae9-702c12bfe3de",
+        "name": "callan",
+        "prompt": "middle-aged male tactics-RPG war instructor, scarred weathered face, short grey-streaked dark hair, burn scar on jaw, dark navy officer uniform with crimson mantle and gold rank braid, arming sword, commanding presence, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:10:01.325259+00:00"
+      },
+      "folder": "callan",
+      "frames": {
+        "rotations": {
+          "south": "callan/rotations/south.png",
+          "south-east": "callan/rotations/south-east.png",
+          "east": "callan/rotations/east.png",
+          "north-east": "callan/rotations/north-east.png",
+          "north": "callan/rotations/north.png",
+          "north-west": "callan/rotations/north-west.png",
+          "west": "callan/rotations/west.png",
+          "south-west": "callan/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "callan/animations/walking/east/frame_000.png",
+              "callan/animations/walking/east/frame_001.png",
+              "callan/animations/walking/east/frame_002.png",
+              "callan/animations/walking/east/frame_003.png",
+              "callan/animations/walking/east/frame_004.png",
+              "callan/animations/walking/east/frame_005.png",
+              "callan/animations/walking/east/frame_006.png",
+              "callan/animations/walking/east/frame_007.png",
+              "callan/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T23:24:51.327375"
+}

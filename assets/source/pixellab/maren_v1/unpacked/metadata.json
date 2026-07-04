@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "09f981ca-494e-4acf-8705-027ccdb31f3d",
+        "name": "maren",
+        "prompt": "middle-aged female tactics-RPG knight instructor, stern disciplined face, steel-grey hair in a tight braid, deep blue and silver officer armor with long coat, tall lance, commanding presence, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:06:17.405725+00:00"
+      },
+      "folder": "maren",
+      "frames": {
+        "rotations": {
+          "south": "maren/rotations/south.png",
+          "south-east": "maren/rotations/south-east.png",
+          "east": "maren/rotations/east.png",
+          "north-east": "maren/rotations/north-east.png",
+          "north": "maren/rotations/north.png",
+          "north-west": "maren/rotations/north-west.png",
+          "west": "maren/rotations/west.png",
+          "south-west": "maren/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "maren/animations/walking/east/frame_000.png",
+              "maren/animations/walking/east/frame_001.png",
+              "maren/animations/walking/east/frame_002.png",
+              "maren/animations/walking/east/frame_003.png",
+              "maren/animations/walking/east/frame_004.png",
+              "maren/animations/walking/east/frame_005.png",
+              "maren/animations/walking/east/frame_006.png",
+              "maren/animations/walking/east/frame_007.png",
+              "maren/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T23:24:27.811955"
+}

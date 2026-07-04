@@ -1,0 +1,36 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "f762aa19-9fe4-4400-a41d-b70fb46108f3",
+        "name": "elowen",
+        "prompt": "young female tactics-RPG healer priest student, serene kind face, long silver-white hair, deep blue and white priestess robe with silver trim, healing staff, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:03:15.902182+00:00"
+      },
+      "folder": "elowen",
+      "frames": {
+        "rotations": {
+          "south": "elowen/rotations/south.png",
+          "south-east": "elowen/rotations/south-east.png",
+          "east": "elowen/rotations/east.png",
+          "north-east": "elowen/rotations/north-east.png",
+          "north": "elowen/rotations/north.png",
+          "north-west": "elowen/rotations/north-west.png",
+          "west": "elowen/rotations/west.png",
+          "south-west": "elowen/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T23:24:19.627827"
+}

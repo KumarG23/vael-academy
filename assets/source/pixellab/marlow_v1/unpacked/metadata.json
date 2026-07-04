@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "d617876f-f927-4052-b2b3-28b3fc65aae7",
+        "name": "marlow",
+        "prompt": "young male tactics-RPG thief scout student, sly street-smart grin, tousled brown hair, bandana scarf, fitted forest green uniform with bronze buckles, twin daggers, light crouched stance, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:09:57.775455+00:00"
+      },
+      "folder": "marlow",
+      "frames": {
+        "rotations": {
+          "south": "marlow/rotations/south.png",
+          "south-east": "marlow/rotations/south-east.png",
+          "east": "marlow/rotations/east.png",
+          "north-east": "marlow/rotations/north-east.png",
+          "north": "marlow/rotations/north.png",
+          "north-west": "marlow/rotations/north-west.png",
+          "west": "marlow/rotations/west.png",
+          "south-west": "marlow/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "marlow/animations/walking/east/frame_000.png",
+              "marlow/animations/walking/east/frame_001.png",
+              "marlow/animations/walking/east/frame_002.png",
+              "marlow/animations/walking/east/frame_003.png",
+              "marlow/animations/walking/east/frame_004.png",
+              "marlow/animations/walking/east/frame_005.png",
+              "marlow/animations/walking/east/frame_006.png",
+              "marlow/animations/walking/east/frame_007.png",
+              "marlow/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T23:24:36.726563"
+}

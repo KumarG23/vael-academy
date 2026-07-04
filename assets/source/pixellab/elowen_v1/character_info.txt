@@ -1,0 +1,29 @@
+status: completed
+id: f762aa19-9fe4-4400-a41d-b70fb46108f3
+name: elowen
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 64x64px
+view: low top-down
+style: -, -, -
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f762aa19-9fe4-4400-a41d-b70fb46108f3/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f762aa19-9fe4-4400-a41d-b70fb46108f3/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f762aa19-9fe4-4400-a41d-b70fb46108f3/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f762aa19-9fe4-4400-a41d-b70fb46108f3/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f762aa19-9fe4-4400-a41d-b70fb46108f3/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f762aa19-9fe4-4400-a41d-b70fb46108f3/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f762aa19-9fe4-4400-a41d-b70fb46108f3/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f762aa19-9fe4-4400-a41d-b70fb46108f3/rotations/south-west.png
+
+animations: none
+
+failed jobs (1):
+  walk_east(east): Generation failed. Please try again.
+
+download: https://api.pixellab.ai/mcp/characters/f762aa19-9fe4-4400-a41d-b70fb46108f3/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="f762aa19-9fe4-4400-a41d-b70fb46108f3", ...) | create_character_state(character_id="f762aa19-9fe4-4400-a41d-b70fb46108f3", ...) | delete_character(character_id="f762aa19-9fe4-4400-a41d-b70fb46108f3")
+hint: animate_character(character_id="f762aa19-9fe4-4400-a41d-b70fb46108f3", template_animation_id="backflip")

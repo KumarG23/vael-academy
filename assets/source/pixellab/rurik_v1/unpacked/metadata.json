@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "88b027c4-e2b5-4fe5-8ee7-540ce232ca5f",
+        "name": "rurik",
+        "prompt": "young male tactics-RPG hunter warrior student, rugged outdoorsman look, shaggy dark hair, fur-trimmed forest green uniform with bronze clasps, hunting axe, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:12:36.128848+00:00"
+      },
+      "folder": "rurik",
+      "frames": {
+        "rotations": {
+          "south": "rurik/rotations/south.png",
+          "south-east": "rurik/rotations/south-east.png",
+          "east": "rurik/rotations/east.png",
+          "north-east": "rurik/rotations/north-east.png",
+          "north": "rurik/rotations/north.png",
+          "north-west": "rurik/rotations/north-west.png",
+          "west": "rurik/rotations/west.png",
+          "south-west": "rurik/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "rurik/animations/walking/east/frame_000.png",
+              "rurik/animations/walking/east/frame_001.png",
+              "rurik/animations/walking/east/frame_002.png",
+              "rurik/animations/walking/east/frame_003.png",
+              "rurik/animations/walking/east/frame_004.png",
+              "rurik/animations/walking/east/frame_005.png",
+              "rurik/animations/walking/east/frame_006.png",
+              "rurik/animations/walking/east/frame_007.png",
+              "rurik/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T23:24:53.438114"
+}

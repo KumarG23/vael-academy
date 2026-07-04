@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "32f50da3-1761-4a86-8be4-4e058c89cad1",
+        "name": "isolde",
+        "prompt": "young female tactics-RPG faith mage student, formal reserved bearing, dark hair in a tight bun, deep blue scholar robe with silver clasps, glowing blue tome, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:06:11.89069+00:00"
+      },
+      "folder": "isolde",
+      "frames": {
+        "rotations": {
+          "south": "isolde/rotations/south.png",
+          "south-east": "isolde/rotations/south-east.png",
+          "east": "isolde/rotations/east.png",
+          "north-east": "isolde/rotations/north-east.png",
+          "north": "isolde/rotations/north.png",
+          "north-west": "isolde/rotations/north-west.png",
+          "west": "isolde/rotations/west.png",
+          "south-west": "isolde/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "isolde/animations/walking/east/frame_000.png",
+              "isolde/animations/walking/east/frame_001.png",
+              "isolde/animations/walking/east/frame_002.png",
+              "isolde/animations/walking/east/frame_003.png",
+              "isolde/animations/walking/east/frame_004.png",
+              "isolde/animations/walking/east/frame_005.png",
+              "isolde/animations/walking/east/frame_006.png",
+              "isolde/animations/walking/east/frame_007.png",
+              "isolde/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T23:24:21.935072"
+}

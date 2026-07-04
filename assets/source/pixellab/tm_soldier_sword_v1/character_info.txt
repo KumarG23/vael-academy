@@ -1,0 +1,6 @@
+status: failed
+id: db96622b-cd23-456a-9dc6-d521432b9f05
+name: wielding a one-hande
+error: Generation failed
+
+hint: create_character(description="generic male tactics-RPG soldier trooper, deep blue uniform ") to retry
