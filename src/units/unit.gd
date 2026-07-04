@@ -240,6 +240,32 @@ func apply_save_state(state: Dictionary) -> void:
 	queue_redraw()
 
 
+## Between-battle progression only (level/XP/stat gains/promotion/inventory) — no
+## board position, current HP, or turn flags. Used by Campaign so redeploying to a
+## new battle keeps growth but resets position and heals to full.
+func progression_state() -> Dictionary:
+	return {
+		"id": unit_id(),
+		"level": level,
+		"xp": xp,
+		"stat_bonus": _stat_bonus.duplicate(true),
+		"class_override": _resource_path(_class_override),
+		"move_bonus": _move_bonus,
+		"inventory": _inventory_save_state(),
+	}
+
+
+func apply_progression_state(state: Dictionary) -> void:
+	level = int(state.get("level", level))
+	xp = int(state.get("xp", xp))
+	_apply_stat_bonus(state.get("stat_bonus", {}))
+	_move_bonus = int(state.get("move_bonus", _move_bonus))
+	_apply_class_override(str(state.get("class_override", "")))
+	_apply_inventory_state(state.get("inventory", []))
+	current_hp = max_hp()  # full HP for a fresh deployment
+	queue_redraw()
+
+
 func _apply_stat_bonus(saved: Dictionary) -> void:
 	for key in _stat_bonus:
 		_stat_bonus[key] = int(saved.get(key, 0))

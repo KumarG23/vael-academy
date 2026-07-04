@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Vael Academy"
 config/description="A Fire Emblem-style tactics RPG. See MASTER_PLAN.md."
-run/main_scene="res://scenes/battle/battle.tscn"
+run/main_scene="res://scenes/hub/hub.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -22,6 +22,7 @@ EventBus="*res://src/core/event_bus.gd"
 MCPScreenshot="*res://addons/godot_mcp/mcp_screenshot_service.gd"
 MCPInputService="*res://addons/godot_mcp/mcp_input_service.gd"
 MCPGameInspector="*res://addons/godot_mcp/mcp_game_inspector_service.gd"
+Campaign="*res://src/core/campaign.gd"
 
 [editor_plugins]
 

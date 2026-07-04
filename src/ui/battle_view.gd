@@ -760,11 +760,24 @@ func _end_battle(victory: bool) -> void:
 	_range_overlay.clear()
 	if victory and casual_mode:
 		_apply_casual_post_chapter_revival()
+	# Carry the roster's progression + supports back to the campaign (WO-3.5).
+	if Campaign.active:
+		Campaign.capture(_captured_roster_progression(), _support_state.save_state(),
+			"victory" if victory else "defeat")
 	if victory:
 		EventBus.battle_won.emit()
 		_result_screen.show_victory()
 	else:
 		_result_screen.show_defeat()
+
+
+## Progression (level/XP/gains/inventory) of every surviving player unit, keyed by id.
+func _captured_roster_progression() -> Dictionary:
+	var out := {}
+	for u in _units:
+		if u.team == 0 and u.is_alive():
+			out[u.unit_id()] = u.progression_state()
+	return out
 
 
 func _execute_enemy_unit(enemy: Unit) -> void:
@@ -1189,44 +1202,28 @@ func _apply_house_theme() -> void:
 
 
 func _on_result_dismissed() -> void:
-	# Reload the battle for another attempt (title/hub flow arrives in WO-4.3).
-	get_tree().reload_current_scene()
+	# In the campaign flow, return to the hub with the roster changed; standalone,
+	# just reload for another attempt (title flow arrives in WO-4.3).
+	if Campaign.active:
+		get_tree().change_scene_to_file("res://scenes/hub/hub.tscn")
+	else:
+		get_tree().reload_current_scene()
 
 
 func _spawn_demo_units() -> void:
-	var myrmidon: ClassDef = _try_load("res://data/classes/myrmidon.tres")
-	var knight: ClassDef = _try_load("res://data/classes/knight.tres")
+	# Player roster (shared with the Academy Hub, §4 / WO-3.5).
+	var cells := Roster.deploy_cells()
+	for def in Roster.player_units():
+		var u := add_unit(def, cells.get(def.id, Vector2i.ZERO))
+		if def.is_lord:
+			_lord_unit = u
+	# Enemy force (chapter/demo). One of each AI tier (§5): an aggressor advances, a
+	# sentinel holds until threatened, a boss holds the fort at (16,4).
 	var soldier: ClassDef = _try_load("res://data/classes/soldier.tres")
 	var sword: WeaponDef = _try_load("res://data/weapons/iron_sword.tres")
 	var lance: WeaponDef = _try_load("res://data/weapons/iron_lance.tres")
-	var axe: WeaponDef = _try_load("res://data/weapons/iron_axe.tres")
-	var heal_staff: WeaponDef = _try_load("res://data/weapons/heal.tres")
-	var vulnerary: ItemDef = _try_load("res://data/items/vulnerary.tres")
-	var seal: ItemDef = _try_load("res://data/items/promotion_seal.tres")
-	if myrmidon == null:
+	if soldier == null:
 		return
-	var ash_def := _demo_unit("ash", "Ash", myrmidon, sword, 0, 6, {"spd": 10, "skl": 9, "str": 8, "hp": 26})
-	ash_def.house_id = "emberwing"
-	add_unit(ash_def, Vector2i(2, 7))
-	var kael_def := _demo_unit("kael", "Kael", myrmidon, sword, 0, 6, {"spd": 12, "skl": 12, "str": 8})
-	kael_def.house_id = "emberwing"
-	kael_def.is_lord = true  # demo lord: his death is a game over (§3)
-	if axe != null:
-		kael_def.extra_weapons = [axe]      # a second weapon so Equip is available
-	kael_def.starting_items = []
-	if vulnerary != null:
-		kael_def.starting_items.append(vulnerary)
-	if seal != null:
-		kael_def.starting_items.append(seal)   # Master Seal — promote at level 10+
-	_lord_unit = add_unit(kael_def, Vector2i(3, 7))
-	var brenna_def := _demo_unit("brenna", "Brenna", knight, lance, 0, 5, {"def": 10, "hp": 28, "spd": 5})
-	if vulnerary != null:
-		brenna_def.starting_items = [vulnerary]
-	add_unit(brenna_def, Vector2i(4, 9))
-	if heal_staff != null:
-		add_unit(_demo_unit("wren", "Wren", _cleric(), heal_staff, 0, 5, {"mag": 6, "hp": 20, "def": 3}), Vector2i(3, 9))
-	# One of each AI tier (§5): an aggressor advances, a sentinel holds until
-	# threatened, a boss holds the fort at (16,4).
 	add_unit(_demo_unit("tide_a", "Tidemark Soldier", soldier, lance, 1, 5, {"spd": 6}), Vector2i(6, 7))
 	var sentinel := _demo_unit("tide_b", "Tidemark Sentinel", soldier, sword, 1, 5, {"spd": 7, "hp": 22})
 	sentinel.ai_behavior = AIBrain.Behavior.SENTINEL
@@ -1234,6 +1231,18 @@ func _spawn_demo_units() -> void:
 	var boss := _demo_unit("serra", "Serra", soldier, lance, 1, 5, {"spd": 6, "hp": 30, "def": 8})
 	boss.ai_behavior = AIBrain.Behavior.BOSS
 	add_unit(boss, Vector2i(16, 4))  # the fort tile
+	# When deployed from the hub, overlay campaign progression + supports (WO-3.5).
+	if Campaign.active:
+		_apply_campaign_state()
+
+
+## Overlay between-battle campaign state onto the freshly-spawned player units.
+func _apply_campaign_state() -> void:
+	casual_mode = Campaign.casual
+	_support_state.apply_save_state(Campaign.support_save)
+	for u in _units:
+		if u.team == 0:
+			Campaign.apply_to_unit(u)
 
 
 func _demo_unit(
@@ -1255,16 +1264,6 @@ func _demo_unit(
 	d.resistance = overrides.get("res", 2)
 	d.house_id = player_house_id if team == 0 else enemy_house_id  # overridable per unit
 	return d
-
-
-## Placeholder healer class (a real Cleric ClassDef .tres lands with the roster WOs).
-func _cleric() -> ClassDef:
-	var c := ClassDef.new()
-	c.id = "cleric"
-	c.display_name = "Cleric"
-	c.token_letter = "C"
-	c.movement_type = ClassDef.MovementType.FOOT
-	return c
 
 
 func _try_load(path: String) -> Resource:
