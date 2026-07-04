@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "47412605-b52f-488c-a7cd-8b5074c57f6a",
+        "name": "serra",
+        "prompt": "young female tactics-RPG armored lance heir, disciplined formal bearing, long pale blonde hair in braided twin tails, silver circlet tiara, fair skin, deep navy blue uniform with ornate silver pauldrons and high collar, lance and shield, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T22:22:45.978612+00:00"
+      },
+      "folder": "serra",
+      "frames": {
+        "rotations": {
+          "south": "serra/rotations/south.png",
+          "south-east": "serra/rotations/south-east.png",
+          "east": "serra/rotations/east.png",
+          "north-east": "serra/rotations/north-east.png",
+          "north": "serra/rotations/north.png",
+          "north-west": "serra/rotations/north-west.png",
+          "west": "serra/rotations/west.png",
+          "south-west": "serra/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "serra/animations/walking/east/frame_000.png",
+              "serra/animations/walking/east/frame_001.png",
+              "serra/animations/walking/east/frame_002.png",
+              "serra/animations/walking/east/frame_003.png",
+              "serra/animations/walking/east/frame_004.png",
+              "serra/animations/walking/east/frame_005.png",
+              "serra/animations/walking/east/frame_006.png",
+              "serra/animations/walking/east/frame_007.png",
+              "serra/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T22:33:20.774908"
+}

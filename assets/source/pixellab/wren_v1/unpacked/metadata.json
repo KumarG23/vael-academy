@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "93894071-8741-4f79-b7e4-7712c7df2c5a",
+        "name": "wren",
+        "prompt": "young female tactics-RPG healer priest student, gentle soft-spoken presence, soft ash-brown hair with short hood down, cream white priest robe with crimson trim over dark navy academy uniform, wooden healing staff, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T22:22:45.402809+00:00"
+      },
+      "folder": "wren",
+      "frames": {
+        "rotations": {
+          "south": "wren/rotations/south.png",
+          "south-east": "wren/rotations/south-east.png",
+          "east": "wren/rotations/east.png",
+          "north-east": "wren/rotations/north-east.png",
+          "north": "wren/rotations/north.png",
+          "north-west": "wren/rotations/north-west.png",
+          "west": "wren/rotations/west.png",
+          "south-west": "wren/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "wren/animations/walking/east/frame_000.png",
+              "wren/animations/walking/east/frame_001.png",
+              "wren/animations/walking/east/frame_002.png",
+              "wren/animations/walking/east/frame_003.png",
+              "wren/animations/walking/east/frame_004.png",
+              "wren/animations/walking/east/frame_005.png",
+              "wren/animations/walking/east/frame_006.png",
+              "wren/animations/walking/east/frame_007.png",
+              "wren/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T22:33:18.710933"
+}

@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "3fdc19f4-e86f-415e-88a5-de2bc5da3885",
+        "name": "tm_knight",
+        "prompt": "generic tactics-RPG armored knight trooper, heavy deep blue full plate armor with silver trim, closed helm, tower shield and lance, slow heavy bearing, GBA Fire Emblem enemy knight style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T22:25:20.795333+00:00"
+      },
+      "folder": "tm_knight",
+      "frames": {
+        "rotations": {
+          "south": "tm_knight/rotations/south.png",
+          "south-east": "tm_knight/rotations/south-east.png",
+          "east": "tm_knight/rotations/east.png",
+          "north-east": "tm_knight/rotations/north-east.png",
+          "north": "tm_knight/rotations/north.png",
+          "north-west": "tm_knight/rotations/north-west.png",
+          "west": "tm_knight/rotations/west.png",
+          "south-west": "tm_knight/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "tm_knight/animations/walking/east/frame_000.png",
+              "tm_knight/animations/walking/east/frame_001.png",
+              "tm_knight/animations/walking/east/frame_002.png",
+              "tm_knight/animations/walking/east/frame_003.png",
+              "tm_knight/animations/walking/east/frame_004.png",
+              "tm_knight/animations/walking/east/frame_005.png",
+              "tm_knight/animations/walking/east/frame_006.png",
+              "tm_knight/animations/walking/east/frame_007.png",
+              "tm_knight/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T22:33:25.766756"
+}

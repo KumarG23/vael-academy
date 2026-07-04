@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "55652fa7-59ab-48a2-bf42-c98ec96a5a1b",
+        "name": "brenna",
+        "prompt": "young female tactics-RPG armored knight student, steady confident bearing, chestnut brown hair in a short practical braid, fair skin, heavy crimson plate armor with gold trim over dark navy academy uniform, tall lance and kite shield, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T22:22:44.801381+00:00"
+      },
+      "folder": "brenna",
+      "frames": {
+        "rotations": {
+          "south": "brenna/rotations/south.png",
+          "south-east": "brenna/rotations/south-east.png",
+          "east": "brenna/rotations/east.png",
+          "north-east": "brenna/rotations/north-east.png",
+          "north": "brenna/rotations/north.png",
+          "north-west": "brenna/rotations/north-west.png",
+          "west": "brenna/rotations/west.png",
+          "south-west": "brenna/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "brenna/animations/walking/east/frame_000.png",
+              "brenna/animations/walking/east/frame_001.png",
+              "brenna/animations/walking/east/frame_002.png",
+              "brenna/animations/walking/east/frame_003.png",
+              "brenna/animations/walking/east/frame_004.png",
+              "brenna/animations/walking/east/frame_005.png",
+              "brenna/animations/walking/east/frame_006.png",
+              "brenna/animations/walking/east/frame_007.png",
+              "brenna/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-04T22:33:16.743469"
+}
