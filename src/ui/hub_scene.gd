@@ -22,6 +22,8 @@ var _roster_defs: Array[UnitDef] = []
 var _context := "main"
 var _info: Array[String] = []
 var _flavor_line := ""
+var _hall_entries: Array = []   # unlocked conversations shown in the Common Hall
+var _dialogue_playing := false
 
 
 func _ready() -> void:
@@ -41,10 +43,7 @@ func _ready() -> void:
 
 
 func _setup_supports() -> void:
-	var chain: SupportChainDef = load("res://data/supports/kai_kael.tres")
-	_support_state = SupportState.new()
-	if chain != null:
-		_support_state.add_chain(chain)
+	_support_state = SupportRegistry.build_state()
 	_support_state.apply_save_state(Campaign.support_save)
 
 
@@ -81,7 +80,7 @@ func _on_chosen(index: int) -> void:
 		"quarter":
 			_show_unit_detail(index)
 		"commonhall":
-			pass  # entries are informational for now (conversations play in WO-4.2)
+			_play_support_entry(index)
 		"mission":
 			_do_mission(index)
 
@@ -104,15 +103,41 @@ func _do_main(index: int) -> void:
 
 func _open_common_hall() -> void:
 	_context = "commonhall"
-	var convos := _support_state.unlocked_conversations_for_unit("kai")
+	_hall_entries = _support_state.unlocked_conversations_for_unit("kai")
 	var labels: Array = []
-	for c in convos:
+	for c in _hall_entries:
 		labels.append(c["label"])
 	if labels.is_empty():
 		labels = ["(no supports unlocked yet)"]
 	_info = ["Common Hall", "", _flavor_line, "", "Unlocked support conversations:"]
 	_menu.open("Common Hall", labels, _menu_pos())
 	queue_redraw()
+
+
+## Play an unlocked support conversation as a VN overlay (WO-4.2), then return
+## to the Common Hall. The placeholder "(no supports…)" row has no entry — no-op.
+func _play_support_entry(index: int) -> void:
+	if _dialogue_playing or index >= _hall_entries.size():
+		return
+	var path: String = str(_hall_entries[index].get("path", ""))
+	var dialogue := DialogueScript.from_file(path)
+	if not dialogue.ok() or dialogue.size() == 0:
+		_info.append("(that conversation isn't written yet)")
+		queue_redraw()
+		return
+	_dialogue_playing = true
+	_menu.close()
+	var layer := CanvasLayer.new()
+	layer.layer = 8
+	add_child(layer)
+	var scene := DialogueScene.new()
+	layer.add_child(scene)
+	scene.play(dialogue)
+	if not scene.is_finished():
+		await scene.finished
+	layer.queue_free()
+	_dialogue_playing = false
+	_open_common_hall()
 
 
 # --- Training Grounds ---------------------------------------------------------

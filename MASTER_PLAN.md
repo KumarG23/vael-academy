@@ -84,7 +84,8 @@ res://
 5. **No premature abstraction.** Build for the current milestone. Refactor via explicit work orders.
 6. **Use Godot MCP Pro for editor-scoped work.** Start scene/project work with `get_project_info`, `get_filesystem_tree`, `get_scene_tree`. Use MCP editor tools for scene nodes, inspector properties, project settings, autoloads, playtest screenshots, and simulated input. Direct file edits are fine for pure GDScript, resources, tests, and plan updates.
 7. **Never hand-edit `project.godot` for editor-managed settings.** Use MCP tools (`set_project_setting`, `set_input_action`, `add_autoload`) so Godot owns serialization.
-8. **Every WO ends with:** run the game (or tests), confirm acceptance criteria, update §10 STATUS, commit.
+8. **Every WO ends with:** run the game (or tests), confirm acceptance criteria, update §10 STATUS **and `HANDOFF.md`**, commit.
+9. **Reference the owning document, not memory of it.** Bibles for content, `PLAN_REWRITE_AUDIT.md` for direction rationale, `HANDOFF.md` for tooling/state, §10 notes + code for system details.
 
 ---
 
@@ -231,6 +232,8 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 
 **Per session:** `"Do the next work order"` is a complete prompt — the lowest-numbered WO whose dependencies are ✅. For content WOs (supports, romance, prologue, house pitches), **co-write**, and read the relevant bible first. Design discussion and writing happen in chat/Fable-in-browser; implementation happens in Claude Code with MCP.
 
+**Agent handoff:** `HANDOFF.md` (repo root, paired with `AGENTS.md` for Codex-family agents) carries the current project state, tooling notes, and gotchas so a non-Claude agent can pick the project up cold. It is updated at the end of every WO (§2 rule 8).
+
 **Godot headless test command:** `godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit`
 
 ---
@@ -298,7 +301,7 @@ Each WO is one Fable session's worth of work. **Do not start a WO until all its 
 | 3.5 | ✅ done | Menu-driven `HubScene`: Common Hall/Training(+10XP)/Quartermaster/Mission Board. Shared `Roster` builder; `Campaign` autoload (between-battle state, save/load). Flow hub↔battle works. 228 tests green. **⚠ Presentation replaced by the castle in M6; systems (`Campaign`/`Roster`) are kept — the menu functions themselves are UI and retire with the menu.** |
 | 4.1 | ✅ done | Chapter 1 `mock_battle.tres` (20×15, forts/forest/ridge/wall/pond), full roster .tres, 6 Tidemark + Serra boss, DEFEAT_BOSS objective, non-lethal "Yields!" flag, intro/quotes/outro via in-battle dialogue, fort heal. 245 tests green. Verified in-game via MCP. **Reframed as the year's opening inter-house battle (fiction only).** |
 | 4.1b | ✅ done | Full `ash`→`kai` id migration while saves were disposable: `data/units/kai.tres` + `data/supports/kai_kael.tres` (renamed, ids/names/conversation paths updated), `Roster.PLAYER_IDS`/deploy keys, mock_battle deploy cell key, both chain-loading sites, dialogue speakers/portraits (intro/outro/sample), hub flavor line reworded (player *is* Kai now), all test references. Zero `ash` references remain outside git history; stale ash-keyed dev saves wiped. Verified live: Kai deploys as lord, intro speaks as Kai. 245 tests green. Chapter-dialogue *voice* pass (Kai's guarded/dry register per bible) deferred to the 4.2/5.1b content passes as planned. |
-| 4.2 | ⬜ | Support conversations: Kai–Kael C/B/A + out-of-battle playback wiring + chain registry — depends 4.1b, 3.1, 3.2 — co-write |
+| 4.2 | ✅ done | `SupportRegistry` loads every chain from `data/supports/` (both hard-coded loading sites replaced; new pairs are now data-only). Common Hall plays unlocked conversations as VN overlays (menu-gated, returns to the hall); in-battle Supports menu plays them too (non-action-consuming, falls back to the old pop if unwritten). Kai–Kael **C/B/A authored** (`kai_kael_{c,b,a}.json`) from the bibles — Kael's chosen-warmth depth beat at B, the bible's payoff line at A — **drafts pending Neal's edit (co-write)**. Kai voice pass on chapter intro/outro (rally moved to Kael; Kai dry/guarded per bible) — also for Neal's review. 252 tests green (7 new: registry, per-rank parse/voice checks, hub + battle playback, placeholder row inert, action not consumed). Verified live: C plays from the Common Hall and releases cleanly. Forecast-bonus acceptance was already covered by WO-3.2 tests. |
 | 4.3 | ⬜ | Title screen & game flow — depends 4.1, 3.3, 3.5 |
 | 4.4 | ⬜ | Polish pass — depends 4.1–4.3 |
 | 4.5 | ⬜ | battle_view refactor (UnitSpawner / action-menu controller / combat executor; zero behavior change) — depends 4.4 |

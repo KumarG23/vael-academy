@@ -1,16 +1,16 @@
 [
-  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "happy",
-   "text": "Emberwing! Form up — today the whole academy watches us burn bright."},
+  {"speaker": "Kael", "side": "left", "portrait": "kael", "expression": "happy",
+   "text": "Form up, Emberwing! The whole academy's watching — let's give them something worth the seats."},
   {"speaker": "Serra", "side": "right", "portrait": "serra", "expression": "neutral",
    "text": "Watch your footing, Kai. Tidemark holds the fort, and the tide does not part for sparks."},
   {"speaker": "Corin", "side": "right", "portrait": "corin", "expression": "neutral",
    "text": "Do carry on, both of you. Thornrook finds it terribly instructive when rivals blunt each other's blades for free."},
-  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "angry",
-   "text": "Blunt THIS, Corin— ahem. Emberwing, eyes northeast: Serra holds the fort on the hill."},
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "neutral",
+   "text": "Two weeks ago I foraged mushrooms for a living. Now the whole academy wants to watch me take a fort. ...Fine. Serra's on the hill — eyes northeast."},
   {"speaker": "Brenna", "side": "left", "portrait": "brenna", "expression": "neutral",
    "text": "Then the orders are simple. Reach Lady Serra and defeat her — or rout every Tidemark student on the field."},
   {"speaker": "Wren", "side": "left", "portrait": "wren", "expression": "happy",
    "text": "And it's a mock battle — nobody dies today. Yield if you must; I'll patch everything else."},
-  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "happy",
-   "text": "Fight close. Fight as one house. Emberwing — advance!"}
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "neutral",
+   "text": "Stay close. Watch each other's backs. ...Alright, Emberwing. Advance."}
 ]

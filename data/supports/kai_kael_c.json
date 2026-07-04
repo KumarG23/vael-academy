@@ -1,0 +1,20 @@
+[
+  {"speaker": "Kael", "side": "right", "portrait": "kael", "expression": "happy",
+   "text": "There you are. You hold that sword like it owes you money, you know."},
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "neutral",
+   "text": "It was a hunting knife until two months ago. Old habits."},
+  {"speaker": "Kael", "side": "right", "portrait": "kael", "expression": "happy",
+   "text": "Ha! Fair. Come on — the dummies are free, and I need a partner who doesn't fight like the drill manual."},
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "neutral",
+   "text": "...You're asking me to spar. With you."},
+  {"speaker": "Kael", "side": "right", "portrait": "kael", "expression": "neutral",
+   "text": "No, I'm asking the other mushroom forager with a sword. Yes, you."},
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "neutral",
+   "text": "Most people here wait to see if I explode first."},
+  {"speaker": "Kael", "side": "right", "portrait": "kael", "expression": "happy",
+   "text": "Waiting's boring. Besides, if you do explode, I want front-row seats. En garde, Oakstead."},
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "neutral",
+   "text": "He didn't flinch. He didn't even pause. ...Fine. But I'm not going easy on you."},
+  {"speaker": "Kael", "side": "right", "portrait": "kael", "expression": "happy",
+   "text": "Wouldn't forgive you if you did."}
+]

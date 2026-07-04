@@ -524,9 +524,16 @@ func _open_support_menu() -> void:
 		_open_menu("supports", "Supports", labels)
 
 
+## Play the chosen support conversation as a VN overlay (WO-4.2), then return to
+## the command menu — viewing a conversation doesn't consume the unit's action.
 func _view_support_entry(index: int) -> void:
 	var entry: Dictionary = _support_menu_entries[index]
-	_pop_text(_selected.position, "%s ready" % entry["label"], Color(0.95, 0.75, 0.35))
+	var path := str(entry.get("path", ""))
+	_menu.close()
+	if dialogue_enabled and path != "" and FileAccess.file_exists(path):
+		await _play_dialogue(path)
+	else:
+		_pop_text(_selected.position, "%s ready" % entry["label"], Color(0.95, 0.75, 0.35))
 	_open_action_menu()
 
 
@@ -1133,9 +1140,8 @@ func _camaraderie_bonus_for(unit: Unit, cell: Vector2i) -> Dictionary:
 
 
 func _setup_supports() -> void:
-	var chain: SupportChainDef = _try_load("res://data/supports/kai_kael.tres")
-	_support_state = SupportState.new()
-	_support_state.add_chain(chain)
+	# Every authored chain, from data — adding a pair is a .tres, not code (WO-4.2).
+	_support_state = SupportRegistry.build_state()
 
 
 func _combatant_for(unit: Unit, assumed_cell: Vector2i) -> Combatant:
