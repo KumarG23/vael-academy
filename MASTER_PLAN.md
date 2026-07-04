@@ -4,20 +4,29 @@
 
 This document is the single source of truth. Every work session starts by reading this file. Fable implements one work order at a time, verifies acceptance criteria, updates the STATUS section, and stops. Nothing outside the current work order gets built "while we're in there."
 
+**Companion story bibles (canonical narrative source of truth — read alongside this plan for any content WO):** `WORLD_BIBLE.md`, `ACADEMY_BIBLE.md`, `CAMPAIGN_STRUCTURE.md`, `CHARACTER_BIBLE_KAI.md`, `CHARACTER_BIBLE_HEADS.md`, `CHARACTER_BIBLE_EMBERWING.md`, `CHARACTER_BIBLE_TIDEMARK.md`, `CHARACTER_BIBLE_THORNROOK.md`. This plan owns *how it's built*; the bibles own *what it is*. (`PLAN_REWRITE_AUDIT.md` is the decision record for this revision; `FABLE_PROMPTS.md` holds the session prompts.)
+
+> **Direction note (this revision):** The combat vertical slice (M0–M4) is essentially proven — the read-map/weigh-terrain/exploit-triangle loop works, 245 tests green. This revision extends the plan to the **full game**: a walkable, living castle-school (not a menu); real **house choice** with all three houses playable from the start; **romance**; a bandit-raid **prologue**; a **school-year calendar**; and Kai's magic as a slow, unique reveal. The rewrite is *additive and reflavoring* — see `PLAN_REWRITE_AUDIT.md`. Of everything built, exactly one presentation layer (the menu hub, WO-3.5) is replaced; its systems survive. **No timeline pressure: build this as large as it can be without going overboard, one work order at a time.**
+>
+> *Reviewed against the codebase 2026-07-04 (Fable): reuse claims verified; M5 reordered (rosters before choice-flow acceptance); WO-4.1b/4.5/4.6 added; hidden technical gaps folded into WO scopes below.*
+
 ---
 
 ## 1. Vision
 
-A 2D grid-based tactics RPG in the spirit of GBA-era Fire Emblem and Dark Deity:
+A 2D grid-based tactics RPG in the spirit of GBA-era Fire Emblem, Three Houses, and Dark Deity:
 
-- **Great story, great characters.** A small cast (8–12 playable units for the slice) whose personalities emerge through support conversations, not just cutscenes.
-- **Character development through combat AND story.** Units grow mechanically (levels, promotions) and narratively (support bonds unlocked by fighting together). The two systems feed each other.
+- **Great story, great characters.** A cast whose personalities emerge through support conversations and a living school, not just cutscenes.
+- **Character development through combat AND story.** Units grow mechanically (levels, promotions, skills) and narratively (support bonds, romance, house identity). The two systems feed each other. The protagonist, **Kai**, is this pillar with a face on it (see §4).
 - **Incredible turn-based combat.** The classic loop: read the map, weigh terrain, exploit the weapon triangle, decide who risks the crit. Deterministic, inspectable math. No physics, no real time.
-- **An academy at the heart of it.** A military academy hub (Three Houses' Officers Academy energy) with three rival houses — distinct colors, banners, personalities, and combat leanings spanning swords, lances, bows, magic, and faith. Between battles you return to the academy: talk to your house, train, manage the roster, take the next mission. House identity soaks into everything — UI theming, roster, supports, and who you face across the field.
+- **A living academy at the heart of it.** **Vael Academy is a walkable castle-school, not a menu** — the game's main attraction and the bulk of its art. Three houses with distinct colors, banners, personalities, and combat leanings (swords, lances, bows, reason, faith). Between battles the player *explores* the castle: talk to housemates, train, fish, cook, study, attend holidays and parties, take the next mission. **The player chooses one of the three houses**, and that choice reshapes roster, tactics, conversations, romances, and who they face across the field — the spine of replayability.
 
-**Non-goals (for the vertical slice):** 3D, multiplayer, procedural maps, voice acting, controller support, mobile. Do not build these. Do not scaffold for them.
+**Non-goals (still true):** 3D, multiplayer, procedural maps, voice acting, controller support, mobile. Do not build these. Do not scaffold for them. (The walkable castle is **2D** — it is now in scope; 3D remains out.)
 
-**Definition of the vertical slice (end state of this plan):** One full loop of the game's real shape: **academy hub → mission briefing → one complete chapter (the inter-house Mock Battle) → outro → back to the hub with the roster changed by what happened.** Concretely: 4 playable units from the player's house, a rival house as the opposing force (6+ units + house leader), working level-ups, one support conversation unlockable through that battle, house-themed UI, save/load, and win/loss handling. When that loop exists and is fun, the plan gets extended.
+**North stars, in order:**
+1. **Combat slice (M0–M4) — essentially done.** The tactical loop is proven and fun.
+2. **School slice (next target).** Prove the *living-school* loop the way M0–M4 proved combat: prologue → house choice → walkable castle with one working activity → opening inter-house battle → back to the castle, changed. Concretely, the school-slice checkpoint is **5.1 + 5.2 + 5.3 + 6.1 + 6.2 + 6.4** plus the opening battle (4.1, done) — full three-house parity (5.4–5.6) and romance (5.7) do *not* gate it. When that loop exists and is fun, scale it out.
+3. **Full game.** All three houses fully playable, the school year, romance, Kai's magic arc, and the kingdom's escalating mystery.
 
 ---
 
@@ -28,12 +37,12 @@ A 2D grid-based tactics RPG in the spirit of GBA-era Fire Emblem and Dark Deity:
 | Engine | Godot 4.x (latest stable) | Text-based scenes/resources, ideal for AI-driven diffs |
 | Language | GDScript, typed (`var x: int`) | Best model fluency, fastest iteration |
 | Scenes | `.tscn` text format | Reviewable diffs |
-| Data | Custom `Resource` classes saved as `.tres` | Units/classes/weapons/maps as data, not code |
+| Data | Custom `Resource` classes saved as `.tres` | Units/classes/weapons/maps/houses/cast as data, not code |
 | Version control | Git, one branch per work order optional | Small commits, message = work order ID |
-| Tests | GUT (Godot Unit Test) for pure logic | Combat math and pathfinding MUST have tests |
+| Tests | GUT (Godot Unit Test) for pure logic | Combat math, pathfinding, progression MUST have tests |
 | Editor automation | Godot MCP Pro 1.15.0 (`.mcp.json` + `addons/godot_mcp`) | Inspect/edit scenes and project settings through the Godot editor API; playtest with screenshots and simulated input |
 
-### Project layout (create in WO-0.1, never reorganize without a work order)
+### Project layout (extend, don't reorganize without a work order)
 
 ```
 res://
@@ -43,38 +52,45 @@ res://
     units/        # Unit node, unit state, stats
     ai/           # Enemy AI behaviors
     ui/           # Cursor, menus, forecast panel, dialogue box
-    progression/  # Level-up, promotion, supports
+    progression/  # Level-up, promotion, supports, skills
     save/         # Save/load
+    hub/          # Castle exploration, rooms, NPC interaction, activities  (NEW — M6)
+    calendar/     # School-year system, events, exams, holidays            (NEW — M7)
   data/
-    classes/      # ClassDef .tres files
-    units/        # UnitDef .tres files
-    weapons/      # WeaponDef .tres files
-    chapters/     # ChapterDef .tres files
-    supports/     # Support conversation data
+    classes/      # ClassDef .tres
+    units/        # UnitDef .tres (full cast — all three houses)
+    weapons/      # WeaponDef .tres
+    chapters/     # ChapterDef .tres
+    supports/     # Support + romance conversation data
+    houses/       # HouseDef .tres (all three)
+    skills/       # SkillDef .tres                                         (NEW — M8)
+    rooms/        # Castle RoomDef .tres                                   (NEW — M6)
+    calendar/     # Calendar/event data                                   (NEW — M7)
   scenes/
     battle/       # Battle scene, map scenes
-    dialogue/     # VN-style dialogue scene
+    dialogue/     # VN-style dialogue scene (supports branches/choices)
+    hub/          # Castle rooms & exploration                            (NEW — M6)
     title/
   tests/          # GUT tests mirroring src/
-  assets/         # Placeholder art (see §8)
+  assets/         # Painted art (see §8)
 ```
 
 ### Coding rules for Fable
 
 1. **Typed GDScript everywhere.** Signals typed where possible.
-2. **Logic/presentation split.** Combat resolution, pathfinding, and AI are pure functions/classes with zero rendering dependencies — testable headless. Nodes call into them.
-3. **One EventBus autoload** for cross-system signals (`unit_died`, `battle_won`, `support_rank_up`). No node reaches across the tree to find another system.
-4. **Data-driven.** Adding a unit, weapon, or map means adding `.tres` files, not code.
-5. **No premature abstraction.** Build for the slice. Refactor via explicit work orders.
-6. **Use Godot MCP Pro for editor-scoped work.** Start scene/project work with `get_project_info`, `get_filesystem_tree`, and `get_scene_tree`. Use MCP editor tools for scene nodes, inspector properties, project settings, autoloads, playtest screenshots, and simulated input. Direct file edits are still fine for pure GDScript, resources, tests, and plan updates.
-7. **Never hand-edit `project.godot` for editor-managed settings.** Use MCP tools such as `set_project_setting`, `set_input_action`, and `add_autoload` so Godot owns the serialization.
-8. **Every WO ends with:** run the game (or tests), confirm acceptance criteria, update §10 STATUS in this file, commit.
+2. **Logic/presentation split.** Combat resolution, pathfinding, AI, progression, calendar logic are pure functions/classes with zero rendering dependencies — testable headless. Nodes call into them. *(This rule is exactly why the menu→castle swap is cheap.)*
+3. **One EventBus autoload** for cross-system signals. No node reaches across the tree to find another system.
+4. **Data-driven.** Adding a unit, weapon, map, house, room, skill, or calendar event means adding `.tres` files, not code.
+5. **No premature abstraction.** Build for the current milestone. Refactor via explicit work orders.
+6. **Use Godot MCP Pro for editor-scoped work.** Start scene/project work with `get_project_info`, `get_filesystem_tree`, `get_scene_tree`. Use MCP editor tools for scene nodes, inspector properties, project settings, autoloads, playtest screenshots, and simulated input. Direct file edits are fine for pure GDScript, resources, tests, and plan updates.
+7. **Never hand-edit `project.godot` for editor-managed settings.** Use MCP tools (`set_project_setting`, `set_input_action`, `add_autoload`) so Godot owns serialization.
+8. **Every WO ends with:** run the game (or tests), confirm acceptance criteria, update §10 STATUS, commit.
 
 ---
 
 ## 3. Core Combat Design (authoritative formulas)
 
-These numbers are the genre. Implement exactly; tune later via data, not code changes.
+These numbers are the genre. Implement exactly; tune later via data, not code changes. **Unchanged this revision.**
 
 ### Stats
 `HP, STR, MAG, SKL, SPD, LCK, DEF, RES, MOV`. Each unit has current values and per-stat **growth rates** (0–100%).
@@ -94,7 +110,7 @@ CritDamage    = Damage * 3
 ```
 
 ### Weapon triangle
-Sword > Axe > Lance > Sword. Advantage: `+15 hit, +1 damage`. Disadvantage: mirror. Magic (Anima/Light/Dark can wait — one "Tome" type for the slice) and Bows sit outside the triangle. Bows: range 2 only, cannot counter at range 1.
+Sword > Axe > Lance > Sword. Advantage: `+15 hit, +1 damage`. Disadvantage: mirror. Magic (one "Tome" type for now; Anima/Light/Dark can wait) and Bows sit outside the triangle. Bows: range 2 only, cannot counter at range 1.
 
 ### Doubling (follow-up)
 If `attacker.AS ≥ defender.AS + 4`, attacker strikes twice. Combat order: attacker → defender counter (if in range) → follow-up by whichever side qualifies.
@@ -112,70 +128,48 @@ If `attacker.AS ≥ defender.AS + 4`, attacker strikes twice. Combat order: atta
 | Wall/Water | impassable | — | — |
 
 ### Level-ups
-XP: ~10 for a hit, ~30+ for a kill, scaled by level difference (`+/−` clamp 1–100). At 100 XP → level up: each stat rolls `randi() % 100 < growth` for +1. Level cap 20; **promotion** at 10+ via item (slice: one promoted class to prove the system).
+XP: ~10 for a hit, ~30+ for a kill, scaled by level difference (clamp 1–100). At 100 XP → level up: each stat rolls `randi() % 100 < growth` for +1. Level cap 20; **promotion** at 10+ via item.
 
 ### Permadeath
-Dead units are gone (flagged in save). A **Casual toggle** at new-game revives them post-chapter. Lord death = game over regardless.
+Dead units are gone (flagged in save). A **Casual toggle** at new-game revives them post-chapter. Lord (Kai) death = game over regardless.
 
 ---
 
 ## 4. Character, Story & Academy Systems
 
-### The Academy & the three houses
-The game is set at **Vael Academy** (placeholder — Neal renames), a military academy where noble and common students train in every discipline of war: blades, lances, bows, reason magic, and faith healing. Three houses, each a full identity:
+*Content lives in the bibles; this section is the build-facing summary of the systems that serve it.*
 
-| House | Colors | Banner animal | Personality | Combat leaning | Leader (slice) |
-|---|---|---|---|---|---|
-| **Emberwing** | Crimson / gold | Firebird | Bold, ambitious, heart-on-sleeve | Swords, cavalry, offense growths (STR/SPD) | **Ash** (the player's lord) |
-| **Tidemark** | Deep blue / silver | Leviathan | Disciplined, chivalric, duty-bound | Lances, armor, faith; defense growths (DEF/HP) | **Serra** (rival, slice boss) |
-| **Thornrook** | Forest green / bronze | Stag | Cunning, scholarly, pragmatic | Bows, reason magic; technique growths (SKL/RES) | **Corin** (rival, NPC in slice) |
+### Kai, the protagonist
+A commoner — the first and only common-born student in Vael's history — whose latent magic is violently awakened by an ancient hidden stone (`CHARACTER_BIBLE_KAI.md`). For the slice he is sword-only with **involuntary magic tells** (no caster kit yet); his defining trait is that he cannot stand by while an innocent is harmed. His unique mechanical destiny (§ M8): unlike every other student — locked to one house's Warder specialty — Kai can eventually learn *any* school of magic, unlocked progressively through story, becoming the flexible, do-anything unit by the campaign's back half. Earned, not handed over. **Under house choice, Kai is house-agnostic: mechanically a protagonist slot appended to whichever house roster the player picks, not a member of any house's own roster** (extraction lands in WO-5.2).
 
-**How houses touch the systems (all data-driven via a `HouseDef` resource):**
-- **Identity & theming.** `HouseDef` carries primary/secondary colors, banner icon, and a UI theme tint. Menus, HP bars, turn banners, and unit team-tinting all pull from the active house. Switching houses later = swapping a resource, not reskinning code.
-- **Roster & growths.** Each unit belongs to a house; house membership nudges class availability and growth flavor (encoded per-unit in `UnitDef`, so it's convention, not a hard rule — Three Houses style).
-- **House Camaraderie passive.** `+5 hit and +5 avoid when within 2 tiles of a housemate.` Cheap to implement (same in-range check as supports), and it makes "fight together as a house" mechanically true from Chapter 1.
-- **Supports live inside (and later across) houses.** Slice pair is intra-house; cross-house recruiting/supports are parked.
-- **Slice scope:** the player *leads Emberwing* (fixed). All three houses exist in data, fiction, and UI; Tidemark takes the field as the Mock Battle opponent; Thornrook appears in dialogue. Choosing your house at new game is parked — the system is built so it's a data unlock, not a rewrite.
+### The three houses & house choice (all three playable from the start)
+Three Great Houses, each a founding Warder line and a ruling region (`WORLD_BIBLE.md`): **Emberwing** (crimson/gold, firebird, swords/cavalry/offense), **Tidemark** (blue/silver, leviathan, lances/armor/faith), **Thornrook** (green/bronze, stag, bows/reason/technique). `HouseDef` carries colors, banner, UI tint, and the **House Camaraderie** passive (+5 hit/avoid within 2 tiles of a housemate) — all built (WO-3.4).
 
-### The Academy Hub (between battles)
-A **menu-driven base screen** — think FE's base camp / Three Houses' calendar with the walking-around stripped out (walkable hub is parked; see §11):
-- **Common Hall:** view unlocked support conversations; short flavor dialogues with housemates that rotate per chapter.
-- **Training Grounds:** each unit may do one training session per hub visit — small XP grant or +weapon familiarity flavor (slice: flat +10 XP, one unit per visit, to prove the loop).
-- **Quartermaster:** roster, inventory, trading, promotion items.
-- **Mission Board:** briefing dialogue → deploy to the next chapter.
-The hub is a scene with its own house-themed backdrop and music hook, entered after every chapter and at campaign start.
+**The player picks a house at new game, and all three are fully playable** (decision: build from the start). The choice forks roster, tactics, supports, romances, and which two houses become the rival forces at the inter-house battles. Every student is noble (great houses down to minor/landless/new-money lines); Kai's commoner status is his alone. Each house: **an heir + five students + a teacher**, full functional coverage (anchor / DPS / mobility / at-least-one-healer / personality outlier), drawn from that house's weapon identity so no two houses blur. Cast and kits: the five character bibles.
 
-### Support system (the heart of the "development through combat" pillar)
-- Each pair of units with a defined support chain accrues **support points** when ending a turn adjacent or within 2 tiles of each other, and when one heals/rescues the other.
-- Thresholds unlock ranks **C → B → A**. Each rank = one conversation (viewable from the pre-battle menu or base screen) + passive combat bonus when within 3 tiles: `C: +5 hit/avoid`, `B: +10 hit/avoid +1 dmg`, `A: +15 hit/avoid +1 dmg +5 crit`.
-- Slice scope: **one pair, full C–B–A chain written.** System supports N pairs via data.
+### The living castle (replaces the menu hub — WO-3.5 systems survive, presentation swapped)
+Vael is a **walkable castle-school**, explored room to room between battles — the game's main attraction and art centerpiece (`ACADEMY_BIBLE.md` §3). Painted-backdrop rooms (same pipeline as maps, §8), NPCs standing where they belong, walk-up-and-talk conversations, and activities triggered in place. The four existing menu functions become rooms wired to their **already-built systems**: Common Hall (supports/flavor/meals), Training Grounds (+XP), Quartermaster (roster/inventory/promotion), War Room (mission deploy) — plus Library (lore/study/quizzes) and the grounds/waterside (fishing). The `Campaign` autoload and `Roster` builder (WO-3.5) are the backend; only the menu UI is discarded.
 
-### Dialogue system
-- VN-style: portraits left/right, name plate, text box, click/space to advance, choices optional (not in slice).
-- Script format: JSON or a simple custom `.dlg` text format — **choose JSON** for the slice (trivially parseable, Fable can author it directly).
-- Used for: chapter intro/outro, support conversations, mid-battle event triggers (e.g., boss quote).
+### The school year (calendar)
+The campaign is one academic year, bracketed by two inter-house battles (opening = the reframed Mock Battle, WO-4.1; closing = the year's climax). Between them: exploration, conversations, exams, homework, holidays, parties, and meals with friends — the feel-good rhythm that makes the battles matter, with the kingdom's mystery escalating quietly underneath (`ACADEMY_BIBLE.md` §4).
 
-### Slice cast (placeholder names — Neal rewrites freely)
-**House Emberwing (playable):**
-- **Lord:** Ash — sword, balanced, house leader, must survive.
-- **Knight:** Brenna — lance, armored, slow/tanky (an Emberwing oddball; good character hook).
-- **Myrmidon:** Kael — sword, fast, crit-leaning. *(Support pair: Ash–Kael)*
-- **Healer:** Wren — staff, no combat, gains XP from healing.
+### Supports & romance
+Built support system (WO-3.2) — proximity points, C→B→A ranks, combat bonuses, any pair via data. **Not locked to any one pair** (a fiction change; the system already supports N pairs — note the two current chain-loading sites hard-code the single authored chain; a chain registry lands with WO-4.2). **Romance** adds one rank past A on a flagged basis: **all students are romanceable, heirs included — a pool of 18 —** regardless of gender; among the three heirs the marquee arcs are two female (Serra, Corin) + one male (Perrin). Genre-level only (crushes, confessions); cast is 15–18.
 
-**House Tidemark (Mock Battle opposition):**
-- **Boss:** Serra — Tidemark's house leader, lance, holds the fort; yields when defeated (see WO-4.1).
-- 5–6 Tidemark students: mixed lances/armor/one tome user, blue-tinted, using the same UnitDef system as playables — rival students are real units, not "monsters."
+### Dialogue
+JSON-driven VN engine (WO-3.1), extended with **choices/branches** for romance and school events (the engine is strictly linear today — the extension is its own WO, 4.6). Portraits, name plates, event hooks (`start_battle`, `give_item`, etc.). Used for chapter intro/outro, supports, romance, castle conversations, and calendar set-pieces.
 
-**House Thornrook:** Corin + house appear in intro/outro dialogue only (foreshadowing), zero combat content in slice.
+### Skills (universal progression — M8)
+All units unlock **skills** via level/class (un-parks class skills). Kai's cross-school magic is his unique flavor of this same system — everyone progresses; his progression is broader.
 
 ---
 
-## 5. Enemy AI (slice tiers)
+## 5. Enemy AI (slice tiers) — unchanged
 
 Pure-logic `AIBrain` evaluating actions; no engine dependencies.
 
 1. **Sentinel:** doesn't move until a player unit enters its threat range, then becomes Aggressor.
-2. **Aggressor:** each enemy phase, pick reachable target maximizing `expected damage dealt − expected damage received` (use the same combat forecast the player sees — one source of truth). Prefer kills. Move toward nearest target if none reachable.
+2. **Aggressor:** each enemy phase, pick reachable target maximizing `expected damage dealt − expected damage received` (same combat forecast the player sees). Prefer kills. Move toward nearest target if none reachable.
 3. **Boss:** never moves off the fort; attacks anything in range.
 
 Priority tiebreakers: kill > lowest counter-damage > lowest HP target. Deterministic given a seed.
@@ -184,136 +178,164 @@ Priority tiebreakers: kill > lowest counter-damage > lowest HP target. Determini
 
 ## 6. Milestones & Work Orders
 
-Each WO is one Fable session's worth of work. **Do not start a WO until all its dependencies are ✅ in §10.** Acceptance criteria are binding.
+Each WO is one Fable session's worth of work. **Do not start a WO until all its dependencies are ✅ in §10.** Acceptance criteria are binding. If a WO is too big, Fable splits it into `WO-x.ya/x.yb` in this file before coding. *(Splits pre-authorized below where review flagged size risk.)*
 
-### M0 — Foundation
-- **WO-0.1 Project skeleton.** Godot project, folder layout (§2), EventBus autoload, GUT installed, one passing dummy test, git init. *Accept: project opens, tests run green.*
-- **WO-0.2 Grid & map.** `Grid` class (cell↔world math at 128px cells), logical terrain layer (data-only TileMap or 2D array in ChapterDef — **no visual tileset**; the visual layer is a single backdrop texture, flat placeholder color until AW-2), `TerrainDB` resource mapping terrain types → cost/def/avoid (§3 table). Subtle grid-line overlay + debug overlay showing terrain info under cursor. *Accept: 20×15 test map renders over a placeholder backdrop; hovering prints terrain stats.*
-- **WO-0.3 Cursor & selection.** Keyboard/mouse cursor, select unit, deselect. *Accept: cursor moves cell-by-cell, selection state visible.*
-- **WO-0.4 Units on the grid + movement.** `UnitDef` resource (stats, growths, class ref), `Unit` node, Dijkstra flood-fill for reachable tiles honoring terrain cost + occupancy, A* path, blue-tile highlight, animated move along path, red attack-range overlay. Tests for pathfinding on a fixture map. *Accept: select unit → see range → click tile → unit walks there; tests green.*
+### M0 — Foundation ✅ · M1 — Combat core ✅ · M2 — Depth ✅ · M3 — Character systems ✅
+*(All done — see §10. WO-0.1 through 3.5. Combat, XP, inventory, promotion, juice, dialogue engine, supports, save/load, houses, and the hub systems all shipped and tested.)*
 
-### M1 — Combat core
-- **WO-1.1 Weapons & combat math.** `WeaponDef` resource; pure `CombatResolver` implementing §3 exactly (hit/crit/damage/AS/doubling/2RN, triangle, terrain) returning a full combat script (list of strikes with results). **Heavy test coverage — this is the most-tested code in the project.** *Accept: table-driven tests for every formula, seeded determinism test.*
-- **WO-1.2 Combat forecast UI + execution.** Select target in range → forecast panel (dmg, hit, crit, doubling arrows both sides) → confirm → resolver runs → HP bars update, simple hit/miss/crit feedback, death removes unit, EventBus signals. *Accept: full player attack round with counter works on the test map.*
-- **WO-1.3 Turn manager & enemy phase.** Player phase (each unit acts once: move+attack/wait), end turn, enemy phase running Aggressor AI (§5), back to player. Turn banner UI. *Accept: play 5 full rounds vs 3 enemies without errors.*
-- **WO-1.4 Win/loss.** Rout and Seize objectives from `ChapterDef`; defeat on lord death; victory/defeat screens. *Accept: both outcomes reachable on the test map.*
+### M4 — Finish the combat/story slice (+ the two enablers M5 needs)
+- **WO-4.1 Chapter 1: The Mock Battle.** ✅ done. *Reframed this revision as the school year's **opening inter-house battle** — fiction only, no rebuild.*
+- **WO-4.1b Kai identity migration.** Rename the protagonist unit id `ash`→`kai` (and display name) across resources (unit `.tres`, `Roster` ids, support chain, chapter deploy keys), dialogue speakers, code references, and tests — **now, while saves are disposable**; after M5–M7 grow the save payload this becomes a migration project. Chapter-dialogue *voice* rewrite to match Kai's bible is content work and stays with the content passes. *Accept: no `ash`/`Ash` reference remains outside git history; tests green.*
+- **WO-4.2 Support conversations.** Write the first full C/B/A chain (Kai–Kael as the natural first bond, per the bibles — not a mandated one). Warm, character-forward, house-flavored. **Scope includes the wiring the acceptance implies:** out-of-battle conversation playback (the Common Hall lists conversations but nothing plays them yet) and a support-chain registry replacing the two hard-coded single-chain loading sites. *(Co-write with Neal.)* *Accept: chain plays start to finish from the hub and is viewable in battle; bonus visibly changes forecast.*
+- **WO-4.3 Title screen & game flow.** Title → New (Classic/Casual) / Load → into the campaign flow → results → loop. *Accept: full loop, no debug keys.*
+- **WO-4.4 Polish pass.** SFX hooks, crit feedback, bugfix sweep from playtest. *Accept: Neal plays the chapter, files zero blockers.*
+- **WO-4.5 battle_view refactor** *(promoted from §11 — precedes M5's battle-heavy WOs, not M6; the castle never touches battle_view).* Extract from the 1,400-line controller: a `UnitSpawner` (spawn/deploy/save-rebuild), an action-menu controller (command menu + item/trade/equip flows), and a combat executor (attack/heal execution, XP, weapon spend). battle_view keeps input + phase orchestration. Zero behavior change; the 245-test suite is the safety net. *Accept: behavior identical, all tests green, battle_view reduced to an orchestrator.*
+- **WO-4.6 Dialogue choices/branches.** Choice steps + label/jump resolution in `DialogueScript`, choice UI in `DialogueScene`, tests. Needed by 5.7 (romance) and M7 (school events); optional spice for 5.1's heir talks. M6 needs none of it (walk-up talk and support entry are linear); 5.3's house pitches only need the existing `ChoiceMenu`. *Accept: a branched sample script plays both paths; linear scripts unaffected; tests cover parse + playback.*
 
-### M2 — Depth
-- **WO-2.1 XP & level-ups.** §3 XP rules, level-up screen with stat-gain animation, healer XP from staff use. *Accept: unit levels mid-battle; gains match growth rolls under a seed.*
-- **WO-2.2 Inventory & weapon durability.** 5-slot inventory, equip, uses-per-weapon, trade between adjacent units, item use (vulnerary, promotion item). *Accept: weapon breaks at 0 uses; trade works.*
-- **WO-2.3 Sentinel + Boss AI, threat display.** Remaining §5 behaviors; toggleable enemy-threat-range overlay. *Accept: sentinels wake correctly; boss holds fort.*
-- **WO-2.4 Promotion.** One promoted class, promotion item flow, stat bonuses, cap reset. *Accept: Kael promotes and gains class bonuses.*
-- **WO-2.5 Combat presentation layer ("juice").** Pure code, Darkest Dungeon philosophy — spectacle without frame animation: standee lunge/recoil tweens, **hit-stop** (60–120ms freeze on connect), screen shake scaled by damage, white hit-flash shader, damage number pop with easing, miss "whiff" slide, death dissolve, and the **clash splash system** — full-screen painted cut-in slammed in with speed-line shader on crits and kills (consumes AW-5 art; placeholder rectangle until then). All timings in one tunable `JuiceConfig` resource. *Accept: a crit visibly feels 3× more dramatic than a normal hit with placeholder art alone; timings tweakable without code edits.*
+### M5 — House choice, three playable houses & the prologue *(the core-of-the-game milestone; big by design)*
+*(Reordered this revision: rosters before the choice flow — the flow's acceptance needs rosters to exist. **Ordering note:** after 5.3, the M6 castle WOs may interleave ahead of 5.4–5.7; see the §1 school-slice checkpoint.)*
 
-### M3 — Character systems
-- **WO-3.1 Dialogue engine.** JSON-driven VN scene (§4): portraits, name plates, advance, event hooks (`start_battle`, `give_item`). *Accept: sample script plays start to finish.*
-- **WO-3.2 Support system.** Point accrual rules, rank thresholds, in-range combat bonuses wired into CombatResolver inputs, rank-up notification, support menu listing unlocked conversations. *Accept: Ash+Kael reach C in a scripted test; bonus visibly changes forecast.*
-- **WO-3.3 Save/load & permadeath.** JSON save (roster state, chapter progress, supports, hub state, casual flag, RNG seed), save slots, load from title. *Accept: save mid-campaign, quit, load, state identical.*
-- **WO-3.4 House system.** `HouseDef` resource (colors, banner, theme tint, camaraderie values); all three houses authored as data; UI theming plumbed (menus, HP bars, turn banner, unit tinting pull from HouseDef); **House Camaraderie** passive (+5 hit/avoid within 2 tiles of a housemate) wired into CombatResolver inputs alongside supports. *Accept: swapping the player HouseDef re-themes the whole UI with zero code changes; camaraderie visibly changes the forecast; unit tests cover the passive.*
-- **WO-3.5 Academy Hub.** Menu-driven hub scene per §4: Common Hall (supports + rotating flavor lines), Training Grounds (+10 XP, one unit per visit), Quartermaster (roster/inventory/promotion), Mission Board (briefing → deploy). House-themed backdrop. Campaign flow becomes hub → battle → hub. *Accept: full loop hub → Mock Battle → hub works; training XP persists through save/load.*
+- **WO-5.1 Prologue chapter — the bandit raid.** Tutorial battle: Kai + the three heirs as strangers caught in a roadside raid (`CAMPAIGN_STRUCTURE.md`). Kai's mark/magic flickers; per-heir conversations; teaches movement/attack/terrain. **Known technical gap, in scope:** `ChapterDef` has enemy spawns only — the player side is hard-wired to `Roster.player_units()`; the prologue needs chapter-driven player/guest spawns, plus heir guest `UnitDef`s (Serra exists only as an enemy boss def; Perrin and Corin don't exist at all). **Pre-authorized split:** 5.1a playable prologue battle (guest-spawn support, heir defs, map, objective) / 5.1b tutorial beats + heir/Kai conversations *(co-write)*. *Accept: playable prologue, all three heirs introduced, first-time player learns the controls.*
+- **WO-5.2 Emberwing playable roster.** Author all Emberwing units as `.tres` per bible (Perrin + Dain + Liora new; confirm built Kai/Kael/Brenna/Wren), kits and growths matching house identity. **Includes extracting Kai from the Emberwing roster into a house-agnostic protagonist slot** appended to the chosen roster (§4). *Accept: full Emberwing roster deployable; Kai rides along as protagonist, not roster member; kits match §3 + bible.*
+- **WO-5.3 House-choice new-game flow.** After the prologue: arrival, each house's in-character pitch (linear dialogue + `ChoiceMenu` — no branch dependency), player chooses → `HouseDef` selected at runtime, roster + theming set, choice persisted in save. **Flip points, enumerated:** `Roster` house-parameterization, `Campaign` gains the house field (+ save payload), battle_view's two `@export` house ids read from Campaign, hub/castle theming source. *Accept (mechanism-scoped): choosing any house sets roster/theming/rivals from data and survives save/load; Emberwing roster is final, Tidemark/Thornrook selectable with provisional rosters until 5.4/5.5; the opening battle plays the Emberwing-route variant until 5.6.* **Pre-authorized split:** 5.3a mechanism / 5.3b arrival + pitch content *(co-write)*.
+- **WO-5.4 Tidemark playable roster.** Serra (playable version of the existing boss) + Osric/Elowen/Isolde/Fenn/Bertram, kits per bible. *Accept: full Tidemark roster deployable and plays distinctly from Emberwing.*
+- **WO-5.5 Thornrook playable roster.** Corin + Thessaly/Corvin/Marlow/Vesper/Rurik, kits per bible. *Accept: full Thornrook roster deployable and plays distinctly.*
+- **WO-5.6 Rival-force generation.** The two unpicked houses become the opposition at inter-house battles. **Bigger than "swap UnitDefs":** the opening battle's chapter data is currently Serra/Tidemark-specific (authored spawns, `boss_unit_id`, her quote/yield dialogue paths) — this WO adds per-rival-house chapter variants (spawns + boss + dialogue set), data-driven from the same UnitDefs. **Inherits the full-parity acceptance:** *whichever house is picked, the player fields the correct roster AND faces correct rival forces at the opening battle.*
+- **WO-5.7 Romance tier.** Extend supports with one romance rank past A + romance flags (all students eligible, §4); branched confession scenes ride WO-4.6. *Accept: a flagged pair reaches romance rank in a scripted test; branch plays; non-romance pairs cap at A.*
 
-### M4 — The vertical slice
-- **WO-4.1 Chapter 1: The Mock Battle.** Vael Academy's inter-house exercise — Emberwing vs Tidemark on a training field map (~20×15, hand-authored, forest/fort/mountain used meaningfully). **Non-lethal rules for this chapter only:** defeated units *yield* and retreat (flagged, not killed — permadeath system stays intact, this chapter just routes deaths to yields; a real Chapter 2 later restores stakes). Objective: Defeat Serra (fort boss) or rout. Intro (all three house leaders talk trash appropriately in-character) + outro + Serra battle quote + boss yield quote. Difficulty pass. *Accept: chapter is beatable and losable; a first-time player understands what to do; nobody can permanently die in it.*
-- **WO-4.2 Support conversations.** Write Ash–Kael C/B/A. Tone brief: warm, character-forward, house-flavored (Emberwing's heart-on-sleeve culture should show), earns the A-rank payoff. *(Neal likely wants a heavy hand in this one — flag for co-writing.)*
-- **WO-4.3 Title screen & game flow.** Title → New (Classic/Casual) / Load → hub intro → Mock Battle → results → hub → title. *Accept: full loop with no debug keys required.*
-- **WO-4.4 Polish pass.** SFX hooks, screen shake on crit, better hit feedback, bugfix sweep from playtest notes. *Accept: Neal plays the chapter and files zero blockers.*
+### M6 — The living castle (shell + first activity) *(the "school slice" payoff — may start once 5.3 is ✅, ahead of 5.4–5.7)*
+- **WO-6.1 Castle exploration shell.** Player avatar moves through room scenes; room-to-room transitions; interaction prompts. Backed by the existing `Campaign`/`Roster` systems. *Accept: walk the castle, move between ≥2 rooms, approach and trigger an interaction.*
+- **WO-6.2a Core room conversions.** Common Hall, Training Grounds, War Room as painted-backdrop rooms wired to their existing systems; **menu hub retired** (including retargeting battle's result-dismissed flow and the main-scene/title entry to the castle). *Accept: those three functions work from their rooms; no menu remains; battle returns to the castle.*
+- **WO-6.2b Remaining rooms.** Quartermaster, Library, grounds/waterside. Library ships **browse-only** (lore flavor) — quizzes/study/exams are WO-7.2. *Accept: every former menu function works from its room; Library and waterside exist as walkable places.*
+- **WO-6.3 NPC conversations.** Housemates/NPCs placed in rooms; walk-up-and-talk; rotating per chapter; support/romance scene entry points. *Accept: talk to ≥3 NPCs in place; a support scene launches from the castle.*
+- **WO-6.4 Fishing (flagship mini-game).** The first activity, self-contained, at the waterside. *Accept: fishing is playable and fun on its own; results persist through save/load.*
+
+### M7 — The school year
+- **WO-7.1 Calendar/year system.** Dates, terms, scheduled events, the two-battle bracket (opening = 4.1; closing = 7.4). **Scope includes the chapter registry/sequencing** (the campaign currently knows exactly one hard-coded battle scene) and date state in the save payload. *Accept: the year advances; events fire on schedule; state persists.*
+- **WO-7.2 Story-unlocked activities.** Cooking, quizzes, exams — **each unlocked via an interaction/story moment, added one at a time** (per standing decision, §9). *Accept: each activity unlocks diegetically and plays; unlock persists.*
+- **WO-7.3 Holidays & parties.** Authored calendar set-pieces; pure feel-good, character-forward. *Accept: at least one holiday and one party play as scheduled events.*
+- **WO-7.4 Closing inter-house battle.** The year's climax chapter. *Accept: beatable/losable; raises stakes over the opening battle.*
+
+### M8 — Progression depth
+- **WO-8.1 Skill system.** All units unlock skills via level/class (`SkillDef` data-driven). **Scoped to passive/stat-modifier skills** riding the proven `Combatant` bonus path (the supports/camaraderie pattern). Combat-order-altering skills (vantage/astra-likes) mean resolver changes — explicitly out; their own future WO if wanted. *Accept: units gain skills on schedule; skills affect combat via the same forecast/resolver path; tests cover it.*
+- **WO-8.2 Kai's cross-school magic.** His unique progressive unlock — schools of magic opening via story beats, riding the class/promotion/skill systems but broader than any house lane. *Accept: Kai gains a new school at a scripted story beat; forecast/resolver reflect it; balance holds.*
+
+### M9+ — Beyond year one *(deliberately loose; extend when the school slice is fun)*
+- Chapter 2 with real permadeath stakes; the wardstone mystery becomes visible; the escalation past the academy. Design when we get there.
 
 ---
 
 ## 7. How Neal runs Fable against this plan
 
-**Setup (one time):**
-1. Create the repo; put this file at the root as `MASTER_PLAN.md`.
-2. Create a short `CLAUDE.md` next to it containing: *"Read MASTER_PLAN.md first. Implement exactly one work order per session — the lowest-numbered WO whose dependencies are ✅ in §10, unless told otherwise. Obey §2 coding rules and §3 formulas as written. Finish by running tests, updating §10, and committing."*
-3. Install and enable **Godot MCP Pro** for this repo: `.mcp.json` points to the local server build, `addons/godot_mcp/plugin.cfg` is present, `addons/godot_mcp/skills.md` is copied to `.claude/skills.md`, the `res://addons/godot_mcp/plugin.cfg` editor plugin is enabled, and the MCP autoload services (`MCPScreenshot`, `MCPInputService`, `MCPGameInspector`) are registered.
-4. Open the repo in **Claude Code** with Godot MCP Pro available (this is the right harness — filesystem access, MCP editor tools, can run `godot --headless` for tests, persistent across the repo). Chat/Fable-in-browser is for design discussions and writing (e.g., WO-4.2); Claude Code is for implementation.
-5. At the start of an implementation session, run a quick MCP smoke check before editing scenes/settings: `get_project_info` should return `Vael Academy`, `get_filesystem_tree` should see `res://src`, and the server should expose the Godot MCP Pro tool set. If MCP is down, restart the Godot editor/MCP server before doing editor-scoped work.
+**Setup (one time):** repo at root; this file + the eight bibles present; `CLAUDE.md` routing every session here; Godot MCP Pro enabled (`.mcp.json`, `addons/godot_mcp`, autoloads registered). Smoke-check before editor work: `get_project_info` → `Vael Academy`, `get_filesystem_tree` sees `res://src`. **Restart the Godot editor after any WO that adds new `class_name` scripts** (a stale editor rewrites the class cache from its old view and breaks launched games).
 
-**Per session:** `"Do the next work order"` is a complete prompt. For content WOs, co-write. If a WO turns out too big, Fable splits it into `WO-x.ya/x.yb` in this file before coding.
+**Per session:** `"Do the next work order"` is a complete prompt — the lowest-numbered WO whose dependencies are ✅. For content WOs (supports, romance, prologue, house pitches), **co-write**, and read the relevant bible first. Design discussion and writing happen in chat/Fable-in-browser; implementation happens in Claude Code with MCP.
 
-**Godot headless test command** (Fable should verify the exact GUT invocation in WO-0.1):
-`godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit`
+**Godot headless test command:** `godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit`
 
 ---
 
 ## 8. Art Track (parallel to code — never blocks it)
 
-**Toolchain:** ComfyUI on Neal's R16 (production image generation) · Claude Code / Antigravity (pipeline scripting, ComfyUI API automation, Godot import) · Gemini image gen (fast concepting and character-consistent edit iterations only — production renders come from ComfyUI where seed/workflow are reproducible).
+**Toolchain:** ComfyUI on the R16 (production) · Claude Code/Antigravity (pipeline scripting, ComfyUI API automation, Godot import) · Gemini (fast concepting/edit iterations only). **Art direction (locked): full painted 2D, no pixel art.** Reference triangle: **Dark Deity** (painted busts) × **The Banner Saga** (painted backdrops + standees, minimal motion) × **Darkest Dungeon** (spectacle from static art + juice).
 
-**Art direction (locked): full painted 2D. No pixel art anywhere.** Reference triangle: **Dark Deity** (painted dialogue busts) × **The Banner Saga** (painted map backdrops + unit standees, minimal motion) × **Darkest Dungeon** (combat spectacle from static art + juice, not frame animation). Every asset class below is something diffusion does *well*; frame-by-frame animation is deliberately absent from this game's art language.
+**Standing rules:** code never waits on art (programmer art ships first, real art swaps in); maps are single painted backdrops with an invisible logical grid; **castle rooms are painted backdrops too** (same pipeline, new asset class this revision); units are painted standees, motion tweened in code; combat spectacle is a code system + one static clash-splash per character; no production asset before the Style Bible (AW-1); consistency law — locked reference sheet per character before variants.
 
-**Standing rules:**
-1. **Code never waits on art.** Every system WO ships with programmer art (colored tokens with class letters, red/blue team tint, initialed portrait frames). Art lands via swap-in WOs after the system it dresses is ✅. The §2 logic/presentation split makes swaps zero-logic.
-2. **Maps are paintings, not tilesets.** Each battle map is **one painted backdrop image** (ComfyUI top-down/high-angle battlefield) with an *invisible logical grid* on top defining terrain per §3. Terrain readability comes from the painting itself plus data-driven overlays (subtle grid lines, terrain icon on cursor-hover, tint on highlight). This eliminates seamless-tile generation entirely.
-3. **Units on the map are painted standees** — Banner Saga style. Per-class painted figure (~waist-up or full-body chip) in a house-colored base ring, generated in ComfyUI from the Style Bible. Motion is tweened in code: slide along path, idle bob, lunge on attack, flash on hit, dissolve on death. No sprite sheets.
-4. **Combat spectacle is a code system + one static image per character.** The **clash splash** (AW-5): painted attack cut-in per named unit (weapon raised, speed lines, house-color energy), slammed in by the presentation layer (WO-2.5) on crits/kills. Generic per-class splash for unnamed units.
-5. **Consistency law.** No production asset is generated until the Style Bible (AW-1) exists. Every character gets a locked reference sheet before variants. Style drift = regenerate, don't hand-fix.
+**Scaling note (this revision):** the cast is now **~22 named characters** (Kai + 3 heirs + 15 students + 3 teachers) vs. the slice's handful — a real portrait-volume step-up. Plus **castle-room backdrops** (per room, house-tint variants where relevant). Same pipeline, larger manifest.
 
 **Asset specs (authoritative):**
 | Asset | Spec |
 |---|---|
-| Portraits | 1024² generation → transparent PNG → displayed ~400px; naming `portrait_<unit>_<expression>.png`; expressions per unit: neutral, happy, angry, hurt (slice) |
-| Map standees | ~512² generation → transparent PNG → displayed ~96–128px per cell; per-class + unique for lords/bosses; house-color base ring composited in pipeline |
-| Map backdrops | ≥2560×1920 painted battlefield per map (20×15 grid at 128px/cell), landmarks aligned to grid in a touch-up pass |
-| Clash splashes | 1920×1080 wide cut-in, transparent-edge vignette; per named unit + per class generic |
-| Backgrounds | 1920×1080: hub (per-house tint variant), title |
+| Portraits | 1024² → transparent PNG → ~400px; `portrait_<unit>_<expression>.png`; expressions: neutral, happy, angry, hurt (slice) |
+| Map standees | ~512² → transparent PNG → ~96–128px/cell; per-class + unique lords/bosses; house-color base ring |
+| Map backdrops | ≥2560×1920 painted battlefield per map (20×15 @ 128px/cell) |
+| **Castle-room backdrops** | painted room per location, house-tint variants where relevant; NPC standees composited in |
+| Clash splashes | 1920×1080 cut-in, transparent-edge vignette; per named unit + per class generic |
+| Backgrounds | 1920×1080: title; castle exteriors |
 | House art | Banner/crest per house, 256², transparent, matching HouseDef colors |
 
 ### Art work orders (AW — parallel track, own dependency chain)
-- **AW-1 Style Bible.** One doc: the painterly look (Dark Deity-bust energy, Banner Saga battlefield palette discipline), master palette incl. the three house palettes, line weight, lighting rule, and the **base prompt templates** (portrait / standee / backdrop / splash) + negatives + fixed generation params (model, sampler, CFG, resolution). Includes 4–6 approved exemplar images per template generated in ComfyUI. *Accept: Neal signs off; each template reproduces its look on a fresh seed batch.*
-- **AW-2 Map backdrop & terrain-authoring flow.** Generate the Mock Battle backdrop (painted training field with fort, forest patch, ridge — landmarks placed to serve the §3 terrain table), touch-up pass aligning features to the 128px grid, then author the invisible terrain grid over it. Includes a tiny in-editor terrain painter (code job for Fable: click cells, assign terrain type, saves to ChapterDef) so future maps take minutes. *Accept: test map plays on the painted backdrop; hover shows correct terrain everywhere; grid/terrain overlays readable.*
-- **AW-3 Pipeline scripts (Claude Code/Antigravity job).** Python batch runner against the ComfyUI HTTP/JSON API on the R16 (`--listen 0.0.0.0`, reachable over the Tailscale mesh; **never exposed publicly**): takes a manifest (YAML: asset type, name, description tags, variants) → `POST /prompt` with API-format workflow JSON → poll `/history` → fetch via `/view` → rembg background strip → resize/crop to spec → convention-named PNGs → copies into `assets/` with Godot `.import` presets. **Control architecture:** the runner is deterministic daemon code, registered as a Hermes-callable tool — models author manifests, the daemon executes identically every run. Interactive mode: Claude Code drives the API directly during AW-1/AW-4 taste sessions, using its vision to inspect each output and adjust prompts/seeds in a closed loop. Batch QC: Qwen3-VL (A2000) does cheap first-pass consistency checks (same character / clean alpha / no artifacts); survivors escalate to Claude + Neal for style sign-off. *Accept: one command (or one Hermes job) regenerates any asset class from manifests.*
-- **AW-4 Character reference sheets & standees.** Per slice-cast unit (§4): locked base portrait via AW-1 template, expression variants via inpainting/img2img from the base — **not** fresh generations; matching map standee derived from the same reference; per-class generic standees for Tidemark students. *Accept: all portraits and standees pass a side-by-side consistency review; standees read clearly at 96px on the backdrop.*
-- **AW-5 Clash splashes, house & UI art.** Attack cut-ins for the four playables + Serra + one per-class generic; three house crests/banners; UI frame set; house-tinted hub backdrops; title art. *Accept: WO-2.5 consumes real splashes; WO-3.4 theming consumes real crests; hub uses real backdrop.*
-- **AW-6 Integration passes.** Swap-ins gated on code WOs: portraits → after WO-3.1 (dialogue); backdrop/standees → after WO-0.4; splashes → after WO-2.5; house/UI art → after WO-3.4/3.5; title → after WO-4.3.
+- **AW-1 Style Bible.** Painterly look, master + three house palettes, base prompt templates (portrait/standee/backdrop/**room**/splash) + negatives + fixed params, 4–6 exemplars per template. *Accept: Neal signs off; each template reproduces on a fresh seed batch.*
+- **AW-2 Map backdrop & terrain-authoring flow.** Mock Battle backdrop + touch-up + invisible terrain grid + tiny in-editor terrain painter. *Accept: map plays on the painted backdrop; hover shows correct terrain.*
+- **AW-3 Pipeline scripts.** Deterministic ComfyUI batch runner from YAML manifests (`/prompt`→poll→`/view`→rembg→resize→named PNGs→Godot import), Hermes-callable; interactive taste mode via Claude Code vision; Qwen3-VL first-pass QC. *Accept: one command regenerates any asset class from manifests.*
+- **AW-4 Character reference sheets & standees.** Locked base portrait per cast member, expression variants via inpaint/img2img, matching standees. *Accept: consistency review passes; standees read at 96px.*
+- **AW-5 Clash splashes, house & UI art.** Cut-ins per playable + bosses + per-class generic; three crests/banners; UI frame set; title art. *Accept: WO-2.5 consumes real splashes; WO-3.4 theming consumes real crests.*
+- **AW-6 Integration passes.** Swap-ins gated on code WOs: portraits→after 3.1; backdrop/standees→after 0.4; splashes→after 2.5; house/UI→after 3.4/3.5; **castle-room art→after 6.2**; title→after 4.3.
 
-**Dependency note:** AW-1 → AW-2/3/4/5 → AW-6. None of it gates any code WO (the terrain painter inside AW-2 is the one code assist, and it's optional for the slice's single map).
+**Dependency note:** AW-1 → AW-2/3/4/5 → AW-6. None gates any code WO.
 
 ## 9. Risks & standing decisions
 
-- **Scope creep is the boss of this project.** New ideas go to §11 PARKING LOT, not into code.
-- **Combat feel > feature count.** If forced to choose, WO-4.4 polish beats any parked feature.
-- **Rescue/canto/skills/fog-of-war/trading-post/base camp:** all parked. The slice proves the loop first.
-- Godot version pinned at whatever WO-0.1 installs; upgrades are their own WO.
-- Godot MCP Pro is an editor/QA accelerator, not a scope expander. It does not justify starting unrelated WOs or changing the plan's one-work-order cadence.
+- **Scope is the boss of this project.** The new direction (walkable castle + three playable houses + romance + school year) is a large, deliberate bet. New ideas go to §11 PARKING LOT, not into code.
+- **No timeline; big but not overboard.** There is no deadline. Prefer depth done right over breadth done fast. But "big" is not "unbounded" — every addition is a scoped WO with acceptance criteria, and the north-star ordering (§1) holds: prove each loop before scaling it.
+- **Build mini-games one at a time.** Fishing first and fun, *then* the next activity, each its own WO — never a batch. Additional activities unlock diegetically (via story/interaction), which also paces the build.
+- **Combat feel > feature count.** If forced to choose, polish beats any parked feature.
+- **All three houses is the expensive commitment (M5).** Accepted deliberately (the review audit recommended shipping one house first; overridden with eyes open). If it ever threatens momentum, the fallback is to ship the chosen-house path first and bring the other two online incrementally — but the plan of record is all three from the start. The M5/M6 interleave note (§6) keeps the school-slice proof from waiting on full parity.
+- **Rescue/canto/fog-of-war/trading-post:** still parked. Godot version pinned at WO-0.1's install; upgrades are their own WO. MCP Pro is an accelerator, not a scope expander.
 
 ## 10. STATUS (Fable updates this — never delete rows)
 
 | WO | Status | Notes |
 |---|---|---|
-| MCP-Pro | ✅ enabled | Godot MCP Pro 1.15.0 installed under `addons/godot_mcp`; `.mcp.json` points to `/Users/nealsharma/Downloads/godot-mcp-pro-v1.15.0/server/build/index.js`; editor plugin and MCP autoloads enabled. Verified 2026-07-03: stdio server exposed 175 tools (`serverInfo.version` reports 1.14.1 from this build), WebSocket bridge connected to Godot headless editor, and `get_project_info` returned `Vael Academy` with MCP autoloads. Full suite also green: 194/194 GUT tests. |
+| MCP-Pro | ✅ enabled | Godot MCP Pro 1.15.0 under `addons/godot_mcp`; `.mcp.json` → local server build; editor plugin + MCP autoloads enabled. Verified 2026-07-03: stdio server exposed 175 tools (build reports 1.14.1), WebSocket bridge connected, `get_project_info` returned `Vael Academy`. Suite green: 194/194 at time of check (245/245 as of 2026-07-04). |
 | 0.1 | ✅ done | Godot 4.7 project; §2 folder layout; EventBus autoload; GUT 9.7.0; 3 dummy tests green; git init. Test cmd: `godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit` |
-| 0.2 | ✅ done | `Grid` (128px cell↔world math), `Terrain`/`TerrainInfo`/`TerrainDB` (§3 table exact), `ChapterDef` (logical terrain array + backdrop). Battle scene: flat placeholder backdrop, per-terrain debug tints, subtle grid overlay, fitted camera, cursor terrain readout (prints stats). 20×15 `test_map.tres` with all 6 terrain types. 25 tests green. |
-| 0.3 | ✅ done | `BattleCursor`: cell-by-cell keyboard move (arrows+WASD, held-key repeat), mouse follow, confirm/cancel selection with signals (`cell_changed`/`confirmed`/`cancelled`/`selection_changed`) for WO-0.4 unit hookup. Visible reticle + selected-cell highlight. Custom input actions in project.godot. Terrain readout now driven by cursor. 41 tests green. |
-| 0.4 | ✅ done | `ClassDef`/`UnitDef` resources; `Unit` node (placeholder token: team-ring disc + class letter, animated path move). Pure `Pathfinder` (Dijkstra reachable + A*), `BattleMoveContext` (terrain cost, occupancy, armored/mounted rough-terrain block), `MovementRange` (standable/attack tiles). `RangeOverlay` blue-move/red-attack. battle_view: select→range→click→walk, occupancy-aware. 56 tests green (15 pathfinding on fixtures); interactive flow verified headless. |
-| 1.1 | ✅ done | Pure combat core (src/combat): `CombatMath` (every §3 formula, int floor), `WeaponTriangle` (sword>axe>lance, +15hit/+1dmg), `WeaponDef` resource, `Combatant` snapshot, seedable `CombatRNG` (2RN hit / 1RN crit), `CombatForecast` (RNG-free UI math), `CombatResolver` → ordered combat script (`StrikeResult`/`CombatResult`) with counter/doubling/lethal-stop/crit. Slice weapons authored (iron sword/lance/axe/bow, fire tome, heal staff). 93 tests green incl. table-driven per-formula + seeded determinism. |
-| 1.2 | ✅ done | Attack flow in battle_view: select→move→choose target in range→two-sided `CombatForecastPanel` (dmg/hit/crit/×2 doubling, "no counter")→confirm→`CombatResolver` runs→per-strike HP-bar updates + floating dmg/Miss/CRIT feedback + hit flash; death removes unit & emits `EventBus.unit_died`. UnitDef gains equipped `weapon`; Unit gains HP/HP-bar/combatant snapshot. 95 tests green incl. integration: full attack round with counter + lethal-removal/EventBus on the test map. |
-| 1.3 | ✅ done | `TurnManager` (player/enemy phases, round count). Player phase: each unit acts once (move+attack/wait), `has_acted` greys unit; end turn via T/Tab or auto when all acted. Enemy phase: pure `AIBrain` Aggressor (§5) — deterministic, maximizes expected (dealt−received) via CombatForecast, prefers kills, advances toward nearest when unreachable; `AIDecision` output executed (move+attack) reusing the WO-1.2 combat path. `TurnBanner` UI. 108 tests green incl. AI scoring/decision + 5-round loop vs 3 enemies. |
-| 1.4 | ✅ done | Pure `ObjectiveResolver` (ROUT / SEIZE, defeat-precedence: lord death = game over §3, or full player wipe). `ChapterDef` gains `objective`+`seize_cell`; `UnitDef` gains `is_lord`. battle_view checks after every combat/move/enemy-phase, gates input once over, shows `ResultScreen` (Victory/Defeat, dismiss→reload), emits `EventBus.battle_won`. Seize-tile marker drawn. 120 tests green incl. both outcomes reachable on the test map (seize-through-play, rout, lord-death defeat via enemy phase). Completes M1. |
-| 2.1 | ✅ done | Pure `CombatXP` (§3: ~10 hit / ~30+ kill, level-diff scaled, clamp 1–100; heal XP) + `LevelUp` (seedable growth rolls in fixed stat order via CombatRNG). `Unit` gains per-instance level/xp + level-up stat gains (base UnitDef stays immutable; HP growth also raises current HP). `LevelUpScreen` reveals gains. battle_view awards XP after combat (both sides, players only) and heals: staff units heal-target damaged allies → `Unit.heal` → healer XP. Wren healer + heal staff added; `combat_seed` export for deterministic runs. 140 tests green incl. unit-levels-mid-battle + healer-XP integration. |
-| 2.2 | ✅ done | Pure `Inventory` (5-slot) / `InventoryItem` / `ItemDef`. Weapons carry per-instance uses; equipped = first weapon; **breaks at 0 uses** → backup auto-equips (1 use/combat, GBA-style). Command menu (`ChoiceMenu`): Attack / Heal / Item / Trade / Equip / Wait. Vulnerary heals (guarded: only offered/consumed when damaged); trade = multi-give to an adjacent ally; equip reorders. Promotion item held (used in 2.4). Null-weapon combat crash fixed; strike routing by counter-flag not name. 155 tests green incl. dedicated inventory suite + durability/item/trade integration. |
-| 2.3 | ✅ done | §5 AI tiers complete: `AIBrain.Behavior` {AGGRESSOR, SENTINEL, BOSS}. Boss never leaves its tile (attacks only from where it stands, else holds); Sentinel holds asleep until a player enters its threat range (`has_enemy_in_threat`) then permanently acts as Aggressor (`Unit.ai_awake`). `threat_tiles` (boss-aware) drives waking + the toggleable `ThreatOverlay` ('H' key). Demo: aggressor + sentinel + Serra boss on the fort. 164 tests green incl. boss-holds / sentinel sleep-then-wake / threat-range / overlay-toggle. |
-| 2.4 | ✅ done | `ClassDef` gains `promoted_class` + flat promotion bonuses. Pure `Promotion.is_eligible` (level ≥10 + class has a path). `Unit.promote()`: per-instance class override (shared UnitDef stays immutable), applies stat + movement bonuses (HP bonus heals too), resets level→1 (cap stays 20). Master Seal usable from the Item menu only when eligible → promote; movement/class routed through promotion-aware helpers. Myrmidon→Swordmaster authored; Kael carries a Seal. 173 tests green incl. Kael-promotes-and-gains-bonuses integration. |
-| 2.5 | ✅ done | Combat juice (pure code, placeholder art): `JuiceController` does standee lunge/recoil, hit-stop (time-scale freeze, 60/120/140ms hit/crit/kill), damage-scaled screen shake (crit exceeds cap), white hit-flash, eased damage-number pop, miss whiff-slide, death dissolve, and `ClashSplash` cut-in on crit/kill (placeholder band+speed-lines until AW-5). All feel in one tunable `JuiceConfig` (data/config/juice.tres) — no code edits to retune. Gated on strike_delay>0 so tests use the instant path. 182 tests green incl. crit-3×-drama math + splash-fires / kill-dissolves integration. **Completes M2.** |
-| 3.1 | ✅ done | JSON dialogue engine (§4): pure `DialogueScript`/`DialogueStep` parser (lines vs event hooks, validation, terminal events). `DialogueScene` VN player — placeholder house-tinted portraits L/R, name plate, text box with typewriter reveal, advance on space/enter/click; fires `event_triggered(start_battle/give_item/…)` + `finished`. Sample `data/dialogue/sample.json` (Ash/Serra/Corin intro + give_item + start_battle) plays start→finish. `scenes/dialogue/dialogue.tscn`. 194 tests green incl. parser + full playback. Also fixed a hit-stop `time_scale` leak (reset on battle _ready + juice _exit_tree). |
-| 3.2 | ✅ done | `SupportChainDef` + pure `SupportState` (points/ranks; C/B/A thresholds 20/60/120; +10 points for ending an action within 2 tiles, +15 for healing). Ash+Kael support chain data authored; Ash added to the demo roster beside Kael. Rank-up emits `EventBus.support_rank_up` and shows a battle pop; unlocked conversations appear under a Supports command. Support bonuses (C/B/A: hit/avoid, dmg, crit) are carried on `Combatant` snapshots, so `CombatForecast`, `CombatResolver`, battle execution, and enemy AI forecasts use one support-aware math path. 200 tests green incl. Ash+Kael reaching C in a scripted battle test and forecast-panel hit/counter-hit changing visibly. |
-| 3.3 | ✅ done | `SaveSystem` JSON slot IO (`user://saves`, title-ready `list_slots`/`load_slot`) plus battle snapshot/restore. Save payload captures roster state (cell/HP/level/XP/stat gains/promotion override/inventory uses), chapter/turn/objective state, support points/ranks, casual flag, defeated/permadead ids, and exact RNG seed/state stored as strings to avoid JSON integer precision loss. Battle scene exposes `save_to_slot`/`load_from_slot`; classic player deaths are flagged permadead and absent after load; casual victory clears non-lord player defeated flags for post-chapter revival metadata. Full title UI remains WO-4.3. 203 tests green incl. save-slot IO, mid-battle load fidelity, RNG state round-trip, and classic permadeath flag/load removal. |
-| 3.4 | ✅ done | `HouseDef` resource (colors/banner/tint/camaraderie); all three houses authored (`data/houses/`). UI theming pulls from the active house — unit team-ring + HP-bar tint, turn-banner accents, menu accents — so swapping the player HouseDef re-themes the chrome with zero code changes. Pure `Camaraderie` passive (+5 hit/avoid within 2 tiles of a housemate) folds into the same Combatant bonus path as supports (forecast + resolver + execution). 213 tests green incl. camaraderie changing the forecast + house-swap re-theming. |
-| 3.5 | ✅ done | Menu-driven `HubScene` (§4, house-themed): Common Hall (unlocked supports + rotating flavor), Training Grounds (+10 XP, one unit/visit), Quartermaster (roster + inventory), Mission Board (briefing → deploy). Shared `Roster` builder (player units + deploy cells) used by hub + battle. `Campaign` autoload holds between-battle progression (progression-only state: level/XP/gains/promotion/inventory — resets HP/position on redeploy), supports, casual flag; save/load via SaveSystem. Flow: hub deploy → battle applies campaign → victory captures back → result → hub. Main scene now the hub. 228 tests green incl. training-XP-persists-through-save/load + deploy-applies / victory-captures. |
-| 4.1 | ✅ done | Chapter 1 authored as data: `mock_battle.tres` (hand-built 20×15 — Serra's NE fort + waypoint fort, mid forest, mountain ridge, wall chokepoint, pond), `UnitSpawn` resource + `ChapterDef` forces/deploy/dialogue fields; full roster as .tres under `data/units/` (**Ash now the lord per §4**; Kael keeps seal/axe) + 6 Tidemark students (2 aggressors, armor/scout/adept/guard sentinels) + Serra (boss, fort). New DEFEAT_BOSS objective (boss falls OR rout; lord-death precedence). **Non-lethal chapter flag**: defeats route to "Yields!" — recorded defeated, never permadead. Intro (3 house leaders in-character) / Serra battle quote / yield quote / outro authored + played via in-battle DialogueScene overlay (input-gated, awaitable). §3 fort heal (10%/turn at phase start) implemented. Objective HUD label + boss-fort gold marker. Fixed keyboard input on ResultScreen/DialogueScene (`_unhandled_key_input`; "press any key" now true). Hub deploys to `mock_battle.tscn`; test map/demo spawns unchanged for tests. 245 tests green (17 new: resolver DEFEAT_BOSS, chapter data sanity/connectivity, yields-not-permadeath, fort heal, intro/boss-quote hooks). Verified in-game via MCP: intro→skirmish (aggressors+waking sentinels)→yields→boss quote→victory→outro→hub with progression captured. Difficulty: turn-1 contact, counters matter, Kael-axe is the Serra answer — real tuning pass lands with WO-4.4 playtest. |
-| 4.2 | ⬜ | depends 3.1, 3.2 — co-write with Neal |
-| 4.3 | ⬜ | depends 4.1, 3.3, 3.5 |
-| 4.4 | ⬜ | depends 4.1–4.3 |
+| 0.2 | ✅ done | `Grid` (128px cell↔world), `Terrain`/`TerrainInfo`/`TerrainDB` (§3 exact), `ChapterDef` (logical terrain + backdrop). Battle scene: flat backdrop, per-terrain debug tints, grid overlay, fitted camera, cursor terrain readout. 20×15 `test_map.tres`. 25 tests green. |
+| 0.3 | ✅ done | `BattleCursor`: cell-by-cell keyboard (arrows+WASD, repeat), mouse follow, confirm/cancel with signals for WO-0.4. Reticle + selected-cell highlight. Input actions in project.godot. 41 tests green. |
+| 0.4 | ✅ done | `ClassDef`/`UnitDef`; `Unit` node (placeholder token, animated move). Pure `Pathfinder` (Dijkstra + A*), `BattleMoveContext`, `MovementRange`; `RangeOverlay`. select→range→click→walk, occupancy-aware. 56 tests green (15 pathfinding). |
+| 1.1 | ✅ done | Pure combat core: `CombatMath` (every §3 formula), `WeaponTriangle`, `WeaponDef`, `Combatant`, seedable `CombatRNG` (2RN/1RN), `CombatForecast`, `CombatResolver` → ordered script with counter/doubling/lethal-stop/crit. Slice weapons authored. 93 tests green incl. per-formula + determinism. |
+| 1.2 | ✅ done | Attack flow: select→move→target→two-sided `CombatForecastPanel`→confirm→resolver→HP-bar updates + floating feedback + hit flash; death removes unit & emits `EventBus.unit_died`. UnitDef gains `weapon`; Unit gains HP/snapshot. 95 tests green incl. counter integration. |
+| 1.3 | ✅ done | `TurnManager` (player/enemy phases, rounds). Player: each unit acts once, greys when acted; end via T/Tab or auto. Enemy: pure `AIBrain` Aggressor (§5), deterministic, executed via WO-1.2 path. `TurnBanner`. 108 tests green incl. 5-round loop vs 3 enemies. |
+| 1.4 | ✅ done | Pure `ObjectiveResolver` (ROUT/SEIZE, lord-death precedence). `ChapterDef` gains `objective`+`seize_cell`; `UnitDef` gains `is_lord`. Post-action checks, `ResultScreen`, `EventBus.battle_won`. 120 tests green incl. both outcomes. Completes M1. |
+| 2.1 | ✅ done | Pure `CombatXP` (§3) + `LevelUp` (seedable growth rolls). `Unit` per-instance level/xp + gains (base UnitDef immutable). `LevelUpScreen`. Staff heal → healer XP; Wren + heal staff added; `combat_seed`. 140 tests green incl. level + healer-XP integration. |
+| 2.2 | ✅ done | Pure `Inventory`(5)/`InventoryItem`/`ItemDef`. Per-instance uses; **breaks at 0** → backup auto-equips. Command menu (Attack/Heal/Item/Trade/Equip/Wait). Vulnerary; multi-give trade; equip reorder; promotion item held. 155 tests green incl. durability/trade. |
+| 2.3 | ✅ done | §5 AI tiers: {AGGRESSOR, SENTINEL, BOSS}. Boss never leaves tile; Sentinel sleeps until enemy in threat then permanently Aggressor; `threat_tiles` + toggleable `ThreatOverlay` ('H'). 164 tests green incl. sleep-then-wake. |
+| 2.4 | ✅ done | `ClassDef` gains `promoted_class` + bonuses. Pure `Promotion.is_eligible` (lvl ≥10 + path). `Unit.promote()` (per-instance override, stat+move bonuses, level→1, cap 20). Master Seal from Item menu. Myrmidon→Swordmaster; Kael carries a Seal. 173 tests green. |
+| 2.5 | ✅ done | Combat juice (pure code): `JuiceController` lunge/recoil, hit-stop, damage-scaled shake, hit-flash, damage pops, whiff-slide, death dissolve, `ClashSplash` cut-in (placeholder until AW-5). All in `JuiceConfig`. 182 tests green. **Completes M2.** |
+| 3.1 | ✅ done | JSON dialogue engine: pure `DialogueScript`/`DialogueStep` parser; `DialogueScene` VN player (placeholder tinted portraits, typewriter, advance, `event_triggered`+`finished`). Sample plays start→finish. 194 tests green. *(WO-4.6 extends with choices/branches — engine is strictly linear today.)* |
+| 3.2 | ✅ done | `SupportChainDef` + pure `SupportState` (C/B/A @ 20/60/120; +10 within 2 tiles, +15 heal). Chain authored; rank-up emits `EventBus.support_rank_up`. Support bonuses on `Combatant` → one support-aware math path (forecast/resolver/AI). 200 tests green. *(5.7 adds romance rank; 4.2 adds the chain registry.)* |
+| 3.3 | ✅ done | `SaveSystem` JSON slot IO + battle snapshot/restore (roster/chapter/turn/objective/supports/casual/defeated/permadead/RNG state as strings). Classic deaths flagged permadead & absent after load. 203 tests green. *(payload grows in M5–M7.)* |
+| 3.4 | ✅ done | `HouseDef` (colors/banner/tint/camaraderie); all three houses authored. UI theming pulls from active house (rings/HP bars/banner/menus). Pure `Camaraderie` (+5 hit/avoid within 2 tiles) folds into the Combatant bonus path. 213 tests green. *(5.3 makes house runtime-chosen.)* |
+| 3.5 | ✅ done | Menu-driven `HubScene`: Common Hall/Training(+10XP)/Quartermaster/Mission Board. Shared `Roster` builder; `Campaign` autoload (between-battle state, save/load). Flow hub↔battle works. 228 tests green. **⚠ Presentation replaced by the castle in M6; systems (`Campaign`/`Roster`) are kept — the menu functions themselves are UI and retire with the menu.** |
+| 4.1 | ✅ done | Chapter 1 `mock_battle.tres` (20×15, forts/forest/ridge/wall/pond), full roster .tres, 6 Tidemark + Serra boss, DEFEAT_BOSS objective, non-lethal "Yields!" flag, intro/quotes/outro via in-battle dialogue, fort heal. 245 tests green. Verified in-game via MCP. **Reframed as the year's opening inter-house battle (fiction only).** |
+| 4.1b | ⬜ | Kai identity migration (`ash`→`kai`, id + display + dialogue speakers + tests; voice pass stays with content WOs) — depends 4.1 |
+| 4.2 | ⬜ | Support conversations: Kai–Kael C/B/A + out-of-battle playback wiring + chain registry — depends 4.1b, 3.1, 3.2 — co-write |
+| 4.3 | ⬜ | Title screen & game flow — depends 4.1, 3.3, 3.5 |
+| 4.4 | ⬜ | Polish pass — depends 4.1–4.3 |
+| 4.5 | ⬜ | battle_view refactor (UnitSpawner / action-menu controller / combat executor; zero behavior change) — depends 4.4 |
+| 4.6 | ⬜ | Dialogue choices/branches — depends 3.1 |
+| 5.1 | ⬜ | Prologue: bandit raid + 3 heirs (guest-spawn support + heir defs in scope; split 5.1a/5.1b pre-authorized) — depends 4.5 |
+| 5.2 | ⬜ | Emberwing playable roster + Kai protagonist-slot extraction — depends 5.1 |
+| 5.3 | ⬜ | House-choice new-game flow (mechanism-scoped; split 5.3a/5.3b pre-authorized) — depends 3.4, 5.2 |
+| 5.4 | ⬜ | Tidemark playable roster — depends 5.3 |
+| 5.5 | ⬜ | Thornrook playable roster — depends 5.3 |
+| 5.6 | ⬜ | Rival-force generation + per-rival chapter variants; full-parity acceptance — depends 5.4, 5.5 |
+| 5.7 | ⬜ | Romance tier — depends 4.6, 3.2 |
+| 6.1 | ⬜ | Castle exploration shell — depends 3.5 systems (may start once 5.3 ✅, ahead of 5.4–5.7) |
+| 6.2a | ⬜ | Core room conversions (Common Hall/Training/War Room; retire menu; retarget battle→castle flow) — depends 6.1 |
+| 6.2b | ⬜ | Remaining rooms (Quartermaster/Library browse-only/waterside) — depends 6.2a |
+| 6.3 | ⬜ | NPC conversations in rooms — depends 6.1, 3.1 |
+| 6.4 | ⬜ | Fishing (flagship mini-game) — depends 6.1 |
+| 7.1 | ⬜ | Calendar/year system (incl. chapter registry/sequencing) — depends 6.2a |
+| 7.2 | ⬜ | Story-unlocked activities (one at a time) — depends 7.1 |
+| 7.3 | ⬜ | Holidays & parties — depends 7.1 |
+| 7.4 | ⬜ | Closing inter-house battle — depends 5.6, 7.1 |
+| 8.1 | ⬜ | Skill system (passive/stat-modifier scope) — depends 2.1, 2.4 |
+| 8.2 | ⬜ | Kai's cross-school magic — depends 8.1 |
 | AW-1 | ⬜ | style bible — no deps, start anytime |
 | AW-2 | ⬜ | Mock Battle backdrop + terrain painter — depends AW-1 |
 | AW-3 | ⬜ | pipeline scripts — depends AW-1 |
-| AW-4 | ⬜ | reference sheets + standees — depends AW-1, AW-3 |
+| AW-4 | ⬜ | reference sheets + standees (full cast) — depends AW-1, AW-3 |
 | AW-5 | ⬜ | splashes/house/UI art — depends AW-1 |
-| AW-6 | ⬜ | integration — depends AW-2/4/5 + gating code WOs (§8) |
+| AW-6 | ⬜ | integration (incl. castle-room art) — depends AW-2/4/5 + gating code WOs |
 
 ## 11. PARKING LOT (ideas land here, not in code)
 
-- Rescue/carry, canto, class skills, fog of war, arena, shops, second support pair, difficulty modes, 3D remake question — revisit after the slice is fun.
-- **Refactor (post-M2):** `battle_view.gd` is becoming a fat battle controller (input, command menu, combat/heal execution, unit spawning, XP, enemy-AI phase flow, objectives). Peel the action-menu/inventory execution and unit-spawn/deploy into their own nodes once M2 is stable. Its own WO — not a "while we're in there" change. Flagged in a code review after WO-2.2.
-- **Full bidirectional trade screen:** WO-2.2 ships one-directional multi-give (give items to an adjacent ally). A proper FE trade screen (take items too, non-turn-ending) is a later polish item.
-- **Academy expansions (post-slice, in rough priority order):** house choice at new game (already data-ready via HouseDef); **walkable 2D hub** (top-down academy map with NPCs — the real Three Houses feel, but it's a whole content pipeline); calendar/timetable system; recruiting students from rival houses (cross-house supports); professor/instruction mechanics (directed stat training); motivation/gifts/tea-time analogues; house-vs-house tournament arc as the campaign spine.
+- **Un-parked this revision (now real milestones):** walkable castle (M6), house choice (M5), calendar/year (M7), romance (M5), class skills (M8). **The `battle_view.gd` refactor is promoted to WO-4.5.**
+- **Still parked:** rescue/carry, canto, fog of war, arena, shops, difficulty modes beyond Classic/Casual, cross-house recruiting (the unpicked heirs joining Kai's house later), professor/instruction directed-training mechanics, house-vs-house tournament arc, combat-order-altering skills (vantage/astra-likes — see 8.1 scope), 3D remake question. Revisit after the school slice is fun.
+- **Full bidirectional trade screen:** current trade is one-directional multi-give; a proper take-items-too screen is later polish.
+- **Title revisit:** "Emberline Tactics" leans Emberwing-specific now that all three houses are equal and player-chosen — worth revisiting once the game has an identity.
+
+## 12. Open decisions (Neal's call — none block current WOs)
+
+- **Roster count symmetry:** ✅ resolved — standardized to **heir + 5 students (6 playable) per house**. Emberwing's sixth (Liora, battle-mage, the house's only ranged attacker) added to the bible.
+- **Kingdom name** (Aldreth placeholder), **teacher deployability** (mentors as occasional guest units?), **exact romance-scene depth**, **Kai's magic-unlock schedule** (which school, which chapter) — all flagged in the bibles, decide when the relevant WO comes up.
