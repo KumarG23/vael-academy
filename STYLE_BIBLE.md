@@ -1,4 +1,12 @@
-# STYLE_BIBLE.md — AW-1 v2 (draft, awaiting Neal's sign-off)
+# STYLE_BIBLE.md — AW-1 v3 (draft, awaiting Neal's sign-off)
+
+> **v3 (2026-07-04):** Neal picked Pole A with Corin seed 704 as the reference ("95%
+> perfect"), asked for the cast to be **normalized to her register** plus a **+5%
+> charm dial** on the heroines, and confirmed the **vivid environment pole** via the
+> feast hall. v3 delivers the normalized template (seeds 901/902/904/905 — which
+> also serve as the fresh-seed reproduction check) and extends vivid rooms (library
+> 906). **Charm rule:** "+5%" is implemented as expression/eyes/grace/stylish fit —
+> FE-official-art level, hard-capped there (cast is 15–18; never past genre level).
 
 The authoritative look for every production asset (MASTER_PLAN §8). **Consistency law:
 no production asset is generated except from these templates and params.** Exemplars
@@ -60,12 +68,16 @@ umbers `#1a1417`–`#2b2026`). Environments: saturated storybook greens/earths.
 
 ## 5. Prompt templates (v2)
 
-**CHARACTER PORTRAIT — POLE A "Dark Deity cel" (recommended; exemplars 703/704/706)**
-> 2D game character art, flat cel shading with bold clean ink outlines, anime
-> influenced tactical RPG portrait, waist-up bust, [attractive] [age] year old
-> [description], [house primary] and [house secondary] academy uniform, [expression],
-> vivid saturated colors, simple flat dark [house-tinted] background, stylized
-> official game art
+**CHARACTER PORTRAIT — THE template (v3 normalized; exemplars 901/902/904, origin 704)**
+> 2D game character art, clean bright anime cel shading with fine ink outlines,
+> large expressive eyes, tactical RPG portrait, waist-up bust,
+> [beautiful/handsome] [age] year old [description], [elegant] [house primary] and
+> [house secondary] academy uniform [detail], [charming expression], vivid flat
+> saturated colors, simple flat dark [house-tinted] background, stylized official
+> game art[, charming and graceful — heroines only, the +5% dial]
+>
+> extra negative: `painterly, heavy shading, muted colors` (+ `armor, pauldrons`
+> for non-armored characters; + `antlers, horns, forest, trees` for Corin/Thornrook)
 
 **CHARACTER PORTRAIT — POLE B "full anime" (Animagine; exemplars 801/802)**
 > masterpiece, best quality, very aesthetic, [1girl/1boy], waist-up portrait,
@@ -133,6 +145,12 @@ umbers `#1a1417`–`#2b2026`). Environments: saturated storybook greens/earths.
    negative `antlers, horns`.
 7. **Animagine is weak at full-body standees** (seed 803: faceless) — use Pole A for
    standees regardless of the portrait pole.
+7b. **Green palettes pull forest backgrounds** (Corin 901, archer standee 905) even
+   with `forest, trees` in the negative — production portraits/standees must be
+   QC'd for background drift and regenerated until the flat background holds.
+7c. **Small identity details don't render from text** (Kai's silver temple mark,
+   exact braids) — that's AW-4's job: locked reference sheets + inpainting, not
+   prompt-wrestling.
 8. **ComfyUI model-switching bug (v0.26.0):** swapping checkpoints can crash
    `CheckpointLoaderSimple` with `IndexError ... free_memory` — POST `/free`
    `{"unload_models": true, "free_memory": true}`, wait ~5s, retry. Freshly
@@ -154,12 +172,13 @@ umbers `#1a1417`–`#2b2026`). Environments: saturated storybook greens/earths.
 standees 202–205, oil backdrops 304/306/308, rooms 401–403, splashes 501–503,
 vistas 305/601.
 
-## 8. Open items for sign-off (Neal)
+## 8. Sign-off state
 
-1. **Character pole: A (Dark Deity cel) or B (full anime)?** Recommendation: **A** —
-   closest to sample 5, holds gravitas, and DreamShaper Turbo iterates 8× faster.
-2. **Environment pole: vivid stylized (708/709) or painterly oil (v1)?**
-   Recommendation: **vivid stylized**, for cohesion with cel characters.
-3. Vista treatment (v1 gouache) — keep as-is?
-4. Once picked: AW-4 locks per-character reference sheets in the chosen pole;
-   fresh-seed reproduction check runs at sign-off.
+- ~~Character pole~~ **DECIDED (v2 review): Pole A, Corin-704 register, +5% charm.**
+  v3 normalized the cast to it (901/902/904/905) — those fresh seeds double as the
+  reproduction check.
+- ~~Environment pole~~ **DECIDED (v2 review): vivid stylized** (feast hall 709
+  anchor; library 906; backdrop 708).
+- Vista treatment (v1 gouache) — unchallenged; stands.
+- **Remaining: Neal's yes/no on v3.** On yes → AW-1 ✅ and AW-2/3/4/5 unblock
+  (AW-4 first: locked reference sheets for the real cast).
