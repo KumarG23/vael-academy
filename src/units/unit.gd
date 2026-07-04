@@ -41,6 +41,9 @@ const _STAT_FIELD := {
 var _grid: Grid
 var _moving := false
 var _flash := 0.0
+## Painted standee (AW-6 hook): drawn instead of the placeholder token when
+## `assets/standees/standee_<id>.png` exists. Pure presentation.
+var _standee: Texture2D = null
 
 
 func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
@@ -57,6 +60,12 @@ func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 	_grid = grid
 	cell = start_cell
 	position = _grid.cell_center(cell)
+	_standee = null
+	if def != null and def.id != "":
+		var standee_path := "res://assets/standees/standee_%s.png" % def.id
+		if ResourceLoader.exists(standee_path):
+			_standee = load(standee_path)
+			texture_filter = TEXTURE_FILTER_LINEAR  # painted art, not pixel art
 	queue_redraw()
 
 
@@ -367,6 +376,9 @@ func _team_color() -> Color:
 func _draw() -> void:
 	if _grid == null:
 		return
+	if _standee != null:
+		_draw_standee()
+		return
 	var r: float = _grid.cell_size * 0.34
 	var base := _team_color()
 	if has_acted:
@@ -378,6 +390,28 @@ func _draw() -> void:
 		draw_circle(Vector2.ZERO, r, Color(1, 1, 1, _flash))
 	_draw_letter()
 	_draw_hp_bar(r)
+
+
+## Banner-Saga-style painted standee: house ring at the feet, figure ~1.5 cells
+## tall, HP bar below. All the tweens (move/lunge/flash/dissolve) apply unchanged.
+func _draw_standee() -> void:
+	var cs: float = float(_grid.cell_size)
+	var base := _team_color()
+	var ring := base.darkened(0.4) if has_acted else base
+	var foot_y := cs * 0.42
+	# House-colored ground ring (flattened circle).
+	draw_set_transform(Vector2(0, foot_y), 0.0, Vector2(1.0, 0.42))
+	draw_circle(Vector2.ZERO, cs * 0.34, Color(ring.r, ring.g, ring.b, 0.30))
+	draw_arc(Vector2.ZERO, cs * 0.34, 0.0, TAU, 40, ring, 3.0)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var h := cs * 1.5
+	var w := _standee.get_width() * (h / _standee.get_height())
+	var rect := Rect2(Vector2(-w * 0.5, foot_y - h), Vector2(w, h))
+	var mod := Color(0.55, 0.55, 0.58) if has_acted else Color.WHITE
+	draw_texture_rect(_standee, rect, false, mod)
+	if _flash > 0.0:
+		draw_rect(Rect2(rect.position, rect.size), Color(1, 1, 1, _flash * 0.5), true)
+	_draw_hp_bar(cs * 0.34)
 
 
 func _draw_letter() -> void:

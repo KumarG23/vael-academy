@@ -1,4 +1,17 @@
-# STYLE_BIBLE.md — AW-1 v3.1 (draft, awaiting Neal's sign-off)
+# STYLE_BIBLE.md — AW-1 v4 (draft, awaiting Neal's sign-off)
+
+> **v4 (2026-07-04): validated IN THE ENGINE.** After static composite mocks failed
+> review, the AW-6 texture hooks were landed early as AW-1 validation: `Unit` draws
+> `assets/standees/standee_<id>.png` (house ring + HP bar + all tweens unchanged)
+> and `DialogueScene` draws `assets/portraits/portrait_<id>.png` per side — both
+> convention-based, zero effect when no art exists, all 268 tests green. Kai is the
+> live proof (engine screenshots in `assets/art_review/aw1_style_bible/engine_*`).
+> Background stripping is **rembg with alpha matting** (isnet-general-use) — the
+> hand-rolled flood-fill keyer failed exactly as expected and is banned.
+> **Castle movement answer (M6):** standees glide with a subtle bob (Banner Saga),
+> matching the no-frame-animation art language; Godot's built-in Skeleton2D cutout
+> rig is the free upgrade path if jointed walk cycles are ever wanted. No paid
+> software anywhere in the pipeline.
 
 > **v3 (2026-07-04):** Neal picked Pole A with Corin seed 704 as the reference ("95%
 > perfect"), asked for the cast to be **normalized to her register** plus a **+5%

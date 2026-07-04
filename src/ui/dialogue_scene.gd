@@ -25,10 +25,16 @@ var _index := -1
 var _finished := false
 var _current: DialogueStep = null
 var _revealed := 0.0
+## Painted portraits (AW-6 hook): `assets/portraits/portrait_<id>.png` per side,
+## falling back to the placeholder card when no art exists. Presentation only.
+var _left_portrait := ""
+var _right_portrait := ""
+var _portrait_cache: Dictionary = {}
 
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
+	texture_filter = TEXTURE_FILTER_LINEAR  # painted art, not pixel art
 	if script_path != "":
 		var s := DialogueScript.from_file(script_path)
 		if s.ok():
@@ -88,6 +94,10 @@ func _advance_logical() -> void:
 				return
 			continue  # non-terminal event: keep going to the next step
 		_current = step
+		if step.side == "right":
+			_right_portrait = step.portrait
+		else:
+			_left_portrait = step.portrait
 		_revealed = 0.0 if typewriter_speed > 0.0 else float(step.text.length())
 		queue_redraw()
 		line_shown.emit(step)
@@ -132,7 +142,7 @@ func _draw() -> void:
 	if _current == null:
 		return
 	var active_left := _current.side == "left"
-	_draw_portrait(Vector2(vp.x * 0.08, vp.y * 0.14), LEFT_COLOR, active_left and true, "left")
+	_draw_portrait(Vector2(vp.x * 0.08, vp.y * 0.14), LEFT_COLOR, active_left, "left")
 	_draw_portrait(Vector2(vp.x * 0.72, vp.y * 0.14), RIGHT_COLOR, not active_left, "right")
 
 	# Text box.
@@ -158,9 +168,18 @@ func _draw() -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(0.8, 0.82, 0.88))
 
 
-func _draw_portrait(pos: Vector2, color: Color, active: bool, _side: String) -> void:
+func _draw_portrait(pos: Vector2, color: Color, active: bool, side: String) -> void:
 	var vp := get_viewport_rect().size
 	var size := Vector2(vp.x * 0.20, vp.y * 0.48)
+	# Painted portrait when the art exists (AW-6); placeholder card otherwise.
+	var tex := _portrait_texture(_left_portrait if side == "left" else _right_portrait)
+	if tex != null:
+		var h := size.y * 1.15  # portraits may overhang the slot a touch, VN-style
+		var w := tex.get_width() * (h / tex.get_height())
+		var rect := Rect2(Vector2(pos.x + size.x * 0.5 - w * 0.5, pos.y + size.y - h + vp.y * 0.06), Vector2(w, h))
+		var mod := Color.WHITE if active else Color(0.45, 0.45, 0.50)
+		draw_texture_rect(tex, rect, false, mod)
+		return
 	var card := color if active else color.darkened(0.5)
 	var alpha := 1.0 if active else 0.55
 	draw_rect(Rect2(pos, size), Color(card.r, card.g, card.b, alpha), true)
@@ -171,3 +190,12 @@ func _draw_portrait(pos: Vector2, color: Color, active: bool, _side: String) -> 
 		var initial := _current.speaker.substr(0, 1)
 		draw_string(font, pos + size * 0.5 - Vector2(20, -20), initial,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 96, Color(1, 1, 1, 0.9))
+
+
+func _portrait_texture(id: String) -> Texture2D:
+	if id == "":
+		return null
+	if not _portrait_cache.has(id):
+		var path := "res://assets/portraits/portrait_%s.png" % id
+		_portrait_cache[id] = load(path) if ResourceLoader.exists(path) else null
+	return _portrait_cache[id]
