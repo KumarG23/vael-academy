@@ -169,9 +169,9 @@ def paint():
         (30, "lmm"),
         (30, "lm"),
     ])
-    # sleeve (short, nearly horizontal to the raised fist)
+    # sleeve (short, nearly horizontal to the raised fist), crimson cuff at wrist
     c.px(29, 20, "c")
-    c.rows(21, [(28, "xcc"), (28, "xcc")])
+    c.rows(21, [(28, "xcy"), (28, "xcy")])
     c.px(29, 23, "x"); c.px(30, 23, "x")
     # blade: two-px wide diagonal from (35,19) to (46,7)
     c.line(35, 18, 45, 8, "b")
@@ -192,12 +192,12 @@ def paint():
     # mark = silver diagonal (29,8)-(30,9) on the temple skin.
     c.rows(1, [
         (19, "....s...d"),       # y1  crown spike tips
-        (19, "..ssssdds"),       # y2
-        (19, ".ssdddffds"),      # y3
-        (19, "ssdddffffds"),     # y4
-        (19, "asddffffffds"),    # y5  sheen toward the light
-        (19, "assdddddddss"),    # y6  skull widest
-        (19, "assddddddsss"),    # y7  fringe root
+        (19, "..sssdfds"),       # y2  lock tip catches light
+        (19, ".ssdsdffds"),      # y3  's' seams carve lock clusters
+        (19, "ssdfsdfffds"),     # y4
+        (19, "asdffsdfffds"),    # y5  sheen toward the light
+        (19, "assddsddsdfs"),    # y6  skull widest, lock seams
+        (19, "assdsdddsdss"),    # y7  fringe root
         (19, "sssseesdes*e"),    # y8  locks over forehead + mark
         (19, "assseaseaae*"),    # y9  lock tips, brows, mark
         (19, ".asweXeeXWee"),    # y10 eye row
@@ -207,6 +207,8 @@ def paint():
         (19, ".....qwweqe"),     # y14 mouth (q at x27)
         (19, "......qwee"),      # y15 chin
     ])
+    # rim light along the lit (right) hair silhouette
+    c.px(28, 3, "f"); c.px(29, 4, "f"); c.px(30, 6, "f")
 
     # ---------- OUTLINE + GROUND SHADOW ----------
     c.outline_sprite("X")
