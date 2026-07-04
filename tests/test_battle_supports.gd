@@ -45,21 +45,21 @@ func _wait_action_at(cell: Vector2i) -> void:
 	await _wait_idle()
 
 
-func _unlock_ash_kael_c() -> void:
-	await _wait_action_at(Vector2i(3, 7))  # Kael ends beside Ash: +10
-	await _wait_action_at(Vector2i(2, 7))  # Ash ends beside Kael: +10 -> C
+func _unlock_kai_kael_c() -> void:
+	await _wait_action_at(Vector2i(3, 7))  # Kael ends beside Kai: +10
+	await _wait_action_at(Vector2i(2, 7))  # Kai ends beside Kael: +10 -> C
 
 
-func test_ash_kael_reach_c_and_support_menu_lists_conversation():
-	var ash: Unit = _view.unit_at(Vector2i(2, 7))
+func test_kai_kael_reach_c_and_support_menu_lists_conversation():
+	var kai: Unit = _view.unit_at(Vector2i(2, 7))
 	var kael: Unit = _view.unit_at(Vector2i(3, 7))
-	assert_not_null(ash, "Ash present for support fixture")
+	assert_not_null(kai, "Kai present for support fixture")
 	assert_not_null(kael, "Kael present for support fixture")
 
-	await _unlock_ash_kael_c()
+	await _unlock_kai_kael_c()
 
-	assert_eq(_view._support_state.rank_for_units("ash", "kael"), "C")
-	assert_true(_rankups.has("ash_kael:C"), "rank-up signal emitted")
+	assert_eq(_view._support_state.rank_for_units("kai", "kael"), "C")
+	assert_true(_rankups.has("kai_kael:C"), "rank-up signal emitted")
 
 	kael.has_acted = false
 	_view._on_cursor_confirmed(Vector2i(3, 7))
@@ -83,7 +83,7 @@ func test_c_rank_bonus_visibly_changes_forecast():
 	var base_hit := int(_view._forecast_panel._atk["hit"])
 	var base_counter_hit := int(_view._forecast_panel._def["hit"])
 
-	await _unlock_ash_kael_c()
+	await _unlock_kai_kael_c()
 
 	kael.has_acted = false
 	_view._selected = kael

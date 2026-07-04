@@ -6,9 +6,9 @@ extends RefCounted
 ##
 ## WO-4.1: units are formal .tres data under data/units/ (§2 rule 4). Defs are
 ## duplicated per call so runtime/test mutation never leaks into the cached
-## resources. Ash is the lord (§4): his death is a game over.
+## resources. Kai is the lord (§4): his death is a game over.
 
-const PLAYER_IDS: Array[String] = ["ash", "kael", "brenna", "wren"]
+const PLAYER_IDS: Array[String] = ["kai", "kael", "brenna", "wren"]
 
 
 ## Fresh UnitDefs for the four Emberwing units, in roster order.
@@ -24,7 +24,7 @@ static func player_units() -> Array[UnitDef]:
 ## WO-0.2 test map). Real chapters carry deploy_cells in their ChapterDef.
 static func deploy_cells() -> Dictionary:
 	return {
-		"ash": Vector2i(2, 7),
+		"kai": Vector2i(2, 7),
 		"kael": Vector2i(3, 7),
 		"brenna": Vector2i(4, 9),
 		"wren": Vector2i(3, 9),

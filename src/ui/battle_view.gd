@@ -1133,7 +1133,7 @@ func _camaraderie_bonus_for(unit: Unit, cell: Vector2i) -> Dictionary:
 
 
 func _setup_supports() -> void:
-	var chain: SupportChainDef = _try_load("res://data/supports/ash_kael.tres")
+	var chain: SupportChainDef = _try_load("res://data/supports/kai_kael.tres")
 	_support_state = SupportState.new()
 	_support_state.add_chain(chain)
 

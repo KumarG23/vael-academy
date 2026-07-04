@@ -82,10 +82,10 @@ func test_dialogue_scripts_exist_and_parse():
 func test_forces_spawn_from_chapter_data():
 	assert_eq(_view._living_units_on_team(0).size(), 4, "four Emberwing units")
 	assert_eq(_view._living_units_on_team(1).size(), 7, "seven Tidemark units")
-	var ash: Unit = _view.unit_by_id("ash")
-	assert_eq(ash.cell, Vector2i(2, 12), "Ash at his authored deploy cell")
-	assert_true(ash.is_lord(), "Ash is the lord (§4)")
-	assert_eq(_view._lord_unit, ash)
+	var kai: Unit = _view.unit_by_id("kai")
+	assert_eq(kai.cell, Vector2i(2, 12), "Kai at his authored deploy cell")
+	assert_true(kai.is_lord(), "Kai is the lord (§4)")
+	assert_eq(_view._lord_unit, kai)
 	var serra: Unit = _view.unit_by_id("serra")
 	assert_eq(serra.cell, Vector2i(17, 2))
 	assert_eq(_view._boss_unit, serra, "Serra tracked as the objective boss")
@@ -110,11 +110,11 @@ func test_rout_also_wins():
 
 
 func test_lord_fall_still_loses_the_mock_battle():
-	var ash: Unit = _view.unit_by_id("ash")
-	_view._kill(ash)
+	var kai: Unit = _view.unit_by_id("kai")
+	_view._kill(kai)
 	_view._check_objective()
 	assert_true(_view._battle_over)
-	assert_false(_view._battle_victory, "losing Ash loses the exercise")
+	assert_false(_view._battle_victory, "losing Kai loses the exercise")
 
 
 # --- non-lethal yields (§6: nobody can permanently die) ----------------------------
@@ -143,10 +143,10 @@ func test_fort_heals_its_occupant_at_phase_start():
 	_view._apply_terrain_heal(1)
 	assert_eq(serra.current_hp, serra.max_hp() - 10 + 3, "Serra heals ceil(30 * 10%) = 3 on her fort")
 	# A unit on plains gets nothing.
-	var ash: Unit = _view.unit_by_id("ash")
-	ash.current_hp = 10
+	var kai: Unit = _view.unit_by_id("kai")
+	kai.current_hp = 10
 	_view._apply_terrain_heal(0)
-	assert_eq(ash.current_hp, 10, "plains do not heal")
+	assert_eq(kai.current_hp, 10, "plains do not heal")
 
 
 # --- dialogue hooks -----------------------------------------------------------------

@@ -17,7 +17,7 @@ func after_each() -> void:
 
 
 func test_hub_lists_the_full_roster():
-	assert_eq(_hub._roster_defs.size(), 4, "Ash, Kael, Brenna, Wren")
+	assert_eq(_hub._roster_defs.size(), 4, "Kai, Kael, Brenna, Wren")
 
 
 func test_entering_the_hub_refreshes_training():
@@ -28,8 +28,8 @@ func test_entering_the_hub_refreshes_training():
 func test_training_grounds_grants_xp_through_the_menu():
 	_hub._open_training()
 	assert_eq(_hub._context, "training")
-	_hub._do_train(0)  # train the first roster unit (Ash)
-	assert_eq(int(Campaign.get_unit_state("ash").get("xp", -1)), 10)
+	_hub._do_train(0)  # train the first roster unit (Kai)
+	assert_eq(int(Campaign.get_unit_state("kai").get("xp", -1)), 10)
 	assert_false(Campaign.can_train(), "one training per visit")
 
 

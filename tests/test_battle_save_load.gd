@@ -28,7 +28,7 @@ func test_save_mid_battle_and_load_into_fresh_scene():
 	_view.casual_mode = true
 	_view._turn.round_number = 3
 	_view._turn.active_team = TurnManager.Team.PLAYER
-	_view._support_state.add_points("ash", "kael", 20)
+	_view._support_state.add_points("kai", "kael", 20)
 	_view._rng.roll()  # prove RNG state, not only seed, is saved
 
 	var kael: Unit = _view.unit_by_id("kael")
@@ -55,21 +55,21 @@ func test_save_mid_battle_and_load_into_fresh_scene():
 	assert_true(loaded_kael.has_acted)
 	assert_eq(loaded_kael.inventory.items[0].uses, 12)
 	assert_eq(loaded._turn.round_number, 3)
-	assert_eq(loaded._support_state.rank_for_units("ash", "kael"), "C")
+	assert_eq(loaded._support_state.rank_for_units("kai", "kael"), "C")
 	assert_eq(loaded._rng.state_value(), _view._rng.state_value(), "RNG state round-trips")
 
 
 func test_classic_permadeath_flags_dead_player_and_load_removes_them():
 	_view.casual_mode = false
-	var ash: Unit = _view.unit_by_id("ash")
-	assert_not_null(ash)
+	var kai: Unit = _view.unit_by_id("kai")
+	assert_not_null(kai)
 
-	_view._kill(ash)
+	_view._kill(kai)
 	var payload: Dictionary = _view.make_save_payload()
-	assert_true(payload["battle"]["defeated_unit_ids"].has("ash"))
-	assert_true(payload["battle"]["permadead_unit_ids"].has("ash"))
+	assert_true(payload["battle"]["defeated_unit_ids"].has("kai"))
+	assert_true(payload["battle"]["permadead_unit_ids"].has("kai"))
 
 	var loaded: Node2D = await _fresh_view()
 	loaded.apply_save_payload(payload)
-	assert_null(loaded.unit_by_id("ash"), "dead classic unit is absent after load")
-	assert_true(loaded._permadead_unit_ids.has("ash"), "permadeath flag survives load")
+	assert_null(loaded.unit_by_id("kai"), "dead classic unit is absent after load")
+	assert_true(loaded._permadead_unit_ids.has("kai"), "permadeath flag survives load")

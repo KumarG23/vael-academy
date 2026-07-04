@@ -6,7 +6,7 @@ extends RefCounted
 ##
 ## Example:
 ##   [
-##     {"speaker":"Ash", "side":"left", "text":"Emberwing takes the field!"},
+##     {"speaker":"Kai", "side":"left", "text":"Emberwing takes the field!"},
 ##     {"event":"give_item", "to":"Kael", "item":"vulnerary"},
 ##     {"event":"start_battle", "chapter":"mock_battle"}
 ##   ]

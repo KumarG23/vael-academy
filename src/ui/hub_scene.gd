@@ -9,7 +9,7 @@ extends Control
 const BATTLE_SCENE := "res://scenes/battle/mock_battle.tscn"
 
 const FLAVOR := [
-	"Ash claps you on the back. \"Emberwing fights as one — stay close out there.\"",
+	"The common room is loud tonight — and for once, the looks aimed your way feel like welcome.",
 	"Kael is already at the training dummies before dawn. He nods as you pass.",
 	"Brenna polishes her lance in silence, then offers you the whetstone.",
 	"Wren hums a healing hymn in the Common Hall, and the room feels lighter.",
@@ -41,7 +41,7 @@ func _ready() -> void:
 
 
 func _setup_supports() -> void:
-	var chain: SupportChainDef = load("res://data/supports/ash_kael.tres")
+	var chain: SupportChainDef = load("res://data/supports/kai_kael.tres")
 	_support_state = SupportState.new()
 	if chain != null:
 		_support_state.add_chain(chain)
@@ -104,7 +104,7 @@ func _do_main(index: int) -> void:
 
 func _open_common_hall() -> void:
 	_context = "commonhall"
-	var convos := _support_state.unlocked_conversations_for_unit("ash")
+	var convos := _support_state.unlocked_conversations_for_unit("kai")
 	var labels: Array = []
 	for c in convos:
 		labels.append(c["label"])

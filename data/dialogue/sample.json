@@ -1,12 +1,12 @@
 [
-  {"speaker": "Ash", "side": "left", "portrait": "ash", "expression": "happy",
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "happy",
    "text": "Emberwing, form up! The Mock Battle is ours to win."},
   {"speaker": "Serra", "side": "right", "portrait": "serra", "expression": "neutral",
    "text": "Bold words. Tidemark holds the fort, and the fort holds the day."},
   {"speaker": "Corin", "side": "right", "portrait": "corin", "expression": "neutral",
    "text": "Thornrook will simply watch you two exhaust each other. How efficient."},
   {"event": "give_item", "to": "Kael", "item": "vulnerary"},
-  {"speaker": "Ash", "side": "left", "portrait": "ash", "expression": "neutral",
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "neutral",
    "text": "Kael, keep this on you. Stay close and we win together."},
   {"event": "start_battle", "chapter": "mock_battle"}
 ]

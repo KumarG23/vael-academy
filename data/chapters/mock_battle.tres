@@ -54,7 +54,7 @@ boss_unit_id = "serra"
 non_lethal = true
 enemy_spawns = Array[ExtResource("1_vyfsr")]([SubResource("Resource_xu6hg"), SubResource("Resource_eiwa8"), SubResource("Resource_ckb63"), SubResource("Resource_fqmd8"), SubResource("Resource_euytt"), SubResource("Resource_t5ycu"), SubResource("Resource_4hgxu")])
 deploy_cells = Dictionary[String, Vector2i]({
-"ash": Vector2i(2, 12),
+"kai": Vector2i(2, 12),
 "brenna": Vector2i(2, 13),
 "kael": Vector2i(3, 12),
 "wren": Vector2i(3, 13)

@@ -9,8 +9,8 @@
 
 [resource]
 script = ExtResource("3_wii57")
-id = "ash"
-display_name = "Ash"
+id = "kai"
+display_name = "Kai"
 char_class = ExtResource("1_8aydn")
 house_id = "emberwing"
 is_lord = true

@@ -8,7 +8,7 @@ var _view: Node2D
 func before_each() -> void:
 	Campaign.reset_new_game(false, 3)
 	Campaign.begin_hub_visit()
-	Campaign.train_unit("ash")   # Ash carries +10 XP into the battle
+	Campaign.train_unit("kai")   # Kai carries +10 XP into the battle
 	Campaign.deploy()
 	var scene: PackedScene = load("res://scenes/battle/battle.tscn")
 	_view = scene.instantiate()
@@ -30,10 +30,10 @@ func _wait_idle(max_frames := 600) -> void:
 
 
 func test_campaign_progression_is_applied_on_deploy():
-	var ash: Unit = _view.unit_by_id("ash")
-	assert_not_null(ash, "Ash deployed")
-	assert_eq(ash.xp, 10, "trained XP carried into the battle")
-	assert_eq(ash.current_hp, ash.max_hp(), "deploys at full HP")
+	var kai: Unit = _view.unit_by_id("kai")
+	assert_not_null(kai, "Kai deployed")
+	assert_eq(kai.xp, 10, "trained XP carried into the battle")
+	assert_eq(kai.current_hp, kai.max_hp(), "deploys at full HP")
 
 
 func test_victory_captures_the_roster_back_to_campaign():
@@ -44,19 +44,19 @@ func test_victory_captures_the_roster_back_to_campaign():
 	await _wait_idle()
 	assert_true(_view._battle_over)
 	assert_eq(Campaign.last_result, "victory")
-	# Ash's progression (with the trained XP) is now in the campaign.
-	assert_eq(int(Campaign.get_unit_state("ash").get("xp", -1)), 10)
+	# Kai's progression (with the trained XP) is now in the campaign.
+	assert_eq(int(Campaign.get_unit_state("kai").get("xp", -1)), 10)
 
 
 func test_standalone_battle_ignores_campaign_when_not_deployed():
 	# A battle loaded directly (not via the hub) must not pick up campaign state.
 	Campaign.reset_new_game(false)
-	Campaign.set_unit_state("ash", {"level": 9, "xp": 44})
+	Campaign.set_unit_state("kai", {"level": 9, "xp": 44})
 	# active is false, so a fresh battle should ignore it.
 	var scene: PackedScene = load("res://scenes/battle/battle.tscn")
 	var v: Node2D = scene.instantiate()
 	v.strike_delay = 0.0
 	add_child_autofree(v)
 	await wait_physics_frames(2)
-	var ash: Unit = v.unit_by_id("ash")
-	assert_eq(ash.level, 1, "standalone battle uses base roster, not campaign state")
+	var kai: Unit = v.unit_by_id("kai")
+	assert_eq(kai.level, 1, "standalone battle uses base roster, not campaign state")

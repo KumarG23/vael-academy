@@ -1,11 +1,11 @@
 [
-  {"speaker": "Ash", "side": "left", "portrait": "ash", "expression": "happy",
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "happy",
    "text": "Emberwing takes the day! Well fought — every one of you."},
   {"speaker": "Serra", "side": "right", "portrait": "serra", "expression": "neutral",
-   "text": "A clean victory, Ash. Loud, reckless... and clean. Tidemark will remember the lesson."},
+   "text": "A clean victory, Kai. Loud, reckless... and clean. Tidemark will remember the lesson."},
   {"speaker": "Corin", "side": "right", "portrait": "corin", "expression": "neutral",
    "text": "Fascinating. Emberwing spends everything to win a game. What will you spend when it isn't one?"},
-  {"speaker": "Ash", "side": "left", "portrait": "ash", "expression": "neutral",
+  {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "neutral",
    "text": "Whatever it takes, Corin. That's rather the point of us."},
   {"speaker": "Wren", "side": "left", "portrait": "wren", "expression": "happy",
    "text": "Back to the academy, then! Bruises to mend — and I believe someone promised the victors honey bread."}

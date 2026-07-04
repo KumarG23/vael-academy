@@ -4,11 +4,11 @@
 
 [resource]
 script = ExtResource("1_support")
-id = "ash_kael"
-unit_a_id = "ash"
-unit_a_name = "Ash"
+id = "kai_kael"
+unit_a_id = "kai"
+unit_a_name = "Kai"
 unit_b_id = "kael"
 unit_b_name = "Kael"
-c_conversation = "res://data/supports/ash_kael_c.json"
-b_conversation = "res://data/supports/ash_kael_b.json"
-a_conversation = "res://data/supports/ash_kael_a.json"
+c_conversation = "res://data/supports/kai_kael_c.json"
+b_conversation = "res://data/supports/kai_kael_b.json"
+a_conversation = "res://data/supports/kai_kael_a.json"

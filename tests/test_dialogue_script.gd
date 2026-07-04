@@ -5,7 +5,7 @@ extends GutTest
 func test_parses_lines_and_events():
 	var json := """
 	[
-	  {"speaker":"Ash","side":"left","text":"Hello."},
+	  {"speaker":"Kai","side":"left","text":"Hello."},
 	  {"event":"give_item","to":"Kael","item":"vulnerary"},
 	  {"speaker":"Serra","side":"right","text":"Hmph."}
 	]
@@ -14,7 +14,7 @@ func test_parses_lines_and_events():
 	assert_true(s.ok(), "parses cleanly: " + s.error)
 	assert_eq(s.size(), 3)
 	assert_true(s.get_step(0).is_line())
-	assert_eq(s.get_step(0).speaker, "Ash")
+	assert_eq(s.get_step(0).speaker, "Kai")
 	assert_eq(s.get_step(0).side, "left")
 	assert_true(s.get_step(1).is_event())
 	assert_eq(s.get_step(1).event_name, "give_item")
@@ -39,12 +39,12 @@ func test_invalid_json_reports_error():
 
 
 func test_non_array_root_is_rejected():
-	var s := DialogueScript.from_json('{"speaker":"Ash","text":"x"}')
+	var s := DialogueScript.from_json('{"speaker":"Kai","text":"x"}')
 	assert_false(s.ok(), "root must be an array")
 
 
 func test_line_without_text_is_rejected():
-	var s := DialogueScript.from_json('[{"speaker":"Ash"}]')
+	var s := DialogueScript.from_json('[{"speaker":"Kai"}]')
 	assert_false(s.ok())
 	assert_string_contains(s.error, "text")
 

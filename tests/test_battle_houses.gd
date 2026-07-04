@@ -26,7 +26,7 @@ func test_all_three_houses_load_as_data():
 
 
 func test_camaraderie_changes_the_forecast():
-	# Kael starts next to housemate Ash (2,7)/(3,7) -> camaraderie active.
+	# Kael starts next to housemate Kai (2,7)/(3,7) -> camaraderie active.
 	var kael: Unit = _view.unit_by_id("kael")
 	var with_mate: Combatant = _view._combatant_for(kael, kael.cell)
 	assert_eq(with_mate.support_avoid, 5, "camaraderie grants +5 avoid near a housemate")
