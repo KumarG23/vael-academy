@@ -110,13 +110,19 @@ func _process(delta: float) -> void:
 func _gui_input(event: InputEvent) -> void:
 	if _finished:
 		return
-	var advance_pressed: bool = (
-		(event is InputEventKey and event.pressed and not event.echo
-			and event.keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER])
-		or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT)
-	)
-	if advance_pressed:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		accept_event()
+		advance()
+
+
+## Keys arrive here — _gui_input only sees them when the control is focused, and
+## this overlay never grabs focus (space/enter must advance from the keyboard).
+func _unhandled_key_input(event: InputEvent) -> void:
+	if _finished:
+		return
+	if (event is InputEventKey and event.pressed and not event.echo
+			and event.keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]):
+		get_viewport().set_input_as_handled()
 		advance()
 
 

@@ -3,6 +3,7 @@ extends GutTest
 
 const ROUT := ChapterDef.Objective.ROUT
 const SEIZE := ChapterDef.Objective.SEIZE
+const BOSS := ChapterDef.Objective.DEFEAT_BOSS
 const SEIZE_CELL := Vector2i(16, 4)
 
 const ONGOING := ObjectiveResolver.Outcome.ONGOING
@@ -51,3 +52,26 @@ func test_no_lord_defined_only_loses_on_full_wipe():
 	assert_eq(ObjectiveResolver.evaluate(ROUT, SEIZE_CELL, false, false, Vector2i(-1, -1), 2, 3), ONGOING)
 	assert_eq(ObjectiveResolver.evaluate(ROUT, SEIZE_CELL, false, false, Vector2i(-1, -1), 0, 3), DEFEAT)
 	assert_eq(ObjectiveResolver.evaluate(ROUT, SEIZE_CELL, false, false, Vector2i(-1, -1), 2, 0), VICTORY)
+
+
+# --- DEFEAT_BOSS (WO-4.1) --------------------------------------------------------
+
+func test_defeat_boss_ongoing_while_boss_stands():
+	var o := ObjectiveResolver.evaluate(BOSS, SEIZE_CELL, true, true, Vector2i(3, 3), 4, 7, true)
+	assert_eq(o, ONGOING)
+
+
+func test_defeat_boss_victory_when_boss_falls_with_enemies_left():
+	var o := ObjectiveResolver.evaluate(BOSS, SEIZE_CELL, true, true, Vector2i(3, 3), 4, 6, false)
+	assert_eq(o, VICTORY, "felling the boss wins even with other enemies alive")
+
+
+func test_defeat_boss_victory_on_full_rout():
+	# Routing everyone (boss included) also wins.
+	var o := ObjectiveResolver.evaluate(BOSS, SEIZE_CELL, true, true, Vector2i(3, 3), 4, 0, false)
+	assert_eq(o, VICTORY)
+
+
+func test_defeat_boss_lord_death_takes_precedence():
+	var o := ObjectiveResolver.evaluate(BOSS, SEIZE_CELL, true, false, Vector2i(-1, -1), 3, 6, false)
+	assert_eq(o, DEFEAT, "lord death is game over even as the boss falls")

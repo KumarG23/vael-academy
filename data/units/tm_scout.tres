@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/soldier.tres" id="1_0gxdi"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_k6v73"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_jicrf"]
+[ext_resource type="Script" path="res://src/items/item_def.gd" id="4_2vxg7"]
+[ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="5_v5ica"]
+
+[resource]
+script = ExtResource("3_jicrf")
+id = "tm_scout"
+display_name = "Tidemark Scout"
+char_class = ExtResource("1_0gxdi")
+house_id = "tidemark"
+team = 1
+ai_behavior = 1
+weapon = ExtResource("5_v5ica")
+level = 2
+max_hp = 24
+strength = 7
+skill = 7
+speed = 8
+resistance = 2

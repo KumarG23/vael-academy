@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/mage.tres" id="1_etetb"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_hhyqc"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_wnhnw"]
+[ext_resource type="Script" path="res://src/items/item_def.gd" id="4_qpnyq"]
+[ext_resource type="Resource" path="res://data/weapons/fire.tres" id="5_hnp3d"]
+
+[resource]
+script = ExtResource("3_wnhnw")
+id = "tm_adept"
+display_name = "Tidemark Adept"
+char_class = ExtResource("1_etetb")
+house_id = "tidemark"
+team = 1
+ai_behavior = 1
+weapon = ExtResource("5_hnp3d")
+level = 2
+strength = 2
+magic = 7
+skill = 7
+speed = 6
+luck = 2
+defense = 2
+resistance = 5

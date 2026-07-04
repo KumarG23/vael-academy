@@ -52,22 +52,23 @@ func _wait_idle(max_frames := 4000) -> void:
 func test_victory_by_seize_when_lord_reaches_the_tile():
 	# Make the objective a nearby seize the lord can reach in one move.
 	_view.chapter.objective = ChapterDef.Objective.SEIZE
-	_view.chapter.seize_cell = Vector2i(3, 4)  # 3 north of Kael's (3,7)
-	var kael: Unit = _view._lord_unit
-	assert_true(kael.is_lord())
+	_view.chapter.seize_cell = Vector2i(2, 4)  # 3 north of Ash's (2,7)
+	var ash: Unit = _view._lord_unit
+	assert_true(ash.is_lord())
+	assert_eq(ash.unit_id(), "ash", "Ash is the lord (§4, WO-4.1)")
 
-	_view._on_cursor_confirmed(Vector2i(3, 7))    # select Kael
-	_view._handle_selected_confirm(Vector2i(3, 4))  # move onto the seize tile
+	_view._on_cursor_confirmed(Vector2i(2, 7))    # select Ash
+	_view._handle_selected_confirm(Vector2i(2, 4))  # move onto the seize tile
 	await _wait_idle()
 	var guard := 0
-	while kael.is_moving() and guard < 240:
+	while ash.is_moving() and guard < 240:
 		await wait_physics_frames(1)
 		guard += 1
 	# Finish the action via the command menu ("Wait"); the seize is checked then.
 	var idx: int = _view._menu_actions.find("wait")
 	await _view._on_menu_chosen(idx)
 
-	assert_eq(kael.cell, Vector2i(3, 4))
+	assert_eq(ash.cell, Vector2i(2, 4))
 	assert_true(_view._battle_over, "seizing ends the battle")
 	assert_true(_won, "EventBus.battle_won emitted")
 	assert_true(_view._result_screen.is_shown())
@@ -83,8 +84,8 @@ func test_victory_by_rout_when_all_enemies_fall():
 
 
 func test_defeat_when_the_lord_is_slain_in_the_enemy_phase():
-	var kael: Unit = _view._lord_unit
-	kael.current_hp = 1  # one counter/strike will finish him
+	var ash: Unit = _view._lord_unit
+	ash.current_hp = 1  # one counter/strike will finish him
 	# Guarantee the blow lands despite any avoid bonus (support/camaraderie).
 	for enemy in _view._living_units_on_team(1):
 		_sure_hit(enemy)

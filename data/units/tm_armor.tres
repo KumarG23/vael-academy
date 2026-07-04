@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/knight.tres" id="1_qlhth"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_hbq2f"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_tutvd"]
+[ext_resource type="Script" path="res://src/items/item_def.gd" id="4_ckgmy"]
+[ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="5_027o0"]
+
+[resource]
+script = ExtResource("3_tutvd")
+id = "tm_armor"
+display_name = "Tidemark Armor"
+char_class = ExtResource("1_qlhth")
+house_id = "tidemark"
+team = 1
+ai_behavior = 1
+weapon = ExtResource("5_027o0")
+level = 2
+max_hp = 26
+strength = 8
+speed = 3
+luck = 2
+defense = 10
+resistance = 1
+movement = 4

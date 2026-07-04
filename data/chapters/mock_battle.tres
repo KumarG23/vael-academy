@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="ChapterDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="1_vyfsr"]
+[ext_resource type="Resource" path="res://data/units/tm_soldier_a.tres" id="2_w7p4r"]
+[ext_resource type="Resource" path="res://data/units/tm_soldier_b.tres" id="3_uumbx"]
+[ext_resource type="Resource" path="res://data/units/tm_scout.tres" id="4_kwdgq"]
+[ext_resource type="Resource" path="res://data/units/tm_armor.tres" id="5_87cys"]
+[ext_resource type="Resource" path="res://data/units/tm_adept.tres" id="6_1euil"]
+[ext_resource type="Resource" path="res://data/units/tm_guard.tres" id="7_17s8o"]
+[ext_resource type="Resource" path="res://data/units/serra.tres" id="8_8kt3g"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="9_ro4ud"]
+
+[sub_resource type="Resource" id="Resource_xu6hg"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("2_w7p4r")
+cell = Vector2i(9, 9)
+
+[sub_resource type="Resource" id="Resource_eiwa8"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("3_uumbx")
+cell = Vector2i(12, 11)
+
+[sub_resource type="Resource" id="Resource_ckb63"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("4_kwdgq")
+cell = Vector2i(7, 6)
+
+[sub_resource type="Resource" id="Resource_fqmd8"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("5_87cys")
+cell = Vector2i(11, 7)
+
+[sub_resource type="Resource" id="Resource_euytt"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("6_1euil")
+cell = Vector2i(17, 5)
+
+[sub_resource type="Resource" id="Resource_t5ycu"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("7_17s8o")
+cell = Vector2i(16, 2)
+
+[sub_resource type="Resource" id="Resource_4hgxu"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("8_8kt3g")
+cell = Vector2i(17, 2)
+
+[resource]
+script = ExtResource("9_ro4ud")
+id = "mock_battle"
+display_name = "Chapter 1 — The Mock Battle"
+objective = 2
+boss_unit_id = "serra"
+non_lethal = true
+enemy_spawns = Array[ExtResource("1_vyfsr")]([SubResource("Resource_xu6hg"), SubResource("Resource_eiwa8"), SubResource("Resource_ckb63"), SubResource("Resource_fqmd8"), SubResource("Resource_euytt"), SubResource("Resource_t5ycu"), SubResource("Resource_4hgxu")])
+deploy_cells = Dictionary[String, Vector2i]({
+"ash": Vector2i(2, 12),
+"brenna": Vector2i(2, 13),
+"kael": Vector2i(3, 12),
+"wren": Vector2i(3, 13)
+})
+intro_dialogue = "res://data/dialogue/mock_battle_intro.json"
+outro_dialogue = "res://data/dialogue/mock_battle_outro.json"
+boss_quote_dialogue = "res://data/dialogue/serra_battle_quote.json"
+boss_yield_dialogue = "res://data/dialogue/serra_yield.json"
+terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 3, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)

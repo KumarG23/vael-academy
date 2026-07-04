@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/soldier.tres" id="1_80iym"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_cuhrv"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_88yyq"]
+[ext_resource type="Script" path="res://src/items/item_def.gd" id="4_uhq54"]
+[ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="5_2filh"]
+
+[resource]
+script = ExtResource("3_88yyq")
+id = "tm_soldier_a"
+display_name = "Tidemark Soldier"
+char_class = ExtResource("1_80iym")
+house_id = "tidemark"
+team = 1
+weapon = ExtResource("5_2filh")
+max_hp = 22
+strength = 6
+skill = 6
+speed = 6
+luck = 2
+resistance = 1

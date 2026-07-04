@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/knight.tres" id="1_qwq6u"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_3rohj"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_r81ns"]
+[ext_resource type="Script" path="res://src/items/item_def.gd" id="4_iccmm"]
+[ext_resource type="Resource" path="res://data/items/vulnerary.tres" id="5_0hu8m"]
+[ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="6_77ux1"]
+
+[resource]
+script = ExtResource("3_r81ns")
+id = "brenna"
+display_name = "Brenna"
+char_class = ExtResource("1_qwq6u")
+house_id = "emberwing"
+weapon = ExtResource("6_77ux1")
+starting_items = Array[ExtResource("4_iccmm")]([ExtResource("5_0hu8m")])
+max_hp = 28
+strength = 7
+skill = 7
+luck = 4
+defense = 10
+resistance = 2
+growth_hp = 75
+growth_str = 45
+growth_mag = 0
+growth_skl = 35
+growth_spd = 20
+growth_lck = 25
+growth_def = 55
+growth_res = 25

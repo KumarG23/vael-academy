@@ -18,6 +18,9 @@ extends Node2D
 ## Casual mode revives non-lord player casualties after a chapter. Classic mode
 ## records them as permadead in save data (§3 / WO-3.3).
 @export var casual_mode: bool = false
+## Chapter dialogue (intro/outro/boss quotes, WO-4.1). Tests disable to skip the
+## VN overlays; paths live on the ChapterDef so the test map is unaffected anyway.
+@export var dialogue_enabled: bool = true
 
 const TERRAIN_TINTS := {
 	Terrain.Type.PLAINS: Color(0.0, 0.0, 0.0, 0.0),
@@ -70,6 +73,12 @@ var _battle_over := false
 var _battle_victory := false
 var _lord_unit: Unit = null
 var _lord_alive := true
+## DEFEAT_BOSS objective (WO-4.1): the chapter's boss and whether it still stands.
+var _boss_unit: Unit = null
+var _boss_alive := true
+var _boss_quote_played := false
+var _dialogue_playing := false
+var _objective_label: Label
 var _support_state := SupportState.new()
 var _houses: Dictionary = {}        # house_id -> HouseDef
 ## The player's active house — drives UI theming. Swap this resource to re-theme.
@@ -97,8 +106,15 @@ func _ready() -> void:
 	_setup_camera()
 	_setup_ui()
 	_setup_juice()
-	_spawn_demo_units()
+	_spawn_units()
 	queue_redraw()
+	_begin_battle()
+
+
+## Chapter opening: play the intro dialogue (if any), then start the player phase.
+func _begin_battle() -> void:
+	if chapter.intro_dialogue != "":
+		await _play_dialogue(chapter.intro_dialogue)
 	_begin_player_phase()
 
 
@@ -112,10 +128,16 @@ func _draw() -> void:
 	_draw_seize_marker()
 
 
+## Gold marker on the objective tile: the seize cell, or the boss's fort so a
+## first-time player can see where to go (WO-4.1).
 func _draw_seize_marker() -> void:
-	if chapter.objective != ChapterDef.Objective.SEIZE:
-		return
-	var c := chapter.seize_cell
+	var c := Vector2i(-1, -1)
+	match chapter.objective:
+		ChapterDef.Objective.SEIZE:
+			c = chapter.seize_cell
+		ChapterDef.Objective.DEFEAT_BOSS:
+			if _boss_unit != null and is_instance_valid(_boss_unit):
+				c = _boss_unit.cell
 	if not _grid.in_bounds(c):
 		return
 	var cs := _grid.cell_size
@@ -217,6 +239,8 @@ func _on_cell_changed(cell: Vector2i) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _dialogue_playing:
+		return
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 	# 'T'/Tab ends the player phase when idle.
@@ -547,6 +571,10 @@ func _execute_attack(attacker: Unit, defender: Unit) -> void:
 	var was_busy := _busy  # keep busy set if we're inside the enemy phase
 	_busy = true
 	_forecast_panel.hide_panel()
+	# Boss quote (WO-4.1): once, the first time the boss enters combat.
+	if not _boss_quote_played and _boss_unit != null and (attacker == _boss_unit or defender == _boss_unit):
+		_boss_quote_played = true
+		await _play_dialogue(chapter.boss_quote_dialogue)
 	var dist := _manhattan(attacker.cell, defender.cell)
 	var atk_level := attacker.level
 	var def_level := defender.level
@@ -653,11 +681,17 @@ func _play_strike(strike: StrikeResult, target: Unit) -> void:
 
 
 func _kill(unit: Unit) -> void:
-	_pop_text(unit.position, "X", Color(0.9, 0.2, 0.2))
+	# Non-lethal chapter (WO-4.1): defeated units yield and retreat instead of dying.
+	if chapter.non_lethal:
+		_pop_text(unit.position, "Yields!", Color(0.75, 0.85, 1.0))
+	else:
+		_pop_text(unit.position, "X", Color(0.9, 0.2, 0.2))
 	EventBus.unit_died.emit(unit)
 	_record_defeat(unit)
 	if unit == _lord_unit:
 		_lord_alive = false
+	if unit == _boss_unit:
+		_boss_alive = false
 	_units.erase(unit)
 	if unit == _selected:
 		_selected = null
@@ -699,10 +733,22 @@ func _begin_player_phase() -> void:
 	for u in _living_units_on_team(0):
 		u.has_acted = false
 		u.queue_redraw()
+	_apply_terrain_heal(0)
 	_deselect()
 	if _threat_overlay.is_shown():
 		_refresh_threat_overlay()  # enemies moved last phase
 	_turn_banner.announce("Player Phase — Round %d" % _turn.round_number, true)
+
+
+## §3 terrain healing (Fort: 10% max HP at the owner's phase start).
+func _apply_terrain_heal(team: int) -> void:
+	for u in _living_units_on_team(team):
+		var info := _terrain_db.get_info(chapter.get_terrain(u.cell.x, u.cell.y))
+		if info == null or info.heal_pct <= 0.0 or u.current_hp >= u.max_hp():
+			continue
+		var healed := u.heal(ceili(u.max_hp() * info.heal_pct))
+		if healed > 0:
+			_pop_text(u.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
 
 
 func _end_player_phase() -> void:
@@ -717,6 +763,7 @@ func _end_player_phase() -> void:
 
 func _run_enemy_phase() -> void:
 	_busy = true
+	_apply_terrain_heal(1)
 	_turn_banner.announce("Enemy Phase", false)
 	# Deterministic acting order (§5): stable by board position.
 	var enemies := _living_units_on_team(1)
@@ -744,6 +791,7 @@ func _check_objective() -> void:
 		chapter.objective, chapter.seize_cell,
 		has_lord, _lord_alive, lord_cell,
 		_living_units_on_team(0).size(), _living_units_on_team(1).size(),
+		_boss_alive,
 	)
 	if outcome == ObjectiveResolver.Outcome.VICTORY:
 		_end_battle(true)
@@ -766,6 +814,10 @@ func _end_battle(victory: bool) -> void:
 			"victory" if victory else "defeat")
 	if victory:
 		EventBus.battle_won.emit()
+		# Boss yield + chapter outro (WO-4.1) play before the result screen.
+		if not _boss_alive:
+			await _play_dialogue(chapter.boss_yield_dialogue)
+		await _play_dialogue(chapter.outro_dialogue)
 		_result_screen.show_victory()
 	else:
 		_result_screen.show_defeat()
@@ -844,6 +896,7 @@ func make_save_payload() -> Dictionary:
 			"battle_over": _battle_over,
 			"battle_victory": _battle_victory,
 			"lord_alive": _lord_alive,
+			"boss_quote_played": _boss_quote_played,
 			"defeated_unit_ids": _defeated_unit_ids.duplicate(),
 			"permadead_unit_ids": _permadead_unit_ids.duplicate(),
 			"objective": int(chapter.objective),
@@ -868,6 +921,7 @@ func apply_save_payload(payload: Dictionary) -> void:
 	_battle_over = bool(battle.get("battle_over", false))
 	_battle_victory = bool(battle.get("battle_victory", false))
 	_lord_alive = bool(battle.get("lord_alive", true))
+	_boss_quote_played = bool(battle.get("boss_quote_played", false))
 	chapter.objective = int(battle.get("objective", chapter.objective))
 	var seize: Dictionary = battle.get("seize_cell", {})
 	chapter.seize_cell = Vector2i(int(seize.get("x", chapter.seize_cell.x)), int(seize.get("y", chapter.seize_cell.y)))
@@ -890,7 +944,7 @@ func _roster_save_state() -> Array:
 
 func _rebuild_units_from_save(roster: Array) -> void:
 	_clear_units()
-	_spawn_demo_units()
+	_spawn_units()
 	var state_by_id := {}
 	for entry in roster:
 		if entry is Dictionary:
@@ -906,6 +960,7 @@ func _rebuild_units_from_save(roster: Array) -> void:
 	if not _lord_alive and _lord_unit != null and is_instance_valid(_lord_unit):
 		if _defeated_unit_ids.has(_lord_unit.unit_id()):
 			_remove_unit_without_events(_lord_unit)
+	_boss_alive = chapter.boss_unit_id == "" or not _defeated_unit_ids.has(chapter.boss_unit_id)
 
 
 func _clear_units() -> void:
@@ -914,6 +969,7 @@ func _clear_units() -> void:
 			u.queue_free()
 	_units.clear()
 	_lord_unit = null
+	_boss_unit = null
 
 
 func _remove_unit_without_events(unit: Unit) -> void:
@@ -950,6 +1006,9 @@ func _record_defeat(unit: Unit) -> void:
 		return
 	if not _defeated_unit_ids.has(id):
 		_defeated_unit_ids.append(id)
+	# Non-lethal chapters never permadeath anyone — yields, not deaths (WO-4.1).
+	if chapter.non_lethal:
+		return
 	if unit.team == 0 and not casual_mode and not _permadead_unit_ids.has(id):
 		_permadead_unit_ids.append(id)
 
@@ -963,11 +1022,36 @@ func _apply_casual_post_chapter_revival() -> void:
 
 
 func _is_player_unit_id(id: String) -> bool:
-	match id:
-		"ash", "kael", "brenna", "wren":
-			return true
-		_:
-			return false
+	return Roster.PLAYER_IDS.has(id)
+
+
+# --- chapter dialogue (WO-4.1) ---------------------------------------------------
+
+## Play a JSON dialogue script as a VN overlay and await its end. No-ops when
+## dialogue is disabled (tests), the path is empty, or the script fails to parse.
+func _play_dialogue(path: String) -> void:
+	if not dialogue_enabled or path == "":
+		return
+	var script := DialogueScript.from_file(path)
+	if not script.ok():
+		push_warning("battle dialogue skipped (%s): %s" % [path, script.error])
+		return
+	_dialogue_playing = true
+	if _cursor != null:
+		_cursor.active = false
+	var layer := CanvasLayer.new()
+	layer.layer = 8  # above battle UI and splash
+	add_child(layer)
+	var scene := DialogueScene.new()
+	layer.add_child(scene)
+	scene.play(script)
+	# An all-event/empty script finishes inside play(); awaiting then would hang.
+	if not scene.is_finished():
+		await scene.finished
+	layer.queue_free()
+	_dialogue_playing = false
+	if _cursor != null and not _battle_over:
+		_cursor.active = true
 
 
 func _pop_text(world_pos: Vector2, text: String, color: Color) -> void:
@@ -1165,6 +1249,17 @@ func _setup_ui() -> void:
 	_debug_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	_debug_label.add_theme_constant_override("outline_size", 6)
 	_ui_layer.add_child(_debug_label)
+	# Persistent objective readout so a first-time player knows what to do (WO-4.1).
+	_objective_label = Label.new()
+	_objective_label.text = _objective_text()
+	_objective_label.add_theme_color_override("font_color", Color(0.95, 0.82, 0.35))
+	_objective_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	_objective_label.add_theme_constant_override("outline_size", 6)
+	_objective_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_objective_label.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_objective_label.position = Vector2(get_viewport_rect().size.x - 420, 10)
+	_objective_label.size = Vector2(400, 24)
+	_ui_layer.add_child(_objective_label)
 	_forecast_panel = CombatForecastPanel.new()
 	_forecast_panel.visible = false
 	var vp := get_viewport_rect().size
@@ -1189,6 +1284,23 @@ func _setup_ui() -> void:
 	_apply_house_theme()
 
 
+func _objective_text() -> String:
+	match chapter.objective:
+		ChapterDef.Objective.SEIZE:
+			return "Objective: Seize the marked tile"
+		ChapterDef.Objective.DEFEAT_BOSS:
+			return "Objective: Defeat %s — or rout them all" % _boss_display_name()
+		_:
+			return "Objective: Rout the enemy"
+
+
+func _boss_display_name() -> String:
+	for spawn in chapter.enemy_spawns:
+		if spawn != null and spawn.unit != null and spawn.unit.id == chapter.boss_unit_id:
+			return spawn.unit.display_name
+	return "the enemy commander"
+
+
 ## Pull every themed UI element's colors from the active HouseDefs. Swapping the
 ## player/enemy house resources re-themes the whole UI with no code change (§4).
 func _apply_house_theme() -> void:
@@ -1210,15 +1322,34 @@ func _on_result_dismissed() -> void:
 		get_tree().reload_current_scene()
 
 
-func _spawn_demo_units() -> void:
-	# Player roster (shared with the Academy Hub, §4 / WO-3.5).
-	var cells := Roster.deploy_cells()
+func _spawn_units() -> void:
+	# Player roster (shared with the Academy Hub, §4 / WO-3.5). Chapters author
+	# their own deploy cells (WO-4.1); the test map falls back to Roster's.
+	var cells: Dictionary = chapter.deploy_cells if not chapter.deploy_cells.is_empty() else Roster.deploy_cells()
 	for def in Roster.player_units():
 		var u := add_unit(def, cells.get(def.id, Vector2i.ZERO))
 		if def.is_lord:
 			_lord_unit = u
-	# Enemy force (chapter/demo). One of each AI tier (§5): an aggressor advances, a
-	# sentinel holds until threatened, a boss holds the fort at (16,4).
+	if chapter.enemy_spawns.is_empty():
+		_spawn_demo_enemies()
+	else:
+		# Authored enemy force (WO-4.1). Defs are duplicated so runtime state
+		# never leaks into the cached .tres resources.
+		for spawn in chapter.enemy_spawns:
+			if spawn == null or spawn.unit == null:
+				continue
+			var u := add_unit(spawn.unit.duplicate(), spawn.cell)
+			if chapter.boss_unit_id != "" and u.unit_id() == chapter.boss_unit_id:
+				_boss_unit = u
+	# When deployed from the hub, overlay campaign progression + supports (WO-3.5).
+	if Campaign.active:
+		_apply_campaign_state()
+
+
+## Legacy demo force for chapters without authored spawns (the WO-0.2 test map).
+## One of each AI tier (§5): an aggressor advances, a sentinel holds until
+## threatened, a boss holds the fort at (16,4).
+func _spawn_demo_enemies() -> void:
 	var soldier: ClassDef = _try_load("res://data/classes/soldier.tres")
 	var sword: WeaponDef = _try_load("res://data/weapons/iron_sword.tres")
 	var lance: WeaponDef = _try_load("res://data/weapons/iron_lance.tres")
@@ -1231,9 +1362,6 @@ func _spawn_demo_units() -> void:
 	var boss := _demo_unit("serra", "Serra", soldier, lance, 1, 5, {"spd": 6, "hp": 30, "def": 8})
 	boss.ai_behavior = AIBrain.Behavior.BOSS
 	add_unit(boss, Vector2i(16, 4))  # the fort tile
-	# When deployed from the hub, overlay campaign progression + supports (WO-3.5).
-	if Campaign.active:
-		_apply_campaign_state()
 
 
 ## Overlay between-battle campaign state onto the freshly-spawned player units.

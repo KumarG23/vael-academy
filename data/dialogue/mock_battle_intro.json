@@ -1,0 +1,16 @@
+[
+  {"speaker": "Ash", "side": "left", "portrait": "ash", "expression": "happy",
+   "text": "Emberwing! Form up — today the whole academy watches us burn bright."},
+  {"speaker": "Serra", "side": "right", "portrait": "serra", "expression": "neutral",
+   "text": "Watch your footing, Ash. Tidemark holds the fort, and the tide does not part for sparks."},
+  {"speaker": "Corin", "side": "right", "portrait": "corin", "expression": "neutral",
+   "text": "Do carry on, both of you. Thornrook finds it terribly instructive when rivals blunt each other's blades for free."},
+  {"speaker": "Ash", "side": "left", "portrait": "ash", "expression": "angry",
+   "text": "Blunt THIS, Corin— ahem. Emberwing, eyes northeast: Serra holds the fort on the hill."},
+  {"speaker": "Brenna", "side": "left", "portrait": "brenna", "expression": "neutral",
+   "text": "Then the orders are simple. Reach Lady Serra and defeat her — or rout every Tidemark student on the field."},
+  {"speaker": "Wren", "side": "left", "portrait": "wren", "expression": "happy",
+   "text": "And it's a mock battle — nobody dies today. Yield if you must; I'll patch everything else."},
+  {"speaker": "Ash", "side": "left", "portrait": "ash", "expression": "happy",
+   "text": "Fight close. Fight as one house. Emberwing — advance!"}
+]

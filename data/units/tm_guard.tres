@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/soldier.tres" id="1_sh32k"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_26uag"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_tn83a"]
+[ext_resource type="Script" path="res://src/items/item_def.gd" id="4_vh3md"]
+[ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="5_5gc7h"]
+
+[resource]
+script = ExtResource("3_tn83a")
+id = "tm_guard"
+display_name = "Tidemark Guard"
+char_class = ExtResource("1_sh32k")
+house_id = "tidemark"
+team = 1
+ai_behavior = 1
+weapon = ExtResource("5_5gc7h")
+level = 3
+max_hp = 25
+strength = 8
+skill = 7
+speed = 8
+defense = 6
+resistance = 2

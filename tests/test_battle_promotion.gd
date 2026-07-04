@@ -21,7 +21,7 @@ func _wait_idle(max_frames := 300) -> void:
 
 
 func test_seal_hidden_until_level_10():
-	var kael: Unit = _view._lord_unit
+	var kael: Unit = _view.unit_by_id("kael")
 	assert_eq(kael.level, 1)
 	# Select and open the command menu in place.
 	_view._on_cursor_confirmed(Vector2i(3, 7))
@@ -32,7 +32,7 @@ func test_seal_hidden_until_level_10():
 
 
 func test_kael_promotes_and_gains_class_bonuses():
-	var kael: Unit = _view._lord_unit
+	var kael: Unit = _view.unit_by_id("kael")
 	assert_eq(kael.current_class().id, "myrmidon")
 	kael.level = 10                       # eligible to promote
 	assert_true(kael.can_promote())

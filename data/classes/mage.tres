@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_sxcey"]
+
+[resource]
+script = ExtResource("1_sxcey")
+id = "mage"
+display_name = "Mage"
+token_letter = "A"

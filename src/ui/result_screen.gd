@@ -34,7 +34,18 @@ func _show(text: String, accent: Color) -> void:
 func _gui_input(event: InputEvent) -> void:
 	if not _shown:
 		return
-	if (event is InputEventKey or event is InputEventMouseButton) and event.pressed:
+	if event is InputEventMouseButton and event.pressed:
+		accept_event()
+		dismissed.emit()
+
+
+## Keys arrive here — _gui_input only sees them when focused, and nothing focuses
+## this overlay ("press ANY key" must actually work from the keyboard, WO-4.1 fix).
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not _shown:
+		return
+	if event is InputEventKey and event.pressed and not event.echo:
+		get_viewport().set_input_as_handled()
 		dismissed.emit()
 
 

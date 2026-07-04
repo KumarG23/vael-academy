@@ -6,7 +6,7 @@ extends Control
 ## inventory), Mission Board (briefing → deploy) — plus Save. Reads/writes the
 ## Campaign autoload so progression flows hub → battle → hub.
 
-const BATTLE_SCENE := "res://scenes/battle/battle.tscn"
+const BATTLE_SCENE := "res://scenes/battle/mock_battle.tscn"
 
 const FLAVOR := [
 	"Ash claps you on the back. \"Emberwing fights as one — stay close out there.\"",
