@@ -1,0 +1,17 @@
+status: completed
+id: 0a0c714f-fa72-4894-b91b-76ba737fc2e6
+terrain: clear blue lake water with gentle ripples -> lush green grass meadow
+tiles: 16
+tile_size: 32x32px
+view: high top-down
+transition: muddy bank with reeds
+
+download_png: https://api.pixellab.ai/mcp/tilesets/0a0c714f-fa72-4894-b91b-76ba737fc2e6/image
+download_metadata: https://api.pixellab.ai/mcp/tilesets/0a0c714f-fa72-4894-b91b-76ba737fc2e6/metadata
+
+base_tile_ids (for chaining):
+  lower (clear blue lake water with gentle ripples): 02c3b549-5c50-45e5-a5df-860f6b4b57f7
+  upper (lush green grass meadow): cd85a2a1-3647-4bf8-ae6b-641d729b740c
+
+hint: use upper ID as lower_base_tile_id in next tileset for seamless transitions
+resource: pixellab://docs/godot/wang-tilesets

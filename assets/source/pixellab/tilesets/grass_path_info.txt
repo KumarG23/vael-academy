@@ -1,0 +1,16 @@
+status: completed
+id: 421f7bee-306b-41d0-a566-a0202faff0fa
+terrain: packed dirt road with small stones -> lush green grass meadow
+tiles: 16
+tile_size: 32x32px
+view: high top-down
+
+download_png: https://api.pixellab.ai/mcp/tilesets/421f7bee-306b-41d0-a566-a0202faff0fa/image
+download_metadata: https://api.pixellab.ai/mcp/tilesets/421f7bee-306b-41d0-a566-a0202faff0fa/metadata
+
+base_tile_ids (for chaining):
+  lower (packed dirt road with small stones): 2e6ebc47-0462-4e79-99c9-dc7d6f87755a
+  upper (lush green grass meadow): 4e9518e8-328d-4c55-9a45-8876ec489e27
+
+hint: use upper ID as lower_base_tile_id in next tileset for seamless transitions
+resource: pixellab://docs/godot/wang-tilesets

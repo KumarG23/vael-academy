@@ -17,11 +17,13 @@ rotations:
   north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/rotations/north-west.png
   south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/rotations/south-west.png
 
-animations: none
+animations (1):
+  walk_east (east, 9f) 2026-07-05
+    frames: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/animations/75687a3c-2b45-4e8c-94ef-e16dea08c3de/east/0.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/animations/75687a3c-2b45-4e8c-94ef-e16dea08c3de/east/1.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/animations/75687a3c-2b45-4e8c-94ef-e16dea08c3de/east/2.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/animations/75687a3c-2b45-4e8c-94ef-e16dea08c3de/east/3.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/animations/75687a3c-2b45-4e8c-94ef-e16dea08c3de/east/4.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/animations/75687a3c-2b45-4e8c-94ef-e16dea08c3de/east/5.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/animations/75687a3c-2b45-4e8c-94ef-e16dea08c3de/east/6.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/animations/75687a3c-2b45-4e8c-94ef-e16dea08c3de/east/7.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/14bac1ec-1fa4-43c5-8562-fbba748516a8/animations/75687a3c-2b45-4e8c-94ef-e16dea08c3de/east/8.png
 
 download: https://api.pixellab.ai/mcp/characters/14bac1ec-1fa4-43c5-8562-fbba748516a8/download
 
 available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
 
-actions: animate_character(character_id="14bac1ec-1fa4-43c5-8562-fbba748516a8", ...) | create_character_state(character_id="14bac1ec-1fa4-43c5-8562-fbba748516a8", ...) | delete_character(character_id="14bac1ec-1fa4-43c5-8562-fbba748516a8")
-hint: animate_character(character_id="14bac1ec-1fa4-43c5-8562-fbba748516a8", template_animation_id="backflip")
+actions: animate_character(character_id="14bac1ec-1fa4-43c5-8562-fbba748516a8", ...) | create_character_state(character_id="14bac1ec-1fa4-43c5-8562-fbba748516a8", ...) | delete_animation(character_id="14bac1ec-1fa4-43c5-8562-fbba748516a8", animation_type="...") | delete_character(character_id="14bac1ec-1fa4-43c5-8562-fbba748516a8")
+hint: get_character(character_id="c87df505-0457-4da3-b65a-e9b64548a4a3") to view sibling state

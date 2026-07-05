@@ -70,10 +70,24 @@
           "west": "promoted_to_warrior/rotations/west.png",
           "south-west": "promoted_to_warrior/rotations/south-west.png"
         },
-        "animations": {}
+        "animations": {
+          "walking": {
+            "east": [
+              "promoted_to_warrior/animations/walking/east/frame_000.png",
+              "promoted_to_warrior/animations/walking/east/frame_001.png",
+              "promoted_to_warrior/animations/walking/east/frame_002.png",
+              "promoted_to_warrior/animations/walking/east/frame_003.png",
+              "promoted_to_warrior/animations/walking/east/frame_004.png",
+              "promoted_to_warrior/animations/walking/east/frame_005.png",
+              "promoted_to_warrior/animations/walking/east/frame_006.png",
+              "promoted_to_warrior/animations/walking/east/frame_007.png",
+              "promoted_to_warrior/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
       }
     }
   ],
   "export_version": "3.0",
-  "export_date": "2026-07-05T05:00:48.510245"
+  "export_date": "2026-07-05T05:58:03.883317"
 }
