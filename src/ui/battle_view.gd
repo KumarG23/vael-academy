@@ -37,6 +37,7 @@ const TERRAIN_TINTS := {
 	Terrain.Type.PILLAR: Color(0.80, 0.78, 0.72, 0.55),
 	Terrain.Type.CARPET: Color(0.25, 0.30, 0.65, 0.45),
 	Terrain.Type.SPRING: Color(0.35, 0.75, 0.85, 0.50),
+	Terrain.Type.FLOWERS: Color(0.85, 0.75, 0.35, 0.30),
 }
 
 enum Phase { IDLE, SELECTED, MENU, TARGETING }

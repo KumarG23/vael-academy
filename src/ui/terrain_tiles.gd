@@ -26,6 +26,7 @@ const SETS_BY_BASE := {
 		Terrain.Type.MOUNTAIN: "grass_mountain",
 		Terrain.Type.FORT: "grass_fortstone",
 		Terrain.Type.WALL: "grass_wall",
+		Terrain.Type.FLOWERS: "grass_flowers",
 	},
 	Terrain.Type.FLOOR: {
 		Terrain.Type.WATER: "floor_pool",
@@ -36,8 +37,8 @@ const SETS_BY_BASE := {
 ## Pass order: ground washes (water/path/carpet) first, features next, walls
 ## last so they read as built ON the land.
 const PASS_ORDER: Array = [Terrain.Type.WATER, Terrain.Type.PATH,
-	Terrain.Type.CARPET, Terrain.Type.FOREST, Terrain.Type.MOUNTAIN,
-	Terrain.Type.FORT, Terrain.Type.WALL]
+	Terrain.Type.FLOWERS, Terrain.Type.CARPET, Terrain.Type.FOREST,
+	Terrain.Type.MOUNTAIN, Terrain.Type.FORT, Terrain.Type.WALL]
 ## Single-tile decor drawn on the cell after the wang passes (no wang set):
 ## type -> texture filename. The cell under it shows the base fill.
 const DECOR_FOR_TERRAIN := {
@@ -185,16 +186,25 @@ func _draw() -> void:
 						src.size.x * clipped.size.x / dest.size.x,
 						src.size.y * clipped.size.y / dest.size.y)
 				draw_texture_rect_region(tex, clipped, src)
-	# decor pass: single-tile features (springs, pillars) on the base fill.
-	# Taller-than-a-tile decor keeps its base on the cell and rises above it.
+	# decor pass: single-tile terrain features (springs, pillars) on the base
+	# fill, then authored scenery props (maps v3) — all sorted by anchor row so
+	# lower items overlap upper ones naturally. Taller-than-a-tile decor keeps
+	# its base on the cell and rises above it.
+	var items: Array = []
 	for y in range(_chapter.height):
 		for x in range(_chapter.width):
 			var t := _chapter.get_terrain(x, y)
-			if not _decor.has(t):
-				continue
-			var tex: Texture2D = _decor[t]
-			var scale := cs / float(TILE)
-			var w := tex.get_width() * scale
-			var h := tex.get_height() * scale
-			draw_texture_rect(tex,
-				Rect2(x * cs + (cs - w) * 0.5, y * cs + cs - h, w, h), false)
+			if _decor.has(t):
+				items.append({"tex": _decor[t], "cell": Vector2i(x, y), "off": Vector2.ZERO})
+	for d in _chapter.decor:
+		if d != null and d.texture != null:
+			items.append({"tex": d.texture, "cell": d.cell, "off": d.offset})
+	items.sort_custom(func(a, b): return a["cell"].y < b["cell"].y)
+	for it in items:
+		var tex: Texture2D = it["tex"]
+		var cell: Vector2i = it["cell"]
+		var scale := cs / float(TILE)
+		var w := tex.get_width() * scale
+		var h := tex.get_height() * scale
+		draw_texture_rect(tex, Rect2(cell.x * cs + (cs - w) * 0.5 + it["off"].x,
+			cell.y * cs + cs - h + it["off"].y, w, h), false)

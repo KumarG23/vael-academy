@@ -47,6 +47,9 @@ enum Objective { ROUT, SEIZE, DEFEAT_BOSS }
 ## Ground the map is built ON (maps v2): PLAINS for field maps, FLOOR for
 ## indoor battles. Picks the tileset family ("grass_*" vs "floor_*").
 @export var base_terrain: Terrain.Type = Terrain.Type.PLAINS
+## Scenery props anchored to cells (maps v3): drawn by TerrainTiles above the
+## terrain, sorted by anchor row so lower props overlap upper ones naturally.
+@export var decor: Array[MapDecor] = []
 ## Painted battlefield backdrop (AW-2). Null => flat placeholder color.
 @export var backdrop: Texture2D = null
 

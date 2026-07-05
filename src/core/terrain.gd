@@ -18,4 +18,5 @@ enum Type {
 	PILLAR = 8,   # standable cover, GBA-style (def+1, avoid+20)
 	CARPET = 9,   # fancy indoor ground, floor-equivalent stats
 	SPRING = 10,  # healing station: 15% max HP at turn start
+	FLOWERS = 11, # wildflower meadow: plains stats, pure color variety
 }
