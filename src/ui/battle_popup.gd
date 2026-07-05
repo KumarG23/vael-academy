@@ -24,7 +24,9 @@ const KIT_ALIASES := {
 	"bandit_a": "bandit", "bandit_b": "bandit", "bandit_c": "bandit",
 	"bandit_d": "bandit", "bandit_boss": "bandit",
 }
-const SPRITE_SCALE := 6.0
+## Battlers aim for ~45% of screen height (GBA proportion) regardless of
+## the kit's native resolution (32px map-scale kits vs 64px+ battle kits).
+const TARGET_BATTLER_PX := 300.0
 const FPS := 10.0
 
 const PLAYER_COLOR := Color(0.16, 0.25, 0.55)
@@ -182,7 +184,6 @@ func _make_sprite(pos: Vector2, flip: bool) -> AnimatedSprite2D:
 	_root.add_child(holder)
 	var s := AnimatedSprite2D.new()
 	s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	s.scale = Vector2.ONE * SPRITE_SCALE
 	s.flip_h = flip
 	var mat := ShaderMaterial.new()
 	var sh := Shader.new()
@@ -294,6 +295,10 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 	_backdrop.texture = map_shot
 	_left_sprite.sprite_frames = load_kit(attacker.unit_id())
 	_right_sprite.sprite_frames = load_kit(defender.unit_id())
+	for spr in [_left_sprite, _right_sprite]:
+		_apply_strike_timing(spr.sprite_frames)
+		var h := _kit_frame_height(spr.sprite_frames)
+		spr.scale = Vector2.ONE * clampf(TARGET_BATTLER_PX / h, 3.0, 7.0)
 	_build_chrome(attacker, defender, exchange)
 	_left_sprite.play("idle")
 	_right_sprite.play("idle")
@@ -317,6 +322,47 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 		(s.material as ShaderMaterial).set_shader_parameter("flash", 0.0)
 
 
+func _kit_frame_height(frames: SpriteFrames) -> float:
+	var tex := frames.get_frame_texture("idle", 0) if frames.has_animation("idle") else null
+	return float(tex.get_height()) if tex != null else 32.0
+
+
+## The GBA feel is in the TIMING, not just the frames: attack/crit anims hold
+## their wind-up (anticipation), snap through the strike window, and ease the
+## follow-through. Applied per-frame via relative durations.
+func _apply_strike_timing(frames: SpriteFrames) -> void:
+	for anim in ["attack", "crit"]:
+		if not frames.has_animation(anim):
+			continue
+		var n := frames.get_frame_count(anim)
+		for i in range(n):
+			var f := float(i) / maxf(n - 1, 1.0)
+			var dur := 1.0
+			if f < 0.35:
+				dur = 1.7    # coiled wind-up: hold it
+			elif f < 0.65:
+				dur = 0.45   # the strike itself: near-instant
+			frames.set_frame(anim, i, frames.get_frame_texture(anim, i), dur)
+
+
+## Afterimage ghosts trailing a dashing battler (Lyn's blur-dash read).
+func _ghost_trail(actor: AnimatedSprite2D, holder: Control, count: int) -> void:
+	for i in range(count):
+		var tex := actor.sprite_frames.get_frame_texture(actor.animation, actor.frame)
+		var ghost := Sprite2D.new()
+		ghost.texture = tex
+		ghost.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		ghost.scale = actor.scale
+		ghost.flip_h = actor.flip_h
+		ghost.position = holder.position
+		ghost.modulate = Color(0.7, 0.85, 1.0, 0.45)
+		_root.add_child(ghost)
+		var tw := create_tween()
+		tw.tween_property(ghost, "modulate:a", 0.0, 0.28)
+		tw.tween_callback(ghost.queue_free)
+		await get_tree().create_timer(0.05).timeout
+
+
 ## One strike, GBA style: run in, land the blow mid-swing (starburst, flash,
 ## knockback, shake, HP drain), run back. Crits use the class "crit" anim,
 ## flash the whole screen, and shake harder. Deaths dissolve to white.
@@ -333,13 +379,19 @@ func _play_strike(strike) -> void:
 	var anim := "crit" if strike.was_crit and actor.sprite_frames.has_animation("crit") else "attack"
 	var swing := actor.sprite_frames.get_frame_count(anim) / FPS
 
-	# run in
+	# crits stage themselves: a beat of stillness, then a BLUR dash
+	if strike.was_crit:
+		_flash_sprite(actor, 0.5, 0.35)
+		await get_tree().create_timer(0.3).timeout
 	var run := create_tween()
-	run.tween_property(actor_holder, "position", contact, 0.20) \
+	run.tween_property(actor_holder, "position", contact, 0.13 if strike.was_crit else 0.20) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_ghost_trail(actor, actor_holder, 4 if strike.was_crit else 2)
 	await run.finished
 	actor.play(anim)
-	await get_tree().create_timer(maxf(swing * 0.55, 0.15)).timeout  # impact moment
+	# impact lands where the strike window begins (the timing curve holds the
+	# wind-up, so real time to impact stays roughly proportional)
+	await get_tree().create_timer(maxf(swing * 0.62, 0.18)).timeout
 
 	var impact_pos: Vector2 = _root.size * 0.5 + Vector2(target_holder.position.x - dir * 40.0,
 		target_holder.position.y - 40.0)

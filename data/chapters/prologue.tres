@@ -24,6 +24,8 @@
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="11_fcoqs"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/stump.png" id="12_af417"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/fence.png" id="13_ithui"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="25_2bcyc"]
+[ext_resource type="Resource" path="res://data/items/vulnerary.tres" id="26_jap02"]
 
 [sub_resource type="Resource" id="Resource_barj4"]
 script = ExtResource("1_3estk")
@@ -143,6 +145,19 @@ script = ExtResource("1_hatpi")
 unit = ExtResource("10_jxfgj")
 cell = Vector2i(2, 3)
 
+[sub_resource type="Resource" id="Resource_0ori1"]
+script = ExtResource("25_2bcyc")
+id = "hamlet_cottage"
+cell = Vector2i(2, 8)
+dialogue = "res://data/dialogue/visit_hamlet_cottage.json"
+item = ExtResource("26_jap02")
+
+[sub_resource type="Resource" id="Resource_l32iw"]
+script = ExtResource("25_2bcyc")
+id = "hamlet_house"
+cell = Vector2i(4, 3)
+dialogue = "res://data/dialogue/visit_hamlet_house.json"
+
 [resource]
 script = ExtResource("11_fcoqs")
 id = "prologue"
@@ -156,3 +171,4 @@ width = 16
 height = 11
 terrain = PackedInt32Array(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 12, 12, 11, 0, 5, 0, 1, 0, 0, 1, 2, 2, 2, 1, 0, 0, 12, 12, 0, 0, 5, 0, 11, 1, 0, 0, 0, 2, 0, 0, 0, 12, 1, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6, 0, 0, 2, 6, 6, 6, 6, 6, 6, 0, 0, 0, 6, 6, 6, 6, 3, 0, 0, 0, 12, 12, 0, 0, 0, 0, 1, 5, 0, 0, 12, 12, 0, 0, 2, 0, 12, 12, 0, 0, 0, 0, 0, 5, 5, 0, 12, 12, 0, 2, 2, 0, 0, 0, 0, 1, 10, 0, 0, 0, 5, 0, 0, 1, 2, 2, 2, 0, 1, 0, 11, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 2, 2, 0, 0, 0, 1, 11, 0, 0, 0, 0, 5, 0, 1, 0, 0, 2, 2)
 decor = Array[ExtResource("1_3estk")]([SubResource("Resource_barj4"), SubResource("Resource_l3u8v"), SubResource("Resource_0j5v5"), SubResource("Resource_08imo"), SubResource("Resource_af417"), SubResource("Resource_ithui"), SubResource("Resource_hos3e"), SubResource("Resource_3xkq5"), SubResource("Resource_bsmj6"), SubResource("Resource_fxl3x"), SubResource("Resource_oanl2"), SubResource("Resource_5crhi"), SubResource("Resource_u0gpi"), SubResource("Resource_7024b")])
+visits = Array[ExtResource("25_2bcyc")]([SubResource("Resource_0ori1"), SubResource("Resource_l32iw")])

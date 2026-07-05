@@ -50,6 +50,9 @@ enum Objective { ROUT, SEIZE, DEFEAT_BOSS }
 ## Scenery props anchored to cells (maps v3): drawn by TerrainTiles above the
 ## terrain, sorted by anchor row so lower props overlap upper ones naturally.
 @export var decor: Array[MapDecor] = []
+## FE-style visitable places (maps v3): door cells that offer a "Visit"
+## action — NPC dialogue + optional item, once per battle.
+@export var visits: Array[VisitSpot] = []
 ## Painted battlefield backdrop (AW-2). Null => flat placeholder color.
 @export var backdrop: Texture2D = null
 

@@ -88,6 +88,18 @@ var _battle_over := false
 var _battle_victory := false
 var _lord_unit: Unit = null
 var _lord_alive := true
+## Visited spot ids this battle (maps v3 FE villages) — each spot is once-only.
+var _visited_spot_ids: Array[String] = []
+
+
+## The unvisited VisitSpot under this cell, or null.
+func _visit_spot_at(cell: Vector2i) -> VisitSpot:
+	for spot in chapter.visits:
+		if spot != null and spot.cell == cell and not _visited_spot_ids.has(spot.id):
+			return spot
+	return null
+
+
 ## DEFEAT_BOSS objective (WO-4.1): the chapter's boss and whether it still stands.
 var _boss_unit: Unit = null
 var _boss_alive := true

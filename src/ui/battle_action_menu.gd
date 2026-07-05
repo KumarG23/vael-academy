@@ -29,6 +29,8 @@ func open_action_menu() -> void:
 		_v._menu_actions.append("equip"); labels.append("Equip")
 	if not unviewed_conversations(unit.unit_def.id).is_empty():
 		_v._menu_actions.append("supports"); labels.append("Supports")
+	if unit.team == 0 and _v._visit_spot_at(unit.cell) != null:
+		_v._menu_actions.append("visit"); labels.append("Visit")
 	_v._menu_actions.append("stats"); labels.append("Stats")
 	_v._menu_actions.append("wait"); labels.append("Wait")
 	open_menu("action", "Action", labels)
@@ -97,6 +99,9 @@ func do_action(id: String) -> void:
 			open_equip_menu()
 		"supports":
 			open_support_menu()
+		"visit":
+			_v._menu.close()
+			await do_visit()
 		"stats":
 			_v._menu.close()
 			_v._stats_from_menu = true
@@ -215,6 +220,24 @@ func view_support_entry(index: int) -> void:
 	else:
 		_v._pop_text(_v._selected.position, "%s ready" % entry["label"], Color(0.95, 0.75, 0.35))
 	open_action_menu()
+
+
+## FE village visit (maps v3): play the spot's NPC dialogue, hand over the
+## reward, and spend the unit's action. Once per spot per battle.
+func do_visit() -> void:
+	var unit: Unit = _v._selected
+	var spot: VisitSpot = _v._visit_spot_at(unit.cell)
+	if spot == null:
+		_v._finish_action()
+		return
+	_v._visited_spot_ids.append(spot.id)
+	if _v.dialogue_enabled and spot.dialogue != "" and FileAccess.file_exists(spot.dialogue):
+		await _v._play_dialogue(spot.dialogue)
+	if spot.item != null:
+		if unit.inventory.add(InventoryItem.from_item(spot.item)):
+			_v._pop_text(unit.position, "got %s!" % spot.item.display_name,
+				Color(0.95, 0.82, 0.35))
+	_v._finish_action()
 
 
 func weapon_count(unit: Unit) -> int:
