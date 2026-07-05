@@ -1,4 +1,24 @@
-# STYLE_BIBLE.md — AW-1 v6.3 (sprite tier: PixelLab-primary)
+# STYLE_BIBLE.md — AW-1 v6.4 (portrait tier: Animagine standard + acceptance bar)
+
+> **v6.4 (2026-07-05): PORTRAIT TIER RULES LOCKED.**
+> - **Pole B (Animagine XL 3.1) is THE portrait style** — Neal's call after
+>   the v1 batch: Pole A drifted between registers; the cast must be one
+>   style. Params as §4 Pole B; danbooru phrasing; negative adds
+>   `forest, trees, outdoors background` (Thornrook trap) and every prompt
+>   names an explicit EYE COLOR (unspecified eyes render dead-white — the
+>   Alaric artifact).
+> - **Acceptance bar (Neal's words): a portrait passes if it matches the
+>   character's SPRITE and their PERSONALITY.** Judge every batch and rerun
+>   against that — style is no longer re-litigated per session.
+> - **Kai's mark spec locked:** left side of the forehead, subtle,
+>   hair-thin, silver or electric blue — never scar-like cheek strokes.
+>   Best-of-batch: seed 2127 (kai_v2e, blue crack, correct placement).
+>   Exact micro-placement remains AW-4 inpainting work as always planned.
+> - Corin/Serra Animagine versions exist (seeds 2125/2126) matching their
+>   approved Pole A identities (704/902) — the leads match the cast now.
+> - Portrait seeds are FIXED per character (v2 batch: 2101–2128,
+>   `tools/comfy_portraits_v2.py`); reruns change the prompt, keep the seed
+>   unless hunting composition.
 
 > **v6.3 (2026-07-04, PixelLab pipeline test): PIXELLAB IS THE PRIMARY
 > GENERATOR** (Neal's call after his own tests; workflow skill in

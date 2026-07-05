@@ -41,6 +41,9 @@ const _STAT_FIELD := {
 var _grid: Grid
 var _moving := false
 var _flash := 0.0
+## WO-4.7: whether dedicated north/south walk frame sets were found.
+var _has_walk_n := false
+var _has_walk_s := false
 ## Painted standee (AW-6 hook): drawn instead of the placeholder token when
 ## `assets/standees/standee_<id>.png` exists. Pure presentation.
 var _standee: Texture2D = null
@@ -73,28 +76,62 @@ func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 	queue_redraw()
 
 
-## AW-7: build an AnimatedSprite2D from conventional walk frames if they exist.
-## idle = the two "passing" poses (subtle bob); walk = the 4-frame cycle.
+## WO-4.7: scan conventional walk frame sets for a unit sprite dir.
+## Returns {"walk": [paths...], "walk_n": [...], "walk_s": [...]} — east set
+## under "walk" (any frame count, walk_f1..fN), north/south optional
+## (walk_n_f*/walk_s_f*). Empty arrays for missing sets.
+static func scan_walk_frames(dir: String) -> Dictionary:
+	var sets := {"walk": "walk_f", "walk_n": "walk_n_f", "walk_s": "walk_s_f"}
+	var out := {}
+	for anim in sets:
+		var paths: Array[String] = []
+		var i := 1
+		while ResourceLoader.exists("%s/%s%d.png" % [dir, sets[anim], i]):
+			paths.append("%s/%s%d.png" % [dir, sets[anim], i])
+			i += 1
+		out[anim] = paths
+	return out
+
+
+## WO-4.7: the two "passing" poses of an N-frame walk cycle (1-based indices)
+## for the idle bob. N=4 keeps the original f2/f4 behavior.
+static func idle_frame_indices(n: int) -> Array[int]:
+	if n <= 1:
+		return [1, 1]
+	return [int(ceil(n / 2.0)), n]
+
+
+## AW-7/WO-4.7: build an AnimatedSprite2D from conventional walk frames.
+## walk = east cycle (flip_h for west); walk_n / walk_s when frame sets exist;
+## idle = the passing poses of the east cycle (subtle bob).
 func _setup_sprite_frames(id: String) -> void:
 	if _anim != null:
 		_anim.queue_free()
 		_anim = null
+	_has_walk_n = false
+	_has_walk_s = false
 	if id == "":
 		return
 	var dir := "res://assets/sprites/units/%s" % id
-	if not ResourceLoader.exists(dir + "/walk_f1.png"):
+	var sets := scan_walk_frames(dir)
+	var east: Array = sets["walk"]
+	if east.is_empty():
 		return
 	var frames := SpriteFrames.new()
-	frames.add_animation("walk")
-	frames.set_animation_speed("walk", 8.0)
-	for i in range(1, 5):
-		var path := "%s/walk_f%d.png" % [dir, i]
-		if ResourceLoader.exists(path):
-			frames.add_frame("walk", load(path))
+	for anim in ["walk", "walk_n", "walk_s"]:
+		var paths: Array = sets[anim]
+		if paths.is_empty():
+			continue
+		frames.add_animation(anim)
+		frames.set_animation_speed(anim, 8.0)
+		for p in paths:
+			frames.add_frame(anim, load(p))
+	_has_walk_n = not (sets["walk_n"] as Array).is_empty()
+	_has_walk_s = not (sets["walk_s"] as Array).is_empty()
 	frames.add_animation("idle")
 	frames.set_animation_speed("idle", 2.0)
-	frames.add_frame("idle", load(dir + "/walk_f2.png"))
-	frames.add_frame("idle", load(dir + ("/walk_f4.png" if ResourceLoader.exists(dir + "/walk_f4.png") else "/walk_f2.png")))
+	for idx in idle_frame_indices(east.size()):
+		frames.add_frame("idle", load(east[idx - 1]))
 	_anim = AnimatedSprite2D.new()
 	_anim.sprite_frames = frames
 	_anim.texture_filter = TEXTURE_FILTER_NEAREST  # crisp pixels at any zoom
@@ -381,12 +418,17 @@ func move_along_path(path: Array) -> void:
 		move_finished.emit()
 		return
 	_moving = true
-	if _anim != null:
-		_anim.play("walk")
 	for i in range(1, path.size()):
 		var target: Vector2 = _grid.cell_center(path[i])
-		if _anim != null and absf(target.x - position.x) > 1.0:
-			_anim.flip_h = target.x < position.x  # sprite faces right by default
+		if _anim != null:
+			var step: Vector2i = Vector2i(path[i]) - Vector2i(path[i - 1])
+			if absi(step.y) > absi(step.x) and (step.y < 0 and _has_walk_n or step.y > 0 and _has_walk_s):
+				_anim.play("walk_n" if step.y < 0 else "walk_s")
+				_anim.flip_h = false
+			else:
+				_anim.play("walk")
+				if absf(target.x - position.x) > 1.0:
+					_anim.flip_h = target.x < position.x  # faces right by default
 		while position.distance_to(target) > 1.0:
 			var delta: float = get_process_delta_time()
 			position = position.move_toward(target, MOVE_SPEED_PX * delta)
