@@ -22,6 +22,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/rocks.png" id="11_ieu8s"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/stump.png" id="12_myhfq"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/signpost.png" id="13_1gi5r"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="23_t5ycu"]
 
 [sub_resource type="Resource" id="Resource_wadgp"]
 script = ExtResource("1_euytt")

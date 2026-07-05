@@ -338,10 +338,12 @@ func _apply_strike_timing(frames: SpriteFrames) -> void:
 		for i in range(n):
 			var f := float(i) / maxf(n - 1, 1.0)
 			var dur := 1.0
-			if f < 0.35:
-				dur = 1.7    # coiled wind-up: hold it
-			elif f < 0.65:
-				dur = 0.45   # the strike itself: near-instant
+			if f < 0.4:
+				dur = 1.55   # coiled wind-up: hold it
+			elif f < 0.75:
+				dur = 0.8    # accelerating...
+			else:
+				dur = 0.5    # ...into the strike: near-instant
 			frames.set_frame(anim, i, frames.get_frame_texture(anim, i), dur)
 
 
@@ -389,9 +391,9 @@ func _play_strike(strike) -> void:
 	_ghost_trail(actor, actor_holder, 4 if strike.was_crit else 2)
 	await run.finished
 	actor.play(anim)
-	# impact lands where the strike window begins (the timing curve holds the
-	# wind-up, so real time to impact stays roughly proportional)
-	await get_tree().create_timer(maxf(swing * 0.62, 0.18)).timeout
+	# impact lands late in the swing (these choreographies strike at the end;
+	# the timing curve compresses the tail so it still feels instant)
+	await get_tree().create_timer(maxf(swing * 0.78, 0.18)).timeout
 
 	var impact_pos: Vector2 = _root.size * 0.5 + Vector2(target_holder.position.x - dir * 40.0,
 		target_holder.position.y - 40.0)
