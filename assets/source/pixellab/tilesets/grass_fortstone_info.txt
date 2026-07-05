@@ -1,0 +1,17 @@
+status: completed
+id: 24a20026-64c1-4046-b565-424901e5eb7a
+terrain: lush green grass meadow -> worn grey stone fortress flooring with large flagstones
+tiles: 16
+tile_size: 32x32px
+view: high top-down
+transition: cracked stone edge with moss
+
+download_png: https://api.pixellab.ai/mcp/tilesets/24a20026-64c1-4046-b565-424901e5eb7a/image
+download_metadata: https://api.pixellab.ai/mcp/tilesets/24a20026-64c1-4046-b565-424901e5eb7a/metadata
+
+base_tile_ids (for chaining):
+  lower (lush green grass meadow): bd65cf63-ba84-4f7c-a8c6-58148a395e74
+  upper (worn grey stone fortress flooring with large flagstones): 9f51244c-7123-41e8-a491-ffe5b04ff9bc
+
+hint: use upper ID as lower_base_tile_id in next tileset for seamless transitions
+resource: pixellab://docs/godot/wang-tilesets

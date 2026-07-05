@@ -1,0 +1,17 @@
+status: completed
+id: bc2f4e74-ac3b-46ae-a5ec-8bb5a9fd9cb8
+terrain: lush green grass meadow -> grey rocky mountain stone with cracks
+tiles: 16
+tile_size: 32x32px
+view: high top-down
+transition: rocky scree slope
+
+download_png: https://api.pixellab.ai/mcp/tilesets/bc2f4e74-ac3b-46ae-a5ec-8bb5a9fd9cb8/image
+download_metadata: https://api.pixellab.ai/mcp/tilesets/bc2f4e74-ac3b-46ae-a5ec-8bb5a9fd9cb8/metadata
+
+base_tile_ids (for chaining):
+  lower (lush green grass meadow): ce6d2c4f-d56c-4114-8013-f8fbfe6047bd
+  upper (grey rocky mountain stone with cracks): 8d5b609d-48de-4e1e-8e65-15000bd0d7b0
+
+hint: use upper ID as lower_base_tile_id in next tileset for seamless transitions
+resource: pixellab://docs/godot/wang-tilesets

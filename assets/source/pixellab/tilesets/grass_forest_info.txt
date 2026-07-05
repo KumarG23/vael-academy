@@ -1,0 +1,17 @@
+status: completed
+id: fb0f6f23-6fde-4c7b-833f-e5a40ed92418
+terrain: lush green grass meadow -> dense forest floor with dark undergrowth and tree roots
+tiles: 16
+tile_size: 32x32px
+view: high top-down
+transition: scattered leaves and ferns
+
+download_png: https://api.pixellab.ai/mcp/tilesets/fb0f6f23-6fde-4c7b-833f-e5a40ed92418/image
+download_metadata: https://api.pixellab.ai/mcp/tilesets/fb0f6f23-6fde-4c7b-833f-e5a40ed92418/metadata
+
+base_tile_ids (for chaining):
+  lower (lush green grass meadow): 3f6338b6-fccf-482f-855c-b8f7055ebe47
+  upper (dense forest floor with dark undergrowth and tree roots): c6e777d2-2ea9-40f4-8ee2-1331abefeec5
+
+hint: use upper ID as lower_base_tile_id in next tileset for seamless transitions
+resource: pixellab://docs/godot/wang-tilesets
