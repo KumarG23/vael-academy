@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bq846rr7xj6dy"
-path="res://.godot/imported/crit_f10.png-5df88a13dbb185d2b4d7d749e0bc60a4.ctex"
+uid="uid://co4w4dklmt4eo"
+path="res://.godot/imported/house_burning3.png-dbb7921c5456c4de120d61388abb72f8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/pixellab/kai/crit_east/crit_f10.png"
-dest_files=["res://.godot/imported/crit_f10.png-5df88a13dbb185d2b4d7d749e0bc60a4.ctex"]
+source_file="res://assets/source/pixellab/props_v1/house_burning3.png"
+dest_files=["res://.godot/imported/house_burning3.png-dbb7921c5456c4de120d61388abb72f8.ctex"]
 
 [params]
 

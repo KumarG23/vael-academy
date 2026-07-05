@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdm1l1kwq74wx"
-path="res://.godot/imported/attack_f17.png-7bd17c8b438889578ff007dea2b564fb.ctex"
+uid="uid://cv4a66by7mnqy"
+path="res://.godot/imported/house_b3.png-1d546c787935ef260196e6a6c9761538.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/pixellab/kai/attack_east/attack_f17.png"
-dest_files=["res://.godot/imported/attack_f17.png-7bd17c8b438889578ff007dea2b564fb.ctex"]
+source_file="res://assets/source/pixellab/props_v1/house_b3.png"
+dest_files=["res://.godot/imported/house_b3.png-1d546c787935ef260196e6a6c9761538.ctex"]
 
 [params]
 

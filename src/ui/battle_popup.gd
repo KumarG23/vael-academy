@@ -300,7 +300,7 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 	for spr in [_left_sprite, _right_sprite]:
 		_apply_strike_timing(spr.sprite_frames)
 		var h := _kit_frame_height(spr.sprite_frames)
-		spr.scale = Vector2.ONE * clampf(TARGET_BATTLER_PX / h, 3.0, 7.0)
+		spr.scale = Vector2.ONE * clampf(TARGET_BATTLER_PX / h, 1.0, 7.0)
 	_build_chrome(attacker, defender, exchange)
 	_left_sprite.play("idle")
 	_right_sprite.play("idle")

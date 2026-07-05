@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b08c3yxelg7hf"
-path="res://.godot/imported/crit_f17.png-f1722d8680990b08e7e277447ba16876.ctex"
+uid="uid://dxl1j6vepxsag"
+path="res://.godot/imported/house_a3.png-4c53a5e49f12a7d328f4e04ace6d56ee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/pixellab/kai/crit_east/crit_f17.png"
-dest_files=["res://.godot/imported/crit_f17.png-f1722d8680990b08e7e277447ba16876.ctex"]
+source_file="res://assets/source/pixellab/props_v1/house_a3.png"
+dest_files=["res://.godot/imported/house_a3.png-4c53a5e49f12a7d328f4e04ace6d56ee.ctex"]
 
 [params]
 
