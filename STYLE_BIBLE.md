@@ -1,4 +1,19 @@
-# STYLE_BIBLE.md — AW-1 v6.4 (portrait tier: Animagine standard + acceptance bar)
+# STYLE_BIBLE.md — AW-1 v6.5 (maps doctrine: HYBRID)
+
+> **v6.5 (2026-07-05): THE MAPS DECISION — HYBRID (Neal: "hybrid is the
+> way").** Battle maps are **pixel Wang tilesets** (PixelLab
+> `create_topdown_tileset`, 32px tiles matching the unit cells — units and
+> ground share one pixel language, terrain-per-cell is exact, Godot TileMap
+> native). **Painted art keeps everything around the battlefield**: vistas,
+> map borders/framing, hub interiors, dialogue busts, splashes — the
+> storybook register stays the game's face. Rationale + composites:
+> `assets/art_review/maps_comparison/`. Terrain pairs are Wang
+> lower↔upper transitions; core set: grass↔water, grass↔dirt-path,
+> grass↔forest, grass↔mountain-rock, grass↔fort-stone (WALL via
+> tiles-pro/objects later). Tileset metadata (corners/patterns per tile)
+> downloads fine; the atlas PNG endpoint is broken upstream — export via
+> PixelLab projects/git or support ticket is an open tooling item
+> (example-map slicing suffices for review).
 
 > **v6.4 (2026-07-05): PORTRAIT TIER RULES LOCKED.**
 > - **Pole B (Animagine XL 3.1) is THE portrait style** — Neal's call after
