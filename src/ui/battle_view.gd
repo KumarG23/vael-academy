@@ -32,6 +32,11 @@ const TERRAIN_TINTS := {
 	Terrain.Type.FORT: Color(0.70, 0.62, 0.25, 0.40),
 	Terrain.Type.WALL: Color(0.10, 0.10, 0.12, 0.75),
 	Terrain.Type.WATER: Color(0.15, 0.35, 0.60, 0.55),
+	Terrain.Type.PATH: Color(0.72, 0.60, 0.38, 0.35),
+	Terrain.Type.FLOOR: Color(0.62, 0.56, 0.46, 0.30),
+	Terrain.Type.PILLAR: Color(0.80, 0.78, 0.72, 0.55),
+	Terrain.Type.CARPET: Color(0.25, 0.30, 0.65, 0.45),
+	Terrain.Type.SPRING: Color(0.35, 0.75, 0.85, 0.50),
 }
 
 enum Phase { IDLE, SELECTED, MENU, TARGETING }

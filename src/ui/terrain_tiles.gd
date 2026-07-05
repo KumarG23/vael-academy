@@ -15,24 +15,43 @@ extends Node2D
 const TILESET_DIR := "res://assets/art/pixellab/tilesets"
 const TILE := 32
 
-## Terrain.Type -> atlas set name (PLAINS intentionally absent: it's the base).
-const SET_FOR_TERRAIN := {
-	Terrain.Type.WATER: "grass_water",
-	Terrain.Type.FOREST: "grass_forest",
-	Terrain.Type.MOUNTAIN: "grass_mountain",
-	Terrain.Type.FORT: "grass_fortstone",
-	Terrain.Type.WALL: "grass_wall",
+## Atlas set names per map base family (chapter.base_terrain, maps v2):
+## field maps build on grass, indoor battles on stone floor. The base type
+## itself has no overlay set — it IS the fill.
+const SETS_BY_BASE := {
+	Terrain.Type.PLAINS: {
+		Terrain.Type.WATER: "grass_water",
+		Terrain.Type.PATH: "grass_path",
+		Terrain.Type.FOREST: "grass_forest",
+		Terrain.Type.MOUNTAIN: "grass_mountain",
+		Terrain.Type.FORT: "grass_fortstone",
+		Terrain.Type.WALL: "grass_wall",
+	},
+	Terrain.Type.FLOOR: {
+		Terrain.Type.WATER: "floor_pool",
+		Terrain.Type.CARPET: "floor_carpet",
+		Terrain.Type.WALL: "floor_wall",
+	},
 }
-## Pass order: water first so land features overlap shorelines, not vice versa;
-## walls last so they read as built ON the land.
-const PASS_ORDER: Array = [Terrain.Type.WATER, Terrain.Type.FOREST,
-	Terrain.Type.MOUNTAIN, Terrain.Type.FORT, Terrain.Type.WALL]
+## Pass order: ground washes (water/path/carpet) first, features next, walls
+## last so they read as built ON the land.
+const PASS_ORDER: Array = [Terrain.Type.WATER, Terrain.Type.PATH,
+	Terrain.Type.CARPET, Terrain.Type.FOREST, Terrain.Type.MOUNTAIN,
+	Terrain.Type.FORT, Terrain.Type.WALL]
+## Single-tile decor drawn on the cell after the wang passes (no wang set):
+## type -> texture filename. The cell under it shows the base fill.
+const DECOR_FOR_TERRAIN := {
+	Terrain.Type.SPRING: "spring_tile.png",
+	Terrain.Type.PILLAR: "pillar_tile.png",
+}
 
 var _grid: Grid
 var _chapter: ChapterDef
 var _atlases := {}      # set name -> Texture2D
 var _wang := {}         # set name -> {sig(int) -> Vector2i(col,row)}
-var _grass_region: Rect2
+var _decor := {}        # Terrain.Type -> Texture2D
+var _base_region: Rect2
+var _base_set_name := ""
 
 
 func setup(grid: Grid, chapter: ChapterDef) -> void:
@@ -47,10 +66,20 @@ func is_active() -> bool:
 	return not _atlases.is_empty()
 
 
-## Whether this terrain type is rendered by a loaded atlas. Types without art
-## keep the battle view's tint fallback (convention: code never waits on art).
+## Whether this terrain type is rendered by loaded art (wang atlas or decor
+## tile) for this chapter's base family. Types without art keep the battle
+## view's tint fallback (convention: code never waits on art).
 func covers(t: int) -> bool:
-	return SET_FOR_TERRAIN.has(t) and _atlases.has(SET_FOR_TERRAIN[t])
+	if t == _base_terrain():
+		return true
+	if _decor.has(t):
+		return true
+	var sets: Dictionary = SETS_BY_BASE.get(_base_terrain(), {})
+	return sets.has(t) and _atlases.has(sets[t])
+
+
+func _base_terrain() -> int:
+	return _chapter.base_terrain if _chapter != null else Terrain.Type.PLAINS
 
 
 static func load_wang_maps(path: String) -> Dictionary:
@@ -88,6 +117,7 @@ static func junction_signature(chapter: ChapterDef, x: int, y: int, overlay: int
 
 func _load_assets() -> void:
 	_atlases.clear()
+	_decor.clear()
 	_wang = load_wang_maps(TILESET_DIR + "/wang_maps.json")
 	if _wang.is_empty():
 		return
@@ -97,28 +127,41 @@ func _load_assets() -> void:
 			_atlases[set_name] = load(p)
 	if _atlases.is_empty():
 		return
-	# base grass = the all-grass tile of the forest set (sig 0 = no overlay)
-	var grass_pos: Vector2i = _wang["grass_forest"][0]
-	_grass_region = Rect2(grass_pos.x * TILE, grass_pos.y * TILE, TILE, TILE)
+	for t in DECOR_FOR_TERRAIN:
+		var dp := "%s/%s" % [TILESET_DIR, DECOR_FOR_TERRAIN[t]]
+		if ResourceLoader.exists(dp):
+			_decor[t] = load(dp)
+	# base fill = the all-base tile (sig 0 = no overlay) of the family's
+	# first available set
+	var base_set := ""
+	for set_name in SETS_BY_BASE.get(_base_terrain(), {}).values():
+		if _atlases.has(set_name):
+			base_set = set_name
+			break
+	if base_set == "":
+		_atlases.clear()  # no art for this base family -> full tint fallback
+		return
+	var pos: Vector2i = _wang[base_set][0]
+	_base_region = Rect2(pos.x * TILE, pos.y * TILE, TILE, TILE)
+	_base_set_name = base_set
 
 
 func _draw() -> void:
 	if _grid == null or _chapter == null or not is_active():
 		return
 	var cs := float(_grid.cell_size)
-	var scale := cs / float(TILE)
-	var grass_tex: Texture2D = _atlases.get("grass_forest",
-		_atlases[_atlases.keys()[0]])
-	# base grass fill, cell-aligned
+	var base_tex: Texture2D = _atlases[_base_set_name]
+	# base fill (grass or floor), cell-aligned
 	for y in range(_chapter.height):
 		for x in range(_chapter.width):
-			draw_texture_rect_region(grass_tex,
-				Rect2(x * cs, y * cs, cs, cs), _grass_region)
+			draw_texture_rect_region(base_tex,
+				Rect2(x * cs, y * cs, cs, cs), _base_region)
 	# overlay passes on the dual grid (junctions: (width+1) x (height+1)),
 	# each drawn tile offset by -half a cell so corners meet cell centers
+	var sets: Dictionary = SETS_BY_BASE.get(_base_terrain(), {})
 	for overlay in PASS_ORDER:
-		var set_name: String = SET_FOR_TERRAIN[overlay]
-		if not _atlases.has(set_name):
+		var set_name: String = sets.get(overlay, "")
+		if set_name == "" or not _atlases.has(set_name):
 			continue
 		var tex: Texture2D = _atlases[set_name]
 		var wmap: Dictionary = _wang[set_name]
@@ -142,3 +185,16 @@ func _draw() -> void:
 						src.size.x * clipped.size.x / dest.size.x,
 						src.size.y * clipped.size.y / dest.size.y)
 				draw_texture_rect_region(tex, clipped, src)
+	# decor pass: single-tile features (springs, pillars) on the base fill.
+	# Taller-than-a-tile decor keeps its base on the cell and rises above it.
+	for y in range(_chapter.height):
+		for x in range(_chapter.width):
+			var t := _chapter.get_terrain(x, y)
+			if not _decor.has(t):
+				continue
+			var tex: Texture2D = _decor[t]
+			var scale := cs / float(TILE)
+			var w := tex.get_width() * scale
+			var h := tex.get_height() * scale
+			draw_texture_rect(tex,
+				Rect2(x * cs + (cs - w) * 0.5, y * cs + cs - h, w, h), false)

@@ -19,6 +19,11 @@ static func create_default() -> TerrainDB:
 		Terrain.Type.FORT: TerrainInfo.new("Fort", 2, 2, 20, false, 0.10, false),
 		Terrain.Type.WALL: TerrainInfo.new("Wall", 0, 0, 0, true),
 		Terrain.Type.WATER: TerrainInfo.new("Water", 0, 0, 0, true),
+		Terrain.Type.PATH: TerrainInfo.new("Road", 1, 0, 0),
+		Terrain.Type.FLOOR: TerrainInfo.new("Floor", 1, 0, 0),
+		Terrain.Type.PILLAR: TerrainInfo.new("Pillar", 2, 1, 20),
+		Terrain.Type.CARPET: TerrainInfo.new("Carpet", 1, 0, 0),
+		Terrain.Type.SPRING: TerrainInfo.new("Healing Spring", 1, 0, 10, false, 0.15),
 	}
 	return db
 

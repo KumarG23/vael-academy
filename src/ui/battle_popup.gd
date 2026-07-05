@@ -9,6 +9,9 @@ extends CanvasLayer
 
 const KIT_DIR := "res://assets/art/pixellab/%s/%s_east"
 const KIT_ANIMS := ["idle", "attack", "hit", "ko"]
+## Optional extras loaded when present; never required by has_kit. "crit" is
+## the class-flavored critical choreography (falls back to "attack").
+const KIT_EXTRA_ANIMS := ["crit"]
 ## Generic enemy unit ids share one design's kit (mirrors the walk-frame
 ## promotion mapping).
 const KIT_ALIASES := {
@@ -25,6 +28,8 @@ const FPS := 10.0
 var _root: Control
 var _left_sprite: AnimatedSprite2D
 var _right_sprite: AnimatedSprite2D
+var _left_holder: Control
+var _right_holder: Control
 var _left_hp: ProgressBar
 var _right_hp: ProgressBar
 var _left_name: Label
@@ -47,7 +52,7 @@ static func has_kit(unit_id: String) -> bool:
 static func load_kit(unit_id: String) -> SpriteFrames:
 	var kit: String = KIT_ALIASES.get(unit_id, unit_id)
 	var frames := SpriteFrames.new()
-	for anim in KIT_ANIMS:
+	for anim in KIT_ANIMS + KIT_EXTRA_ANIMS:
 		var dir := KIT_DIR % [kit, anim]
 		var paths: Array[String] = []
 		var i := 1
@@ -91,6 +96,8 @@ func _ready() -> void:
 	# combat sprites
 	_left_sprite = _make_sprite(Vector2(-190, 40), false)
 	_right_sprite = _make_sprite(Vector2(190, 40), true)
+	_left_holder = _left_sprite.get_parent()
+	_right_holder = _right_sprite.get_parent()
 	# chrome
 	_left_name = _make_name(Vector2(-360, -140))
 	_right_name = _make_name(Vector2(120, -140))
@@ -158,29 +165,95 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array) -> void:
 	await tw.finished
 
 	for strike in strikes:
-		var striker_left: bool = not strike.is_counter
-		var actor := _left_sprite if striker_left else _right_sprite
-		var target := _right_sprite if striker_left else _left_sprite
-		var target_bar := _right_hp if striker_left else _left_hp
-		actor.play("attack")
-		await actor.animation_finished
-		if strike.connected:
-			var lethal: bool = strike.defender_hp_after <= 0
-			target.play("ko" if lethal and target.sprite_frames.has_animation("ko") else "hit")
-			target_bar.value = strike.defender_hp_after
-			_damage_label.text = ("CRIT %d" % strike.damage) if strike.was_crit else str(strike.damage)
-			_damage_label.modulate = Color(1.0, 0.85, 0.2) if strike.was_crit else Color(1.0, 0.5, 0.45)
-			if not lethal:
-				await target.animation_finished
-				target.play("idle")
-		else:
-			_damage_label.text = "Miss"
-			_damage_label.modulate = Color(0.85, 0.85, 0.9)
-		actor.play("idle")
-		await get_tree().create_timer(0.25).timeout
+		await _play_strike(strike)
+		await get_tree().create_timer(0.22).timeout
 
 	await get_tree().create_timer(0.35).timeout
 	var out := create_tween()
 	out.tween_property(_root, "modulate:a", 0.0, 0.15)
 	await out.finished
 	_root.visible = false
+	_left_sprite.modulate.a = 1.0
+	_right_sprite.modulate.a = 1.0
+
+
+## One strike, GBA-style: the actor lunges in, the blow lands MID-swing
+## (reaction, knockback, flash, shake, damage pop), then the actor recovers
+## back to its mark. Crits use the class "crit" choreography when the kit
+## has one, with a heavier shake.
+func _play_strike(strike) -> void:
+	var striker_left: bool = not strike.is_counter
+	var actor := _left_sprite if striker_left else _right_sprite
+	var actor_holder := _left_holder if striker_left else _right_holder
+	var target := _right_sprite if striker_left else _left_sprite
+	var target_holder := _right_holder if striker_left else _left_holder
+	var target_bar := _right_hp if striker_left else _left_hp
+	var dir := 1.0 if striker_left else -1.0
+	var home := actor_holder.position
+	var anim := "crit" if strike.was_crit and actor.sprite_frames.has_animation("crit") else "attack"
+	var swing := actor.sprite_frames.get_frame_count(anim) / FPS
+
+	# lunge toward the opponent while the swing starts
+	var lunge := create_tween()
+	lunge.tween_property(actor_holder, "position:x", home.x + dir * 95.0, 0.12) \
+		.set_ease(Tween.EASE_OUT)
+	actor.play(anim)
+	await get_tree().create_timer(maxf(swing * 0.55, 0.15)).timeout  # impact moment
+
+	if strike.connected:
+		var lethal: bool = strike.defender_hp_after <= 0
+		target.play("ko" if lethal and target.sprite_frames.has_animation("ko") else "hit")
+		target_bar.value = strike.defender_hp_after
+		_flash(target, Color(1.0, 0.35, 0.35))
+		_knockback(target_holder, dir)
+		_shake(0.35 if strike.was_crit else 0.16)
+		_pop_damage(("CRIT %d" % strike.damage) if strike.was_crit else str(strike.damage),
+			Color(1.0, 0.85, 0.2) if strike.was_crit else Color(1.0, 0.5, 0.45),
+			strike.was_crit)
+		if lethal:
+			var fade := create_tween()
+			fade.tween_property(target, "modulate:a", 0.0, 0.7).set_delay(0.35)
+	else:
+		# whiff: the target sways out of the blow
+		_knockback(target_holder, dir * 0.5)
+		_pop_damage("Miss", Color(0.85, 0.85, 0.9), false)
+
+	await actor.animation_finished
+	actor.play("idle")
+	var back := create_tween()
+	back.tween_property(actor_holder, "position", home, 0.14).set_ease(Tween.EASE_IN)
+	await back.finished
+	if strike.connected and strike.defender_hp_after > 0 and target.animation != "idle":
+		target.play("idle")
+
+
+func _flash(sprite: AnimatedSprite2D, color: Color) -> void:
+	var alpha := sprite.modulate.a
+	sprite.modulate = Color(color.r, color.g, color.b, alpha)
+	var tw := create_tween()
+	tw.tween_property(sprite, "modulate", Color(1, 1, 1, alpha), 0.28)
+
+
+func _knockback(holder: Control, dir: float) -> void:
+	var home := holder.position
+	var tw := create_tween()
+	tw.tween_property(holder, "position:x", home.x + dir * 18.0, 0.06)
+	tw.tween_property(holder, "position:x", home.x, 0.16)
+
+
+func _shake(strength: float) -> void:
+	var tw := create_tween()
+	for i in range(5):
+		var off := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * 14.0 * strength * 3.0
+		tw.tween_property(_root, "position", off, 0.035)
+	tw.tween_property(_root, "position", Vector2.ZERO, 0.05)
+
+
+func _pop_damage(text: String, color: Color, big: bool) -> void:
+	_damage_label.text = text
+	_damage_label.modulate = color
+	_damage_label.pivot_offset = _damage_label.size / 2.0
+	_damage_label.scale = Vector2.ONE * (1.9 if big else 1.5)
+	var tw := create_tween()
+	tw.tween_property(_damage_label, "scale", Vector2.ONE, 0.18) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

@@ -44,6 +44,9 @@ enum Objective { ROUT, SEIZE, DEFEAT_BOSS }
 @export var height: int = 15
 ## Row-major terrain grid, length == width * height, each value a Terrain.Type.
 @export var terrain: PackedInt32Array = PackedInt32Array()
+## Ground the map is built ON (maps v2): PLAINS for field maps, FLOOR for
+## indoor battles. Picks the tileset family ("grass_*" vs "floor_*").
+@export var base_terrain: Terrain.Type = Terrain.Type.PLAINS
 ## Painted battlefield backdrop (AW-2). Null => flat placeholder color.
 @export var backdrop: Texture2D = null
 
