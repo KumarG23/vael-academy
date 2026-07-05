@@ -1,11 +1,13 @@
 class_name BattlePopup
 extends CanvasLayer
-## WO-4.9: FE/Dark Deity-style combat cut-in. Slides in over the map when a
-## combat resolves, plays the attacker's attack animation against the
-## defender's hit/KO reaction per strike, with name plates + HP bars.
-## Convention-based like every art hook: available only when BOTH units have
-## kit frames under `assets/art/pixellab/<id>/{idle,attack,hit,ko}_east/`;
-## otherwise combat presents on the map exactly as before.
+## WO-4.9 v3: full GBA-FE style battle screen (rebuilt to Neal's reference
+## GIFs in sample/). The map itself becomes the washed backdrop with a
+## terrain diorama platform; chrome is team-colored framed banners, weapon
+## plates, HIT/DMG/CRT blocks and segmented HP bars that DRAIN (no floating
+## damage numbers); strikes run in, land mid-swing with a starburst, shake
+## and white flash; crits flash the whole screen; deaths dissolve to white.
+## Convention-based: available only when BOTH units have kit frames under
+## `assets/art/pixellab/<id>/{idle,attack,hit,ko}_east/`.
 
 const KIT_DIR := "res://assets/art/pixellab/%s/%s_east"
 const KIT_ANIMS := ["idle", "attack", "hit", "ko"]
@@ -25,20 +27,38 @@ const KIT_ALIASES := {
 const SPRITE_SCALE := 6.0
 const FPS := 10.0
 
-## Stage dressing per the chapter's base terrain (set by the battle view):
-## sky gradient + a ground band tiled from the matching terrain atlas.
+const PLAYER_COLOR := Color(0.16, 0.25, 0.55)
+const PLAYER_EDGE := Color(0.45, 0.62, 0.95)
+const ENEMY_COLOR := Color(0.52, 0.13, 0.13)
+const ENEMY_EDGE := Color(0.95, 0.45, 0.40)
+const TRIM := Color(0.86, 0.78, 0.55)
+
+const FLASH_SHADER := "
+shader_type canvas_item;
+uniform float flash : hint_range(0.0, 1.0) = 0.0;
+void fragment() {
+	vec4 c = texture(TEXTURE, UV);
+	COLOR = vec4(mix(c.rgb, vec3(1.0), flash), c.a * COLOR.a);
+}"
+
+## Stage dressing per the chapter's base terrain (set by the battle view).
 var stage_base: int = Terrain.Type.PLAINS
 
 var _root: Control
+var _backdrop: TextureRect
 var _left_sprite: AnimatedSprite2D
 var _right_sprite: AnimatedSprite2D
 var _left_holder: Control
 var _right_holder: Control
-var _left_hp: ProgressBar
-var _right_hp: ProgressBar
-var _left_name: Label
-var _right_name: Label
-var _damage_label: Label
+var _left_hp: BattlePopupHPBar
+var _right_hp: BattlePopupHPBar
+var _crit_flash: ColorRect
+var _fx: Control
+var _miss_label: Label
+var _bursts: Array = []  # active starbursts: {pos, age, life, big}
+
+# chrome rebuilt per exchange
+var _chrome: Control
 
 
 ## Whether `unit_id` has a full combat kit on disk (aliases resolved).
@@ -79,76 +99,80 @@ func _ready() -> void:
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.visible = false
 	add_child(_root)
-	# darken the map
-	var dim := ColorRect.new()
-	dim.color = Color(0.05, 0.04, 0.07, 0.75)
-	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_root.add_child(dim)
-	# stage: sky gradient band + tiled terrain ground (falls back to flats)
-	var indoor := stage_base == Terrain.Type.FLOOR
-	var sky := TextureRect.new()
-	var grad := Gradient.new()
-	if indoor:
-		grad.set_color(0, Color(0.16, 0.13, 0.19))
-		grad.set_color(1, Color(0.34, 0.28, 0.36))
-	else:
-		grad.set_color(0, Color(0.22, 0.30, 0.52))
-		grad.set_color(1, Color(0.66, 0.60, 0.48))
-	var gtex := GradientTexture2D.new()
-	gtex.gradient = grad
-	gtex.fill_from = Vector2(0, 0)
-	gtex.fill_to = Vector2(0, 1)
-	sky.texture = gtex
-	sky.set_anchors_preset(Control.PRESET_CENTER)
-	sky.custom_minimum_size = Vector2(760, 320)
-	sky.position = Vector2(-380, -160)
-	_root.add_child(sky)
-	var ground_tex := _ground_tile_texture(indoor)
-	if ground_tex != null:
-		var ground := TextureRect.new()
-		ground.texture = ground_tex
-		ground.stretch_mode = TextureRect.STRETCH_TILE
-		ground.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		ground.set_anchors_preset(Control.PRESET_CENTER)
-		ground.custom_minimum_size = Vector2(760, 96)
-		ground.position = Vector2(-380, 64)
-		_root.add_child(ground)
-	else:
-		var flat := ColorRect.new()
-		flat.color = Color(0.20, 0.26, 0.16) if not indoor else Color(0.42, 0.38, 0.30)
-		flat.set_anchors_preset(Control.PRESET_CENTER)
-		flat.custom_minimum_size = Vector2(760, 96)
-		flat.position = Vector2(-380, 64)
-		_root.add_child(flat)
+	# washed map backdrop (set per exchange) + warm wash + vignette dim
+	_backdrop = TextureRect.new()
+	_backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_backdrop.stretch_mode = TextureRect.STRETCH_SCALE
+	_root.add_child(_backdrop)
+	var wash := ColorRect.new()
+	wash.color = Color(0.93, 0.92, 0.86, 0.42)
+	wash.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_root.add_child(wash)
+	# diorama platform: tiled terrain top + shaded lip (FE pedestal)
+	var plat := Control.new()
+	plat.set_anchors_preset(Control.PRESET_CENTER)
+	plat.draw.connect(_draw_platform.bind(plat))
+	plat.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_root.add_child(plat)
 	# combat sprites
-	_left_sprite = _make_sprite(Vector2(-190, 40), false)
-	_right_sprite = _make_sprite(Vector2(190, 40), true)
+	_left_sprite = _make_sprite(Vector2(-190, 46), false)
+	_right_sprite = _make_sprite(Vector2(190, 46), true)
 	_left_holder = _left_sprite.get_parent()
 	_right_holder = _right_sprite.get_parent()
-	# chrome
-	_left_name = _make_name(Vector2(-360, -140))
-	_right_name = _make_name(Vector2(120, -140))
-	_left_hp = _make_hp(Vector2(-360, -108))
-	_right_hp = _make_hp(Vector2(120, -108))
-	_damage_label = Label.new()
-	_damage_label.add_theme_font_size_override("font_size", 34)
-	_damage_label.set_anchors_preset(Control.PRESET_CENTER)
-	_damage_label.position = Vector2(-40, -60)
-	_root.add_child(_damage_label)
+	# effects: starburst layer, MISS label, full-screen crit flash
+	_fx = Control.new()
+	_fx.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_fx.draw.connect(_draw_fx)
+	_root.add_child(_fx)
+	_miss_label = Label.new()
+	_miss_label.text = "MISS"
+	_miss_label.add_theme_font_size_override("font_size", 26)
+	_miss_label.add_theme_color_override("font_color", Color(0.98, 0.96, 0.90))
+	_miss_label.add_theme_color_override("font_outline_color", Color(0.15, 0.15, 0.2))
+	_miss_label.add_theme_constant_override("outline_size", 6)
+	_miss_label.set_anchors_preset(Control.PRESET_CENTER)
+	_miss_label.visible = false
+	_root.add_child(_miss_label)
+	_crit_flash = ColorRect.new()
+	_crit_flash.color = Color(1, 1, 1, 0)
+	_crit_flash.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_root.add_child(_crit_flash)
+	# chrome container (rebuilt per exchange: teams differ)
+	_chrome = Control.new()
+	_chrome.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_root.add_child(_chrome)
 
 
-## A tileable 32px ground texture cut from the base terrain's atlas (the
-## all-base wang tile). Null when the atlases aren't installed.
-func _ground_tile_texture(indoor: bool) -> Texture2D:
-	var set_name := "floor_wall" if indoor else "grass_forest"
+## FE diorama pedestal: the base terrain's tile drawn straight from its
+## atlas region across the platform (TerrainTiles' proven path), scaled 2x
+## chunky, with a shaded lip. Falls back to flat colors without atlases.
+func _draw_platform(plat: Control) -> void:
+	var indoor := stage_base == Terrain.Type.FLOOR
+	var top := Rect2(-370, 8, 740, 104)
+	var lip := Rect2(-370, 112, 740, 16)
+	var set_name := "floor_carpet" if indoor else "grass_forest"
 	var atlas_path := "res://assets/art/pixellab/tilesets/%s_atlas.png" % set_name
 	var maps := TerrainTiles.load_wang_maps("res://assets/art/pixellab/tilesets/wang_maps.json")
-	if not ResourceLoader.exists(atlas_path) or not maps.has(set_name):
-		return null
-	var pos: Vector2i = maps[set_name][0]
-	var img: Image = (load(atlas_path) as Texture2D).get_image()
-	var tile := img.get_region(Rect2i(pos.x * 32, pos.y * 32, 32, 32))
-	return ImageTexture.create_from_image(tile)
+	if ResourceLoader.exists(atlas_path) and maps.has(set_name):
+		var pos: Vector2i = maps[set_name][0]
+		var src := Rect2(pos.x * 32, pos.y * 32, 32, 32)
+		var tex: Texture2D = load(atlas_path)
+		var cell := 64.0  # 2x chunky tiles
+		var x := top.position.x
+		while x < top.end.x:
+			var w := minf(cell, top.end.x - x)
+			var y := top.position.y
+			while y < top.end.y:
+				var h := minf(cell, top.end.y - y)
+				plat.draw_texture_rect_region(tex, Rect2(x, y, w, h),
+					Rect2(src.position, Vector2(src.size.x * w / cell, src.size.y * h / cell)))
+				y += cell
+			x += cell
+	else:
+		plat.draw_rect(top, Color(0.30, 0.42, 0.22) if not indoor else Color(0.72, 0.66, 0.52), true)
+	plat.draw_rect(lip, Color(0.12, 0.16, 0.09, 0.9) if not indoor else Color(0.25, 0.20, 0.14, 0.9), true)
+	# soft edge line so the pedestal pops off the washed map
+	plat.draw_rect(top, Color(0.10, 0.12, 0.08, 0.55), false, 2.0)
 
 
 func _make_sprite(pos: Vector2, flip: bool) -> AnimatedSprite2D:
@@ -160,43 +184,117 @@ func _make_sprite(pos: Vector2, flip: bool) -> AnimatedSprite2D:
 	s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	s.scale = Vector2.ONE * SPRITE_SCALE
 	s.flip_h = flip
+	var mat := ShaderMaterial.new()
+	var sh := Shader.new()
+	sh.code = FLASH_SHADER
+	mat.shader = sh
+	s.material = mat
 	holder.add_child(s)
 	return s
 
 
-func _make_name(pos: Vector2) -> Label:
-	var l := Label.new()
-	l.add_theme_font_size_override("font_size", 20)
-	l.set_anchors_preset(Control.PRESET_CENTER)
-	l.position = pos
-	l.custom_minimum_size = Vector2(240, 26)
-	_root.add_child(l)
-	return l
+# --- chrome -------------------------------------------------------------------
+
+func _team_colors(unit: Unit) -> Array:
+	return [PLAYER_COLOR, PLAYER_EDGE] if unit.team == 0 else [ENEMY_COLOR, ENEMY_EDGE]
 
 
-func _make_hp(pos: Vector2) -> ProgressBar:
-	var p := ProgressBar.new()
-	p.show_percentage = false
-	p.set_anchors_preset(Control.PRESET_CENTER)
-	p.position = pos
-	p.custom_minimum_size = Vector2(240, 14)
-	_root.add_child(p)
+func _framed_panel(parent: Control, rect: Rect2, fill: Color, edge: Color) -> Panel:
+	var p := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = fill
+	sb.border_color = edge
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(3)
+	sb.shadow_color = Color(0, 0, 0, 0.45)
+	sb.shadow_size = 4
+	p.add_theme_stylebox_override("panel", sb)
+	p.position = rect.position
+	p.size = rect.size
+	parent.add_child(p)
 	return p
 
 
+func _panel_label(parent: Control, pos: Vector2, text: String, size: int,
+		color := Color(0.96, 0.94, 0.88), width := 0.0) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", color)
+	l.add_theme_color_override("font_outline_color", Color(0.08, 0.08, 0.12, 0.9))
+	l.add_theme_constant_override("outline_size", 4)
+	l.position = pos
+	if width > 0.0:
+		l.custom_minimum_size = Vector2(width, 0)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	parent.add_child(l)
+	return l
+
+
+## Build the GBA chrome for this exchange: name banners top, weapon plate +
+## HIT/DMG/CRT block + segmented HP bar per side at the bottom.
+func _build_chrome(attacker: Unit, defender: Unit, exchange: Dictionary) -> void:
+	for c in _chrome.get_children():
+		c.queue_free()
+	var vp := _root.size
+	var sides := [
+		{"unit": attacker, "stats": exchange.get("attacker", {}), "active": true, "x": 0.0},
+		{"unit": defender, "stats": exchange.get("defender", {}),
+			"active": bool(exchange.get("defender_can_counter", false)), "x": vp.x - 340.0},
+	]
+	for i in range(2):
+		var s: Dictionary = sides[i]
+		var unit: Unit = s["unit"]
+		var colors := _team_colors(unit)
+		var left_side: bool = i == 0
+		# name banner (top corner)
+		var bx := 26.0 if left_side else vp.x - 266.0
+		_framed_panel(_chrome, Rect2(bx, 22, 240, 40), colors[0], TRIM)
+		_panel_label(_chrome, Vector2(bx, 28), unit.unit_def.display_name, 20,
+			Color(0.98, 0.96, 0.9), 240)
+		# bottom block
+		var px := 26.0 if left_side else vp.x - 366.0
+		var py := vp.y - 148.0
+		# weapon plate
+		var wname := unit.weapon().display_name if unit.weapon() != null else "—"
+		_framed_panel(_chrome, Rect2(px, py, 340, 34), Color(0.16, 0.14, 0.11, 0.97), TRIM)
+		_panel_label(_chrome, Vector2(px, py + 4), wname, 17, Color(0.95, 0.9, 0.78), 340)
+		# stat block + HP panel
+		_framed_panel(_chrome, Rect2(px, py + 38, 340, 86), colors[0], TRIM)
+		var stats: Dictionary = s["stats"]
+		var rows := ([["HIT", "%d" % int(stats.get("hit", 0))],
+			["DMG", "%d" % int(stats.get("damage", 0))],
+			["CRT", "%d" % int(stats.get("crit", 0))]] if s["active"]
+			else [["", ""], ["", "—"], ["", ""]])
+		for r in range(3):
+			_panel_label(_chrome, Vector2(px + 12, py + 40 + r * 25), rows[r][0], 14,
+				Color(0.95, 0.9, 0.75))
+			_panel_label(_chrome, Vector2(px + 56, py + 40 + r * 25), rows[r][1], 14)
+		# segmented HP bar
+		var bar := BattlePopupHPBar.new()
+		bar.max_hp = unit.max_hp()
+		bar.shown_hp = float(unit.current_hp)
+		bar.position = Vector2(px + 108, py + 52)
+		bar.size = Vector2(220, 58)
+		_chrome.add_child(bar)
+		if left_side:
+			_left_hp = bar
+		else:
+			_right_hp = bar
+
+
+# --- the exchange ---------------------------------------------------------------
+
 ## Play a full combat exchange. `strikes` is CombatResult.strikes; attacker is
-## always shown on the left facing right.
-func play_exchange(attacker: Unit, defender: Unit, strikes: Array) -> void:
+## always shown on the left facing right. `exchange` is CombatForecast.exchange
+## (drives the chrome numbers); `map_shot` is the battle viewport captured just
+## before the popup opens (becomes the washed backdrop, FE field-battle style).
+func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
+		exchange: Dictionary = {}, map_shot: Texture2D = null) -> void:
+	_backdrop.texture = map_shot
 	_left_sprite.sprite_frames = load_kit(attacker.unit_id())
 	_right_sprite.sprite_frames = load_kit(defender.unit_id())
-	_left_name.text = attacker.unit_def.display_name
-	_right_name.text = defender.unit_def.display_name
-	for pair in [[_left_hp, attacker], [_right_hp, defender]]:
-		var bar: ProgressBar = pair[0]
-		var u: Unit = pair[1]
-		bar.max_value = u.max_hp()
-		bar.value = u.current_hp
-	_damage_label.text = ""
+	_build_chrome(attacker, defender, exchange)
 	_left_sprite.play("idle")
 	_right_sprite.play("idle")
 	_root.visible = true
@@ -207,21 +305,21 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array) -> void:
 
 	for strike in strikes:
 		await _play_strike(strike)
-		await get_tree().create_timer(0.22).timeout
+		await get_tree().create_timer(0.28).timeout
 
-	await get_tree().create_timer(0.35).timeout
+	await get_tree().create_timer(0.4).timeout
 	var out := create_tween()
-	out.tween_property(_root, "modulate:a", 0.0, 0.15)
+	out.tween_property(_root, "modulate:a", 0.0, 0.16)
 	await out.finished
 	_root.visible = false
-	_left_sprite.modulate.a = 1.0
-	_right_sprite.modulate.a = 1.0
+	for s in [_left_sprite, _right_sprite]:
+		s.modulate.a = 1.0
+		(s.material as ShaderMaterial).set_shader_parameter("flash", 0.0)
 
 
-## One strike, GBA-style: the actor lunges in, the blow lands MID-swing
-## (reaction, knockback, flash, shake, damage pop), then the actor recovers
-## back to its mark. Crits use the class "crit" choreography when the kit
-## has one, with a heavier shake.
+## One strike, GBA style: run in, land the blow mid-swing (starburst, flash,
+## knockback, shake, HP drain), run back. Crits use the class "crit" anim,
+## flash the whole screen, and shake harder. Deaths dissolve to white.
 func _play_strike(strike) -> void:
 	var striker_left: bool = not strike.is_counter
 	var actor := _left_sprite if striker_left else _right_sprite
@@ -231,70 +329,118 @@ func _play_strike(strike) -> void:
 	var target_bar := _right_hp if striker_left else _left_hp
 	var dir := 1.0 if striker_left else -1.0
 	var home := actor_holder.position
+	var contact := Vector2(target_holder.position.x - dir * 120.0, home.y)
 	var anim := "crit" if strike.was_crit and actor.sprite_frames.has_animation("crit") else "attack"
 	var swing := actor.sprite_frames.get_frame_count(anim) / FPS
 
-	# lunge toward the opponent while the swing starts
-	var lunge := create_tween()
-	lunge.tween_property(actor_holder, "position:x", home.x + dir * 95.0, 0.12) \
-		.set_ease(Tween.EASE_OUT)
+	# run in
+	var run := create_tween()
+	run.tween_property(actor_holder, "position", contact, 0.20) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await run.finished
 	actor.play(anim)
 	await get_tree().create_timer(maxf(swing * 0.55, 0.15)).timeout  # impact moment
 
+	var impact_pos: Vector2 = _root.size * 0.5 + Vector2(target_holder.position.x - dir * 40.0,
+		target_holder.position.y - 40.0)
 	if strike.connected:
 		var lethal: bool = strike.defender_hp_after <= 0
 		target.play("ko" if lethal and target.sprite_frames.has_animation("ko") else "hit")
-		target_bar.value = strike.defender_hp_after
-		_flash(target, Color(1.0, 0.35, 0.35))
+		_burst(impact_pos, strike.was_crit)
+		_flash_sprite(target, 0.85, 0.3)
 		_knockback(target_holder, dir)
-		_shake(0.35 if strike.was_crit else 0.16)
-		_pop_damage(("CRIT %d" % strike.damage) if strike.was_crit else str(strike.damage),
-			Color(1.0, 0.85, 0.2) if strike.was_crit else Color(1.0, 0.5, 0.45),
-			strike.was_crit)
+		_shake(0.5 if strike.was_crit else 0.2)
+		if strike.was_crit:
+			_screen_flash()
+		if target_bar != null:
+			var drain := create_tween()
+			drain.tween_property(target_bar, "shown_hp", float(strike.defender_hp_after), 0.4) \
+				.set_trans(Tween.TRANS_SINE)
 		if lethal:
-			var fade := create_tween()
-			fade.tween_property(target, "modulate:a", 0.0, 0.7).set_delay(0.35)
+			# white-silhouette dissolve, FE death style
+			var mat := target.material as ShaderMaterial
+			var die := create_tween()
+			die.tween_method(func(v): mat.set_shader_parameter("flash", v), 0.0, 1.0, 0.35) \
+				.set_delay(0.3)
+			die.tween_property(target, "modulate:a", 0.0, 0.6)
 	else:
-		# whiff: the target sways out of the blow
-		_knockback(target_holder, dir * 0.5)
-		_pop_damage("Miss", Color(0.85, 0.85, 0.9), false)
+		# dodge: quick slide away + MISS
+		_knockback(target_holder, dir * 1.6)
+		_miss_label.position = Vector2(target_holder.position.x - 34.0,
+			target_holder.position.y - 120.0)
+		_miss_label.visible = true
+		_miss_label.scale = Vector2.ONE * 1.6
+		_miss_label.pivot_offset = _miss_label.size / 2.0
+		var mt := create_tween()
+		mt.tween_property(_miss_label, "scale", Vector2.ONE, 0.16) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		mt.tween_interval(0.4)
+		mt.tween_callback(func(): _miss_label.visible = false)
 
 	await actor.animation_finished
 	actor.play("idle")
 	var back := create_tween()
-	back.tween_property(actor_holder, "position", home, 0.14).set_ease(Tween.EASE_IN)
+	back.tween_property(actor_holder, "position", home, 0.18) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await back.finished
 	if strike.connected and strike.defender_hp_after > 0 and target.animation != "idle":
 		target.play("idle")
 
 
-func _flash(sprite: AnimatedSprite2D, color: Color) -> void:
-	var alpha := sprite.modulate.a
-	sprite.modulate = Color(color.r, color.g, color.b, alpha)
+# --- effects --------------------------------------------------------------------
+
+func _flash_sprite(sprite: AnimatedSprite2D, strength: float, time: float) -> void:
+	var mat := sprite.material as ShaderMaterial
+	mat.set_shader_parameter("flash", strength)
 	var tw := create_tween()
-	tw.tween_property(sprite, "modulate", Color(1, 1, 1, alpha), 0.28)
+	tw.tween_method(func(v): mat.set_shader_parameter("flash", v), strength, 0.0, time)
 
 
 func _knockback(holder: Control, dir: float) -> void:
 	var home := holder.position
 	var tw := create_tween()
-	tw.tween_property(holder, "position:x", home.x + dir * 18.0, 0.06)
-	tw.tween_property(holder, "position:x", home.x, 0.16)
+	tw.tween_property(holder, "position:x", home.x + dir * 22.0, 0.07)
+	tw.tween_property(holder, "position:x", home.x, 0.18)
 
 
 func _shake(strength: float) -> void:
 	var tw := create_tween()
-	for i in range(5):
-		var off := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * 14.0 * strength * 3.0
-		tw.tween_property(_root, "position", off, 0.035)
+	for i in range(6):
+		var off := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * 30.0 * strength
+		tw.tween_property(_root, "position", off, 0.03)
 	tw.tween_property(_root, "position", Vector2.ZERO, 0.05)
 
 
-func _pop_damage(text: String, color: Color, big: bool) -> void:
-	_damage_label.text = text
-	_damage_label.modulate = color
-	_damage_label.pivot_offset = _damage_label.size / 2.0
-	_damage_label.scale = Vector2.ONE * (1.9 if big else 1.5)
+func _screen_flash() -> void:
+	_crit_flash.color = Color(1, 1, 1, 0.85)
 	var tw := create_tween()
-	tw.tween_property(_damage_label, "scale", Vector2.ONE, 0.18) \
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_property(_crit_flash, "color:a", 0.0, 0.28)
+
+
+func _burst(pos: Vector2, big: bool) -> void:
+	_bursts.append({"pos": pos, "age": 0.0, "life": 0.30 if big else 0.22, "big": big})
+	_fx.queue_redraw()
+
+
+func _process(delta: float) -> void:
+	if _bursts.is_empty():
+		return
+	for b in _bursts:
+		b["age"] += delta
+	_bursts = _bursts.filter(func(b): return b["age"] < b["life"])
+	_fx.queue_redraw()
+
+
+func _draw_fx() -> void:
+	for b in _bursts:
+		var t: float = b["age"] / b["life"]
+		var pos: Vector2 = b["pos"]
+		var r := (34.0 + t * 46.0) * (1.6 if b["big"] else 1.0)
+		var alpha := (1.0 - t)
+		# radiating slash spokes + a thin expanding ring
+		for i in range(8):
+			var ang := TAU * i / 8.0 + (0.4 if b["big"] else 0.0)
+			var inner := pos + Vector2.from_angle(ang) * r * 0.35
+			var outer := pos + Vector2.from_angle(ang) * r
+			_fx.draw_line(inner, outer, Color(1, 1, 0.92, alpha), 4.0 if b["big"] else 3.0)
+		_fx.draw_arc(pos, r * 0.75, 0, TAU, 24, Color(1, 1, 0.85, alpha * 0.8), 2.5)

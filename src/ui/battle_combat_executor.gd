@@ -31,7 +31,11 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 	# Tests run strike_delay = 0 and never enter this path.
 	if _v.strike_delay > 0.0 and _v.battle_popups_enabled and _v._battle_popup != null \
 			and BattlePopup.has_kit(attacker.unit_id()) and BattlePopup.has_kit(defender.unit_id()):
-		await _v._battle_popup.play_exchange(attacker, defender, result.strikes)
+		# v3: forecast numbers drive the chrome; the map itself (captured just
+		# before the cut-in) becomes the washed backdrop, FE field-battle style.
+		var ex := CombatForecast.exchange(atk_c, def_c, dist)
+		var shot := ImageTexture.create_from_image(_v.get_viewport().get_texture().get_image())
+		await _v._battle_popup.play_exchange(attacker, defender, result.strikes, ex, shot)
 		for strike in result.strikes:
 			var target := attacker if strike.is_counter else defender
 			if strike.connected:
