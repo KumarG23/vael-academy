@@ -3,13 +3,18 @@ extends Control
 ## VN-style dialogue player (§4): portraits left/right, a name plate, a text box
 ## with a typewriter reveal, and advance on space/enter/click. Event steps
 ## (start_battle, give_item, ...) fire `event_triggered`; a terminal event or the
-## end of the script fires `finished`. Choices are parked (not in the slice).
+## end of the script fires `finished`. WO-4.6: choice steps pause playback with an
+## option panel (arrows + enter, or tests call `choose()`); options may jump to a
+## label and/or set a flag in `flags` for the caller (romance, school events).
 ##
 ## Portraits are placeholder panels (initial on a house-tinted card) until AW-4/AW-6
 ## paints them; the portrait id is carried through so the swap is art-only.
 
 signal line_shown(step: DialogueStep)
 signal event_triggered(event_name: String, params: Dictionary)
+signal choice_shown(step: DialogueStep)
+signal choice_made(step: DialogueStep, index: int)
+signal flag_set(flag: String)
 signal finished
 
 ## Auto-play this script on _ready if set (for standalone testing of scenes/dialogue).
@@ -20,10 +25,15 @@ signal finished
 const LEFT_COLOR := Color(0.55, 0.20, 0.20)
 const RIGHT_COLOR := Color(0.20, 0.30, 0.55)
 
+## Flags set by chosen options this playback — read by the caller after `finished`.
+var flags: Dictionary = {}
+
 var _script: DialogueScript
 var _index := -1
 var _finished := false
 var _current: DialogueStep = null
+var _choice: DialogueStep = null
+var _choice_index := 0
 var _revealed := 0.0
 ## Painted portraits (AW-6 hook): `assets/portraits/portrait_<id>.png` per side,
 ## falling back to the placeholder card when no art exists. Presentation only.
@@ -47,6 +57,8 @@ func play(script: DialogueScript) -> void:
 	_index = -1
 	_finished = false
 	_current = null
+	_choice = null
+	flags = {}
 	_advance_logical()
 
 
@@ -56,6 +68,31 @@ func is_finished() -> bool:
 
 func current_line() -> DialogueStep:
 	return _current
+
+
+func awaiting_choice() -> bool:
+	return _choice != null
+
+
+func current_choice() -> DialogueStep:
+	return _choice
+
+
+## Answer the pending choice: record its flag, jump to its label (or fall
+## through), and resume playback. Tests call this directly; the panel routes here.
+func choose(index: int) -> void:
+	if _choice == null or index < 0 or index >= _choice.options.size():
+		return
+	var step := _choice
+	var option: Dictionary = step.options[index]
+	_choice = null
+	if option["flag"] != "":
+		flags[option["flag"]] = true
+		flag_set.emit(option["flag"])
+	choice_made.emit(step, index)
+	if option["goto"] != "":
+		_index = _script.labels[option["goto"]]  # loop pre-increments past the label
+	_advance_logical()
 
 
 func is_revealing() -> bool:
@@ -72,7 +109,7 @@ func skip_reveal() -> void:
 ## stopping at a terminal event or the end. This is what input drives (after any
 ## in-progress reveal is completed) and what tests call directly.
 func advance() -> void:
-	if _finished:
+	if _finished or _choice != null:  # a pending choice blocks advance
 		return
 	if is_revealing():
 		skip_reveal()
@@ -87,6 +124,17 @@ func _advance_logical() -> void:
 			_finish()
 			return
 		var step := _script.get_step(_index)
+		if step.is_label():
+			continue  # labels are jump targets, not content
+		if step.is_goto():
+			_index = _script.labels[step.target]  # loop pre-increments past the label
+			continue
+		if step.is_choice():
+			_choice = step
+			_choice_index = 0
+			queue_redraw()
+			choice_shown.emit(step)
+			return
 		if step.is_event():
 			event_triggered.emit(step.event_name, step.params)
 			if DialogueScript.is_terminal_event(step.event_name):
@@ -122,16 +170,32 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		accept_event()
-		advance()
+		if _choice != null:
+			choose(_choice_index)  # click confirms the highlighted option
+		else:
+			advance()
 
 
 ## Keys arrive here — _gui_input only sees them when the control is focused, and
 ## this overlay never grabs focus (space/enter must advance from the keyboard).
 func _unhandled_key_input(event: InputEvent) -> void:
-	if _finished:
+	if _finished or not (event is InputEventKey) or not event.pressed or event.echo:
 		return
-	if (event is InputEventKey and event.pressed and not event.echo
-			and event.keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]):
+	if _choice != null:
+		match event.keycode:
+			KEY_UP, KEY_W:
+				_choice_index = wrapi(_choice_index - 1, 0, _choice.options.size())
+				queue_redraw()
+			KEY_DOWN, KEY_S:
+				_choice_index = wrapi(_choice_index + 1, 0, _choice.options.size())
+				queue_redraw()
+			KEY_SPACE, KEY_ENTER, KEY_KP_ENTER:
+				choose(_choice_index)
+			_:
+				return
+		get_viewport().set_input_as_handled()
+		return
+	if event.keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
 		get_viewport().set_input_as_handled()
 		advance()
 
@@ -140,6 +204,8 @@ func _draw() -> void:
 	var vp := get_viewport_rect().size
 	draw_rect(Rect2(Vector2.ZERO, vp), Color(0.02, 0.02, 0.04, 0.35), true)
 	if _current == null:
+		if _choice != null:
+			_draw_choice_panel(vp)  # a leading choice has no line under it
 		return
 	var active_left := _current.side == "left"
 	_draw_portrait(Vector2(vp.x * 0.08, vp.y * 0.14), LEFT_COLOR, active_left, "left")
@@ -163,9 +229,38 @@ func _draw() -> void:
 	draw_multiline_string(font, box.position + Vector2(28, 44), shown,
 		HORIZONTAL_ALIGNMENT_LEFT, box.size.x - 56, 24, -1, Color.WHITE)
 
-	if not is_revealing():
+	if not is_revealing() and _choice == null:
 		draw_string(font, box.position + box.size - Vector2(40, 20), "▼",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(0.8, 0.82, 0.88))
+	if _choice != null:
+		_draw_choice_panel(vp)  # last: the panel sits above portraits and box
+
+
+## The WO-4.6 option panel: prompt title + option rows, highlighted row marked.
+## Drawn above the text box on the right, FE dialogue-choice style.
+func _draw_choice_panel(vp: Vector2) -> void:
+	var font := ThemeDB.fallback_font
+	var row_h := 40.0
+	var title_h := 44.0 if _choice.text != "" else 8.0
+	var panel := Rect2(
+		Vector2(vp.x * 0.50, vp.y * 0.66 - title_h - row_h * _choice.options.size() - 24),
+		Vector2(vp.x * 0.36, title_h + row_h * _choice.options.size() + 12))
+	draw_rect(panel, Color(0.06, 0.07, 0.10, 0.97), true)
+	draw_rect(panel, Color(0.85, 0.78, 0.45, 0.9), false, 2.0)
+	if _choice.text != "":
+		draw_string(font, panel.position + Vector2(20, 30), _choice.text,
+			HORIZONTAL_ALIGNMENT_LEFT, panel.size.x - 40, 20, Color(0.95, 0.82, 0.35))
+	for i in range(_choice.options.size()):
+		var row := Rect2(panel.position + Vector2(10, title_h + row_h * i),
+			Vector2(panel.size.x - 20, row_h - 6))
+		if i == _choice_index:
+			draw_rect(row, Color(0.30, 0.26, 0.14, 0.95), true)
+			draw_rect(row, Color(0.95, 0.82, 0.35, 0.9), false, 1.5)
+			draw_string(font, row.position + Vector2(10, 24), "▶",
+				HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.95, 0.82, 0.35))
+		draw_string(font, row.position + Vector2(34, 24), str(_choice.options[i]["text"]),
+			HORIZONTAL_ALIGNMENT_LEFT, row.size.x - 44, 20,
+			Color.WHITE if i == _choice_index else Color(0.75, 0.76, 0.80))
 
 
 func _draw_portrait(pos: Vector2, color: Color, active: bool, side: String) -> void:

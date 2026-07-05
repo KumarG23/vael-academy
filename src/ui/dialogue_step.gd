@@ -1,13 +1,15 @@
 class_name DialogueStep
 extends RefCounted
-## One step of a dialogue script (§4): either a spoken LINE or an EVENT hook
-## (start_battle, give_item, ...). Parsed from JSON by DialogueScript.
+## One step of a dialogue script (§4): a spoken LINE, an EVENT hook
+## (start_battle, give_item, ...), or — since WO-4.6 — the branching steps:
+## a CHOICE the player answers, a LABEL marking a jump target, and a GOTO
+## jumping to one. Parsed from JSON by DialogueScript.
 
-enum Kind { LINE, EVENT }
+enum Kind { LINE, EVENT, CHOICE, LABEL, GOTO }
 
 var kind: Kind
 
-# LINE fields.
+# LINE fields (CHOICE reuses `text` as its prompt).
 var speaker: String = ""
 var text: String = ""
 var side: String = "left"          # "left" or "right"
@@ -17,6 +19,13 @@ var expression: String = "neutral"
 # EVENT fields.
 var event_name: String = ""
 var params: Dictionary = {}
+
+# CHOICE fields: each option is {"text": String, "goto": String, "flag": String}
+# ("goto" empty = fall through to the next step; "flag" empty = nothing recorded).
+var options: Array = []
+
+# LABEL / GOTO fields: the label's name / the jump's destination label.
+var target: String = ""
 
 
 static func make_line(speaker: String, text: String, side := "left", portrait := "", expression := "neutral") -> DialogueStep:
@@ -38,9 +47,43 @@ static func make_event(event_name: String, params: Dictionary = {}) -> DialogueS
 	return s
 
 
+static func make_choice(prompt: String, options: Array) -> DialogueStep:
+	var s := DialogueStep.new()
+	s.kind = Kind.CHOICE
+	s.text = prompt
+	s.options = options
+	return s
+
+
+static func make_label(name: String) -> DialogueStep:
+	var s := DialogueStep.new()
+	s.kind = Kind.LABEL
+	s.target = name
+	return s
+
+
+static func make_goto(target: String) -> DialogueStep:
+	var s := DialogueStep.new()
+	s.kind = Kind.GOTO
+	s.target = target
+	return s
+
+
 func is_line() -> bool:
 	return kind == Kind.LINE
 
 
 func is_event() -> bool:
 	return kind == Kind.EVENT
+
+
+func is_choice() -> bool:
+	return kind == Kind.CHOICE
+
+
+func is_label() -> bool:
+	return kind == Kind.LABEL
+
+
+func is_goto() -> bool:
+	return kind == Kind.GOTO

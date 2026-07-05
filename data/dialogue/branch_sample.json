@@ -1,0 +1,16 @@
+[
+  {"speaker":"Serra", "side":"right", "portrait":"serra", "text":"Emberwing's call, Kai. Do we strike the fort head-on, or circle through the marsh?"},
+  {"choice":"How does Kai answer?", "options":[
+    {"text":"Head-on. Speed wins.", "goto":"headon", "flag":"bold_call"},
+    {"text":"Circle the marsh.", "goto":"marsh"}
+  ]},
+  {"label":"headon"},
+  {"speaker":"Kai", "portrait":"kai", "text":"Head-on. They expect us to be careful — so we won't be."},
+  {"speaker":"Serra", "side":"right", "portrait":"serra", "text":"Reckless. I like it."},
+  {"goto":"end"},
+  {"label":"marsh"},
+  {"speaker":"Kai", "portrait":"kai", "text":"The marsh. Slow is smooth, and smooth wins battles."},
+  {"speaker":"Serra", "side":"right", "portrait":"serra", "text":"Sensible. Boring, but sensible."},
+  {"label":"end"},
+  {"speaker":"Kai", "portrait":"kai", "text":"Either way — Emberwing takes the field."}
+]

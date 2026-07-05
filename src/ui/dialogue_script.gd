@@ -2,19 +2,30 @@ class_name DialogueScript
 extends RefCounted
 ## A parsed dialogue script (§4): a validated sequence of DialogueSteps loaded from
 ## JSON. Format is a JSON array of objects; an object with an "event" key is an
-## event hook, otherwise it's a spoken line (requires "text").
+## event hook, "label"/"goto"/"choice" are the branching steps (WO-4.6), otherwise
+## it's a spoken line (requires "text").
 ##
 ## Example:
 ##   [
 ##     {"speaker":"Kai", "side":"left", "text":"Emberwing takes the field!"},
 ##     {"event":"give_item", "to":"Kael", "item":"vulnerary"},
-##     {"event":"start_battle", "chapter":"mock_battle"}
+##     {"choice":"Take the field?", "options":[
+##       {"text":"Charge!", "goto":"charge", "flag":"kai_bold"},
+##       {"text":"Hold back."}
+##     ]},
+##     {"speaker":"Kai", "text":"We wait."}, {"goto":"end"},
+##     {"label":"charge"}, {"speaker":"Kai", "text":"With me!"},
+##     {"label":"end"}, {"event":"start_battle", "chapter":"mock_battle"}
 ##   ]
+##
+## Every "goto" (step or option) must name a "label" that exists — validated at
+## parse time so a broken branch can never be authored.
 
 ## Event names that end the conversation when reached.
 const TERMINAL_EVENTS := ["start_battle"]
 
 var steps: Array[DialogueStep] = []
+var labels: Dictionary = {}  # label name -> step index
 var error: String = ""
 
 
@@ -39,6 +50,7 @@ static func from_json(text: String) -> DialogueScript:
 		if step == null:
 			return script  # error already set
 		script.steps.append(step)
+	script._validate_jumps()
 	return script
 
 
@@ -55,8 +67,22 @@ static func _parse_step(entry: Dictionary, index: int, script: DialogueScript) -
 		var params := entry.duplicate()
 		params.erase("event")
 		return DialogueStep.make_event(str(entry["event"]), params)
+	if entry.has("label"):
+		var name := str(entry["label"])
+		if name == "":
+			script.error = "step %d has an empty label" % index
+			return null
+		if script.labels.has(name):
+			script.error = "step %d duplicates label \"%s\"" % [index, name]
+			return null
+		script.labels[name] = index
+		return DialogueStep.make_label(name)
+	if entry.has("goto"):
+		return DialogueStep.make_goto(str(entry["goto"]))
+	if entry.has("choice"):
+		return _parse_choice(entry, index, script)
 	if not entry.has("text"):
-		script.error = "step %d is neither an event nor a line (no \"text\")" % index
+		script.error = "step %d is neither an event, label, goto, choice, nor a line (no \"text\")" % index
 		return null
 	return DialogueStep.make_line(
 		str(entry.get("speaker", "")),
@@ -65,6 +91,41 @@ static func _parse_step(entry: Dictionary, index: int, script: DialogueScript) -
 		str(entry.get("portrait", "")),
 		str(entry.get("expression", "neutral")),
 	)
+
+
+static func _parse_choice(entry: Dictionary, index: int, script: DialogueScript) -> DialogueStep:
+	var raw: Variant = entry.get("options")
+	if not (raw is Array) or (raw as Array).is_empty():
+		script.error = "choice at step %d needs a non-empty \"options\" array" % index
+		return null
+	var options: Array = []
+	for o in (raw as Array):
+		if not (o is Dictionary) or not (o as Dictionary).has("text"):
+			script.error = "choice at step %d has an option without \"text\"" % index
+			return null
+		options.append({
+			"text": str(o["text"]),
+			"goto": str(o.get("goto", "")),
+			"flag": str(o.get("flag", "")),
+		})
+	return DialogueStep.make_choice(str(entry["choice"]), options)
+
+
+## Every jump destination — goto steps and choice options — must be a real label.
+func _validate_jumps() -> void:
+	if error != "":
+		return
+	for i in range(steps.size()):
+		var step := steps[i]
+		if step.is_goto() and not labels.has(step.target):
+			error = "goto at step %d targets unknown label \"%s\"" % [i, step.target]
+			return
+		if step.is_choice():
+			for o in step.options:
+				var t: String = o["goto"]
+				if t != "" and not labels.has(t):
+					error = "choice at step %d targets unknown label \"%s\"" % [i, t]
+					return
 
 
 func ok() -> bool:
