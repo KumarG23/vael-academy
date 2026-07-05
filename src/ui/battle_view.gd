@@ -163,6 +163,25 @@ func _draw() -> void:
 			draw_rect(Rect2(Vector2.ZERO, size), backdrop_color, true)
 	_draw_terrain_tints()
 	_draw_seize_marker()
+	_draw_visit_markers()
+
+
+## FE door sparkle: unvisited visit cells pulse a small gold diamond so the
+## player can spot which houses will talk to them (maps v3).
+func _draw_visit_markers() -> void:
+	if chapter.visits.is_empty():
+		return
+	var cs := float(_grid.cell_size)
+	var pulse := 0.55 + 0.35 * sin(Time.get_ticks_msec() / 280.0)
+	for spot in chapter.visits:
+		if spot == null or _visited_spot_ids.has(spot.id):
+			continue
+		var c := Vector2((spot.cell.x + 0.5) * cs, (spot.cell.y + 0.35) * cs)
+		var r := cs * 0.16
+		var pts := PackedVector2Array([c + Vector2(0, -r), c + Vector2(r, 0),
+			c + Vector2(0, r), c + Vector2(-r, 0)])
+		draw_colored_polygon(pts, Color(1.0, 0.88, 0.35, pulse))
+		draw_polyline(pts + PackedVector2Array([pts[0]]), Color(0.55, 0.4, 0.05, pulse), 2.0)
 
 
 ## Gold marker on the objective tile: the seize cell, or the boss's fort so a
@@ -1086,6 +1105,8 @@ func _camera_clamp(focus: Vector2) -> Vector2:
 
 
 func _process(delta: float) -> void:
+	if not chapter.visits.is_empty():
+		queue_redraw()  # visit markers pulse
 	if _camera == null or _grid == null:
 		return
 	var cs := float(_grid.cell_size)
