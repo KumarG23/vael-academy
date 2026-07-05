@@ -102,6 +102,7 @@ func _ready() -> void:
 	_grid = chapter.make_grid()
 	_rng = CombatRNG.new(combat_seed if combat_seed >= 0 else int(Time.get_ticks_usec()))
 	_combat_exec = BattleCombatExecutor.new(self)
+	_menu_ctrl = BattleActionMenuController.new(self)
 	_setup_houses()
 	_setup_supports()
 	_setup_terrain_tiles()
@@ -363,73 +364,26 @@ func _arrive(unit: Unit) -> void:
 	_open_action_menu()
 
 
-# --- command menu -------------------------------------------------------------
+# --- command menu (WO-4.5: driven by BattleActionMenuController; menu state
+# stays here — tests inspect it — and the view keeps signal-facing delegates) --
+
+var _menu_ctrl: BattleActionMenuController
+
 
 func _open_action_menu() -> void:
-	var unit := _selected
-	var labels: Array = []
-	_menu_actions = []
-	if unit.can_attack() and not _attackable_targets(unit.cell, unit).is_empty():
-		_menu_actions.append("attack"); labels.append("Attack")
-	var w := unit.weapon()
-	if w != null and w.is_staff() and not _heal_targets(unit.cell, unit).is_empty():
-		_menu_actions.append("heal"); labels.append("Heal")
-	if not _usable_consumables(unit).is_empty():
-		_menu_actions.append("item"); labels.append("Item")
-	if not _adjacent_allies(unit).is_empty():
-		_menu_actions.append("trade"); labels.append("Trade")
-	if _weapon_count(unit) > 1:
-		_menu_actions.append("equip"); labels.append("Equip")
-	if not _unviewed_conversations(unit.unit_def.id).is_empty():
-		_menu_actions.append("supports"); labels.append("Supports")
-	_menu_actions.append("stats"); labels.append("Stats")
-	_menu_actions.append("wait"); labels.append("Wait")
-	_open_menu("action", "Action", labels)
+	_menu_ctrl.open_action_menu()
 
 
-## Unlocked support conversations this unit hasn't watched yet — the in-battle
-## Supports menu only offers new scenes; the Common Hall keeps the full archive.
 func _unviewed_conversations(unit_id: String) -> Array:
-	var out: Array = []
-	for entry in _support_state.unlocked_conversations_for_unit(unit_id):
-		if not bool(entry.get("viewed", false)):
-			out.append(entry)
-	return out
-
-
-func _open_menu(context: String, title: String, labels: Array) -> void:
-	_menu_context = context
-	_phase = Phase.MENU
-	_cursor.active = false
-	_menu.open(title, labels, Vector2(40, 110))
+	return _menu_ctrl.unviewed_conversations(unit_id)
 
 
 func _on_menu_chosen(index: int) -> void:
-	if _busy:
-		return
-	match _menu_context:
-		"action":
-			await _do_action(_menu_actions[index])
-		"item":
-			await _use_consumable(index)
-		"equip":
-			_do_equip(index)
-		"trade_ally":
-			_pick_trade_ally(index)
-		"trade_give":
-			_do_give(index)
-		"supports":
-			_view_support_entry(index)
+	await _menu_ctrl.choose(index)
 
 
 func _on_menu_cancelled() -> void:
-	if _busy:
-		return
-	match _menu_context:
-		"action":
-			_undo_move_and_deselect()  # cancel the command menu = take the move back
-		_:
-			_open_action_menu()       # any submenu -> back to the command menu
+	_menu_ctrl.cancel()
 
 
 ## Cancel out of the command menu: the unit returns to where it stood before
@@ -444,33 +398,6 @@ func _undo_move_and_deselect() -> void:
 	_deselect()
 
 
-func _do_action(id: String) -> void:
-	match id:
-		"attack":
-			_menu.close()
-			_cursor.active = true
-			_begin_targeting(false)
-		"heal":
-			_menu.close()
-			_cursor.active = true
-			_begin_targeting(true)
-		"item":
-			_open_item_menu()
-		"trade":
-			_open_trade_ally_menu()
-		"equip":
-			_open_equip_menu()
-		"supports":
-			_open_support_menu()
-		"stats":
-			_menu.close()
-			_stats_from_menu = true
-			_open_stats_for(_selected)
-		"wait":
-			_menu.close()
-			_finish_action()
-
-
 func _begin_targeting(heal: bool) -> void:
 	_targeting_heal = heal
 	_targets = _heal_targets(_selected.cell, _selected) if heal else _attackable_targets(_selected.cell, _selected)
@@ -483,115 +410,8 @@ func _begin_targeting(heal: bool) -> void:
 		_show_forecast_for(_targets[0])
 
 
-## Consumables the unit can meaningfully use right now: a Vulnerary only when
-## damaged, a Promotion item only when the unit is eligible to promote (§3).
-func _usable_consumables(unit: Unit) -> Array[InventoryItem]:
-	var out: Array[InventoryItem] = []
-	for it in unit.inventory.consumables():
-		var def := it.item()
-		if def.heals() and unit.current_hp < unit.max_hp():
-			out.append(it)
-		elif def.is_promotion() and unit.can_promote():
-			out.append(it)
-	return out
-
-
-func _open_item_menu() -> void:
-	_menu_items = _usable_consumables(_selected)
-	var labels: Array = []
-	for it in _menu_items:
-		labels.append("%s (%d)" % [it.display_name(), it.uses])
-	_open_menu("item", "Item", labels)
-
-
-func _use_consumable(index: int) -> void:
-	var item: InventoryItem = _menu_items[index]
-	var def: ItemDef = item.item()
-	# Only usable items reach this menu.
-	if def.is_promotion():
-		var result := _selected.promote()
-		_pop_text(_selected.position, "→ %s!" % result["class_name"], Color(0.95, 0.82, 0.35))
-	else:
-		var healed := _selected.heal(def.power)
-		_pop_text(_selected.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
-	_selected.inventory.use_consumable(item)
-	_menu.close()
-	_finish_action()
-
-
-func _open_equip_menu() -> void:
-	_menu_items = []
-	var labels: Array = []
-	for it in _selected.inventory.items:
-		if it.is_weapon():
-			_menu_items.append(it)
-			var eq := " *" if it == _selected.inventory.equipped_weapon_item() else ""
-			labels.append("%s (%d)%s" % [it.display_name(), it.uses, eq])
-	_open_menu("equip", "Equip", labels)
-
-
-func _do_equip(index: int) -> void:
-	_selected.inventory.equip(_menu_items[index])
-	_open_action_menu()  # equipping is free — return to the command menu
-
-
-func _open_trade_ally_menu() -> void:
-	_menu_partners = _adjacent_allies(_selected)
-	var labels: Array = []
-	for a in _menu_partners:
-		labels.append("%s (%d items)" % [a.unit_def.display_name, a.inventory.size()])
-	_open_menu("trade_ally", "Trade with", labels)
-
-
-func _pick_trade_ally(index: int) -> void:
-	_trade_partner = _menu_partners[index]
-	_open_trade_give_menu()
-
-
-func _open_trade_give_menu() -> void:
-	_menu_items = _selected.inventory.items.duplicate()
-	var labels: Array = []
-	for it in _menu_items:
-		labels.append("Give %s" % it.display_name())
-	_open_menu("trade_give", "Give to %s" % _trade_partner.unit_def.display_name, labels)
-
-
-func _do_give(index: int) -> void:
-	var item: InventoryItem = _menu_items[index]
-	if _selected.inventory.transfer_to(item, _trade_partner.inventory):
-		_pop_text(_trade_partner.position, "got %s" % item.display_name(), Color(0.7, 0.85, 1.0))
-	# Stay in the give menu so multiple items can be handed over; cancel finishes.
-	if _selected.inventory.is_empty():
-		_menu.close()
-		_finish_action()
-	else:
-		_open_trade_give_menu()
-
-
-func _open_support_menu() -> void:
-	_support_menu_entries = _unviewed_conversations(_selected.unit_def.id)
-	var labels: Array = []
-	for entry in _support_menu_entries:
-		labels.append(entry["label"])
-	if labels.is_empty():
-		_open_action_menu()
-	else:
-		_open_menu("supports", "Supports", labels)
-
-
-## Play the chosen support conversation as a VN overlay (WO-4.2), then return to
-## the command menu — viewing a conversation doesn't consume the unit's action.
-## Once watched it stops appearing in battle (WO-4.4); the Common Hall keeps it.
 func _view_support_entry(index: int) -> void:
-	var entry: Dictionary = _support_menu_entries[index]
-	var path := str(entry.get("path", ""))
-	_menu.close()
-	if dialogue_enabled and path != "" and FileAccess.file_exists(path):
-		await _play_dialogue(path)
-		_support_state.mark_viewed(str(entry["pair_id"]), str(entry["rank"]))
-	else:
-		_pop_text(_selected.position, "%s ready" % entry["label"], Color(0.95, 0.75, 0.35))
-	_open_action_menu()
+	await _menu_ctrl.view_support_entry(index)
 
 
 # --- unit inspection (WO-4.4) ------------------------------------------------------
@@ -618,14 +438,6 @@ func _adjacent_allies(unit: Unit) -> Array[Unit]:
 		if u != unit and u.team == unit.team and u.is_alive() and _manhattan(u.cell, unit.cell) == 1:
 			out.append(u)
 	return out
-
-
-func _weapon_count(unit: Unit) -> int:
-	var n := 0
-	for it in unit.inventory.items:
-		if it.is_weapon():
-			n += 1
-	return n
 
 
 func _handle_targeting_confirm(cell: Vector2i) -> void:
