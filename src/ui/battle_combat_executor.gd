@@ -34,6 +34,7 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 		# v3: forecast numbers drive the chrome; the map itself (captured just
 		# before the cut-in) becomes the washed backdrop, FE field-battle style.
 		var ex := CombatForecast.exchange(atk_c, def_c, dist)
+		_v._battle_popup.stage_terrain = _v.chapter.get_terrain(defender.cell.x, defender.cell.y)
 		var shot := ImageTexture.create_from_image(_v.get_viewport().get_texture().get_image())
 		await _v._battle_popup.play_exchange(attacker, defender, result.strikes, ex, shot)
 		for strike in result.strikes:

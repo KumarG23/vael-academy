@@ -26,7 +26,7 @@ const KIT_ALIASES := {
 }
 ## Battlers aim for ~45% of screen height (GBA proportion) regardless of
 ## the kit's native resolution (32px map-scale kits vs 64px+ battle kits).
-const TARGET_BATTLER_PX := 300.0
+const TARGET_BATTLER_PX := 385.0
 const FPS := 10.0
 ## Strike animations play hot — GBA attacks resolve in about a second.
 const STRIKE_FPS := 14.0
@@ -47,6 +47,22 @@ void fragment() {
 
 ## Stage dressing per the chapter's base terrain (set by the battle view).
 var stage_base: int = Terrain.Type.PLAINS
+## The DEFENDER's terrain tile (set by the executor per exchange) — picks the
+## battle-scene background, FE style: fight on a forest tile, get the forest.
+var stage_terrain: int = Terrain.Type.PLAINS
+
+const BG_DIR := "res://assets/art/pixellab/battle_bgs"
+const BG_FOR_TERRAIN := {
+	Terrain.Type.PLAINS: "bg_plains", Terrain.Type.FLOWERS: "bg_plains",
+	Terrain.Type.PATH: "bg_plains", Terrain.Type.FOREST: "bg_forest",
+	Terrain.Type.MOUNTAIN: "bg_mountain", Terrain.Type.WATER: "bg_river",
+	Terrain.Type.FORT: "bg_fort", Terrain.Type.WALL: "bg_fort",
+	Terrain.Type.FLOOR: "bg_hall", Terrain.Type.CARPET: "bg_hall",
+	Terrain.Type.PILLAR: "bg_hall", Terrain.Type.SPRING: "bg_plains",
+	Terrain.Type.SITE: "bg_village",
+}
+## Screen-space y of the scene ground line battlers stand on.
+const GROUND_FRAC := 0.72
 
 var _root: Control
 var _backdrop: TextureRect
@@ -63,6 +79,8 @@ var _bursts: Array = []  # active starbursts: {pos, age, life, big}
 
 # chrome rebuilt per exchange
 var _chrome: Control
+var _wash: ColorRect
+var _platform: Control
 
 
 ## Whether `unit_id` has a full combat kit on disk (aliases resolved).
@@ -108,16 +126,17 @@ func _ready() -> void:
 	_backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_backdrop.stretch_mode = TextureRect.STRETCH_SCALE
 	_root.add_child(_backdrop)
-	var wash := ColorRect.new()
-	wash.color = Color(0.93, 0.92, 0.86, 0.42)
-	wash.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_root.add_child(wash)
-	# diorama platform: tiled terrain top + shaded lip (FE pedestal)
-	var plat := Control.new()
-	plat.set_anchors_preset(Control.PRESET_CENTER)
-	plat.draw.connect(_draw_platform.bind(plat))
-	plat.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_root.add_child(plat)
+	_wash = ColorRect.new()
+	_wash.color = Color(0.93, 0.92, 0.86, 0.42)
+	_wash.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_root.add_child(_wash)
+	# diorama platform: tiled terrain top + shaded lip (FE pedestal) — only
+	# shown for the washed-map fallback; scene backgrounds carry their own ground
+	_platform = Control.new()
+	_platform.set_anchors_preset(Control.PRESET_CENTER)
+	_platform.draw.connect(_draw_platform.bind(_platform))
+	_platform.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_root.add_child(_platform)
 	# combat sprites
 	_left_sprite = _make_sprite(Vector2(-190, 46), false)
 	_right_sprite = _make_sprite(Vector2(190, 46), true)
@@ -294,13 +313,31 @@ func _build_chrome(attacker: Unit, defender: Unit, exchange: Dictionary) -> void
 ## before the popup opens (becomes the washed backdrop, FE field-battle style).
 func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 		exchange: Dictionary = {}, map_shot: Texture2D = null) -> void:
-	_backdrop.texture = map_shot
+	# scene background by the defender's terrain; washed map as the fallback
+	var bg_name: String = BG_FOR_TERRAIN.get(stage_terrain, "bg_plains")
+	var bg_path := "%s/%s.png" % [BG_DIR, bg_name]
+	var scene_bg := ResourceLoader.exists(bg_path)
+	_backdrop.texture = load(bg_path) if scene_bg else map_shot
+	_backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_wash.visible = not scene_bg
+	_platform.visible = not scene_bg
 	_left_sprite.sprite_frames = load_kit(attacker.unit_id())
 	_right_sprite.sprite_frames = load_kit(defender.unit_id())
-	for spr in [_left_sprite, _right_sprite]:
+	# NOTE: Control.position set at runtime is ABSOLUTE (from the parent's
+	# top-left) — unlike the _ready-time values, which float with the center
+	# anchor because the parent had no size yet. Everything here is absolute.
+	for i2 in range(2):
+		var spr: AnimatedSprite2D = [_left_sprite, _right_sprite][i2]
+		var holder: Control = [_left_holder, _right_holder][i2]
 		_apply_strike_timing(spr.sprite_frames)
 		var h := _kit_frame_height(spr.sprite_frames)
-		spr.scale = Vector2.ONE * clampf(TARGET_BATTLER_PX / h, 1.0, 7.0)
+		var sc := clampf(TARGET_BATTLER_PX / h, 1.0, 9.0)
+		spr.scale = Vector2.ONE * sc
+		var x := _root.size.x * 0.5 + (-190.0 if i2 == 0 else 190.0)
+		# feet on the scene's ground line regardless of battler size
+		var feet_y := _root.size.y * (GROUND_FRAC if scene_bg else 0.5) \
+			+ (0.0 if scene_bg else 46.0 + h * sc * 0.5)
+		holder.position = Vector2(x, feet_y - h * sc * 0.5)
 	_build_chrome(attacker, defender, exchange)
 	_left_sprite.play("idle")
 	_right_sprite.play("idle")
@@ -388,7 +425,7 @@ func _play_strike(strike) -> void:
 	var target_bar := _right_hp if striker_left else _left_hp
 	var dir := 1.0 if striker_left else -1.0
 	var home := actor_holder.position
-	var contact := Vector2(target_holder.position.x - dir * 120.0, home.y)
+	var contact := Vector2(target_holder.position.x - dir * 120.0, home.y)  # stay on own ground line
 	var anim := "crit" if strike.was_crit and actor.sprite_frames.has_animation("crit") else "attack"
 	var swing := _swing_time(actor.sprite_frames, anim)
 
@@ -414,24 +451,23 @@ func _play_strike(strike) -> void:
 	# the timing curve compresses the tail so it still feels instant)
 	await get_tree().create_timer(maxf(swing * 0.78, 0.18)).timeout
 
-	var impact_pos: Vector2 = _root.size * 0.5 + Vector2(target_holder.position.x - dir * 40.0,
+	var impact_pos := Vector2(target_holder.position.x - dir * 40.0,
 		target_holder.position.y - 40.0)
 	if strike.connected:
 		var lethal: bool = strike.defender_hp_after <= 0
 		target.play("ko" if lethal and target.sprite_frames.has_animation("ko") else "hit")
 		_burst(impact_pos, strike.was_crit)
 		_slash_arc(impact_pos, dir, strike.was_crit)
+		_screen_flash(0.9 if strike.was_crit else 0.4)
 		# hit-stop: the whole scene bites for a beat (GBA crunch)
 		actor.pause()
 		target.pause()
-		await get_tree().create_timer(0.12 if strike.was_crit else 0.07).timeout
+		await get_tree().create_timer(0.14 if strike.was_crit else 0.09).timeout
 		actor.play()
 		target.play()
-		_flash_sprite(target, 0.85, 0.3)
+		_flash_sprite(target, 1.0, 0.32)
 		_knockback(target_holder, dir)
-		_shake(0.5 if strike.was_crit else 0.2)
-		if strike.was_crit:
-			_screen_flash()
+		_shake(0.6 if strike.was_crit else 0.32)
 		if target_bar != null:
 			var drain := create_tween()
 			drain.tween_property(target_bar, "shown_hp", float(strike.defender_hp_after), 0.4) \
@@ -479,8 +515,9 @@ func _flash_sprite(sprite: AnimatedSprite2D, strength: float, time: float) -> vo
 func _knockback(holder: Control, dir: float) -> void:
 	var home := holder.position
 	var tw := create_tween()
-	tw.tween_property(holder, "position:x", home.x + dir * 22.0, 0.07)
-	tw.tween_property(holder, "position:x", home.x, 0.18)
+	tw.tween_property(holder, "position:x", home.x + dir * 42.0, 0.05)
+	tw.tween_property(holder, "position:x", home.x, 0.22) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
 func _shake(strength: float) -> void:
@@ -491,10 +528,10 @@ func _shake(strength: float) -> void:
 	tw.tween_property(_root, "position", Vector2.ZERO, 0.05)
 
 
-func _screen_flash() -> void:
-	_crit_flash.color = Color(1, 1, 1, 0.85)
+func _screen_flash(strength := 0.85) -> void:
+	_crit_flash.color = Color(1, 1, 1, strength)
 	var tw := create_tween()
-	tw.tween_property(_crit_flash, "color:a", 0.0, 0.28)
+	tw.tween_property(_crit_flash, "color:a", 0.0, 0.22 + strength * 0.1)
 
 
 func _burst(pos: Vector2, big: bool) -> void:
