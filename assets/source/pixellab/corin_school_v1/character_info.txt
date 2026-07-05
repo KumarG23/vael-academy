@@ -1,0 +1,29 @@
+status: completed
+id: 891c4435-926c-442a-b515-8a16d2bff1d5
+name: school uniform outfi
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 60x60px
+view: low top-down
+style: -, -, -
+group: 970a074a-4e4f-4909-bcde-b823b01ac37b (5 states)
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/rotations/south-west.png
+
+animations (1):
+  walk_east (east, 9f) 2026-07-05
+    frames: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/animations/c2c35567-d37b-4963-a0f2-9e1b3f920b05/east/0.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/animations/c2c35567-d37b-4963-a0f2-9e1b3f920b05/east/1.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/animations/c2c35567-d37b-4963-a0f2-9e1b3f920b05/east/2.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/animations/c2c35567-d37b-4963-a0f2-9e1b3f920b05/east/3.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/animations/c2c35567-d37b-4963-a0f2-9e1b3f920b05/east/4.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/animations/c2c35567-d37b-4963-a0f2-9e1b3f920b05/east/5.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/animations/c2c35567-d37b-4963-a0f2-9e1b3f920b05/east/6.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/animations/c2c35567-d37b-4963-a0f2-9e1b3f920b05/east/7.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/891c4435-926c-442a-b515-8a16d2bff1d5/animations/c2c35567-d37b-4963-a0f2-9e1b3f920b05/east/8.png
+
+download: https://api.pixellab.ai/mcp/characters/891c4435-926c-442a-b515-8a16d2bff1d5/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="891c4435-926c-442a-b515-8a16d2bff1d5", ...) | create_character_state(character_id="891c4435-926c-442a-b515-8a16d2bff1d5", ...) | delete_animation(character_id="891c4435-926c-442a-b515-8a16d2bff1d5", animation_type="...") | delete_character(character_id="891c4435-926c-442a-b515-8a16d2bff1d5")
+hint: get_character(character_id="5c583261-55cd-400c-9396-72832caad015") to view sibling state

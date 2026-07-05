@@ -1,0 +1,29 @@
+status: completed
+id: e91dc34a-d785-4ce5-b3ae-45e6498d371f
+name: casual clothes: simp
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 60x60px
+view: low top-down
+style: -, -, -
+group: db75c8db-182c-4125-a8cd-5a2dc5aa1f76 (5 states)
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/rotations/south-west.png
+
+animations (1):
+  walk_east (east, 9f) 2026-07-05
+    frames: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/animations/1da2954a-7e65-4a41-92aa-0dc4792c3d19/east/0.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/animations/1da2954a-7e65-4a41-92aa-0dc4792c3d19/east/1.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/animations/1da2954a-7e65-4a41-92aa-0dc4792c3d19/east/2.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/animations/1da2954a-7e65-4a41-92aa-0dc4792c3d19/east/3.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/animations/1da2954a-7e65-4a41-92aa-0dc4792c3d19/east/4.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/animations/1da2954a-7e65-4a41-92aa-0dc4792c3d19/east/5.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/animations/1da2954a-7e65-4a41-92aa-0dc4792c3d19/east/6.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/animations/1da2954a-7e65-4a41-92aa-0dc4792c3d19/east/7.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/e91dc34a-d785-4ce5-b3ae-45e6498d371f/animations/1da2954a-7e65-4a41-92aa-0dc4792c3d19/east/8.png
+
+download: https://api.pixellab.ai/mcp/characters/e91dc34a-d785-4ce5-b3ae-45e6498d371f/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="e91dc34a-d785-4ce5-b3ae-45e6498d371f", ...) | create_character_state(character_id="e91dc34a-d785-4ce5-b3ae-45e6498d371f", ...) | delete_animation(character_id="e91dc34a-d785-4ce5-b3ae-45e6498d371f", animation_type="...") | delete_character(character_id="e91dc34a-d785-4ce5-b3ae-45e6498d371f")
+hint: get_character(character_id="47412605-b52f-488c-a7cd-8b5074c57f6a") to view sibling state

@@ -1,0 +1,29 @@
+status: completed
+id: 0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8
+name: school uniform outfi
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 60x60px
+view: low top-down
+style: -, -, -
+group: 60d64003-5ca0-44bc-b3b3-c89b79cc5d77 (5 states)
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/rotations/south-west.png
+
+animations (1):
+  walk_east (east, 9f) 2026-07-05
+    frames: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/animations/73ffdc9b-c0f5-4e6c-af2b-13f3bf1a5b5c/east/0.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/animations/73ffdc9b-c0f5-4e6c-af2b-13f3bf1a5b5c/east/1.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/animations/73ffdc9b-c0f5-4e6c-af2b-13f3bf1a5b5c/east/2.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/animations/73ffdc9b-c0f5-4e6c-af2b-13f3bf1a5b5c/east/3.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/animations/73ffdc9b-c0f5-4e6c-af2b-13f3bf1a5b5c/east/4.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/animations/73ffdc9b-c0f5-4e6c-af2b-13f3bf1a5b5c/east/5.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/animations/73ffdc9b-c0f5-4e6c-af2b-13f3bf1a5b5c/east/6.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/animations/73ffdc9b-c0f5-4e6c-af2b-13f3bf1a5b5c/east/7.png, https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/animations/73ffdc9b-c0f5-4e6c-af2b-13f3bf1a5b5c/east/8.png
+
+download: https://api.pixellab.ai/mcp/characters/0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8", ...) | create_character_state(character_id="0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8", ...) | delete_animation(character_id="0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8", animation_type="...") | delete_character(character_id="0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8")
+hint: get_character(character_id="f7ca9481-39b8-40e9-8a3f-fb4825996835") to view sibling state

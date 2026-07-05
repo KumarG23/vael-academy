@@ -103,6 +103,7 @@ func _ready() -> void:
 	_rng = CombatRNG.new(combat_seed if combat_seed >= 0 else int(Time.get_ticks_usec()))
 	_setup_houses()
 	_setup_supports()
+	_setup_terrain_tiles()
 	_setup_overlay()
 	_setup_range_overlay()
 	_setup_threat_overlay()
@@ -125,10 +126,13 @@ func _begin_battle() -> void:
 
 func _draw() -> void:
 	var size := _grid.pixel_size()
-	if chapter.backdrop != null:
-		draw_texture_rect(chapter.backdrop, Rect2(Vector2.ZERO, size), false)
-	else:
-		draw_rect(Rect2(Vector2.ZERO, size), backdrop_color, true)
+	# with Wang tiles active they ARE the ground — the opaque backdrop would
+	# occlude them (tiles render show_behind_parent, i.e. below this canvas)
+	if _terrain_tiles == null or not _terrain_tiles.is_active():
+		if chapter.backdrop != null:
+			draw_texture_rect(chapter.backdrop, Rect2(Vector2.ZERO, size), false)
+		else:
+			draw_rect(Rect2(Vector2.ZERO, size), backdrop_color, true)
 	_draw_terrain_tints()
 	_draw_seize_marker()
 
@@ -151,11 +155,30 @@ func _draw_seize_marker() -> void:
 	draw_rect(rect, Color(0.95, 0.82, 0.35, 0.9), false, 3.0)
 
 
+## AW-2a: pixel Wang-tile terrain when the atlases exist (hybrid maps
+## doctrine); the tint fallback keeps working without art. With tiles
+## active, only WALL still tints (no tileset for it yet).
+var _terrain_tiles: TerrainTiles
+
+
+func _setup_terrain_tiles() -> void:
+	_terrain_tiles = TerrainTiles.new()
+	# render below the battle view's own canvas (WALL tint + seize marker
+	# draw there and must stay visible above the tiles)
+	_terrain_tiles.show_behind_parent = true
+	add_child(_terrain_tiles)
+	_terrain_tiles.setup(_grid, chapter)
+
+
 func _draw_terrain_tints() -> void:
 	var cs := _grid.cell_size
+	var tiles_active := _terrain_tiles != null and _terrain_tiles.is_active()
 	for y in range(chapter.height):
 		for x in range(chapter.width):
-			var tint: Color = TERRAIN_TINTS.get(chapter.get_terrain(x, y), Color(0, 0, 0, 0))
+			var t := chapter.get_terrain(x, y)
+			if tiles_active and t != Terrain.Type.WALL:
+				continue
+			var tint: Color = TERRAIN_TINTS.get(t, Color(0, 0, 0, 0))
 			if tint.a > 0.0:
 				draw_rect(Rect2(x * cs, y * cs, cs, cs), tint, true)
 
