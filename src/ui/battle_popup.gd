@@ -28,6 +28,8 @@ const KIT_ALIASES := {
 ## the kit's native resolution (32px map-scale kits vs 64px+ battle kits).
 const TARGET_BATTLER_PX := 300.0
 const FPS := 10.0
+## Strike animations play hot — GBA attacks resolve in about a second.
+const STRIKE_FPS := 14.0
 
 const PLAYER_COLOR := Color(0.16, 0.25, 0.55)
 const PLAYER_EDGE := Color(0.45, 0.62, 0.95)
@@ -88,7 +90,7 @@ static func load_kit(unit_id: String) -> SpriteFrames:
 		if paths.is_empty():
 			continue
 		frames.add_animation(anim)
-		frames.set_animation_speed(anim, FPS)
+		frames.set_animation_speed(anim, STRIKE_FPS if anim in ["attack", "crit"] else FPS)
 		frames.set_animation_loop(anim, anim == "idle")
 		for p in paths:
 			frames.add_frame(anim, load(p))
@@ -322,6 +324,15 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 		(s.material as ShaderMaterial).set_shader_parameter("flash", 0.0)
 
 
+## Real playback time of an animation with per-frame durations applied.
+func _swing_time(frames: SpriteFrames, anim: String) -> float:
+	var fps := frames.get_animation_speed(anim)
+	var total := 0.0
+	for i in range(frames.get_frame_count(anim)):
+		total += frames.get_frame_duration(anim, i) / fps
+	return total
+
+
 func _kit_frame_height(frames: SpriteFrames) -> float:
 	var tex := frames.get_frame_texture("idle", 0) if frames.has_animation("idle") else null
 	return float(tex.get_height()) if tex != null else 32.0
@@ -338,12 +349,12 @@ func _apply_strike_timing(frames: SpriteFrames) -> void:
 		for i in range(n):
 			var f := float(i) / maxf(n - 1, 1.0)
 			var dur := 1.0
-			if f < 0.4:
-				dur = 1.55   # coiled wind-up: hold it
-			elif f < 0.75:
-				dur = 0.8    # accelerating...
+			if f < 0.3:
+				dur = 1.2    # a breath of tension, not slow motion
+			elif f < 0.6:
+				dur = 0.75   # accelerating...
 			else:
-				dur = 0.5    # ...into the strike: near-instant
+				dur = 0.45   # ...into the strike: near-instant
 			frames.set_frame(anim, i, frames.get_frame_texture(anim, i), dur)
 
 
@@ -379,18 +390,26 @@ func _play_strike(strike) -> void:
 	var home := actor_holder.position
 	var contact := Vector2(target_holder.position.x - dir * 120.0, home.y)
 	var anim := "crit" if strike.was_crit and actor.sprite_frames.has_animation("crit") else "attack"
-	var swing := actor.sprite_frames.get_frame_count(anim) / FPS
+	var swing := _swing_time(actor.sprite_frames, anim)
 
 	# crits stage themselves: a beat of stillness, then a BLUR dash
 	if strike.was_crit:
 		_flash_sprite(actor, 0.5, 0.35)
 		await get_tree().create_timer(0.3).timeout
 	var run := create_tween()
-	run.tween_property(actor_holder, "position", contact, 0.13 if strike.was_crit else 0.20) \
+	run.tween_property(actor_holder, "position", contact, 0.10 if strike.was_crit else 0.16) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_ghost_trail(actor, actor_holder, 4 if strike.was_crit else 2)
 	await run.finished
 	actor.play(anim)
+	if strike.was_crit:
+		# over-the-top: the crit rides an aerial arc onto the target
+		var arc := create_tween()
+		arc.tween_property(actor_holder, "position:y", contact.y - 110.0, 0.22) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		arc.tween_property(actor_holder, "position:y", contact.y, 0.16) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		_ghost_trail(actor, actor_holder, 5)
 	# impact lands late in the swing (these choreographies strike at the end;
 	# the timing curve compresses the tail so it still feels instant)
 	await get_tree().create_timer(maxf(swing * 0.78, 0.18)).timeout
@@ -401,6 +420,13 @@ func _play_strike(strike) -> void:
 		var lethal: bool = strike.defender_hp_after <= 0
 		target.play("ko" if lethal and target.sprite_frames.has_animation("ko") else "hit")
 		_burst(impact_pos, strike.was_crit)
+		_slash_arc(impact_pos, dir, strike.was_crit)
+		# hit-stop: the whole scene bites for a beat (GBA crunch)
+		actor.pause()
+		target.pause()
+		await get_tree().create_timer(0.12 if strike.was_crit else 0.07).timeout
+		actor.play()
+		target.play()
 		_flash_sprite(target, 0.85, 0.3)
 		_knockback(target_holder, dir)
 		_shake(0.5 if strike.was_crit else 0.2)
@@ -472,7 +498,15 @@ func _screen_flash() -> void:
 
 
 func _burst(pos: Vector2, big: bool) -> void:
-	_bursts.append({"pos": pos, "age": 0.0, "life": 0.30 if big else 0.22, "big": big})
+	_bursts.append({"pos": pos, "age": 0.0, "life": 0.30 if big else 0.22, "big": big,
+		"kind": "burst"})
+	_fx.queue_redraw()
+
+
+## The sweeping blade-arc light that follows a strike (the Lyn slash read).
+func _slash_arc(pos: Vector2, dir: float, big: bool) -> void:
+	_bursts.append({"pos": pos, "age": 0.0, "life": 0.26 if big else 0.2, "big": big,
+		"kind": "slash", "dir": dir})
 	_fx.queue_redraw()
 
 
@@ -489,8 +523,19 @@ func _draw_fx() -> void:
 	for b in _bursts:
 		var t: float = b["age"] / b["life"]
 		var pos: Vector2 = b["pos"]
-		var r := (34.0 + t * 46.0) * (1.6 if b["big"] else 1.0)
 		var alpha := (1.0 - t)
+		if b.get("kind", "burst") == "slash":
+			# a crescent of 3 sweeping arcs slicing through the impact point,
+			# rotating with age — reads as the blade's afterglow
+			var dir: float = b["dir"]
+			var base_ang := (-0.6 if dir > 0 else PI + 0.6) + t * 1.6 * dir
+			for j in range(3):
+				var rr := (52.0 + j * 16.0) * (1.5 if b["big"] else 1.0)
+				_fx.draw_arc(pos, rr, base_ang - 0.9, base_ang + 0.9, 18,
+					Color(1, 1, 0.9, alpha * (1.0 - j * 0.25)),
+					(6.0 - j * 1.5) * (1.4 if b["big"] else 1.0))
+			continue
+		var r := (34.0 + t * 46.0) * (1.6 if b["big"] else 1.0)
 		# radiating slash spokes + a thin expanding ring
 		for i in range(8):
 			var ang := TAU * i / 8.0 + (0.4 if b["big"] else 0.0)
