@@ -164,8 +164,8 @@ func _draw_seize_marker() -> void:
 
 
 ## AW-2a: pixel Wang-tile terrain when the atlases exist (hybrid maps
-## doctrine); the tint fallback keeps working without art. With tiles
-## active, only WALL still tints (no tileset for it yet).
+## doctrine); the tint fallback keeps working without art, per terrain
+## type (a type whose atlas is missing still tints).
 var _terrain_tiles: TerrainTiles
 
 
@@ -184,7 +184,7 @@ func _draw_terrain_tints() -> void:
 	for y in range(chapter.height):
 		for x in range(chapter.width):
 			var t := chapter.get_terrain(x, y)
-			if tiles_active and t != Terrain.Type.WALL:
+			if tiles_active and _terrain_tiles.covers(t):
 				continue
 			var tint: Color = TERRAIN_TINTS.get(t, Color(0, 0, 0, 0))
 			if tint.a > 0.0:

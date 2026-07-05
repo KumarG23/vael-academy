@@ -17,9 +17,9 @@ func _chapter_3x3(center: int) -> ChapterDef:
 	return c
 
 
-func test_wang_maps_load_all_five_sets_complete() -> void:
+func test_wang_maps_load_all_six_sets_complete() -> void:
 	var maps := TerrainTiles.load_wang_maps(WANG_JSON)
-	assert_eq(maps.size(), 5, "five terrain pair sets")
+	assert_eq(maps.size(), 6, "six terrain pair sets (walls landed with AW-2b)")
 	for set_name in maps:
 		assert_eq((maps[set_name] as Dictionary).size(), 16,
 			"%s has all 16 wang signatures" % set_name)

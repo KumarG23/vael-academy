@@ -9,22 +9,24 @@ extends Node2D
 ## Dual-grid corner Wang: each drawn 32px tile sits on a cell-corner
 ## junction (offset half a cell) and is picked by which of its four
 ## corners touch the overlay terrain. Draw order: base grass everywhere,
-## then one pass per overlay terrain type. WALL has no tileset and keeps
-## the tint fallback.
+## then one pass per overlay terrain type. Any overlay whose atlas is
+## missing keeps the battle view's tint fallback (see `covers`).
 
 const TILESET_DIR := "res://assets/art/pixellab/tilesets"
 const TILE := 32
 
-## Terrain.Type -> atlas set name (WALL/PLAINS intentionally absent).
+## Terrain.Type -> atlas set name (PLAINS intentionally absent: it's the base).
 const SET_FOR_TERRAIN := {
 	Terrain.Type.WATER: "grass_water",
 	Terrain.Type.FOREST: "grass_forest",
 	Terrain.Type.MOUNTAIN: "grass_mountain",
 	Terrain.Type.FORT: "grass_fortstone",
+	Terrain.Type.WALL: "grass_wall",
 }
-## Pass order: water first so land features overlap shorelines, not vice versa.
+## Pass order: water first so land features overlap shorelines, not vice versa;
+## walls last so they read as built ON the land.
 const PASS_ORDER: Array = [Terrain.Type.WATER, Terrain.Type.FOREST,
-	Terrain.Type.MOUNTAIN, Terrain.Type.FORT]
+	Terrain.Type.MOUNTAIN, Terrain.Type.FORT, Terrain.Type.WALL]
 
 var _grid: Grid
 var _chapter: ChapterDef
@@ -43,6 +45,12 @@ func setup(grid: Grid, chapter: ChapterDef) -> void:
 
 func is_active() -> bool:
 	return not _atlases.is_empty()
+
+
+## Whether this terrain type is rendered by a loaded atlas. Types without art
+## keep the battle view's tint fallback (convention: code never waits on art).
+func covers(t: int) -> bool:
+	return SET_FOR_TERRAIN.has(t) and _atlases.has(SET_FOR_TERRAIN[t])
 
 
 static func load_wang_maps(path: String) -> Dictionary:
