@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/brigand.tres" id="1_bccl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_bcwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_bcud"]
+[ext_resource type="Resource" path="res://data/weapons/iron_axe.tres" id="4_bcax"]
+
+[resource]
+script = ExtResource("3_bcud")
+id = "bandit_c"
+display_name = "Bandit"
+char_class = ExtResource("1_bccl")
+team = 1
+weapon = ExtResource("4_bcax")
+level = 1
+max_hp = 22
+strength = 8
+skill = 4
+speed = 4
+luck = 2
+defense = 4
+resistance = 0
+movement = 5

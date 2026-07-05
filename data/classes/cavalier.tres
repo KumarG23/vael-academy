@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_cvlr1"]
+
+[resource]
+script = ExtResource("1_cvlr1")
+id = "cavalier"
+display_name = "Cavalier"
+token_letter = "C"
+movement_type = 2

@@ -16,6 +16,8 @@ const KIT_ALIASES := {
 	"tm_guard": "tm_soldier", "tm_scout": "tm_soldier",
 	"tm_armor": "tm_knight", "tm_adept": "tm_mage",
 	"tide_a": "tm_soldier", "tide_b": "tm_soldier",
+	"bandit_a": "bandit", "bandit_b": "bandit", "bandit_c": "bandit",
+	"bandit_d": "bandit", "bandit_boss": "bandit",
 }
 const SPRITE_SCALE := 5.0
 const FPS := 10.0

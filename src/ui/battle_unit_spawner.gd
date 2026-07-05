@@ -13,13 +13,23 @@ func _init(view) -> void:
 
 
 func spawn_units() -> void:
-	# Player roster (shared with the Academy Hub, §4 / WO-3.5). Chapters author
-	# their own deploy cells (WO-4.1); the test map falls back to Roster's.
-	var cells: Dictionary = _v.chapter.deploy_cells if not _v.chapter.deploy_cells.is_empty() else Roster.deploy_cells()
-	for def in Roster.player_units():
-		var u: Unit = _v.add_unit(def, cells.get(def.id, Vector2i.ZERO))
-		if def.is_lord:
-			_v._lord_unit = u
+	if not _v.chapter.player_spawns.is_empty():
+		# Authored player-side force (WO-5.1a): the prologue fields Kai + the
+		# three heir guests before any roster exists. Duplicated like enemies.
+		for spawn in _v.chapter.player_spawns:
+			if spawn == null or spawn.unit == null:
+				continue
+			var g: Unit = _v.add_unit(spawn.unit.duplicate(), spawn.cell)
+			if g.unit_def.is_lord:
+				_v._lord_unit = g
+	else:
+		# Player roster (shared with the Academy Hub, §4 / WO-3.5). Chapters author
+		# their own deploy cells (WO-4.1); the test map falls back to Roster's.
+		var cells: Dictionary = _v.chapter.deploy_cells if not _v.chapter.deploy_cells.is_empty() else Roster.deploy_cells()
+		for def in Roster.player_units():
+			var u: Unit = _v.add_unit(def, cells.get(def.id, Vector2i.ZERO))
+			if def.is_lord:
+				_v._lord_unit = u
 	if _v.chapter.enemy_spawns.is_empty():
 		spawn_demo_enemies()
 	else:

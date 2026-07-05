@@ -26,6 +26,11 @@ enum Objective { ROUT, SEIZE, DEFEAT_BOSS }
 @export var enemy_spawns: Array[UnitSpawn] = []
 ## Player deploy cells keyed by unit id. Empty => Roster.deploy_cells() fallback.
 @export var deploy_cells: Dictionary[String, Vector2i] = {}
+## WO-5.1a: authored player-side force — replaces the Roster when non-empty (the
+## prologue fields Kai + the three heir guests before any roster exists). Defs
+## are duplicated at spawn like enemies; the lord comes from `is_lord` as usual.
+## Guests aren't in Campaign state, so the campaign overlay is a no-op for them.
+@export var player_spawns: Array[UnitSpawn] = []
 
 @export_group("Dialogue (WO-4.1)")
 ## JSON dialogue paths (§4). "" => skipped.

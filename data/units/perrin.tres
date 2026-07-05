@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/cavalier.tres" id="1_prncl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_prnwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_prnud"]
+[ext_resource type="Resource" path="res://data/weapons/iron_sword.tres" id="4_prnsw"]
+
+[resource]
+script = ExtResource("3_prnud")
+id = "perrin"
+display_name = "Perrin"
+char_class = ExtResource("1_prncl")
+house_id = "emberwing"
+weapon = ExtResource("4_prnsw")
+level = 2
+max_hp = 24
+strength = 9
+skill = 7
+speed = 9
+luck = 6
+defense = 6
+resistance = 2
+movement = 7
+growth_hp = 70
+growth_str = 50
+growth_mag = 5
+growth_skl = 40
+growth_spd = 50
+growth_lck = 40
+growth_def = 30
+growth_res = 20

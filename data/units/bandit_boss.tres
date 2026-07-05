@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/brigand.tres" id="1_bbscl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_bbswp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_bbsud"]
+[ext_resource type="Resource" path="res://data/weapons/iron_axe.tres" id="4_bbsax"]
+
+[resource]
+script = ExtResource("3_bbsud")
+id = "bandit_boss"
+display_name = "Bandit Chief"
+char_class = ExtResource("1_bbscl")
+team = 1
+ai_behavior = 2
+weapon = ExtResource("4_bbsax")
+level = 3
+max_hp = 27
+strength = 9
+skill = 6
+speed = 6
+luck = 3
+defense = 6
+resistance = 1
+movement = 5
