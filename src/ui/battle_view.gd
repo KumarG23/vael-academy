@@ -101,6 +101,7 @@ func _ready() -> void:
 	_terrain_db = TerrainDB.create_default()
 	_grid = chapter.make_grid()
 	_rng = CombatRNG.new(combat_seed if combat_seed >= 0 else int(Time.get_ticks_usec()))
+	_combat_exec = BattleCombatExecutor.new(self)
 	_setup_houses()
 	_setup_supports()
 	_setup_terrain_tiles()
@@ -650,117 +651,17 @@ func _show_forecast_for(enemy: Unit) -> void:
 	_forecast_panel.show_forecast(attacker, enemy, ex)
 
 
+## WO-4.5: combat execution lives in BattleCombatExecutor; these delegates
+## keep the view's public surface (tests, targeting flow) unchanged.
+var _combat_exec: BattleCombatExecutor
+
+
 func _execute_attack(attacker: Unit, defender: Unit) -> void:
-	var was_busy := _busy  # keep busy set if we're inside the enemy phase
-	_busy = true
-	_forecast_panel.hide_panel()
-	# Boss quote (WO-4.1): once, the first time the boss enters combat.
-	if not _boss_quote_played and _boss_unit != null and (attacker == _boss_unit or defender == _boss_unit):
-		_boss_quote_played = true
-		await _play_dialogue(chapter.boss_quote_dialogue)
-	var dist := _manhattan(attacker.cell, defender.cell)
-	var atk_level := attacker.level
-	var def_level := defender.level
-	var atk_c := _combatant_for(attacker, attacker.cell)
-	var def_c := _combatant_for(defender, defender.cell)
-	var result := CombatResolver.resolve(atk_c, def_c, dist, _rng)
-
-	for strike in result.strikes:
-		# Route by the counter flag, not the display name (names aren't unique —
-		# e.g. multiple "Tidemark Soldier"). A counter strike hits the attacker.
-		var striker := defender if strike.is_counter else attacker
-		var target := attacker if strike.is_counter else defender
-		var lethal := strike.connected and strike.defender_hp_after <= 0
-		if strike_delay > 0.0 and _juice != null:
-			await _juice.play_strike(striker, target, strike, lethal)  # applies hp at impact
-		else:
-			_play_strike(strike, target)
-			await get_tree().process_frame
-		if not target.is_alive():
-			if strike_delay > 0.0 and _juice != null:
-				await _juice.play_death(target)
-			_kill(target)
-
-	# Weapon durability: 1 use per combat per side that swung — GBA-accurate
-	# (a doubling unit still spends only one use, not one per strike). The attacker
-	# always swung; the defender swung only if it countered.
-	var defender_countered := false
-	for s in result.strikes:
-		if s.is_counter:
-			defender_countered = true
-			break
-	if is_instance_valid(attacker):
-		_spend_weapon(attacker)
-	if is_instance_valid(defender) and defender_countered:
-		_spend_weapon(defender)
-
-	# XP: attacker for its strikes, defender for its counter (players only, §3/§4).
-	# A slain combatant has been freed by now — guard before passing it on.
-	if is_instance_valid(attacker):
-		await _award_combat_xp(attacker, def_level, _side_connected(result, false), result.defender_defeated())
-	if is_instance_valid(defender):
-		await _award_combat_xp(defender, atk_level, _side_connected(result, true), result.attacker_defeated())
-
-	_busy = was_busy
-	_check_objective()
+	await _combat_exec.execute_attack(attacker, defender)
 
 
 func _execute_heal(healer: Unit, ally: Unit) -> void:
-	var was_busy := _busy
-	_busy = true
-	var amount := healer.weapon().heal_amount + healer.stat("mag")
-	var healed := ally.heal(amount)
-	_pop_text(ally.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
-	_accrue_support_points(healer, ally, SupportState.POINTS_HEAL)
-	_spend_weapon(healer)  # staves have uses too
-	await _award_heal_xp(healer, healed)
-	_busy = was_busy
-	_check_objective()
-
-
-## Spend one use of `unit`'s equipped weapon and announce a break.
-func _spend_weapon(unit: Unit) -> void:
-	var broke := unit.spend_weapon_use()
-	if broke != null:
-		_pop_text(unit.position, "%s broke!" % broke.display_name(), Color(0.9, 0.7, 0.3))
-
-
-## Whether one side landed a hit. `counter_side` false = the initiating attacker's
-## strikes; true = the defender's counter strikes.
-func _side_connected(result: CombatResult, counter_side: bool) -> bool:
-	for s in result.strikes:
-		if s.is_counter == counter_side and s.connected:
-			return true
-	return false
-
-
-func _award_combat_xp(unit: Unit, opponent_level: int, connected: bool, killed: bool) -> void:
-	if not is_instance_valid(unit) or not unit.is_alive() or unit.team != 0:
-		return
-	var amount := CombatXP.award(unit.level, opponent_level, connected, killed)
-	await _apply_xp(unit, amount)
-
-
-func _award_heal_xp(unit: Unit, healed: int) -> void:
-	if unit.team != 0:
-		return
-	await _apply_xp(unit, CombatXP.award_heal(healed))
-
-
-func _apply_xp(unit: Unit, amount: int) -> void:
-	for result in unit.gain_xp(amount, _rng):
-		await _level_up_screen.play(unit.unit_def.display_name, result)
-
-
-func _play_strike(strike: StrikeResult, target: Unit) -> void:
-	if not strike.connected:
-		_pop_text(target.position, "Miss", Color(0.85, 0.85, 0.9))
-		target.flash()
-		return
-	target.set_hp(strike.defender_hp_after)
-	var text := ("CRIT " + str(strike.damage)) if strike.was_crit else str(strike.damage)
-	var color := Color(1.0, 0.85, 0.2) if strike.was_crit else Color(1.0, 0.4, 0.35)
-	_pop_text(target.position, text, color)
+	await _combat_exec.execute_heal(healer, ally)
 
 
 func _kill(unit: Unit) -> void:
