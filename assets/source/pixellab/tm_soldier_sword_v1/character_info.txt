@@ -1,6 +1,27 @@
-status: failed
-id: db96622b-cd23-456a-9dc6-d521432b9f05
-name: wielding a one-hande
-error: Generation failed
+status: completed
+id: d7f65d56-2b62-4c6f-a073-c8fbb3b0af97
+name: spear removed, now h
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 60x60px
+view: low top-down
+style: -, -, -
+group: aed58b47-3b4a-45d0-af7d-60a7e636c0b9 (3 states)
 
-hint: create_character(description="generic male tactics-RPG soldier trooper, deep blue uniform ") to retry
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/d7f65d56-2b62-4c6f-a073-c8fbb3b0af97/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/d7f65d56-2b62-4c6f-a073-c8fbb3b0af97/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/d7f65d56-2b62-4c6f-a073-c8fbb3b0af97/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/d7f65d56-2b62-4c6f-a073-c8fbb3b0af97/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/d7f65d56-2b62-4c6f-a073-c8fbb3b0af97/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/d7f65d56-2b62-4c6f-a073-c8fbb3b0af97/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/d7f65d56-2b62-4c6f-a073-c8fbb3b0af97/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/d7f65d56-2b62-4c6f-a073-c8fbb3b0af97/rotations/south-west.png
+
+animations: none
+
+download: https://api.pixellab.ai/mcp/characters/d7f65d56-2b62-4c6f-a073-c8fbb3b0af97/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="d7f65d56-2b62-4c6f-a073-c8fbb3b0af97", ...) | create_character_state(character_id="d7f65d56-2b62-4c6f-a073-c8fbb3b0af97", ...) | delete_character(character_id="d7f65d56-2b62-4c6f-a073-c8fbb3b0af97")
+hint: animate_character(character_id="d7f65d56-2b62-4c6f-a073-c8fbb3b0af97", template_animation_id="backflip")

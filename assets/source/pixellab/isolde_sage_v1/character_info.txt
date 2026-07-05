@@ -1,0 +1,27 @@
+status: completed
+id: f7e427f4-5fe3-4700-93cb-6b036c9ca74c
+name: promoted to sage: or
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 64x64px
+view: low top-down
+style: -, -, -
+group: b24bfc2c-8d0a-4844-b4f6-e1c1ab66ba8c (3 states)
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f7e427f4-5fe3-4700-93cb-6b036c9ca74c/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f7e427f4-5fe3-4700-93cb-6b036c9ca74c/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f7e427f4-5fe3-4700-93cb-6b036c9ca74c/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f7e427f4-5fe3-4700-93cb-6b036c9ca74c/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f7e427f4-5fe3-4700-93cb-6b036c9ca74c/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f7e427f4-5fe3-4700-93cb-6b036c9ca74c/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f7e427f4-5fe3-4700-93cb-6b036c9ca74c/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/f7e427f4-5fe3-4700-93cb-6b036c9ca74c/rotations/south-west.png
+
+animations: none
+
+download: https://api.pixellab.ai/mcp/characters/f7e427f4-5fe3-4700-93cb-6b036c9ca74c/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="f7e427f4-5fe3-4700-93cb-6b036c9ca74c", ...) | create_character_state(character_id="f7e427f4-5fe3-4700-93cb-6b036c9ca74c", ...) | delete_character(character_id="f7e427f4-5fe3-4700-93cb-6b036c9ca74c")
+hint: animate_character(character_id="f7e427f4-5fe3-4700-93cb-6b036c9ca74c", template_animation_id="backflip")

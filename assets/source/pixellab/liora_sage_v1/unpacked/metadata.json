@@ -1,0 +1,108 @@
+{
+  "group_id": "b6bef8a4-d17f-4911-85a5-25bcb1c76efc",
+  "states": [
+    {
+      "character": {
+        "id": "9e130ae2-3bd5-46a1-ba54-de37868c808f",
+        "name": "liora",
+        "prompt": "young female tactics-RPG fire mage student, proud noble bearing, long dark hair with a crimson ribbon, warm brown skin, dark navy academy uniform with crimson-gold trim and short mage cloak, open fire tome with small flame, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:03:14.713633+00:00"
+      },
+      "folder": "liora",
+      "frames": {
+        "rotations": {
+          "south": "liora/rotations/south.png",
+          "south-east": "liora/rotations/south-east.png",
+          "east": "liora/rotations/east.png",
+          "north-east": "liora/rotations/north-east.png",
+          "north": "liora/rotations/north.png",
+          "north-west": "liora/rotations/north-west.png",
+          "west": "liora/rotations/west.png",
+          "south-west": "liora/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "liora/animations/walking/east/frame_000.png",
+              "liora/animations/walking/east/frame_001.png",
+              "liora/animations/walking/east/frame_002.png",
+              "liora/animations/walking/east/frame_003.png",
+              "liora/animations/walking/east/frame_004.png",
+              "liora/animations/walking/east/frame_005.png",
+              "liora/animations/walking/east/frame_006.png",
+              "liora/animations/walking/east/frame_007.png",
+              "liora/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "10cef27d-cb13-42b8-84f8-88f88f600e4f",
+        "name": "hair recolored to ri",
+        "prompt": "young female tactics-RPG fire mage student, proud noble bearing, long dark hair with a crimson ribbon, warm brown skin, dark navy academy uniform with crimson-gold trim and short mage cloak, open fire tome with small flame, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:40:19.027185+00:00"
+      },
+      "folder": "hair_recolored_to_ri",
+      "frames": {
+        "rotations": {
+          "south": "hair_recolored_to_ri/rotations/south.png",
+          "south-east": "hair_recolored_to_ri/rotations/south-east.png",
+          "east": "hair_recolored_to_ri/rotations/east.png",
+          "north-east": "hair_recolored_to_ri/rotations/north-east.png",
+          "north": "hair_recolored_to_ri/rotations/north.png",
+          "north-west": "hair_recolored_to_ri/rotations/north-west.png",
+          "west": "hair_recolored_to_ri/rotations/west.png",
+          "south-west": "hair_recolored_to_ri/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "a75cae0b-4de0-4813-b176-0833684e53f4",
+        "name": "promoted to sage: fl",
+        "prompt": "young female tactics-RPG fire mage student, proud noble bearing, long dark hair with a crimson ribbon, warm brown skin, dark navy academy uniform with crimson-gold trim and short mage cloak, open fire tome with small flame, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:41:52.077613+00:00"
+      },
+      "folder": "promoted_to_sage_fl",
+      "frames": {
+        "rotations": {
+          "south": "promoted_to_sage_fl/rotations/south.png",
+          "south-east": "promoted_to_sage_fl/rotations/south-east.png",
+          "east": "promoted_to_sage_fl/rotations/east.png",
+          "north-east": "promoted_to_sage_fl/rotations/north-east.png",
+          "north": "promoted_to_sage_fl/rotations/north.png",
+          "north-west": "promoted_to_sage_fl/rotations/north-west.png",
+          "west": "promoted_to_sage_fl/rotations/west.png",
+          "south-west": "promoted_to_sage_fl/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T05:00:53.906873"
+}

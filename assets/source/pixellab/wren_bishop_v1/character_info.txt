@@ -1,0 +1,27 @@
+status: completed
+id: 5b83f320-6a4b-4cb1-8627-ef923f6698f0
+name: promoted to bishop:
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 64x64px
+view: low top-down
+style: -, -, -
+group: 6c872895-d1ec-443e-94d9-bdf6c26dbda9 (3 states)
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5b83f320-6a4b-4cb1-8627-ef923f6698f0/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5b83f320-6a4b-4cb1-8627-ef923f6698f0/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5b83f320-6a4b-4cb1-8627-ef923f6698f0/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5b83f320-6a4b-4cb1-8627-ef923f6698f0/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5b83f320-6a4b-4cb1-8627-ef923f6698f0/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5b83f320-6a4b-4cb1-8627-ef923f6698f0/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5b83f320-6a4b-4cb1-8627-ef923f6698f0/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/5b83f320-6a4b-4cb1-8627-ef923f6698f0/rotations/south-west.png
+
+animations: none
+
+download: https://api.pixellab.ai/mcp/characters/5b83f320-6a4b-4cb1-8627-ef923f6698f0/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="5b83f320-6a4b-4cb1-8627-ef923f6698f0", ...) | create_character_state(character_id="5b83f320-6a4b-4cb1-8627-ef923f6698f0", ...) | delete_character(character_id="5b83f320-6a4b-4cb1-8627-ef923f6698f0")
+hint: animate_character(character_id="5b83f320-6a4b-4cb1-8627-ef923f6698f0", template_animation_id="backflip")

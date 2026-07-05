@@ -1,0 +1,79 @@
+{
+  "group_id": "cbc67327-f3d0-4a24-9324-d03125c31fce",
+  "states": [
+    {
+      "character": {
+        "id": "63c9cbb9-7459-499c-9995-b01dfbac206a",
+        "name": "osric",
+        "prompt": "young male tactics-RPG armored knight student, calm immovable bearing, short sandy hair, heavy deep blue plate armor with silver trim over uniform, greatshield and lance, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:03:15.30518+00:00"
+      },
+      "folder": "osric",
+      "frames": {
+        "rotations": {
+          "south": "osric/rotations/south.png",
+          "south-east": "osric/rotations/south-east.png",
+          "east": "osric/rotations/east.png",
+          "north-east": "osric/rotations/north-east.png",
+          "north": "osric/rotations/north.png",
+          "north-west": "osric/rotations/north-west.png",
+          "west": "osric/rotations/west.png",
+          "south-west": "osric/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "osric/animations/walking/east/frame_000.png",
+              "osric/animations/walking/east/frame_001.png",
+              "osric/animations/walking/east/frame_002.png",
+              "osric/animations/walking/east/frame_003.png",
+              "osric/animations/walking/east/frame_004.png",
+              "osric/animations/walking/east/frame_005.png",
+              "osric/animations/walking/east/frame_006.png",
+              "osric/animations/walking/east/frame_007.png",
+              "osric/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "a369640a-98f4-4d08-95f5-7142b8b9c7c4",
+        "name": "promoted to general:",
+        "prompt": "young male tactics-RPG armored knight student, calm immovable bearing, short sandy hair, heavy deep blue plate armor with silver trim over uniform, greatshield and lance, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:41:53.06252+00:00"
+      },
+      "folder": "promoted_to_general",
+      "frames": {
+        "rotations": {
+          "south": "promoted_to_general/rotations/south.png",
+          "south-east": "promoted_to_general/rotations/south-east.png",
+          "east": "promoted_to_general/rotations/east.png",
+          "north-east": "promoted_to_general/rotations/north-east.png",
+          "north": "promoted_to_general/rotations/north.png",
+          "north-west": "promoted_to_general/rotations/north-west.png",
+          "west": "promoted_to_general/rotations/west.png",
+          "south-west": "promoted_to_general/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T05:00:57.630015"
+}

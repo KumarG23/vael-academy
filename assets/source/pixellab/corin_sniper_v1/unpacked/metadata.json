@@ -1,0 +1,79 @@
+{
+  "group_id": "970a074a-4e4f-4909-bcde-b823b01ac37b",
+  "states": [
+    {
+      "character": {
+        "id": "5c583261-55cd-400c-9396-72832caad015",
+        "name": "corin",
+        "prompt": "young female tactics-RPG archer heir, warm confident smile, auburn chestnut hair in two long braided twin tails with gold clasps, amber eyes, fair skin with freckles, forest green academy uniform jacket with bronze-gold trim and gold tie, brown leather quiver strap, elegant recurve bow in hand, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T22:46:38.421139+00:00"
+      },
+      "folder": "corin",
+      "frames": {
+        "rotations": {
+          "south": "corin/rotations/south.png",
+          "south-east": "corin/rotations/south-east.png",
+          "east": "corin/rotations/east.png",
+          "north-east": "corin/rotations/north-east.png",
+          "north": "corin/rotations/north.png",
+          "north-west": "corin/rotations/north-west.png",
+          "west": "corin/rotations/west.png",
+          "south-west": "corin/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "corin/animations/walking/east/frame_000.png",
+              "corin/animations/walking/east/frame_001.png",
+              "corin/animations/walking/east/frame_002.png",
+              "corin/animations/walking/east/frame_003.png",
+              "corin/animations/walking/east/frame_004.png",
+              "corin/animations/walking/east/frame_005.png",
+              "corin/animations/walking/east/frame_006.png",
+              "corin/animations/walking/east/frame_007.png",
+              "corin/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "ab672f7d-ea31-412b-8ad0-a13033a39495",
+        "name": "promoted to sniper:",
+        "prompt": "young female tactics-RPG archer heir, warm confident smile, auburn chestnut hair in two long braided twin tails with gold clasps, amber eyes, fair skin with freckles, forest green academy uniform jacket with bronze-gold trim and gold tie, brown leather quiver strap, elegant recurve bow in hand, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:41:49.107089+00:00"
+      },
+      "folder": "promoted_to_sniper",
+      "frames": {
+        "rotations": {
+          "south": "promoted_to_sniper/rotations/south.png",
+          "south-east": "promoted_to_sniper/rotations/south-east.png",
+          "east": "promoted_to_sniper/rotations/east.png",
+          "north-east": "promoted_to_sniper/rotations/north-east.png",
+          "north": "promoted_to_sniper/rotations/north.png",
+          "north-west": "promoted_to_sniper/rotations/north-west.png",
+          "west": "promoted_to_sniper/rotations/west.png",
+          "south-west": "promoted_to_sniper/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T05:00:43.413097"
+}

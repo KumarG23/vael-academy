@@ -1,0 +1,36 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "b1e93af9-3e1c-4c3e-99e6-50906c05f887",
+        "name": "perrin_mounted",
+        "prompt": "golden blond young knight heir in dark navy and crimson uniform with gold epaulettes riding an armored warhorse with crimson caparison, lance in hand, GBA Fire Emblem cavalier style, strong readable silhouette",
+        "size": {
+          "width": 68,
+          "height": 68
+        },
+        "template_id": "horse",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T04:58:57.208463+00:00"
+      },
+      "folder": "perrin_mounted",
+      "frames": {
+        "rotations": {
+          "south": "perrin_mounted/rotations/south.png",
+          "south-east": "perrin_mounted/rotations/south-east.png",
+          "east": "perrin_mounted/rotations/east.png",
+          "north-east": "perrin_mounted/rotations/north-east.png",
+          "north": "perrin_mounted/rotations/north.png",
+          "north-west": "perrin_mounted/rotations/north-west.png",
+          "west": "perrin_mounted/rotations/west.png",
+          "south-west": "perrin_mounted/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T05:04:09.079285"
+}

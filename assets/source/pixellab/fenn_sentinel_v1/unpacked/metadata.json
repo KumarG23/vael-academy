@@ -1,0 +1,65 @@
+{
+  "group_id": "f4054de4-ae54-41e2-baf0-f9764733f53a",
+  "states": [
+    {
+      "character": {
+        "id": "5afce77e-c05d-45d0-bca5-92a57ad8b87b",
+        "name": "fenn",
+        "prompt": "young male tactics-RPG skirmisher student, playful grin, messy sea-green hair, light deep blue uniform with silver trim and short cloak, javelin and small buckler, quick light stance, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:06:12.530236+00:00"
+      },
+      "folder": "fenn",
+      "frames": {
+        "rotations": {
+          "south": "fenn/rotations/south.png",
+          "south-east": "fenn/rotations/south-east.png",
+          "east": "fenn/rotations/east.png",
+          "north-east": "fenn/rotations/north-east.png",
+          "north": "fenn/rotations/north.png",
+          "north-west": "fenn/rotations/north-west.png",
+          "west": "fenn/rotations/west.png",
+          "south-west": "fenn/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "80e6151e-8304-4369-a6c4-850fb7a724d8",
+        "name": "promoted to sentinel",
+        "prompt": "young male tactics-RPG skirmisher student, playful grin, messy sea-green hair, light deep blue uniform with silver trim and short cloak, javelin and small buckler, quick light stance, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:43:28.711535+00:00"
+      },
+      "folder": "promoted_to_sentinel",
+      "frames": {
+        "rotations": {
+          "south": "promoted_to_sentinel/rotations/south.png",
+          "south-east": "promoted_to_sentinel/rotations/south-east.png",
+          "east": "promoted_to_sentinel/rotations/east.png",
+          "north-east": "promoted_to_sentinel/rotations/north-east.png",
+          "north": "promoted_to_sentinel/rotations/north.png",
+          "north-west": "promoted_to_sentinel/rotations/north-west.png",
+          "west": "promoted_to_sentinel/rotations/west.png",
+          "south-west": "promoted_to_sentinel/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T05:01:06.501658"
+}

@@ -1,0 +1,108 @@
+{
+  "group_id": "9d515a8c-a870-4119-a767-27bb2ef036c0",
+  "states": [
+    {
+      "character": {
+        "id": "c87df505-0457-4da3-b65a-e9b64548a4a3",
+        "name": "vesper",
+        "prompt": "young female tactics-RPG research healer student, precise clinical calm, ash-blonde hair in a braided crown, forest green and cream robe with bronze trim, staff and satchel of instruments, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:09:58.340688+00:00"
+      },
+      "folder": "vesper",
+      "frames": {
+        "rotations": {
+          "south": "vesper/rotations/south.png",
+          "south-east": "vesper/rotations/south-east.png",
+          "east": "vesper/rotations/east.png",
+          "north-east": "vesper/rotations/north-east.png",
+          "north": "vesper/rotations/north.png",
+          "north-west": "vesper/rotations/north-west.png",
+          "west": "vesper/rotations/west.png",
+          "south-west": "vesper/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "vesper/animations/walking/east/frame_000.png",
+              "vesper/animations/walking/east/frame_001.png",
+              "vesper/animations/walking/east/frame_002.png",
+              "vesper/animations/walking/east/frame_003.png",
+              "vesper/animations/walking/east/frame_004.png",
+              "vesper/animations/walking/east/frame_005.png",
+              "vesper/animations/walking/east/frame_006.png",
+              "vesper/animations/walking/east/frame_007.png",
+              "vesper/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "d4614372-7926-40df-87c2-d90fc8434b71",
+        "name": "hair recolored to pa",
+        "prompt": "young female tactics-RPG research healer student, precise clinical calm, ash-blonde hair in a braided crown, forest green and cream robe with bronze trim, staff and satchel of instruments, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:40:16.736018+00:00"
+      },
+      "folder": "hair_recolored_to_pa",
+      "frames": {
+        "rotations": {
+          "south": "hair_recolored_to_pa/rotations/south.png",
+          "south-east": "hair_recolored_to_pa/rotations/south-east.png",
+          "east": "hair_recolored_to_pa/rotations/east.png",
+          "north-east": "hair_recolored_to_pa/rotations/north-east.png",
+          "north": "hair_recolored_to_pa/rotations/north.png",
+          "north-west": "hair_recolored_to_pa/rotations/north-west.png",
+          "west": "hair_recolored_to_pa/rotations/west.png",
+          "south-west": "hair_recolored_to_pa/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "14bac1ec-1fa4-43c5-8562-fbba748516a8",
+        "name": "promoted to bishop:",
+        "prompt": "young female tactics-RPG research healer student, precise clinical calm, ash-blonde hair in a braided crown, forest green and cream robe with bronze trim, staff and satchel of instruments, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:44:20.602591+00:00"
+      },
+      "folder": "promoted_to_bishop",
+      "frames": {
+        "rotations": {
+          "south": "promoted_to_bishop/rotations/south.png",
+          "south-east": "promoted_to_bishop/rotations/south-east.png",
+          "east": "promoted_to_bishop/rotations/east.png",
+          "north-east": "promoted_to_bishop/rotations/north-east.png",
+          "north": "promoted_to_bishop/rotations/north.png",
+          "north-west": "promoted_to_bishop/rotations/north-west.png",
+          "west": "promoted_to_bishop/rotations/west.png",
+          "south-west": "promoted_to_bishop/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T05:01:18.393336"
+}

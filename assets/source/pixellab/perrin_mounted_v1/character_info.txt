@@ -1,0 +1,26 @@
+status: completed
+id: b1e93af9-3e1c-4c3e-99e6-50906c05f887
+name: perrin_mounted
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 68x68px
+view: low top-down
+style: basic shading, single color black outline, medium detail
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/b1e93af9-3e1c-4c3e-99e6-50906c05f887/rotations/south.png
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/b1e93af9-3e1c-4c3e-99e6-50906c05f887/rotations/east.png
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/b1e93af9-3e1c-4c3e-99e6-50906c05f887/rotations/north.png
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/b1e93af9-3e1c-4c3e-99e6-50906c05f887/rotations/west.png
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/b1e93af9-3e1c-4c3e-99e6-50906c05f887/rotations/south-east.png
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/b1e93af9-3e1c-4c3e-99e6-50906c05f887/rotations/north-east.png
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/b1e93af9-3e1c-4c3e-99e6-50906c05f887/rotations/north-west.png
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/b1e93af9-3e1c-4c3e-99e6-50906c05f887/rotations/south-west.png
+
+animations: none
+
+download: https://api.pixellab.ai/mcp/characters/b1e93af9-3e1c-4c3e-99e6-50906c05f887/download
+
+available_animations: attack, attack-back, dying, eat-end, eat-start, eating, hit-left, hit-right, idle-shaking-head, lie-down, rest-cycle, rest-idle +16 more
+
+actions: animate_character(character_id="b1e93af9-3e1c-4c3e-99e6-50906c05f887", ...) | create_character_state(character_id="b1e93af9-3e1c-4c3e-99e6-50906c05f887", ...) | delete_character(character_id="b1e93af9-3e1c-4c3e-99e6-50906c05f887")
+hint: animate_character(character_id="b1e93af9-3e1c-4c3e-99e6-50906c05f887", template_animation_id="attack")

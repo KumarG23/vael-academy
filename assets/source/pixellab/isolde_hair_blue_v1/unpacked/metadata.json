@@ -1,0 +1,108 @@
+{
+  "group_id": "b24bfc2c-8d0a-4844-b4f6-e1c1ab66ba8c",
+  "states": [
+    {
+      "character": {
+        "id": "32f50da3-1761-4a86-8be4-4e058c89cad1",
+        "name": "isolde",
+        "prompt": "young female tactics-RPG faith mage student, formal reserved bearing, dark hair in a tight bun, deep blue scholar robe with silver clasps, glowing blue tome, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:06:11.89069+00:00"
+      },
+      "folder": "isolde",
+      "frames": {
+        "rotations": {
+          "south": "isolde/rotations/south.png",
+          "south-east": "isolde/rotations/south-east.png",
+          "east": "isolde/rotations/east.png",
+          "north-east": "isolde/rotations/north-east.png",
+          "north": "isolde/rotations/north.png",
+          "north-west": "isolde/rotations/north-west.png",
+          "west": "isolde/rotations/west.png",
+          "south-west": "isolde/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "isolde/animations/walking/east/frame_000.png",
+              "isolde/animations/walking/east/frame_001.png",
+              "isolde/animations/walking/east/frame_002.png",
+              "isolde/animations/walking/east/frame_003.png",
+              "isolde/animations/walking/east/frame_004.png",
+              "isolde/animations/walking/east/frame_005.png",
+              "isolde/animations/walking/east/frame_006.png",
+              "isolde/animations/walking/east/frame_007.png",
+              "isolde/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "898d12dd-3d51-4859-a085-151376797735",
+        "name": "hair recolored to de",
+        "prompt": "young female tactics-RPG faith mage student, formal reserved bearing, dark hair in a tight bun, deep blue scholar robe with silver clasps, glowing blue tome, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:40:15.790868+00:00"
+      },
+      "folder": "hair_recolored_to_de",
+      "frames": {
+        "rotations": {
+          "south": "hair_recolored_to_de/rotations/south.png",
+          "south-east": "hair_recolored_to_de/rotations/south-east.png",
+          "east": "hair_recolored_to_de/rotations/east.png",
+          "north-east": "hair_recolored_to_de/rotations/north-east.png",
+          "north": "hair_recolored_to_de/rotations/north.png",
+          "north-west": "hair_recolored_to_de/rotations/north-west.png",
+          "west": "hair_recolored_to_de/rotations/west.png",
+          "south-west": "hair_recolored_to_de/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "f7e427f4-5fe3-4700-93cb-6b036c9ca74c",
+        "name": "promoted to sage: or",
+        "prompt": "young female tactics-RPG faith mage student, formal reserved bearing, dark hair in a tight bun, deep blue scholar robe with silver clasps, glowing blue tome, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:43:27.139789+00:00"
+      },
+      "folder": "promoted_to_sage_or",
+      "frames": {
+        "rotations": {
+          "south": "promoted_to_sage_or/rotations/south.png",
+          "south-east": "promoted_to_sage_or/rotations/south-east.png",
+          "east": "promoted_to_sage_or/rotations/east.png",
+          "north-east": "promoted_to_sage_or/rotations/north-east.png",
+          "north": "promoted_to_sage_or/rotations/north.png",
+          "north-west": "promoted_to_sage_or/rotations/north-west.png",
+          "west": "promoted_to_sage_or/rotations/west.png",
+          "south-west": "promoted_to_sage_or/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T05:00:12.358388"
+}
