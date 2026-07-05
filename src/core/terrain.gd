@@ -19,4 +19,6 @@ enum Type {
 	CARPET = 9,   # fancy indoor ground, floor-equivalent stats
 	SPRING = 10,  # healing station: 15% max HP at turn start
 	FLOWERS = 11, # wildflower meadow: plains stats, pure color variety
+	SITE = 12,    # invisible blocker under scenery props (houses, wells):
+	              # impassable, but the ground beneath the prop stays base fill
 }

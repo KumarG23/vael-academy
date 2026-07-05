@@ -71,8 +71,8 @@ func is_active() -> bool:
 ## tile) for this chapter's base family. Types without art keep the battle
 ## view's tint fallback (convention: code never waits on art).
 func covers(t: int) -> bool:
-	if t == _base_terrain():
-		return true
+	if t == _base_terrain() or t == Terrain.Type.SITE:
+		return true  # SITE: invisible blocker — the prop IS its art
 	if _decor.has(t):
 		return true
 	var sets: Dictionary = SETS_BY_BASE.get(_base_terrain(), {})

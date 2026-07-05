@@ -1,16 +1,102 @@
 [gd_resource type="Resource" script_class="ChapterDef" format=3]
 
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_3estk"]
 [ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="1_hatpi"]
 [ext_resource type="Resource" path="res://data/units/bandit_a.tres" id="2_5u70u"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/house_a.png" id="2_r5n3a"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/house_b.png" id="3_2bcyc"]
 [ext_resource type="Resource" path="res://data/units/bandit_b.tres" id="3_4ursp"]
 [ext_resource type="Resource" path="res://data/units/bandit_c.tres" id="4_5bl3h"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/house_burning.png" id="4_jap02"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/well.png" id="5_eex22"]
 [ext_resource type="Resource" path="res://data/units/bandit_d.tres" id="5_uttgq"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/cart.png" id="6_crnft"]
 [ext_resource type="Resource" path="res://data/units/bandit_boss.tres" id="6_ly3m2"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="7_8lu1o"]
 [ext_resource type="Resource" path="res://data/units/kai.tres" id="7_pqq6m"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="8_barj4"]
 [ext_resource type="Resource" path="res://data/units/perrin.tres" id="8_j6pi5"]
 [ext_resource type="Resource" path="res://data/units/serra_prologue.tres" id="9_a6ln8"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/signpost.png" id="9_l3u8v"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bush.png" id="10_0j5v5"]
 [ext_resource type="Resource" path="res://data/units/corin.tres" id="10_jxfgj"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/rocks.png" id="11_08imo"]
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="11_fcoqs"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/stump.png" id="12_af417"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/fence.png" id="13_ithui"]
+
+[sub_resource type="Resource" id="Resource_barj4"]
+script = ExtResource("1_3estk")
+texture = ExtResource("2_r5n3a")
+cell = Vector2i(4, 2)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_l3u8v"]
+script = ExtResource("1_3estk")
+texture = ExtResource("3_2bcyc")
+cell = Vector2i(1, 7)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_0j5v5"]
+script = ExtResource("1_3estk")
+texture = ExtResource("4_jap02")
+cell = Vector2i(11, 7)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_08imo"]
+script = ExtResource("1_3estk")
+texture = ExtResource("5_eex22")
+cell = Vector2i(3, 3)
+
+[sub_resource type="Resource" id="Resource_af417"]
+script = ExtResource("1_3estk")
+texture = ExtResource("6_crnft")
+cell = Vector2i(7, 3)
+
+[sub_resource type="Resource" id="Resource_ithui"]
+script = ExtResource("1_3estk")
+texture = ExtResource("7_8lu1o")
+cell = Vector2i(2, 3)
+
+[sub_resource type="Resource" id="Resource_hos3e"]
+script = ExtResource("1_3estk")
+texture = ExtResource("8_barj4")
+cell = Vector2i(5, 6)
+
+[sub_resource type="Resource" id="Resource_3xkq5"]
+script = ExtResource("1_3estk")
+texture = ExtResource("9_l3u8v")
+cell = Vector2i(1, 4)
+
+[sub_resource type="Resource" id="Resource_bsmj6"]
+script = ExtResource("1_3estk")
+texture = ExtResource("10_0j5v5")
+cell = Vector2i(6, 7)
+
+[sub_resource type="Resource" id="Resource_fxl3x"]
+script = ExtResource("1_3estk")
+texture = ExtResource("10_0j5v5")
+cell = Vector2i(10, 3)
+
+[sub_resource type="Resource" id="Resource_oanl2"]
+script = ExtResource("1_3estk")
+texture = ExtResource("11_08imo")
+cell = Vector2i(4, 9)
+
+[sub_resource type="Resource" id="Resource_5crhi"]
+script = ExtResource("1_3estk")
+texture = ExtResource("12_af417")
+cell = Vector2i(2, 9)
+
+[sub_resource type="Resource" id="Resource_u0gpi"]
+script = ExtResource("1_3estk")
+texture = ExtResource("13_ithui")
+cell = Vector2i(3, 7)
+
+[sub_resource type="Resource" id="Resource_7024b"]
+script = ExtResource("1_3estk")
+texture = ExtResource("13_ithui")
+cell = Vector2i(4, 7)
 
 [sub_resource type="Resource" id="Resource_hf71s"]
 script = ExtResource("1_hatpi")
@@ -68,4 +154,5 @@ enemy_spawns = Array[ExtResource("1_hatpi")]([SubResource("Resource_hf71s"), Sub
 player_spawns = Array[ExtResource("1_hatpi")]([SubResource("Resource_jap02"), SubResource("Resource_eex22"), SubResource("Resource_crnft"), SubResource("Resource_8lu1o")])
 width = 16
 height = 11
-terrain = PackedInt32Array(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 5, 0, 1, 0, 0, 1, 2, 2, 2, 1, 0, 0, 1, 0, 0, 0, 5, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 1, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6, 0, 0, 2, 6, 6, 6, 6, 6, 6, 0, 0, 0, 6, 6, 6, 6, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 5, 0, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 5, 5, 0, 1, 0, 0, 2, 2, 0, 0, 0, 0, 1, 10, 0, 0, 0, 5, 0, 0, 1, 2, 2, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 5, 0, 1, 0, 0, 2, 2)
+terrain = PackedInt32Array(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 12, 12, 11, 0, 5, 0, 1, 0, 0, 1, 2, 2, 2, 1, 0, 0, 12, 12, 0, 0, 5, 0, 11, 1, 0, 0, 0, 2, 0, 0, 0, 12, 1, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6, 0, 0, 2, 6, 6, 6, 6, 6, 6, 0, 0, 0, 6, 6, 6, 6, 3, 0, 0, 0, 12, 12, 0, 0, 0, 0, 1, 5, 0, 0, 12, 12, 0, 0, 2, 0, 12, 12, 0, 0, 0, 0, 0, 5, 5, 0, 12, 12, 0, 2, 2, 0, 0, 0, 0, 1, 10, 0, 0, 0, 5, 0, 0, 1, 2, 2, 2, 0, 1, 0, 11, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 2, 2, 0, 0, 0, 1, 11, 0, 0, 0, 0, 5, 0, 1, 0, 0, 2, 2)
+decor = Array[ExtResource("1_3estk")]([SubResource("Resource_barj4"), SubResource("Resource_l3u8v"), SubResource("Resource_0j5v5"), SubResource("Resource_08imo"), SubResource("Resource_af417"), SubResource("Resource_ithui"), SubResource("Resource_hos3e"), SubResource("Resource_3xkq5"), SubResource("Resource_bsmj6"), SubResource("Resource_fxl3x"), SubResource("Resource_oanl2"), SubResource("Resource_5crhi"), SubResource("Resource_u0gpi"), SubResource("Resource_7024b")])

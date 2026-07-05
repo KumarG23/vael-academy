@@ -25,6 +25,7 @@ static func create_default() -> TerrainDB:
 		Terrain.Type.CARPET: TerrainInfo.new("Carpet", 1, 0, 0),
 		Terrain.Type.SPRING: TerrainInfo.new("Healing Spring", 1, 0, 10, false, 0.15),
 		Terrain.Type.FLOWERS: TerrainInfo.new("Meadow", 1, 0, 0),
+		Terrain.Type.SITE: TerrainInfo.new("Village", 0, 0, 0, true),
 	}
 	return db
 

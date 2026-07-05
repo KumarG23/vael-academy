@@ -38,6 +38,7 @@ const TERRAIN_TINTS := {
 	Terrain.Type.CARPET: Color(0.25, 0.30, 0.65, 0.45),
 	Terrain.Type.SPRING: Color(0.35, 0.75, 0.85, 0.50),
 	Terrain.Type.FLOWERS: Color(0.85, 0.75, 0.35, 0.30),
+	Terrain.Type.SITE: Color(0, 0, 0, 0),
 }
 
 enum Phase { IDLE, SELECTED, MENU, TARGETING }
@@ -540,6 +541,7 @@ func _all_player_units_acted() -> bool:
 
 
 func _begin_player_phase() -> void:
+	_camera_follow = null  # back to cursor-follow
 	for u in _living_units_on_team(0):
 		u.has_acted = false
 		u.queue_redraw()
@@ -583,6 +585,7 @@ func _run_enemy_phase() -> void:
 			break
 		if not is_instance_valid(enemy) or not enemy.is_alive():
 			continue
+		_camera_follow = enemy  # the camera tracks whoever is acting
 		await _execute_enemy_unit(enemy)
 	_busy = false
 	_check_objective()
@@ -1038,15 +1041,50 @@ func _setup_juice() -> void:
 	_juice.setup(_juice_config, _camera, _units_root, _splash)
 
 
+## Dark Deity-style camera (Neal 2026-07-05): battles play ZOOMED IN and the
+## camera pans across maps larger than the screen, following the cursor (or
+## the acting enemy). Small maps still fit; big maps scroll.
+const TARGET_CELL_PX := 72.0
+
+## When set (enemy phase), the camera follows this unit instead of the cursor.
+var _camera_follow: Node2D = null
+
+
 func _setup_camera() -> void:
 	_camera = Camera2D.new()
 	add_child(_camera)
 	var map := _grid.pixel_size()
-	_camera.position = map * 0.5
 	var vp := get_viewport_rect().size
 	var fit := minf(vp.x / map.x, vp.y / map.y) * 0.96
-	_camera.zoom = Vector2(fit, fit)
+	var z := maxf(fit, TARGET_CELL_PX / float(_grid.cell_size))
+	_camera.zoom = Vector2(z, z)
+	_camera.position = _camera_clamp(map * 0.5)
 	_camera.make_current()
+
+
+## Clamp a focus point so the view never leaves the map; axes where the whole
+## map fits on screen stay centered.
+func _camera_clamp(focus: Vector2) -> Vector2:
+	var map := _grid.pixel_size()
+	var half := get_viewport_rect().size * 0.5 / _camera.zoom.x
+	var out := focus
+	out.x = clampf(focus.x, half.x, map.x - half.x) if map.x > half.x * 2.0 else map.x * 0.5
+	out.y = clampf(focus.y, half.y, map.y - half.y) if map.y > half.y * 2.0 else map.y * 0.5
+	return out
+
+
+func _process(delta: float) -> void:
+	if _camera == null or _grid == null:
+		return
+	var cs := float(_grid.cell_size)
+	var focus: Vector2
+	if _camera_follow != null and is_instance_valid(_camera_follow):
+		focus = _camera_follow.position + Vector2(cs, cs) * 0.5
+	elif _cursor != null:
+		focus = _cursor.position + Vector2(cs, cs) * 0.5
+	else:
+		return
+	_camera.position = _camera.position.lerp(_camera_clamp(focus), minf(1.0, delta * 9.0))
 
 
 func _setup_ui() -> void:
