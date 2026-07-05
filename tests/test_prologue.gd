@@ -89,4 +89,5 @@ func test_mock_battle_roster_path_unaffected():
 		if u.team == 0:
 			players.append(u.unit_id())
 	players.sort()
-	assert_eq(players, ["brenna", "kael", "kai", "wren"], "the Roster still fields the four")
+	assert_eq(players, ["brenna", "dain", "kael", "kai", "liora", "perrin", "wren"],
+		"the Roster path fields the full Emberwing house + Kai (WO-5.2)")

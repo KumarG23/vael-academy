@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/mage.tres" id="1_lrcls"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_lrwpn"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_lrudf"]
+[ext_resource type="Resource" path="res://data/weapons/fire.tres" id="4_lrfir"]
+
+[resource]
+script = ExtResource("3_lrudf")
+id = "liora"
+display_name = "Liora"
+char_class = ExtResource("1_lrcls")
+house_id = "emberwing"
+weapon = ExtResource("4_lrfir")
+max_hp = 18
+strength = 2
+magic = 9
+skill = 7
+speed = 8
+luck = 6
+defense = 2
+resistance = 6
+movement = 5
+growth_hp = 45
+growth_str = 5
+growth_mag = 60
+growth_skl = 45
+growth_spd = 50
+growth_lck = 35
+growth_def = 15
+growth_res = 40

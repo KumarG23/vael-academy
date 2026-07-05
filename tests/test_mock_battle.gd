@@ -36,7 +36,7 @@ func test_chapter_data_is_authored_correctly():
 	assert_eq(chapter.boss_unit_id, "serra")
 	assert_true(chapter.non_lethal, "the Mock Battle is non-lethal")
 	assert_eq(chapter.enemy_spawns.size(), 7, "6 Tidemark students + Serra")
-	assert_eq(chapter.deploy_cells.size(), 4, "four player deploy cells")
+	assert_eq(chapter.deploy_cells.size(), 7, "deploy cells for the house + Kai (WO-5.2)")
 
 
 func test_chapter_terrain_uses_landmarks_meaningfully():
@@ -80,7 +80,7 @@ func test_dialogue_scripts_exist_and_parse():
 # --- spawns & objective ------------------------------------------------------------
 
 func test_forces_spawn_from_chapter_data():
-	assert_eq(_view._living_units_on_team(0).size(), 4, "four Emberwing units")
+	assert_eq(_view._living_units_on_team(0).size(), 7, "the Emberwing house + Kai (WO-5.2)")
 	assert_eq(_view._living_units_on_team(1).size(), 7, "seven Tidemark units")
 	var kai: Unit = _view.unit_by_id("kai")
 	assert_eq(kai.cell, Vector2i(2, 12), "Kai at his authored deploy cell")

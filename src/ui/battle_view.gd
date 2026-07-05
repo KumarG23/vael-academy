@@ -825,7 +825,7 @@ func _apply_casual_post_chapter_revival() -> void:
 
 
 func _is_player_unit_id(id: String) -> bool:
-	return Roster.PLAYER_IDS.has(id)
+	return Roster.all_player_ids().has(id)
 
 
 # --- chapter dialogue (WO-4.1) ---------------------------------------------------

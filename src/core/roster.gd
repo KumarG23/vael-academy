@@ -6,15 +6,29 @@ extends RefCounted
 ##
 ## WO-4.1: units are formal .tres data under data/units/ (§2 rule 4). Defs are
 ## duplicated per call so runtime/test mutation never leaks into the cached
-## resources. Kai is the lord (§4): his death is a game over.
+## resources.
+##
+## WO-5.2: Kai is NOT a roster member — he's the house-agnostic protagonist
+## slot (§4), appended to whichever house roster is chosen (5.3 parameterizes
+## the house; Emberwing is the only roster until then). He stays the lord:
+## his death is a game over.
 
-const PLAYER_IDS: Array[String] = ["kai", "kael", "brenna", "wren"]
+## The full Emberwing house roster per CHARACTER_BIBLE_EMBERWING (heir + five).
+const PLAYER_IDS: Array[String] = ["perrin", "kael", "brenna", "wren", "dain", "liora"]
+const PROTAGONIST_ID := "kai"
 
 
-## Fresh UnitDefs for the four Emberwing units, in roster order.
+## Roster ids + the protagonist appended (§4) — every id the player fields.
+static func all_player_ids() -> Array[String]:
+	var ids := PLAYER_IDS.duplicate()
+	ids.append(PROTAGONIST_ID)
+	return ids
+
+
+## Fresh UnitDefs for the fielded units: the house roster, then Kai appended.
 static func player_units() -> Array[UnitDef]:
 	var out: Array[UnitDef] = []
-	for id in PLAYER_IDS:
+	for id in all_player_ids():
 		var def: UnitDef = load("res://data/units/%s.tres" % id)
 		out.append(def.duplicate())
 	return out
@@ -28,4 +42,7 @@ static func deploy_cells() -> Dictionary:
 		"kael": Vector2i(3, 7),
 		"brenna": Vector2i(4, 9),
 		"wren": Vector2i(3, 9),
+		"perrin": Vector2i(2, 8),
+		"dain": Vector2i(4, 7),
+		"liora": Vector2i(2, 9),
 	}

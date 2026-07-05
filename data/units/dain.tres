@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/fighter.tres" id="1_dncls"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_dnwpn"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_dnudf"]
+[ext_resource type="Resource" path="res://data/weapons/iron_axe.tres" id="4_dnaxe"]
+
+[resource]
+script = ExtResource("3_dnudf")
+id = "dain"
+display_name = "Dain"
+char_class = ExtResource("1_dncls")
+house_id = "emberwing"
+weapon = ExtResource("4_dnaxe")
+max_hp = 28
+strength = 9
+skill = 5
+speed = 6
+luck = 3
+defense = 5
+resistance = 1
+movement = 5
+growth_hp = 85
+growth_str = 60
+growth_mag = 0
+growth_skl = 30
+growth_spd = 35
+growth_lck = 25
+growth_def = 35
+growth_res = 15
