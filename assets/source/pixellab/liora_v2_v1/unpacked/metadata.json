@@ -1,0 +1,50 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "3f7c6b7f-7ea1-41d5-ade1-5b4ba6842490",
+        "name": "liora_v2",
+        "prompt": "young female tactics-RPG fire mage student, proud noble bearing, long rich violet purple hair with a crimson ribbon, warm brown skin, dark navy academy uniform with crimson-gold trim and short mage cloak, open fire tome with small flame, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 56,
+          "height": 56
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T05:31:11.916069+00:00"
+      },
+      "folder": "liora_v2",
+      "frames": {
+        "rotations": {
+          "south": "liora_v2/rotations/south.png",
+          "south-east": "liora_v2/rotations/south-east.png",
+          "east": "liora_v2/rotations/east.png",
+          "north-east": "liora_v2/rotations/north-east.png",
+          "north": "liora_v2/rotations/north.png",
+          "north-west": "liora_v2/rotations/north-west.png",
+          "west": "liora_v2/rotations/west.png",
+          "south-west": "liora_v2/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "liora_v2/animations/walking/east/frame_000.png",
+              "liora_v2/animations/walking/east/frame_001.png",
+              "liora_v2/animations/walking/east/frame_002.png",
+              "liora_v2/animations/walking/east/frame_003.png",
+              "liora_v2/animations/walking/east/frame_004.png",
+              "liora_v2/animations/walking/east/frame_005.png",
+              "liora_v2/animations/walking/east/frame_006.png",
+              "liora_v2/animations/walking/east/frame_007.png",
+              "liora_v2/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T05:38:39.257822"
+}
