@@ -22,8 +22,12 @@ const KIT_ALIASES := {
 	"bandit_a": "bandit", "bandit_b": "bandit", "bandit_c": "bandit",
 	"bandit_d": "bandit", "bandit_boss": "bandit",
 }
-const SPRITE_SCALE := 5.0
+const SPRITE_SCALE := 6.0
 const FPS := 10.0
+
+## Stage dressing per the chapter's base terrain (set by the battle view):
+## sky gradient + a ground band tiled from the matching terrain atlas.
+var stage_base: int = Terrain.Type.PLAINS
 
 var _root: Control
 var _left_sprite: AnimatedSprite2D
@@ -80,19 +84,42 @@ func _ready() -> void:
 	dim.color = Color(0.05, 0.04, 0.07, 0.75)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(dim)
-	# stage band
-	var stage := ColorRect.new()
-	stage.color = Color(0.12, 0.13, 0.11)
-	stage.set_anchors_preset(Control.PRESET_CENTER)
-	stage.custom_minimum_size = Vector2(760, 320)
-	stage.position = Vector2(-380, -160)
-	_root.add_child(stage)
-	var ground := ColorRect.new()
-	ground.color = Color(0.20, 0.26, 0.16)
-	ground.set_anchors_preset(Control.PRESET_CENTER)
-	ground.custom_minimum_size = Vector2(760, 90)
-	ground.position = Vector2(-380, 70)
-	_root.add_child(ground)
+	# stage: sky gradient band + tiled terrain ground (falls back to flats)
+	var indoor := stage_base == Terrain.Type.FLOOR
+	var sky := TextureRect.new()
+	var grad := Gradient.new()
+	if indoor:
+		grad.set_color(0, Color(0.16, 0.13, 0.19))
+		grad.set_color(1, Color(0.34, 0.28, 0.36))
+	else:
+		grad.set_color(0, Color(0.22, 0.30, 0.52))
+		grad.set_color(1, Color(0.66, 0.60, 0.48))
+	var gtex := GradientTexture2D.new()
+	gtex.gradient = grad
+	gtex.fill_from = Vector2(0, 0)
+	gtex.fill_to = Vector2(0, 1)
+	sky.texture = gtex
+	sky.set_anchors_preset(Control.PRESET_CENTER)
+	sky.custom_minimum_size = Vector2(760, 320)
+	sky.position = Vector2(-380, -160)
+	_root.add_child(sky)
+	var ground_tex := _ground_tile_texture(indoor)
+	if ground_tex != null:
+		var ground := TextureRect.new()
+		ground.texture = ground_tex
+		ground.stretch_mode = TextureRect.STRETCH_TILE
+		ground.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		ground.set_anchors_preset(Control.PRESET_CENTER)
+		ground.custom_minimum_size = Vector2(760, 96)
+		ground.position = Vector2(-380, 64)
+		_root.add_child(ground)
+	else:
+		var flat := ColorRect.new()
+		flat.color = Color(0.20, 0.26, 0.16) if not indoor else Color(0.42, 0.38, 0.30)
+		flat.set_anchors_preset(Control.PRESET_CENTER)
+		flat.custom_minimum_size = Vector2(760, 96)
+		flat.position = Vector2(-380, 64)
+		_root.add_child(flat)
 	# combat sprites
 	_left_sprite = _make_sprite(Vector2(-190, 40), false)
 	_right_sprite = _make_sprite(Vector2(190, 40), true)
@@ -108,6 +135,20 @@ func _ready() -> void:
 	_damage_label.set_anchors_preset(Control.PRESET_CENTER)
 	_damage_label.position = Vector2(-40, -60)
 	_root.add_child(_damage_label)
+
+
+## A tileable 32px ground texture cut from the base terrain's atlas (the
+## all-base wang tile). Null when the atlases aren't installed.
+func _ground_tile_texture(indoor: bool) -> Texture2D:
+	var set_name := "floor_wall" if indoor else "grass_forest"
+	var atlas_path := "res://assets/art/pixellab/tilesets/%s_atlas.png" % set_name
+	var maps := TerrainTiles.load_wang_maps("res://assets/art/pixellab/tilesets/wang_maps.json")
+	if not ResourceLoader.exists(atlas_path) or not maps.has(set_name):
+		return null
+	var pos: Vector2i = maps[set_name][0]
+	var img: Image = (load(atlas_path) as Texture2D).get_image()
+	var tile := img.get_region(Rect2i(pos.x * 32, pos.y * 32, 32, 32))
+	return ImageTexture.create_from_image(tile)
 
 
 func _make_sprite(pos: Vector2, flip: bool) -> AnimatedSprite2D:

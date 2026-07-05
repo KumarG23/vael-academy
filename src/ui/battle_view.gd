@@ -113,6 +113,7 @@ func _ready() -> void:
 	_menu_ctrl = BattleActionMenuController.new(self)
 	_spawner = BattleUnitSpawner.new(self)
 	_battle_popup = BattlePopup.new()
+	_battle_popup.stage_base = chapter.base_terrain
 	add_child(_battle_popup)
 	_setup_houses()
 	_setup_supports()
