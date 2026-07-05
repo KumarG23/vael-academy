@@ -55,3 +55,28 @@ func test_sprite_frames_built_from_fixture_sets() -> void:
 	assert_true(frames.has_animation("walk_n"))
 	assert_eq(frames.get_frame_count("walk_n"), 2)
 	assert_false(frames.has_animation("walk_s"))
+
+
+# --- WO-4.8: variant resolution ---------------------------------------------
+
+func test_variant_dir_resolves_when_frames_exist() -> void:
+	# kai's school variant is committed data (WO-4.8)
+	assert_eq(Unit.resolve_sprite_dir("kai", "school"),
+		"res://assets/sprites/units/kai/school")
+
+
+func test_variant_falls_back_to_root_when_missing() -> void:
+	assert_eq(Unit.resolve_sprite_dir("kai", "nonexistent_variant"),
+		"res://assets/sprites/units/kai")
+
+
+func test_battle_variant_uses_root() -> void:
+	assert_eq(Unit.resolve_sprite_dir("kai", "battle"),
+		"res://assets/sprites/units/kai")
+
+
+func test_scan_variant_frame_counts_differ() -> void:
+	var root := Unit.scan_walk_frames("res://tests/fixtures/sprites/testunit47")
+	var school := Unit.scan_walk_frames("res://tests/fixtures/sprites/testunit47/school")
+	assert_eq((root["walk"] as Array).size(), 5)
+	assert_eq((school["walk"] as Array).size(), 2)

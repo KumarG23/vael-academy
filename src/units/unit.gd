@@ -44,6 +44,11 @@ var _flash := 0.0
 ## WO-4.7: whether dedicated north/south walk frame sets were found.
 var _has_walk_n := false
 var _has_walk_s := false
+## WO-4.8: outfit/context variant. Frames load from
+## `assets/sprites/units/<id>/<variant>/` when that set exists, falling back
+## to the legacy root frames (the battle kit). Battles use the default;
+## hub/castle scenes set school/casual/party per context.
+var sprite_variant := "battle"
 ## Painted standee (AW-6 hook): drawn instead of the placeholder token when
 ## `assets/standees/standee_<id>.png` exists. Pure presentation.
 var _standee: Texture2D = null
@@ -101,6 +106,25 @@ static func idle_frame_indices(n: int) -> Array[int]:
 	return [int(ceil(n / 2.0)), n]
 
 
+## WO-4.8: resolve the frame directory for a unit id + variant. A variant
+## subdir wins when it holds frames; the unit root is the battle-kit default.
+static func resolve_sprite_dir(id: String, variant: String) -> String:
+	var root := "res://assets/sprites/units/%s" % id
+	if variant != "" and variant != "battle":
+		var vdir := "%s/%s" % [root, variant]
+		if ResourceLoader.exists(vdir + "/walk_f1.png"):
+			return vdir
+	return root
+
+
+## WO-4.8: switch outfit/context variant and rebuild the sprite frames.
+func set_sprite_variant(variant: String) -> void:
+	if variant == sprite_variant:
+		return
+	sprite_variant = variant
+	_setup_sprite_frames(unit_def.id if unit_def != null else "")
+
+
 ## AW-7/WO-4.7: build an AnimatedSprite2D from conventional walk frames.
 ## walk = east cycle (flip_h for west); walk_n / walk_s when frame sets exist;
 ## idle = the passing poses of the east cycle (subtle bob).
@@ -112,7 +136,7 @@ func _setup_sprite_frames(id: String) -> void:
 	_has_walk_s = false
 	if id == "":
 		return
-	var dir := "res://assets/sprites/units/%s" % id
+	var dir := resolve_sprite_dir(id, sprite_variant)
 	var sets := scan_walk_frames(dir)
 	var east: Array = sets["walk"]
 	if east.is_empty():
