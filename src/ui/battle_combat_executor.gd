@@ -27,21 +27,33 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 	var def_c: Combatant = _v._combatant_for(defender, defender.cell)
 	var result := CombatResolver.resolve(atk_c, def_c, dist, _v._rng)
 
-	for strike in result.strikes:
-		# Route by the counter flag, not the display name (names aren't unique —
-		# e.g. multiple "Tidemark Soldier"). A counter strike hits the attacker.
-		var striker := defender if strike.is_counter else attacker
-		var target := attacker if strike.is_counter else defender
-		var lethal: bool = strike.connected and strike.defender_hp_after <= 0
-		if _v.strike_delay > 0.0 and _v._juice != null:
-			await _v._juice.play_strike(striker, target, strike, lethal)  # applies hp at impact
-		else:
-			play_strike(strike, target)
-			await _v.get_tree().process_frame
-		if not target.is_alive():
+	# WO-4.9: FE-style combat cut-in when both sides have animation kits.
+	# Tests run strike_delay = 0 and never enter this path.
+	if _v.strike_delay > 0.0 and _v.battle_popups_enabled and _v._battle_popup != null \
+			and BattlePopup.has_kit(attacker.unit_id()) and BattlePopup.has_kit(defender.unit_id()):
+		await _v._battle_popup.play_exchange(attacker, defender, result.strikes)
+		for strike in result.strikes:
+			var target := attacker if strike.is_counter else defender
+			if strike.connected:
+				target.set_hp(strike.defender_hp_after)
+			if not target.is_alive():
+				_v._kill(target)
+	else:
+		for strike in result.strikes:
+			# Route by the counter flag, not the display name (names aren't unique —
+			# e.g. multiple "Tidemark Soldier"). A counter strike hits the attacker.
+			var striker := defender if strike.is_counter else attacker
+			var target := attacker if strike.is_counter else defender
+			var lethal: bool = strike.connected and strike.defender_hp_after <= 0
 			if _v.strike_delay > 0.0 and _v._juice != null:
-				await _v._juice.play_death(target)
-			_v._kill(target)
+				await _v._juice.play_strike(striker, target, strike, lethal)  # applies hp at impact
+			else:
+				play_strike(strike, target)
+				await _v.get_tree().process_frame
+			if not target.is_alive():
+				if _v.strike_delay > 0.0 and _v._juice != null:
+					await _v._juice.play_death(target)
+				_v._kill(target)
 
 	# Weapon durability: 1 use per combat per side that swung — GBA-accurate
 	# (a doubling unit still spends only one use, not one per strike). The attacker

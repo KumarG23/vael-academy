@@ -9,6 +9,7 @@ func before_each() -> void:
 	var scene: PackedScene = load("res://scenes/battle/battle.tscn")
 	_view = scene.instantiate()
 	_view.strike_delay = 0.01   # > 0 -> juice path active
+	_view.battle_popups_enabled = false  # WO-4.9: this suite tests the map-strike juice path
 	_view.combat_seed = 3
 	add_child_autofree(_view)
 	await wait_physics_frames(2)

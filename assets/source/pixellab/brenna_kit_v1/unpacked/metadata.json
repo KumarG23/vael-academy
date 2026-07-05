@@ -1,0 +1,145 @@
+{
+  "group_id": "ceef189c-8619-4691-9bef-165558c2cba3",
+  "states": [
+    {
+      "character": {
+        "id": "55652fa7-59ab-48a2-bf42-c98ec96a5a1b",
+        "name": "brenna",
+        "prompt": "young female tactics-RPG armored knight student, steady confident bearing, chestnut brown hair in a short practical braid, fair skin, heavy crimson plate armor with gold trim over dark navy academy uniform, tall lance and kite shield, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T22:22:44.801381+00:00"
+      },
+      "folder": "brenna",
+      "frames": {
+        "rotations": {
+          "south": "brenna/rotations/south.png",
+          "south-east": "brenna/rotations/south-east.png",
+          "east": "brenna/rotations/east.png",
+          "north-east": "brenna/rotations/north-east.png",
+          "north": "brenna/rotations/north.png",
+          "north-west": "brenna/rotations/north-west.png",
+          "west": "brenna/rotations/west.png",
+          "south-west": "brenna/rotations/south-west.png"
+        },
+        "animations": {
+          "collapsing_to_the_ground_defeated_falling_down": {
+            "east": [
+              "brenna/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_000.png",
+              "brenna/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_001.png",
+              "brenna/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_002.png",
+              "brenna/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_003.png",
+              "brenna/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_004.png",
+              "brenna/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_005.png",
+              "brenna/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_006.png",
+              "brenna/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_007.png",
+              "brenna/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_008.png"
+            ]
+          },
+          "thrusting_forward_with_a_lance_from_behind_the_shi": {
+            "east": [
+              "brenna/animations/thrusting_forward_with_a_lance_from_behind_the_shi/east/frame_000.png",
+              "brenna/animations/thrusting_forward_with_a_lance_from_behind_the_shi/east/frame_001.png",
+              "brenna/animations/thrusting_forward_with_a_lance_from_behind_the_shi/east/frame_002.png",
+              "brenna/animations/thrusting_forward_with_a_lance_from_behind_the_shi/east/frame_003.png",
+              "brenna/animations/thrusting_forward_with_a_lance_from_behind_the_shi/east/frame_004.png",
+              "brenna/animations/thrusting_forward_with_a_lance_from_behind_the_shi/east/frame_005.png",
+              "brenna/animations/thrusting_forward_with_a_lance_from_behind_the_shi/east/frame_006.png",
+              "brenna/animations/thrusting_forward_with_a_lance_from_behind_the_shi/east/frame_007.png",
+              "brenna/animations/thrusting_forward_with_a_lance_from_behind_the_shi/east/frame_008.png"
+            ]
+          },
+          "flinching_backward_from_taking_a_hit_staggered": {
+            "east": [
+              "brenna/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_000.png",
+              "brenna/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_001.png",
+              "brenna/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_002.png",
+              "brenna/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_003.png",
+              "brenna/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_004.png",
+              "brenna/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_005.png",
+              "brenna/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_006.png",
+              "brenna/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_007.png",
+              "brenna/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_008.png"
+            ]
+          },
+          "walking": {
+            "east": [
+              "brenna/animations/walking/east/frame_000.png",
+              "brenna/animations/walking/east/frame_001.png",
+              "brenna/animations/walking/east/frame_002.png",
+              "brenna/animations/walking/east/frame_003.png",
+              "brenna/animations/walking/east/frame_004.png",
+              "brenna/animations/walking/east/frame_005.png",
+              "brenna/animations/walking/east/frame_006.png",
+              "brenna/animations/walking/east/frame_007.png",
+              "brenna/animations/walking/east/frame_008.png"
+            ]
+          },
+          "standing_at_the_ready_breathing_gently_subtle_sway": {
+            "east": [
+              "brenna/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_000.png",
+              "brenna/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_001.png",
+              "brenna/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_002.png",
+              "brenna/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_003.png",
+              "brenna/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_004.png",
+              "brenna/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_005.png",
+              "brenna/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_006.png",
+              "brenna/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_007.png",
+              "brenna/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "4e098ac8-9f85-403c-a47c-f327e598e6e5",
+        "name": "promoted to general:",
+        "prompt": "young female tactics-RPG armored knight student, steady confident bearing, chestnut brown hair in a short practical braid, fair skin, heavy crimson plate armor with gold trim over dark navy academy uniform, tall lance and kite shield, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:41:45.93134+00:00"
+      },
+      "folder": "promoted_to_general",
+      "frames": {
+        "rotations": {
+          "south": "promoted_to_general/rotations/south.png",
+          "south-east": "promoted_to_general/rotations/south-east.png",
+          "east": "promoted_to_general/rotations/east.png",
+          "north-east": "promoted_to_general/rotations/north-east.png",
+          "north": "promoted_to_general/rotations/north.png",
+          "north-west": "promoted_to_general/rotations/north-west.png",
+          "west": "promoted_to_general/rotations/west.png",
+          "south-west": "promoted_to_general/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "promoted_to_general/animations/walking/east/frame_000.png",
+              "promoted_to_general/animations/walking/east/frame_001.png",
+              "promoted_to_general/animations/walking/east/frame_002.png",
+              "promoted_to_general/animations/walking/east/frame_003.png",
+              "promoted_to_general/animations/walking/east/frame_004.png",
+              "promoted_to_general/animations/walking/east/frame_005.png",
+              "promoted_to_general/animations/walking/east/frame_006.png",
+              "promoted_to_general/animations/walking/east/frame_007.png",
+              "promoted_to_general/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T07:14:58.683040"
+}

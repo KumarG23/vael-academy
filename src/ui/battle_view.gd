@@ -21,6 +21,9 @@ extends Node2D
 ## Chapter dialogue (intro/outro/boss quotes, WO-4.1). Tests disable to skip the
 ## VN overlays; paths live on the ChapterDef so the test map is unaffected anyway.
 @export var dialogue_enabled: bool = true
+## WO-4.9: FE-style combat cut-in when both units have animation kits.
+## Only runs with strike_delay > 0, so tests never see it.
+@export var battle_popups_enabled: bool = true
 
 const TERRAIN_TINTS := {
 	Terrain.Type.PLAINS: Color(0.0, 0.0, 0.0, 0.0),
@@ -104,6 +107,8 @@ func _ready() -> void:
 	_combat_exec = BattleCombatExecutor.new(self)
 	_menu_ctrl = BattleActionMenuController.new(self)
 	_spawner = BattleUnitSpawner.new(self)
+	_battle_popup = BattlePopup.new()
+	add_child(_battle_popup)
 	_setup_houses()
 	_setup_supports()
 	_setup_terrain_tiles()
@@ -467,6 +472,7 @@ func _show_forecast_for(enemy: Unit) -> void:
 ## WO-4.5: combat execution lives in BattleCombatExecutor; these delegates
 ## keep the view's public surface (tests, targeting flow) unchanged.
 var _combat_exec: BattleCombatExecutor
+var _battle_popup: BattlePopup
 
 
 func _execute_attack(attacker: Unit, defender: Unit) -> void:
