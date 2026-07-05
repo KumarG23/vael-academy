@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="ChapterDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="1_p7ndj"]
+[ext_resource type="Resource" path="res://data/units/tm_soldier_a.tres" id="2_jh7a1"]
+[ext_resource type="Resource" path="res://data/units/tm_armor.tres" id="3_hihv2"]
+[ext_resource type="Resource" path="res://data/units/tm_adept.tres" id="4_ey5ms"]
+[ext_resource type="Resource" path="res://data/units/serra.tres" id="5_5t04w"]
+[ext_resource type="Resource" path="res://data/units/kai.tres" id="6_p36j8"]
+[ext_resource type="Resource" path="res://data/units/kael.tres" id="7_u38hd"]
+[ext_resource type="Resource" path="res://data/units/brenna.tres" id="8_1i24c"]
+[ext_resource type="Resource" path="res://data/units/wren.tres" id="9_2jijr"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="10_mh2qw"]
+
+[sub_resource type="Resource" id="Resource_o5pft"]
+script = ExtResource("1_p7ndj")
+unit = ExtResource("2_jh7a1")
+cell = Vector2i(5, 6)
+
+[sub_resource type="Resource" id="Resource_vk5su"]
+script = ExtResource("1_p7ndj")
+unit = ExtResource("3_hihv2")
+cell = Vector2i(10, 6)
+
+[sub_resource type="Resource" id="Resource_y8xpj"]
+script = ExtResource("1_p7ndj")
+unit = ExtResource("4_ey5ms")
+cell = Vector2i(8, 4)
+
+[sub_resource type="Resource" id="Resource_kgvmv"]
+script = ExtResource("1_p7ndj")
+unit = ExtResource("5_5t04w")
+cell = Vector2i(7, 1)
+
+[sub_resource type="Resource" id="Resource_aykx3"]
+script = ExtResource("1_p7ndj")
+unit = ExtResource("6_p36j8")
+cell = Vector2i(7, 9)
+
+[sub_resource type="Resource" id="Resource_6o5yw"]
+script = ExtResource("1_p7ndj")
+unit = ExtResource("7_u38hd")
+cell = Vector2i(8, 9)
+
+[sub_resource type="Resource" id="Resource_sgkel"]
+script = ExtResource("1_p7ndj")
+unit = ExtResource("8_1i24c")
+cell = Vector2i(6, 9)
+
+[sub_resource type="Resource" id="Resource_o3fjr"]
+script = ExtResource("1_p7ndj")
+unit = ExtResource("9_2jijr")
+cell = Vector2i(9, 8)
+
+[resource]
+script = ExtResource("10_mh2qw")
+id = "indoor_demo"
+display_name = "Demo — The Great Hall"
+objective = 2
+boss_unit_id = "serra"
+non_lethal = true
+enemy_spawns = Array[ExtResource("1_p7ndj")]([SubResource("Resource_o5pft"), SubResource("Resource_vk5su"), SubResource("Resource_y8xpj"), SubResource("Resource_kgvmv")])
+player_spawns = Array[ExtResource("1_p7ndj")]([SubResource("Resource_aykx3"), SubResource("Resource_6o5yw"), SubResource("Resource_sgkel"), SubResource("Resource_o3fjr")])
+width = 16
+height = 11
+terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 3, 3, 7, 7, 7, 7, 7, 7, 4, 4, 7, 5, 5, 7, 9, 7, 7, 7, 7, 9, 7, 5, 5, 7, 4, 4, 7, 5, 5, 7, 9, 7, 7, 7, 7, 9, 7, 7, 7, 7, 4, 4, 7, 7, 7, 7, 9, 7, 7, 7, 7, 9, 7, 7, 7, 7, 4, 4, 8, 7, 7, 7, 9, 7, 7, 7, 7, 9, 7, 7, 7, 8, 4, 4, 7, 7, 7, 7, 9, 7, 7, 7, 7, 9, 7, 7, 7, 7, 4, 4, 4, 7, 4, 4, 4, 7, 7, 7, 7, 4, 4, 4, 7, 4, 4, 4, 7, 7, 7, 7, 9, 7, 7, 7, 7, 9, 7, 7, 7, 7, 4, 4, 10, 7, 7, 7, 9, 7, 7, 7, 7, 9, 7, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 4, 4, 4, 4, 4, 4, 4)
+base_terrain = 7

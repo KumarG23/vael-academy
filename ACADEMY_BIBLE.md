@@ -57,6 +57,18 @@ The academic year is the spine of the campaign — the player lives through one,
 
 Underneath all of it, the kingdom's mystery (`WORLD_BIBLE.md` §4) escalates quietly — a strange rumor here, a wardstone incident there — so the feel-good year and the gathering threat are always running at once. That contrast is the engine of the whole tone.
 
+## 4b. Campus Visual & Spatial Direction *(Neal, 2026-07-05)*
+
+The campus is for **nobles**: huge, beautiful, slightly gaudy — gold trim, stained glass, banners, marble. Never modest.
+
+**Chrono Trigger is the spatial reference for exploration spaces:**
+- **Truce (town)** — alive through multiple elevations, little alleys, fountains, gardens, NPCs walking, buildings connected naturally.
+- **Guardia Castle** — the castle blueprint: courtyards, dorm rooms, classrooms, hallways, towers, throne room (ours: the headmaster's), training areas.
+- **Zeal** — "almost a magic university already": libraries, magic research, teleporters, crystal architecture. The pretty ceiling to aim at.
+- **Enhasa / Kajar / Magic Cave** — magic classrooms, libraries, laboratories, mystical atmosphere.
+
+**Battle maps** (applies to §M-maps too): more color, many terrain types with real bonuses, healing stations, towers, battles *inside* buildings; unique map per chapter. The FE ROM-hack map pack (Neal's Dropbox, mirrored at `assets/reference/map_pack/` if promoted) is the structural baseline — well-composed but *bland*; we go more detailed and extravagant. Chrono Trigger sprite reference: spriters-resource SNES Chrono Trigger.
+
 ## 5. Admission — By Ancient Law
 
 Standard path: noble children, enrolled at the right age, assigned by lineage. Kai arrives by a different door entirely, and it isn't charity or petition — **it's law.** By an old statute nobody's had reason to invoke in living memory, *any* child in whom magic and mana awaken must go to Vael Academy. Full stop. It was written for a kingdom where magic only ever meant a noble child — so it was never a hardship, just protocol. Nobody ever imagined it applying to a forager's son from Oakstead.
