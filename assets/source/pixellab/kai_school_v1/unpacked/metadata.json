@@ -1,0 +1,379 @@
+{
+  "group_id": "ccfc5db4-82f3-45e3-9e07-2eb6f288fece",
+  "states": [
+    {
+      "character": {
+        "id": "471c7fb8-afa9-4dd6-aaba-9b440a08427b",
+        "name": "Kai Emberwing",
+        "prompt": "young male tactics-RPG swordsman student, warm brown skin, short spiky black hair with dark blue sheen, crimson red headband, dark navy academy uniform jacket with gold buttons, short crimson cape on shoulders, brown leather belt and boots, sword at hip, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T21:40:03.624455+00:00"
+      },
+      "folder": "Kai_Emberwing",
+      "frames": {
+        "rotations": {
+          "south": "Kai_Emberwing/rotations/south.png",
+          "south-east": "Kai_Emberwing/rotations/south-east.png",
+          "east": "Kai_Emberwing/rotations/east.png",
+          "north-east": "Kai_Emberwing/rotations/north-east.png",
+          "north": "Kai_Emberwing/rotations/north.png",
+          "north-west": "Kai_Emberwing/rotations/north-west.png",
+          "west": "Kai_Emberwing/rotations/west.png",
+          "south-west": "Kai_Emberwing/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "Kai_Emberwing/animations/walking/east/frame_000.png",
+              "Kai_Emberwing/animations/walking/east/frame_001.png",
+              "Kai_Emberwing/animations/walking/east/frame_002.png",
+              "Kai_Emberwing/animations/walking/east/frame_003.png",
+              "Kai_Emberwing/animations/walking/east/frame_004.png",
+              "Kai_Emberwing/animations/walking/east/frame_005.png",
+              "Kai_Emberwing/animations/walking/east/frame_006.png",
+              "Kai_Emberwing/animations/walking/east/frame_007.png",
+              "Kai_Emberwing/animations/walking/east/frame_008.png"
+            ]
+          },
+          "two-handed_downward_sword_slash_attack": {
+            "east": [
+              "Kai_Emberwing/animations/two-handed_downward_sword_slash_attack/east/frame_000.png",
+              "Kai_Emberwing/animations/two-handed_downward_sword_slash_attack/east/frame_001.png",
+              "Kai_Emberwing/animations/two-handed_downward_sword_slash_attack/east/frame_002.png",
+              "Kai_Emberwing/animations/two-handed_downward_sword_slash_attack/east/frame_003.png",
+              "Kai_Emberwing/animations/two-handed_downward_sword_slash_attack/east/frame_004.png",
+              "Kai_Emberwing/animations/two-handed_downward_sword_slash_attack/east/frame_005.png",
+              "Kai_Emberwing/animations/two-handed_downward_sword_slash_attack/east/frame_006.png",
+              "Kai_Emberwing/animations/two-handed_downward_sword_slash_attack/east/frame_007.png",
+              "Kai_Emberwing/animations/two-handed_downward_sword_slash_attack/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "67bba8cf-1c68-468b-b90b-d255571daf05",
+        "name": "hair recolored to bl",
+        "prompt": "young male tactics-RPG swordsman student, warm brown skin, short spiky black hair with dark blue sheen, crimson red headband, dark navy academy uniform jacket with gold buttons, short crimson cape on shoulders, brown leather belt and boots, sword at hip, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:40:19.973524+00:00"
+      },
+      "folder": "hair_recolored_to_bl",
+      "frames": {
+        "rotations": {
+          "south": "hair_recolored_to_bl/rotations/south.png",
+          "south-east": "hair_recolored_to_bl/rotations/south-east.png",
+          "east": "hair_recolored_to_bl/rotations/east.png",
+          "north-east": "hair_recolored_to_bl/rotations/north-east.png",
+          "north": "hair_recolored_to_bl/rotations/north.png",
+          "north-west": "hair_recolored_to_bl/rotations/north-west.png",
+          "west": "hair_recolored_to_bl/rotations/west.png",
+          "south-west": "hair_recolored_to_bl/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "4566fb75-89fa-4eef-b24d-c4f07720a181",
+        "name": "promoted lord: headb",
+        "prompt": "young male tactics-RPG swordsman student, warm brown skin, short spiky black hair with dark blue sheen, crimson red headband, dark navy academy uniform jacket with gold buttons, short crimson cape on shoulders, brown leather belt and boots, sword at hip, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:41:45.020215+00:00"
+      },
+      "folder": "promoted_lord_headb",
+      "frames": {
+        "rotations": {
+          "south": "promoted_lord_headb/rotations/south.png",
+          "south-east": "promoted_lord_headb/rotations/south-east.png",
+          "east": "promoted_lord_headb/rotations/east.png",
+          "north-east": "promoted_lord_headb/rotations/north-east.png",
+          "north": "promoted_lord_headb/rotations/north.png",
+          "north-west": "promoted_lord_headb/rotations/north-west.png",
+          "west": "promoted_lord_headb/rotations/west.png",
+          "south-west": "promoted_lord_headb/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "promoted_lord_headb/animations/walking/east/frame_000.png",
+              "promoted_lord_headb/animations/walking/east/frame_001.png",
+              "promoted_lord_headb/animations/walking/east/frame_002.png",
+              "promoted_lord_headb/animations/walking/east/frame_003.png",
+              "promoted_lord_headb/animations/walking/east/frame_004.png",
+              "promoted_lord_headb/animations/walking/east/frame_005.png",
+              "promoted_lord_headb/animations/walking/east/frame_006.png",
+              "promoted_lord_headb/animations/walking/east/frame_007.png",
+              "promoted_lord_headb/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "3c3b217c-3a7d-45e5-baa4-e9dc316205ad",
+        "name": "change ONLY the hair",
+        "prompt": "young male tactics-RPG swordsman student, warm brown skin, short spiky black hair with dark blue sheen, crimson red headband, dark navy academy uniform jacket with gold buttons, short crimson cape on shoulders, brown leather belt and boots, sword at hip, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T05:02:01.257275+00:00"
+      },
+      "folder": "change_ONLY_the_hair",
+      "frames": {
+        "rotations": {
+          "south": "change_ONLY_the_hair/rotations/south.png",
+          "south-east": "change_ONLY_the_hair/rotations/south-east.png",
+          "east": "change_ONLY_the_hair/rotations/east.png",
+          "north-east": "change_ONLY_the_hair/rotations/north-east.png",
+          "north": "change_ONLY_the_hair/rotations/north.png",
+          "north-west": "change_ONLY_the_hair/rotations/north-west.png",
+          "west": "change_ONLY_the_hair/rotations/west.png",
+          "south-west": "change_ONLY_the_hair/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "c1e3da83-99bc-4818-b80a-2f1ddd96c620",
+        "name": "promoted lord: headb",
+        "prompt": "young male tactics-RPG swordsman student, warm brown skin, short spiky black hair with dark blue sheen, crimson red headband, dark navy academy uniform jacket with gold buttons, short crimson cape on shoulders, brown leather belt and boots, sword at hip, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T05:03:21.287843+00:00"
+      },
+      "folder": "promoted_lord_headb_2",
+      "frames": {
+        "rotations": {
+          "south": "promoted_lord_headb_2/rotations/south.png",
+          "south-east": "promoted_lord_headb_2/rotations/south-east.png",
+          "east": "promoted_lord_headb_2/rotations/east.png",
+          "north-east": "promoted_lord_headb_2/rotations/north-east.png",
+          "north": "promoted_lord_headb_2/rotations/north.png",
+          "north-west": "promoted_lord_headb_2/rotations/north-west.png",
+          "west": "promoted_lord_headb_2/rotations/west.png",
+          "south-west": "promoted_lord_headb_2/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "promoted_lord_headb_2/animations/walking/east/frame_000.png",
+              "promoted_lord_headb_2/animations/walking/east/frame_001.png",
+              "promoted_lord_headb_2/animations/walking/east/frame_002.png",
+              "promoted_lord_headb_2/animations/walking/east/frame_003.png",
+              "promoted_lord_headb_2/animations/walking/east/frame_004.png",
+              "promoted_lord_headb_2/animations/walking/east/frame_005.png",
+              "promoted_lord_headb_2/animations/walking/east/frame_006.png",
+              "promoted_lord_headb_2/animations/walking/east/frame_007.png",
+              "promoted_lord_headb_2/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "de0cf044-913c-4c3d-9afb-76954d68e249",
+        "name": "promoted lord: headb",
+        "prompt": "young male tactics-RPG swordsman student, warm brown skin, short spiky black hair with dark blue sheen, crimson red headband, dark navy academy uniform jacket with gold buttons, short crimson cape on shoulders, brown leather belt and boots, sword at hip, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T05:50:46.136627+00:00"
+      },
+      "folder": "promoted_lord_headb_3",
+      "frames": {
+        "rotations": {
+          "south": "promoted_lord_headb_3/rotations/south.png",
+          "south-east": "promoted_lord_headb_3/rotations/south-east.png",
+          "east": "promoted_lord_headb_3/rotations/east.png",
+          "north-east": "promoted_lord_headb_3/rotations/north-east.png",
+          "north": "promoted_lord_headb_3/rotations/north.png",
+          "north-west": "promoted_lord_headb_3/rotations/north-west.png",
+          "west": "promoted_lord_headb_3/rotations/west.png",
+          "south-west": "promoted_lord_headb_3/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "promoted_lord_headb_3/animations/walking/east/frame_000.png",
+              "promoted_lord_headb_3/animations/walking/east/frame_001.png",
+              "promoted_lord_headb_3/animations/walking/east/frame_002.png",
+              "promoted_lord_headb_3/animations/walking/east/frame_003.png",
+              "promoted_lord_headb_3/animations/walking/east/frame_004.png",
+              "promoted_lord_headb_3/animations/walking/east/frame_005.png",
+              "promoted_lord_headb_3/animations/walking/east/frame_006.png",
+              "promoted_lord_headb_3/animations/walking/east/frame_007.png",
+              "promoted_lord_headb_3/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "cf07c02d-f524-44cc-a105-b43222b8b2e7",
+        "name": "school uniform outfi",
+        "prompt": "young male tactics-RPG swordsman student, warm brown skin, short spiky black hair with dark blue sheen, crimson red headband, dark navy academy uniform jacket with gold buttons, short crimson cape on shoulders, brown leather belt and boots, sword at hip, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T06:18:56.566881+00:00"
+      },
+      "folder": "school_uniform_outfi",
+      "frames": {
+        "rotations": {
+          "south": "school_uniform_outfi/rotations/south.png",
+          "south-east": "school_uniform_outfi/rotations/south-east.png",
+          "east": "school_uniform_outfi/rotations/east.png",
+          "north-east": "school_uniform_outfi/rotations/north-east.png",
+          "north": "school_uniform_outfi/rotations/north.png",
+          "north-west": "school_uniform_outfi/rotations/north-west.png",
+          "west": "school_uniform_outfi/rotations/west.png",
+          "south-west": "school_uniform_outfi/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "school_uniform_outfi/animations/walking/east/frame_000.png",
+              "school_uniform_outfi/animations/walking/east/frame_001.png",
+              "school_uniform_outfi/animations/walking/east/frame_002.png",
+              "school_uniform_outfi/animations/walking/east/frame_003.png",
+              "school_uniform_outfi/animations/walking/east/frame_004.png",
+              "school_uniform_outfi/animations/walking/east/frame_005.png",
+              "school_uniform_outfi/animations/walking/east/frame_006.png",
+              "school_uniform_outfi/animations/walking/east/frame_007.png",
+              "school_uniform_outfi/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "805fe990-b161-4850-b66c-cbe518c2398a",
+        "name": "casual clothes: simp",
+        "prompt": "young male tactics-RPG swordsman student, warm brown skin, short spiky black hair with dark blue sheen, crimson red headband, dark navy academy uniform jacket with gold buttons, short crimson cape on shoulders, brown leather belt and boots, sword at hip, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T06:18:57.865751+00:00"
+      },
+      "folder": "casual_clothes_simp",
+      "frames": {
+        "rotations": {
+          "south": "casual_clothes_simp/rotations/south.png",
+          "south-east": "casual_clothes_simp/rotations/south-east.png",
+          "east": "casual_clothes_simp/rotations/east.png",
+          "north-east": "casual_clothes_simp/rotations/north-east.png",
+          "north": "casual_clothes_simp/rotations/north.png",
+          "north-west": "casual_clothes_simp/rotations/north-west.png",
+          "west": "casual_clothes_simp/rotations/west.png",
+          "south-west": "casual_clothes_simp/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "casual_clothes_simp/animations/walking/east/frame_000.png",
+              "casual_clothes_simp/animations/walking/east/frame_001.png",
+              "casual_clothes_simp/animations/walking/east/frame_002.png",
+              "casual_clothes_simp/animations/walking/east/frame_003.png",
+              "casual_clothes_simp/animations/walking/east/frame_004.png",
+              "casual_clothes_simp/animations/walking/east/frame_005.png",
+              "casual_clothes_simp/animations/walking/east/frame_006.png",
+              "casual_clothes_simp/animations/walking/east/frame_007.png",
+              "casual_clothes_simp/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "6dc5c67e-8f6c-4e84-97f6-a0ef440177f1",
+        "name": "formal festival outf",
+        "prompt": "young male tactics-RPG swordsman student, warm brown skin, short spiky black hair with dark blue sheen, crimson red headband, dark navy academy uniform jacket with gold buttons, short crimson cape on shoulders, brown leather belt and boots, sword at hip, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T06:18:59.340348+00:00"
+      },
+      "folder": "formal_festival_outf",
+      "frames": {
+        "rotations": {
+          "south": "formal_festival_outf/rotations/south.png",
+          "south-east": "formal_festival_outf/rotations/south-east.png",
+          "east": "formal_festival_outf/rotations/east.png",
+          "north-east": "formal_festival_outf/rotations/north-east.png",
+          "north": "formal_festival_outf/rotations/north.png",
+          "north-west": "formal_festival_outf/rotations/north-west.png",
+          "west": "formal_festival_outf/rotations/west.png",
+          "south-west": "formal_festival_outf/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "formal_festival_outf/animations/walking/east/frame_000.png",
+              "formal_festival_outf/animations/walking/east/frame_001.png",
+              "formal_festival_outf/animations/walking/east/frame_002.png",
+              "formal_festival_outf/animations/walking/east/frame_003.png",
+              "formal_festival_outf/animations/walking/east/frame_004.png",
+              "formal_festival_outf/animations/walking/east/frame_005.png",
+              "formal_festival_outf/animations/walking/east/frame_006.png",
+              "formal_festival_outf/animations/walking/east/frame_007.png",
+              "formal_festival_outf/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T06:27:47.254691"
+}

@@ -1,0 +1,222 @@
+{
+  "group_id": "60d64003-5ca0-44bc-b3b3-c89b79cc5d77",
+  "states": [
+    {
+      "character": {
+        "id": "f7ca9481-39b8-40e9-8a3f-fb4825996835",
+        "name": "perrin",
+        "prompt": "young male tactics-RPG cavalier heir, charismatic golden-boy grin, short golden blond hair, fair skin, dark navy academy uniform with crimson half-cape and gold epaulettes, riding boots, lance and sword at belt, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-04T23:03:13.504829+00:00"
+      },
+      "folder": "perrin",
+      "frames": {
+        "rotations": {
+          "south": "perrin/rotations/south.png",
+          "south-east": "perrin/rotations/south-east.png",
+          "east": "perrin/rotations/east.png",
+          "north-east": "perrin/rotations/north-east.png",
+          "north": "perrin/rotations/north.png",
+          "north-west": "perrin/rotations/north-west.png",
+          "west": "perrin/rotations/west.png",
+          "south-west": "perrin/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "perrin/animations/walking/east/frame_000.png",
+              "perrin/animations/walking/east/frame_001.png",
+              "perrin/animations/walking/east/frame_002.png",
+              "perrin/animations/walking/east/frame_003.png",
+              "perrin/animations/walking/east/frame_004.png",
+              "perrin/animations/walking/east/frame_005.png",
+              "perrin/animations/walking/east/frame_006.png",
+              "perrin/animations/walking/east/frame_007.png",
+              "perrin/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "ff39c2c0-f1e3-4a82-9042-ecbccd284db6",
+        "name": "promoted to paladin:",
+        "prompt": "young male tactics-RPG cavalier heir, charismatic golden-boy grin, short golden blond hair, fair skin, dark navy academy uniform with crimson half-cape and gold epaulettes, riding boots, lance and sword at belt, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T03:41:50.003808+00:00"
+      },
+      "folder": "promoted_to_paladin",
+      "frames": {
+        "rotations": {
+          "south": "promoted_to_paladin/rotations/south.png",
+          "south-east": "promoted_to_paladin/rotations/south-east.png",
+          "east": "promoted_to_paladin/rotations/east.png",
+          "north-east": "promoted_to_paladin/rotations/north-east.png",
+          "north": "promoted_to_paladin/rotations/north.png",
+          "north-west": "promoted_to_paladin/rotations/north-west.png",
+          "west": "promoted_to_paladin/rotations/west.png",
+          "south-west": "promoted_to_paladin/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "promoted_to_paladin/animations/walking/east/frame_000.png",
+              "promoted_to_paladin/animations/walking/east/frame_001.png",
+              "promoted_to_paladin/animations/walking/east/frame_002.png",
+              "promoted_to_paladin/animations/walking/east/frame_003.png",
+              "promoted_to_paladin/animations/walking/east/frame_004.png",
+              "promoted_to_paladin/animations/walking/east/frame_005.png",
+              "promoted_to_paladin/animations/walking/east/frame_006.png",
+              "promoted_to_paladin/animations/walking/east/frame_007.png",
+              "promoted_to_paladin/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8",
+        "name": "school uniform outfi",
+        "prompt": "young male tactics-RPG cavalier heir, charismatic golden-boy grin, short golden blond hair, fair skin, dark navy academy uniform with crimson half-cape and gold epaulettes, riding boots, lance and sword at belt, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T06:19:07.032428+00:00"
+      },
+      "folder": "school_uniform_outfi",
+      "frames": {
+        "rotations": {
+          "south": "school_uniform_outfi/rotations/south.png",
+          "south-east": "school_uniform_outfi/rotations/south-east.png",
+          "east": "school_uniform_outfi/rotations/east.png",
+          "north-east": "school_uniform_outfi/rotations/north-east.png",
+          "north": "school_uniform_outfi/rotations/north.png",
+          "north-west": "school_uniform_outfi/rotations/north-west.png",
+          "west": "school_uniform_outfi/rotations/west.png",
+          "south-west": "school_uniform_outfi/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "school_uniform_outfi/animations/walking/east/frame_000.png",
+              "school_uniform_outfi/animations/walking/east/frame_001.png",
+              "school_uniform_outfi/animations/walking/east/frame_002.png",
+              "school_uniform_outfi/animations/walking/east/frame_003.png",
+              "school_uniform_outfi/animations/walking/east/frame_004.png",
+              "school_uniform_outfi/animations/walking/east/frame_005.png",
+              "school_uniform_outfi/animations/walking/east/frame_006.png",
+              "school_uniform_outfi/animations/walking/east/frame_007.png",
+              "school_uniform_outfi/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "da9b051f-6dba-4dcd-b76b-ea1a2b7c99d8",
+        "name": "formal festival outf",
+        "prompt": "young male tactics-RPG cavalier heir, charismatic golden-boy grin, short golden blond hair, fair skin, dark navy academy uniform with crimson half-cape and gold epaulettes, riding boots, lance and sword at belt, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T06:20:03.2119+00:00"
+      },
+      "folder": "formal_festival_outf",
+      "frames": {
+        "rotations": {
+          "south": "formal_festival_outf/rotations/south.png",
+          "south-east": "formal_festival_outf/rotations/south-east.png",
+          "east": "formal_festival_outf/rotations/east.png",
+          "north-east": "formal_festival_outf/rotations/north-east.png",
+          "north": "formal_festival_outf/rotations/north.png",
+          "north-west": "formal_festival_outf/rotations/north-west.png",
+          "west": "formal_festival_outf/rotations/west.png",
+          "south-west": "formal_festival_outf/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "formal_festival_outf/animations/walking/east/frame_000.png",
+              "formal_festival_outf/animations/walking/east/frame_001.png",
+              "formal_festival_outf/animations/walking/east/frame_002.png",
+              "formal_festival_outf/animations/walking/east/frame_003.png",
+              "formal_festival_outf/animations/walking/east/frame_004.png",
+              "formal_festival_outf/animations/walking/east/frame_005.png",
+              "formal_festival_outf/animations/walking/east/frame_006.png",
+              "formal_festival_outf/animations/walking/east/frame_007.png",
+              "formal_festival_outf/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "3b7ae31c-745f-4f3c-9a3a-c10603d936cd",
+        "name": "casual clothes: open",
+        "prompt": "young male tactics-RPG cavalier heir, charismatic golden-boy grin, short golden blond hair, fair skin, dark navy academy uniform with crimson half-cape and gold epaulettes, riding boots, lance and sword at belt, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T06:20:55.650114+00:00"
+      },
+      "folder": "casual_clothes_open",
+      "frames": {
+        "rotations": {
+          "south": "casual_clothes_open/rotations/south.png",
+          "south-east": "casual_clothes_open/rotations/south-east.png",
+          "east": "casual_clothes_open/rotations/east.png",
+          "north-east": "casual_clothes_open/rotations/north-east.png",
+          "north": "casual_clothes_open/rotations/north.png",
+          "north-west": "casual_clothes_open/rotations/north-west.png",
+          "west": "casual_clothes_open/rotations/west.png",
+          "south-west": "casual_clothes_open/rotations/south-west.png"
+        },
+        "animations": {
+          "walking": {
+            "east": [
+              "casual_clothes_open/animations/walking/east/frame_000.png",
+              "casual_clothes_open/animations/walking/east/frame_001.png",
+              "casual_clothes_open/animations/walking/east/frame_002.png",
+              "casual_clothes_open/animations/walking/east/frame_003.png",
+              "casual_clothes_open/animations/walking/east/frame_004.png",
+              "casual_clothes_open/animations/walking/east/frame_005.png",
+              "casual_clothes_open/animations/walking/east/frame_006.png",
+              "casual_clothes_open/animations/walking/east/frame_007.png",
+              "casual_clothes_open/animations/walking/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-05T06:28:22.501477"
+}

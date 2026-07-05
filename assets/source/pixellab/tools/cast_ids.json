@@ -56,5 +56,17 @@
  "isolde_v2": "2767b51e-40fe-4434-aaf2-b0706208c2d8",
  "thessaly_v2": "13997546-692c-47e3-b4ee-f473416c02e1",
  "liora_v2": "3f7c6b7f-7ea1-41d5-ade1-5b4ba6842490",
- "kai_evolved3": "de0cf044-913c-4c3d-9afb-76954d68e249"
+ "kai_evolved3": "de0cf044-913c-4c3d-9afb-76954d68e249",
+ "kai_school": "cf07c02d-f524-44cc-a105-b43222b8b2e7",
+ "kai_casual": "805fe990-b161-4850-b66c-cbe518c2398a",
+ "kai_party": "6dc5c67e-8f6c-4e84-97f6-a0ef440177f1",
+ "serra_school": "cfc9e3b1-71dd-4efe-b480-a947cd1c57b4",
+ "serra_casual": "e91dc34a-d785-4ce5-b3ae-45e6498d371f",
+ "serra_party": "021873a4-f94c-453e-9dc4-d6200cf2d984",
+ "corin_school": "891c4435-926c-442a-b515-8a16d2bff1d5",
+ "corin_casual": "38bbf887-bfab-4247-aa38-e83c4b64cae5",
+ "corin_party": "f8d6b082-024a-438f-8f97-706c5e08d43d",
+ "perrin_school": "0cfa3784-ff9a-4b7d-9b5f-a2073f5f52d8",
+ "perrin_party": "da9b051f-6dba-4dcd-b76b-ea1a2b7c99d8",
+ "perrin_casual": "3b7ae31c-745f-4f3c-9a3a-c10603d936cd"
 }
