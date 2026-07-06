@@ -38,6 +38,7 @@ var _nearest_point: CastlePoint = null
 var _door_pulse := 0.0
 
 # room functions (v1 handlers, unchanged names — tests ride on these)
+var _music: AudioStreamPlayer
 var _menu: ChoiceMenu
 var _menu_context := ""
 var _roster_defs: Array[UnitDef] = []
@@ -87,12 +88,31 @@ func _ready() -> void:
 	_menu.chosen.connect(_on_menu_chosen)
 	_menu.cancelled.connect(_close_menu)
 	_ui.add_child(_menu)
+	_start_music()
 	var target := next_room if next_room != "" else START_ROOM
 	var spawn := next_spawn
 	next_room = ""
 	next_spawn = Vector2i(-1, -1)
 	enter_room(target, spawn)
 	_refresh_date()
+
+
+## WO-9.3 (first slice): campus background music — one looping bed for the
+## whole castle scene, so it carries across every room. Convention-based:
+## plays whatever lives at assets/audio/music/campus_chill.mp3.
+func _start_music() -> void:
+	var path := "res://assets/audio/music/campus_chill.mp3"
+	if not ResourceLoader.exists(path):
+		return
+	var stream: AudioStream = load(path)
+	if stream is AudioStreamMP3:
+		stream.loop = true
+	_music = AudioStreamPlayer.new()
+	_music.stream = stream
+	_music.volume_db = -6.0
+	_music.autoplay = true
+	add_child(_music)
+	_music.play()
 
 
 func _load_rooms() -> void:
