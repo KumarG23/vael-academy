@@ -1,4 +1,13 @@
 {
  "grass_water": "0a0c714f-fa72-4894-b91b-76ba737fc2e6",
- "grass_path": "421f7bee-306b-41d0-a566-a0202faff0fa"
+ "grass_path": "421f7bee-306b-41d0-a566-a0202faff0fa",
+ "grass_forest": "fb0f6f23-6fde-4c7b-833f-e5a40ed92418",
+ "grass_mountain": "bc2f4e74-ac3b-46ae-a5ec-8bb5a9fd9cb8",
+ "grass_fortstone": "24a20026-64c1-4046-b565-424901e5eb7a",
+ "grass_wall": "c02199bc-2a7c-4e6a-8064-c88b70de2041",
+ "floor_wall": "fe7511db-ecf0-44b8-9c75-7fc797bfae29",
+ "floor_carpet": "970b587c-55e5-4984-863a-9beff55b5fa6",
+ "floor_pool": "a6d33e15-6cdc-4210-9c51-a3a538d37c75",
+ "floor_wall_v2": "fc8c5fee-3c49-4895-b8dc-4d27b70bb05c",
+ "grass_flowers": "8d16c53d-f49f-436e-a14e-e9cabe7e75e4"
 }
