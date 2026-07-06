@@ -334,10 +334,12 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 		var sc := clampf(TARGET_BATTLER_PX / h, 1.0, 9.0)
 		spr.scale = Vector2.ONE * sc
 		var x := _root.size.x * 0.5 + (-190.0 if i2 == 0 else 190.0)
-		# feet on the scene's ground line regardless of battler size
+		# feet on the scene's ground line regardless of battler size — using
+		# the idle stance's real baseline, not the frame bottom
 		var feet_y := _root.size.y * (GROUND_FRAC if scene_bg else 0.5) \
 			+ (0.0 if scene_bg else 46.0 + h * sc * 0.5)
-		holder.position = Vector2(x, feet_y - h * sc * 0.5)
+		holder.position = Vector2(x,
+			feet_y - h * sc * 0.5 + _kit_ground_gap(spr.sprite_frames) * sc)
 	_build_chrome(attacker, defender, exchange)
 	_left_sprite.play("idle")
 	_right_sprite.play("idle")
@@ -373,6 +375,20 @@ func _swing_time(frames: SpriteFrames, anim: String) -> float:
 func _kit_frame_height(frames: SpriteFrames) -> float:
 	var tex := frames.get_frame_texture("idle", 0) if frames.has_animation("idle") else null
 	return float(tex.get_height()) if tex != null else 32.0
+
+
+## Empty margin (px) between the idle stance's feet and the frame bottom.
+## Kit frames are cropped to the union of ALL animations, so a standing pose
+## usually has dead space under it — without this the battler floats.
+func _kit_ground_gap(frames: SpriteFrames) -> float:
+	if not frames.has_animation("idle"):
+		return 0.0
+	var img := frames.get_frame_texture("idle", 0).get_image()
+	for y in range(img.get_height() - 1, -1, -1):
+		for x in range(0, img.get_width(), 2):
+			if img.get_pixel(x, y).a > 0.1:
+				return float(img.get_height() - 1 - y)
+	return 0.0
 
 
 ## The GBA feel is in the TIMING, not just the frames: attack/crit anims hold
