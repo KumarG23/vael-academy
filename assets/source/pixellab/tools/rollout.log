@@ -103,3 +103,22 @@ bandit: base creating -> a5f1ff84-0db5-423a-be70-2b79cbfeddc3
   anim not in zip yet, waiting...
   anim not in zip yet, waiting...
   anim not in zip yet, waiting...
+  tm_knight PROCESSED: [('idle', 9), ('hit', 7), ('ko', 9), ('attack_wind', 9), ('attack_strike', 9), ('crit_wind', 9), ('crit_strike', 9), ('attack', 18), ('crit', 18)]
+tm_knight: DONE | generations_remaining: 3088
+  queued attack_strike_east
+  queued crit_strike_east
+tm_mage: strikes queued (chained)
+  queued idle_east
+  queued hit_east
+  queued ko_east
+  queued attack_wind_east
+  queued crit_wind_east
+bandit: anims1 queued
+  tm_mage PROCESSED: [('idle', 9), ('hit', 7), ('ko', 9), ('attack_wind', 9), ('attack_strike', 9), ('crit_wind', 9), ('crit_strike', 9), ('attack', 18), ('crit', 18)]
+tm_mage: DONE | generations_remaining: 3059
+  queued attack_strike_east
+  queued crit_strike_east
+bandit: strikes queued (chained)
+  bandit PROCESSED: [('idle', 9), ('hit', 7), ('ko', 9), ('attack_wind', 9), ('attack_strike', 9), ('crit_wind', 9), ('crit_strike', 9), ('attack', 18), ('crit', 18)]
+bandit: DONE | generations_remaining: 3031
+CAST ROLLOUT COMPLETE

@@ -27,15 +27,17 @@
  },
  "tm_knight": {
   "cid": "410feb44-fcaa-44d7-a702-cb7d79fd3a1c",
-  "phase": "strikes",
+  "phase": "done",
   "base_folder": "tm_knight_battle_pro"
  },
  "tm_mage": {
   "cid": "1fe80913-10db-46f7-9f42-09c087fcd66b",
-  "phase": "anims1"
+  "phase": "done",
+  "base_folder": "tm_mage_battle_pro"
  },
  "bandit": {
   "cid": "a5f1ff84-0db5-423a-be70-2b79cbfeddc3",
-  "phase": "base_creating"
+  "phase": "done",
+  "base_folder": "bandit_battle_pro"
  }
 }

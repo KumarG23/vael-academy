@@ -38,7 +38,12 @@ func spawn_units() -> void:
 		for spawn in _v.chapter.enemy_spawns:
 			if spawn == null or spawn.unit == null:
 				continue
-			var u: Unit = _v.add_unit(spawn.unit.duplicate(), spawn.cell)
+			var def: UnitDef = spawn.unit.duplicate()
+			if spawn.team_override >= 0:
+				def.team = spawn.team_override
+			if spawn.ai_override >= 0:
+				def.ai_behavior = spawn.ai_override as AIBrain.Behavior
+			var u: Unit = _v.add_unit(def, spawn.cell)
 			if _v.chapter.boss_unit_id != "" and u.unit_id() == _v.chapter.boss_unit_id:
 				_v._boss_unit = u
 	# When deployed from the hub, overlay campaign progression + supports (WO-3.5).

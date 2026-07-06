@@ -7,6 +7,13 @@ extends Control
 ## Campaign autoload so progression flows hub → battle → hub.
 
 const BATTLE_SCENE := "res://scenes/battle/mock_battle.tscn"
+## WO-5.6: the opening rite is fought against the next house in the cycle, so
+## no house ever faces itself. Emberwing's route is the original chapter.
+const BATTLE_SCENE_FOR_HOUSE := {
+	"emberwing": "res://scenes/battle/mock_battle.tscn",
+	"tidemark": "res://scenes/battle/mock_battle_vs_thornrook.tscn",
+	"thornrook": "res://scenes/battle/mock_battle_vs_emberwing.tscn",
+}
 
 const FLAVOR := [
 	"The common room is loud tonight — and for once, the looks aimed your way feel like welcome.",
@@ -270,7 +277,7 @@ func _do_mission(index: int) -> void:
 
 func deploy() -> void:
 	Campaign.deploy()
-	get_tree().change_scene_to_file(BATTLE_SCENE)
+	get_tree().change_scene_to_file(BATTLE_SCENE_FOR_HOUSE.get(Campaign.house_id, BATTLE_SCENE))
 
 
 func _return_to_title() -> void:
