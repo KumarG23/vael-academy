@@ -1,0 +1,19 @@
+[
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "Kai. Before the year ends and everything changes — I need to say a thing, and you need to not interrupt."},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "I've tended everyone's flame but my own since I was a girl. And then you noticed me back. Nobody ever... you NOTICED me back."},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "So. The thing is that I love you. That's the thing."},
+ {"choice": "What does Kai say?", "options": [
+   {"text": "\"Say it again. Please.\"", "goto": "accept", "flag": "romance_liora"},
+   {"text": "\"Liora... I can't. Not yet.\"", "goto": "gentle"}
+ ]},
+ {"label": "accept"},
+ {"speaker": "Kai", "portrait": "kai", "text": "Say it again. Please. Nobody's ever — I want to hear it while I'm brave enough to answer."},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "I love you, Kai of nowhere and everywhere. Now say YOUR thing before I set something on fire."},
+ {"speaker": "Kai", "portrait": "kai", "text": "I love you. There. The world's strangest magic, and it's the only one that's never scared me."},
+ {"goto": "end"},
+ {"label": "gentle"},
+ {"speaker": "Kai", "portrait": "kai", "text": "Liora... I can't. Not yet. Everything I am is still waking up — I won't hand you half a person."},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "...then I'll wait by the fire, dolt. It's what I'm best at. But you OWE me a whole person, Kai. I'm collecting."},
+ {"label": "end"},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "Now come on. Practice field. If tonight taught me anything, it's that your flame gets brighter around me."}
+]

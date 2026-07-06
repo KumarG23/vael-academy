@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SupportChainDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/support_chain_def.gd" id="1_support"]
+
+[resource]
+script = ExtResource("1_support")
+id = "kai_liora"
+unit_a_id = "kai"
+unit_a_name = "Kai"
+unit_b_id = "liora"
+unit_b_name = "Liora"
+romance_eligible = true
+c_conversation = "res://data/supports/kai_liora_c.json"
+b_conversation = "res://data/supports/kai_liora_b.json"
+a_conversation = "res://data/supports/kai_liora_a.json"
+s_conversation = "res://data/supports/kai_liora_s.json"

@@ -4,6 +4,9 @@ extends Resource
 ## paths/labels in WO-3.2; WO-4.2 replaces the placeholder scripts with real copy.
 
 const RANKS := ["C", "B", "A"]
+## WO-5.7: the romance rank past A (FE's S). Only romance-eligible chains
+## can reach it; everyone else caps at A.
+const ROMANCE_RANK := "S"
 
 @export var id: String = ""
 @export var unit_a_id: String = ""
@@ -11,15 +14,22 @@ const RANKS := ["C", "B", "A"]
 @export var unit_b_id: String = ""
 @export var unit_b_name: String = ""
 
+## WO-5.7: whether this pair can grow past A into the romance rank (§4:
+## all students are candidates; the flag is per-chain data).
+@export var romance_eligible: bool = false
+
 @export_group("Thresholds")
 @export var c_threshold: int = 20
 @export var b_threshold: int = 60
 @export var a_threshold: int = 120
+@export var s_threshold: int = 200
 
 @export_group("Conversation Paths")
 @export var c_conversation: String = ""
 @export var b_conversation: String = ""
 @export var a_conversation: String = ""
+## The confession scene (branched via WO-4.6 choices).
+@export var s_conversation: String = ""
 
 
 static func canonical_pair_id(a_id: String, b_id: String) -> String:
@@ -54,6 +64,11 @@ func display_pair() -> String:
 	return "%s + %s" % [a, b]
 
 
+## The rank ladder THIS chain can climb (romance pairs get S).
+func ranks() -> Array:
+	return RANKS + [ROMANCE_RANK] if romance_eligible else RANKS
+
+
 func threshold_for_rank(rank: String) -> int:
 	match rank:
 		"C":
@@ -62,20 +77,22 @@ func threshold_for_rank(rank: String) -> int:
 			return b_threshold
 		"A":
 			return a_threshold
+		"S":
+			return s_threshold
 		_:
 			return 1 << 30
 
 
 func rank_for_points(value: int) -> String:
 	var unlocked := ""
-	for rank in RANKS:
+	for rank in ranks():
 		if value >= threshold_for_rank(rank):
 			unlocked = rank
 	return unlocked
 
 
 func rank_index(rank: String) -> int:
-	return RANKS.find(rank)
+	return ranks().find(rank)
 
 
 func conversation_path(rank: String) -> String:
@@ -86,6 +103,8 @@ func conversation_path(rank: String) -> String:
 			return b_conversation
 		"A":
 			return a_conversation
+		"S":
+			return s_conversation
 		_:
 			return ""
 

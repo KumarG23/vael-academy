@@ -14,6 +14,7 @@ const _BONUS_BY_RANK := {
 	"C": {"hit": 5, "avoid": 5, "damage": 0, "crit": 0},
 	"B": {"hit": 10, "avoid": 10, "damage": 1, "crit": 0},
 	"A": {"hit": 15, "avoid": 15, "damage": 1, "crit": 5},
+	"S": {"hit": 20, "avoid": 20, "damage": 2, "crit": 10},
 }
 
 var chains: Array[SupportChainDef] = []
@@ -22,6 +23,9 @@ var ranks: Dictionary = {}
 ## "pair_id:rank" -> true once the conversation has been watched (WO-4.4). The
 ## in-battle menu offers only unwatched scenes; the Common Hall keeps the archive.
 var viewed: Dictionary = {}
+## WO-5.7: unit id -> partner id, set when a pair reaches the romance rank.
+## Romance is exclusive — a unit with a recorded partner can't S another chain.
+var romances: Dictionary = {}
 
 
 func mark_viewed(pair_id: String, rank: String) -> void:
@@ -51,8 +55,15 @@ func add_points(a_id: String, b_id: String, amount: int) -> Dictionary:
 	var before_rank: String = ranks.get(pair, "")
 	points[pair] = int(points.get(pair, 0)) + amount
 	var after_rank := chain.rank_for_points(int(points[pair]))
+	# WO-5.7: the romance rank is exclusive — if either unit is already
+	# spoken for (another chain), this pair stops at A.
+	if after_rank == SupportChainDef.ROMANCE_RANK and _romance_blocked(chain):
+		after_rank = "A"
 	if chain.rank_index(after_rank) > chain.rank_index(before_rank):
 		ranks[pair] = after_rank
+		if after_rank == SupportChainDef.ROMANCE_RANK:
+			romances[chain.unit_a_id] = chain.unit_b_id
+			romances[chain.unit_b_id] = chain.unit_a_id
 		return {
 			"ranked_up": true,
 			"pair_id": pair,
@@ -66,6 +77,22 @@ func add_points(a_id: String, b_id: String, amount: int) -> Dictionary:
 		"rank": before_rank,
 		"points": points[pair],
 	}
+
+
+## Either partner already romanced into a DIFFERENT pair?
+func _romance_blocked(chain: SupportChainDef) -> bool:
+	for uid in [chain.unit_a_id, chain.unit_b_id]:
+		if romances.has(uid) and romances[uid] != chain.partner_id(uid):
+			return true
+	return false
+
+
+func is_romanced(unit_id: String) -> bool:
+	return romances.has(unit_id)
+
+
+func romance_partner(unit_id: String) -> String:
+	return str(romances.get(unit_id, ""))
 
 
 func chain_for_units(a_id: String, b_id: String) -> SupportChainDef:
@@ -114,7 +141,7 @@ func unlocked_conversations_for_unit(unit_id: String) -> Array:
 		if idx < 0:
 			continue
 		for i in range(idx + 1):
-			var rank: String = SupportChainDef.RANKS[i]
+			var rank: String = chain.ranks()[i]
 			out.append({
 				"pair_id": chain.pair_id(),
 				"rank": rank,
@@ -134,6 +161,7 @@ func save_state() -> Dictionary:
 		"points": points.duplicate(true),
 		"ranks": ranks.duplicate(true),
 		"viewed": viewed.duplicate(true),
+		"romances": romances.duplicate(true),
 	}
 
 
@@ -150,6 +178,10 @@ func apply_save_state(state: Dictionary) -> void:
 	var saved_viewed: Dictionary = state.get("viewed", {})
 	for key in saved_viewed:
 		viewed[str(key)] = bool(saved_viewed[key])
+	romances.clear()
+	var saved_rom: Dictionary = state.get("romances", {})
+	for key in saved_rom:
+		romances[str(key)] = str(saved_rom[key])
 	for chain in chains:
 		var pair := chain.pair_id()
 		if not points.has(pair):
