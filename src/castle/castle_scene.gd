@@ -125,13 +125,17 @@ func enter_room(room_id: String, spawn_x := 0.5) -> void:
 	room_changed.emit(room_id)
 
 
+func _spot_available(spot: RoomSpot) -> bool:
+	return spot.requires_flag == "" or bool(Campaign.flags.get(spot.requires_flag, false))
+
+
 ## WO-6.3: housemates stand at their spots (idle loop from their map frames).
 func _spawn_npcs(vp: Vector2) -> void:
 	for n in _npc_sprites:
 		n.queue_free()
 	_npc_sprites.clear()
 	for spot in room.spots:
-		if spot.npc_unit == "":
+		if spot.npc_unit == "" or not _spot_available(spot):
 			continue
 		var npc := AnimatedSprite2D.new()
 		npc.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -174,6 +178,8 @@ func _update_prompt(vp: Vector2) -> void:
 			best = d
 			_nearest = e
 	for s in room.spots:
+		if not _spot_available(s):
+			continue
 		var d2: float = absf(_avatar_pos.x - s.x * vp.x)
 		if d2 < best:
 			best = d2
@@ -247,6 +253,8 @@ func _open_function(fn: String) -> void:
 			_start_fishing()
 		"fn_rest":
 			_rest_week()
+		"fn_cook":
+			_open_cooking()
 
 
 # --- 6.4: fishing ---------------------------------------------------------------
@@ -348,6 +356,22 @@ func _do_train(index: int) -> void:
 func _refresh_date() -> void:
 	var e := Campaign.current_event()
 	_date_label.text = "Week %d — %s" % [Campaign.week, e.label if e != null else "The year is done"]
+	_maybe_play_set_piece(e)
+
+
+## WO-7.3: scheduled set-pieces fire once each — the Founding Festival plays
+## on its week (and unlocks cooking, WO-7.2); the Victory Feast plays when
+## the year ends past the Closing Rite.
+func _maybe_play_set_piece(e: CalendarEventDef) -> void:
+	if e != null and e.kind == CalendarEventDef.Kind.HOLIDAY \
+			and not bool(Campaign.flags.get("festival_seen", false)):
+		Campaign.flags["festival_seen"] = true
+		Campaign.flags["cooking_unlocked"] = true
+		_play_dialogue("res://data/dialogue/festival_founding.json")
+	elif e == null and Campaign.last_result == "victory" \
+			and not bool(Campaign.flags.get("feast_seen", false)):
+		Campaign.flags["feast_seen"] = true
+		_play_dialogue("res://data/dialogue/party_victory_feast.json")
 
 
 func _open_mission() -> void:
@@ -418,8 +442,41 @@ func _on_menu_chosen(index: int) -> void:
 			_inspect_unit(index)
 		"house":
 			_choose_house(index)
+		"cooking":
+			_do_cook(index)
 		"system":
 			_do_system(index)
+
+
+## WO-7.2: fire-pit cooking (unlocked at the Founding Festival) — cook with a
+## housemate, grow the bond. Once per week.
+func _open_cooking() -> void:
+	var key := "cooked_week_%d" % Campaign.week
+	if bool(Campaign.flags.get(key, false)):
+		_toast("The pits are cold until next week.")
+		return
+	_menu_context = "cooking"
+	var labels: Array = []
+	for def in _roster_defs:
+		if def.id != "kai":
+			labels.append(def.display_name)
+	_menu.open("Fire-pit Cooking — with whom?", labels, _menu_pos())
+
+
+func _do_cook(index: int) -> void:
+	var partners: Array = []
+	for def in _roster_defs:
+		if def.id != "kai":
+			partners.append(def)
+	var partner: UnitDef = partners[index]
+	Campaign.flags["cooked_week_%d" % Campaign.week] = true
+	var result := _support_state.add_points("kai", partner.id, 8)
+	Campaign.support_save = _support_state.save_state()
+	_close_menu()
+	if result.get("ranked_up", false):
+		_toast("Cooking with %s — bond deepened to %s!" % [partner.display_name, result["new_rank"]])
+	else:
+		_toast("Cooking with %s — the fire does its quiet work." % partner.display_name)
 
 
 func _open_system_menu() -> void:

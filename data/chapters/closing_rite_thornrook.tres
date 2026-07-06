@@ -1,0 +1,236 @@
+[gd_resource type="Resource" script_class="ChapterDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_y3jem"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/well.png" id="2_aplv7"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/archery_target.png" id="3_g8d6f"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/fence.png" id="4_qf03b"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/tent.png" id="5_ff8iu"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner.png" id="6_vdgrc"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="7_y2j56"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="8_22vt3"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/cart.png" id="9_ahby6"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bush.png" id="10_r0il8"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/rocks.png" id="11_m1ad4"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/stump.png" id="12_bbfq0"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/signpost.png" id="13_3yn4s"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="14_lk316"]
+[ext_resource type="Resource" path="res://data/units/kael.tres" id="15_shjyw"]
+[ext_resource type="Resource" path="res://data/units/dain.tres" id="16_cgohk"]
+[ext_resource type="Resource" path="res://data/units/liora.tres" id="17_luvww"]
+[ext_resource type="Resource" path="res://data/units/brenna.tres" id="18_fgkod"]
+[ext_resource type="Resource" path="res://data/units/wren.tres" id="19_30yd7"]
+[ext_resource type="Resource" path="res://data/units/perrin.tres" id="20_5ropg"]
+[ext_resource type="Resource" path="res://data/units/osric.tres" id="21_ujn1f"]
+[ext_resource type="Resource" path="res://data/units/elowen.tres" id="22_2mcgp"]
+[ext_resource type="Resource" path="res://data/units/isolde.tres" id="23_l54v7"]
+[ext_resource type="Resource" path="res://data/units/fenn.tres" id="24_yvmvl"]
+[ext_resource type="Resource" path="res://data/units/bertram.tres" id="25_lsxsy"]
+[ext_resource type="Resource" path="res://data/units/serra_prologue.tres" id="26_2goom"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="27_r44jt"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="28_4a3un"]
+
+[sub_resource type="Resource" id="Resource_ai2pm"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("2_aplv7")
+cell = Vector2i(6, 10)
+
+[sub_resource type="Resource" id="Resource_xtcy2"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("3_g8d6f")
+cell = Vector2i(2, 5)
+
+[sub_resource type="Resource" id="Resource_ou56a"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("3_g8d6f")
+cell = Vector2i(2, 6)
+
+[sub_resource type="Resource" id="Resource_68ds8"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("4_qf03b")
+cell = Vector2i(1, 4)
+
+[sub_resource type="Resource" id="Resource_p7i05"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("4_qf03b")
+cell = Vector2i(2, 4)
+
+[sub_resource type="Resource" id="Resource_fhtaf"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("4_qf03b")
+cell = Vector2i(3, 4)
+
+[sub_resource type="Resource" id="Resource_c10jr"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("5_ff8iu")
+cell = Vector2i(1, 10)
+
+[sub_resource type="Resource" id="Resource_idjn6"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("5_ff8iu")
+cell = Vector2i(2, 10)
+
+[sub_resource type="Resource" id="Resource_k4i1r"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("6_vdgrc")
+cell = Vector2i(14, 6)
+
+[sub_resource type="Resource" id="Resource_r8j12"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("6_vdgrc")
+cell = Vector2i(16, 7)
+
+[sub_resource type="Resource" id="Resource_mcav7"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("7_y2j56")
+cell = Vector2i(4, 6)
+
+[sub_resource type="Resource" id="Resource_70acf"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("8_22vt3")
+cell = Vector2i(6, 9)
+
+[sub_resource type="Resource" id="Resource_dareo"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("9_ahby6")
+cell = Vector2i(8, 10)
+
+[sub_resource type="Resource" id="Resource_bew11"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("10_r0il8")
+cell = Vector2i(9, 12)
+
+[sub_resource type="Resource" id="Resource_w2wt1"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("10_r0il8")
+cell = Vector2i(14, 12)
+
+[sub_resource type="Resource" id="Resource_bgywd"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("11_m1ad4")
+cell = Vector2i(18, 9)
+
+[sub_resource type="Resource" id="Resource_8444h"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("12_bbfq0")
+cell = Vector2i(8, 13)
+
+[sub_resource type="Resource" id="Resource_oxtn7"]
+script = ExtResource("1_y3jem")
+texture = ExtResource("13_3yn4s")
+cell = Vector2i(5, 11)
+
+[sub_resource type="Resource" id="Resource_60xc6"]
+script = ExtResource("14_lk316")
+unit = ExtResource("15_shjyw")
+cell = Vector2i(9, 9)
+team_override = 1
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_t4qob"]
+script = ExtResource("14_lk316")
+unit = ExtResource("16_cgohk")
+cell = Vector2i(12, 11)
+team_override = 1
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_hx5ol"]
+script = ExtResource("14_lk316")
+unit = ExtResource("17_luvww")
+cell = Vector2i(7, 6)
+team_override = 1
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_0pi68"]
+script = ExtResource("14_lk316")
+unit = ExtResource("18_fgkod")
+cell = Vector2i(11, 7)
+team_override = 1
+ai_override = 1
+
+[sub_resource type="Resource" id="Resource_8c5d0"]
+script = ExtResource("14_lk316")
+unit = ExtResource("19_30yd7")
+cell = Vector2i(17, 5)
+team_override = 1
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_3eidg"]
+script = ExtResource("14_lk316")
+unit = ExtResource("20_5ropg")
+cell = Vector2i(17, 2)
+team_override = 1
+ai_override = 2
+
+[sub_resource type="Resource" id="Resource_kdlmh"]
+script = ExtResource("14_lk316")
+unit = ExtResource("21_ujn1f")
+cell = Vector2i(15, 13)
+team_override = 1
+ai_override = 1
+
+[sub_resource type="Resource" id="Resource_jl3u3"]
+script = ExtResource("14_lk316")
+unit = ExtResource("22_2mcgp")
+cell = Vector2i(17, 12)
+team_override = 1
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_jj1kr"]
+script = ExtResource("14_lk316")
+unit = ExtResource("23_l54v7")
+cell = Vector2i(13, 13)
+team_override = 1
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_onqsc"]
+script = ExtResource("14_lk316")
+unit = ExtResource("24_yvmvl")
+cell = Vector2i(18, 10)
+team_override = 1
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_dro77"]
+script = ExtResource("14_lk316")
+unit = ExtResource("25_lsxsy")
+cell = Vector2i(16, 11)
+team_override = 1
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_2to8s"]
+script = ExtResource("14_lk316")
+unit = ExtResource("26_2goom")
+cell = Vector2i(19, 12)
+team_override = 1
+ai_override = 2
+
+[resource]
+script = ExtResource("27_r44jt")
+id = "closing_rite_thornrook"
+display_name = "The Closing Rite"
+non_lethal = true
+enemy_spawns = Array[ExtResource("14_lk316")]([SubResource("Resource_60xc6"), SubResource("Resource_t4qob"), SubResource("Resource_hx5ol"), SubResource("Resource_0pi68"), SubResource("Resource_8c5d0"), SubResource("Resource_3eidg"), SubResource("Resource_kdlmh"), SubResource("Resource_jl3u3"), SubResource("Resource_jj1kr"), SubResource("Resource_onqsc"), SubResource("Resource_dro77"), SubResource("Resource_2to8s")])
+deploy_cells = Dictionary[String, Vector2i]({
+"bertram": Vector2i(3, 10),
+"brenna": Vector2i(2, 13),
+"corin": Vector2i(4, 12),
+"corvin": Vector2i(6, 13),
+"dain": Vector2i(1, 13),
+"elowen": Vector2i(0, 13),
+"fenn": Vector2i(2, 10),
+"isolde": Vector2i(1, 11),
+"kael": Vector2i(3, 12),
+"kai": Vector2i(2, 12),
+"liora": Vector2i(2, 11),
+"marlow": Vector2i(7, 12),
+"osric": Vector2i(0, 12),
+"perrin": Vector2i(1, 12),
+"rurik": Vector2i(4, 10),
+"serra": Vector2i(3, 11),
+"thessaly": Vector2i(6, 12),
+"vesper": Vector2i(7, 13),
+"wren": Vector2i(3, 13)
+})
+intro_dialogue = "res://data/dialogue/mock_battle_intro.json"
+outro_dialogue = "res://data/dialogue/mock_battle_outro.json"
+terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 4, 0, 0, 0, 0, 0, 11, 0, 0, 11, 11, 0, 0, 0, 0, 0, 0, 2, 2, 2, 4, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 4, 0, 3, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 6, 6, 6, 6, 6, 0, 1, 1, 0, 0, 0, 0, 10, 0, 0, 1, 1, 1, 0, 0, 6, 0, 0, 0, 4, 0, 1, 4, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 5, 5, 0, 10, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+decor = Array[ExtResource("1_y3jem")]([SubResource("Resource_ai2pm"), SubResource("Resource_xtcy2"), SubResource("Resource_ou56a"), SubResource("Resource_68ds8"), SubResource("Resource_p7i05"), SubResource("Resource_fhtaf"), SubResource("Resource_c10jr"), SubResource("Resource_idjn6"), SubResource("Resource_k4i1r"), SubResource("Resource_r8j12"), SubResource("Resource_mcav7"), SubResource("Resource_70acf"), SubResource("Resource_dareo"), SubResource("Resource_bew11"), SubResource("Resource_w2wt1"), SubResource("Resource_bgywd"), SubResource("Resource_8444h"), SubResource("Resource_oxtn7")])

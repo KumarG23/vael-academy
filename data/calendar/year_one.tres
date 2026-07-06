@@ -35,7 +35,7 @@ script = ExtResource("1_g1nu2")
 week = 6
 kind = 1
 label = "The Closing Rite"
-chapter_id = "mock_battle"
+chapter_id = "closing_rite"
 
 [resource]
 script = ExtResource("2_5lfhk")

@@ -11,3 +11,6 @@ extends Resource
 ## WO-6.3: when set, this spot IS a person — the unit's idle sprite stands
 ## here (walk-up-and-talk; art from assets/sprites/units/<id>/ as always).
 @export var npc_unit: String = ""
+## WO-7.2: the spot only exists once this Campaign flag is set (diegetic
+## activity unlocks — "" = always present).
+@export var requires_flag: String = ""

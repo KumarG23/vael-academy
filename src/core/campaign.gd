@@ -20,6 +20,8 @@ var fish_log: Dictionary = {}
 ## WO-7.1: the academy year, week by week (saved). The calendar data lives in
 ## data/calendar/year_one.tres; this is just the cursor.
 var week: int = 1
+## WO-7.2/7.3: story/event flags (activity unlocks, seen set-pieces) — saved.
+var flags: Dictionary = {}
 var _calendar: Array[CalendarEventDef] = []
 var last_result: String = ""         # "victory" / "defeat" / ""
 ## True while the player is deployed — the battle applies campaign state only then,
@@ -39,6 +41,7 @@ func reset_new_game(is_casual: bool, seed_value: int = 1) -> void:
 	set_house("emberwing")  # the prologue precedes the choice; 5.3b flows it
 	fish_log = {}
 	week = 1
+	flags = {}
 	unit_states = {}
 	support_save = {}
 	casual = is_casual
@@ -158,6 +161,7 @@ func to_dict() -> Dictionary:
 		"house_id": house_id,
 		"fish_log": fish_log.duplicate(true),
 		"week": week,
+		"flags": flags.duplicate(true),
 		"last_result": last_result,
 		"training_used": training_used,
 		"rng_state": str(_training_rng.state_value()),
@@ -172,6 +176,7 @@ func from_dict(data: Dictionary) -> void:
 	set_house(str(data.get("house_id", "emberwing")))
 	fish_log = (data.get("fish_log", {}) as Dictionary).duplicate(true)
 	week = int(data.get("week", 1))
+	flags = (data.get("flags", {}) as Dictionary).duplicate(true)
 	last_result = str(data.get("last_result", ""))
 	training_used = bool(data.get("training_used", false))
 	_training_rng = CombatRNG.new(1)

@@ -10,6 +10,11 @@ const VARIANTS := {
 		"tidemark": "res://scenes/battle/mock_battle_vs_thornrook.tscn",
 		"thornrook": "res://scenes/battle/mock_battle_vs_emberwing.tscn",
 	},
+	"closing_rite": {
+		"emberwing": "res://scenes/battle/closing_rite_emberwing.tscn",
+		"tidemark": "res://scenes/battle/closing_rite_tidemark.tscn",
+		"thornrook": "res://scenes/battle/closing_rite_thornrook.tscn",
+	},
 }
 const SCENES := {
 	"prologue": "res://scenes/battle/prologue.tscn",
