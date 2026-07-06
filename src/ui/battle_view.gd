@@ -106,6 +106,8 @@ var _boss_alive := true
 var _boss_quote_played := false
 var _dialogue_playing := false
 var _objective_label: Label
+var _hover_info: Control      # FE-style unit info box (name/Lv/HP/XP) on hover
+var _hover_unit: Unit = null
 var _support_state := SupportState.new()
 var _houses: Dictionary = {}        # house_id -> HouseDef
 ## The player's active house — drives UI theming. Swap this resource to re-theme.
@@ -321,10 +323,53 @@ func _heal_targets(from_cell: Vector2i, unit: Unit) -> Array[Unit]:
 
 func _on_cell_changed(cell: Vector2i) -> void:
 	_update_debug(cell)
+	_update_hover_info(cell)
 	if _phase == Phase.TARGETING:
 		var enemy := unit_at(cell)
 		if enemy != null and _targets.has(enemy):
 			_show_forecast_for(enemy)
+
+
+## FE-style: pointing the cursor at any living unit shows its stats box.
+func _update_hover_info(cell: Vector2i) -> void:
+	if _hover_info == null:
+		return
+	var u := unit_at(cell)
+	if u != null and u.is_alive():
+		_hover_unit = u
+		_hover_info.visible = true
+		_hover_info.queue_redraw()
+	else:
+		_hover_unit = null
+		_hover_info.visible = false
+
+
+func _draw_hover_info() -> void:
+	if _hover_unit == null:
+		return
+	var u := _hover_unit
+	var font := ThemeDB.fallback_font
+	var rect := Rect2(Vector2.ZERO, _hover_info.size)
+	var team_col := Color(0.16, 0.25, 0.55, 0.92) if u.team == 0 else Color(0.5, 0.14, 0.14, 0.92)
+	_hover_info.draw_rect(rect, Color(0.08, 0.09, 0.13, 0.92), true)
+	_hover_info.draw_rect(Rect2(0, 0, rect.size.x, 30), team_col, true)
+	_hover_info.draw_rect(rect, Color(0.86, 0.78, 0.55, 0.9), false, 2.0)
+	var cls := u.unit_def.char_class.display_name if u.unit_def != null and u.unit_def.char_class != null else ""
+	_hover_info.draw_string(font, Vector2(12, 22), u.unit_def.display_name,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.98, 0.96, 0.9))
+	_hover_info.draw_string(font, Vector2(12, 50), "%s   Lv %d" % [cls, u.level],
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.85, 0.85, 0.9))
+	_hover_info.draw_string(font, Vector2(12, 76), "HP  %d / %d" % [u.current_hp, u.max_hp()],
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.95, 0.7))
+	# HP bar
+	_hover_info.draw_rect(Rect2(120, 64, 118, 14), Color(0.2, 0.1, 0.1), true)
+	var hp_frac := clampf(float(u.current_hp) / maxf(u.max_hp(), 1), 0.0, 1.0)
+	_hover_info.draw_rect(Rect2(120, 64, 118 * hp_frac, 14), Color(0.4, 0.85, 0.4), true)
+	# XP bar (100 per level)
+	_hover_info.draw_string(font, Vector2(12, 104), "XP  %d / 100" % (u.xp % 100),
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.95, 0.9, 0.55))
+	_hover_info.draw_rect(Rect2(120, 92, 118, 12), Color(0.15, 0.13, 0.05), true)
+	_hover_info.draw_rect(Rect2(120, 92, 118 * (float(u.xp % 100) / 100.0), 12), Color(0.95, 0.82, 0.35), true)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -1159,6 +1204,14 @@ func _setup_ui() -> void:
 	_objective_label.position = Vector2(get_viewport_rect().size.x - 420, 10)
 	_objective_label.size = Vector2(400, 24)
 	_ui_layer.add_child(_objective_label)
+	# hover info box (playtest 3: point at a unit, see its stats)
+	_hover_info = Control.new()
+	_hover_info.position = Vector2(16, get_viewport_rect().size.y - 150)
+	_hover_info.size = Vector2(250, 128)
+	_hover_info.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hover_info.visible = false
+	_hover_info.draw.connect(_draw_hover_info)
+	_ui_layer.add_child(_hover_info)
 	_forecast_panel = CombatForecastPanel.new()
 	_forecast_panel.visible = false
 	var vp := get_viewport_rect().size
