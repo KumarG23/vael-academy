@@ -33,6 +33,10 @@ var _npc_sprites: Array = []
 ## wait} — they pace their little patch of campus and make the place breathe.
 var _walkers: Array = []
 var _camera: Camera2D
+## Interior rooms get a tall back wall ABOVE row 0 the camera may reveal, so
+## props against the top wall (bookshelves/statues run 2+ cells tall at 4×
+## scale) are never clipped by the map's top edge. 0 for outdoor rooms.
+var _ceiling := 0.0
 var _ui: CanvasLayer
 var _prompt: Label
 var _date_label: Label
@@ -172,6 +176,7 @@ func enter_room(room_id: String, spawn := Vector2i(-1, -1)) -> void:
 		return
 	room = _rooms[room_id]
 	_grid = room.chapter.make_grid()
+	_ceiling = float(_grid.cell_size) * 1.6 if room.chapter.base_terrain == Terrain.Type.FLOOR else 0.0
 	_tiles.setup(_grid, room.chapter)
 	var cell := spawn
 	if cell == Vector2i(-1, -1):
@@ -199,7 +204,10 @@ func _camera_clamp(focus: Vector2) -> Vector2:
 	var half := get_viewport_rect().size * 0.5 / _camera.zoom.x
 	var out := focus
 	out.x = clampf(focus.x, half.x, map.x - half.x) if map.x > half.x * 2.0 else map.x * 0.5
-	out.y = clampf(focus.y, half.y, map.y - half.y) if map.y > half.y * 2.0 else map.y * 0.5
+	# the vertical extent runs from -_ceiling (top of the back wall) to map.y
+	var top := -_ceiling
+	var span := map.y - top
+	out.y = clampf(focus.y, top + half.y, map.y - half.y) if span > half.y * 2.0 else (top + map.y) * 0.5
 	return out
 
 
@@ -373,6 +381,19 @@ func _draw() -> void:
 		return
 	var cs := float(_grid.cell_size)
 	if room.chapter.base_terrain == Terrain.Type.FLOOR:
+		# the tall back wall filling the ceiling headroom above row 0, so props
+		# leaning against the top wall (2+ cells tall) read as being IN the room.
+		if _ceiling > 0.0:
+			var mapw := room.chapter.width * cs
+			draw_rect(Rect2(0, -_ceiling, mapw, _ceiling + 1.0), Color(0.19, 0.16, 0.22), true)
+			draw_rect(Rect2(0, -_ceiling, mapw, cs * 0.14), Color(0.30, 0.26, 0.34), true)
+			# faint vertical courses so the wall reads as masonry, not a void
+			var course := Color(0.15, 0.13, 0.18, 0.7)
+			var col := cs
+			while col < mapw:
+				draw_line(Vector2(col, -_ceiling), Vector2(col, 0), course, 2.0)
+				col += cs
+			draw_rect(Rect2(0, -cs * 0.12, mapw, cs * 0.12), Color(0.33, 0.29, 0.36), true)
 		for y in range(room.chapter.height):
 			for x in range(room.chapter.width):
 				if room.chapter.get_terrain(x, y) == Terrain.Type.WALL:

@@ -27,7 +27,8 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 	var def_c: Combatant = _v._combatant_for(defender, defender.cell)
 	var result := CombatResolver.resolve(atk_c, def_c, dist, _v._rng)
 
-	# WO-4.9: FE-style combat cut-in when both sides have animation kits.
+	# WO-4.9: FE-style combat cut-in when both sides have a hand-authored kit.
+	# Every combat unit is meant to have its own — see the kit rollout.
 	# Tests run strike_delay = 0 and never enter this path.
 	if _v.strike_delay > 0.0 and _v.battle_popups_enabled and _v._battle_popup != null \
 			and BattlePopup.has_kit(attacker.unit_id()) and BattlePopup.has_kit(defender.unit_id()):
@@ -88,8 +89,17 @@ func execute_heal(healer: Unit, ally: Unit) -> void:
 	var was_busy: bool = _v._busy
 	_v._busy = true
 	var amount: int = healer.weapon().heal_amount + healer.stat("mag")
+	var hp_before: int = ally.current_hp
 	var healed: int = ally.heal(amount)
-	_v._pop_text(ally.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
+	# FE-style heal cut-in when animations are on; tests (strike_delay 0) and
+	# not-yet-kitted units fall back to the floating "+N" over the map.
+	if _v.strike_delay > 0.0 and _v.battle_popups_enabled and _v._battle_popup != null \
+			and BattlePopup.has_kit(healer.unit_id()) and BattlePopup.has_kit(ally.unit_id()):
+		_v._battle_popup.stage_terrain = _v.chapter.get_terrain(ally.cell.x, ally.cell.y)
+		var shot := ImageTexture.create_from_image(_v.get_viewport().get_texture().get_image())
+		await _v._battle_popup.play_heal(healer, ally, hp_before, shot)
+	else:
+		_v._pop_text(ally.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
 	_v._accrue_support_points(healer, ally, SupportState.POINTS_HEAL)
 	spend_weapon(healer)  # staves have uses too
 	await award_heal_xp(healer, healed)

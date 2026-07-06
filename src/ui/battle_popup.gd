@@ -27,6 +27,7 @@ const KIT_ALIASES := {
 	"tide_a": "tm_soldier", "tide_b": "tm_soldier",
 	"bandit_a": "bandit", "bandit_b": "bandit", "bandit_c": "bandit",
 	"bandit_d": "bandit", "bandit_boss": "bandit",
+	"serra_prologue": "serra",  # same character, prologue instance
 }
 ## Battlers aim for ~45% of screen height (GBA proportion) regardless of
 ## the kit's native resolution (32px map-scale kits vs 64px+ battle kits).
@@ -314,10 +315,10 @@ func _build_chrome(attacker: Unit, defender: Unit, exchange: Dictionary) -> void
 ## Play a full combat exchange. `strikes` is CombatResult.strikes; attacker is
 ## always shown on the left facing right. `exchange` is CombatForecast.exchange
 ## (drives the chrome numbers); `map_shot` is the battle viewport captured just
-## before the popup opens (becomes the washed backdrop, FE field-battle style).
-func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
-		exchange: Dictionary = {}, map_shot: Texture2D = null) -> void:
-	# scene background by the defender's terrain; washed map as the fallback
+## Common staging for both attack and heal cut-ins: pick the scene backdrop by
+## `stage_terrain`, load both battlers, scale and plant their feet on the ground
+## line. Returns whether a painted scene background was used (vs the washed map).
+func _stage_battlers(left_id: String, right_id: String, map_shot: Texture2D) -> bool:
 	var bg_name: String = BG_FOR_TERRAIN.get(stage_terrain, "bg_plains")
 	var bg_path := "%s/%s.png" % [BG_DIR, bg_name]
 	var scene_bg := ResourceLoader.exists(bg_path)
@@ -325,8 +326,8 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 	_backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_wash.visible = not scene_bg
 	_platform.visible = not scene_bg
-	_left_sprite.sprite_frames = load_kit(attacker.unit_id())
-	_right_sprite.sprite_frames = load_kit(defender.unit_id())
+	_left_sprite.sprite_frames = load_kit(left_id)
+	_right_sprite.sprite_frames = load_kit(right_id)
 	# NOTE: Control.position set at runtime is ABSOLUTE (from the parent's
 	# top-left) — unlike the _ready-time values, which float with the center
 	# anchor because the parent had no size yet. Everything here is absolute.
@@ -344,6 +345,16 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 			+ (0.0 if scene_bg else 46.0 + h * sc * 0.5)
 		holder.position = Vector2(x,
 			feet_y - h * sc * 0.5 + _kit_ground_gap(spr.sprite_frames) * sc)
+	return scene_bg
+
+
+## before the popup opens (becomes the washed backdrop, FE field-battle style).
+func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
+		exchange: Dictionary = {}, map_shot: Texture2D = null) -> void:
+	# scene background by the defender's terrain; washed map as the fallback
+	var bg_name: String = BG_FOR_TERRAIN.get(stage_terrain, "bg_plains")
+	var bg_path := "%s/%s.png" % [BG_DIR, bg_name]
+	var scene_bg := _stage_battlers(attacker.unit_id(), defender.unit_id(), map_shot)
 	_build_chrome(attacker, defender, exchange)
 	_left_sprite.play("idle")
 	_right_sprite.play("idle")
@@ -365,6 +376,88 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 	for s in [_left_sprite, _right_sprite]:
 		s.modulate.a = 1.0
 		(s.material as ShaderMaterial).set_shader_parameter("flash", 0.0)
+
+
+## Heal cut-in (playtest 3: staves deserve a scene too, FE-style). Healer on the
+## left raises the staff; a green light crosses to the ally on the right, who is
+## bathed in it as their HP bar refills. `hp_before` is the ally's HP prior to
+## the heal being applied (the bar fills from there to their current HP).
+func play_heal(healer: Unit, ally: Unit, hp_before: int, map_shot: Texture2D = null) -> void:
+	var scene_bg := _stage_battlers(healer.unit_id(), ally.unit_id(), map_shot)
+	_build_heal_chrome(healer, ally, hp_before)
+	_left_sprite.play("idle")
+	_right_sprite.play("idle")
+	_root.visible = true
+	_root.modulate.a = 0.0
+	var tin := create_tween()
+	tin.tween_property(_root, "modulate:a", 1.0, 0.18)
+	await tin.finished
+	# the healer raises the staff — a lift and a soft glint
+	_flash_sprite(_left_sprite, 0.55, 0.45)
+	var home_y := _left_holder.position.y
+	var lift := create_tween()
+	lift.tween_property(_left_holder, "position:y", home_y - 26.0, 0.24).set_trans(Tween.TRANS_SINE)
+	lift.tween_property(_left_holder, "position:y", home_y, 0.24).set_trans(Tween.TRANS_SINE)
+	await get_tree().create_timer(0.42).timeout
+	# green light blooms over the ally
+	await _heal_glow(_right_holder.position)
+	_ally_heal_flash(_right_sprite)
+	_shake(0.12)
+	if _right_hp != null:
+		var fill := create_tween()
+		fill.tween_property(_right_hp, "shown_hp", float(ally.current_hp), 0.5).set_trans(Tween.TRANS_SINE)
+	var bob := create_tween()
+	var ay := _right_holder.position.y
+	bob.tween_property(_right_holder, "position:y", ay - 16.0, 0.18).set_trans(Tween.TRANS_SINE)
+	bob.tween_property(_right_holder, "position:y", ay, 0.2).set_trans(Tween.TRANS_SINE)
+	await get_tree().create_timer(0.75).timeout
+	var out := create_tween()
+	out.tween_property(_root, "modulate:a", 0.0, 0.16)
+	await out.finished
+	_root.visible = false
+	for s in [_left_sprite, _right_sprite]:
+		s.modulate = Color(1, 1, 1, 1)
+		(s.material as ShaderMaterial).set_shader_parameter("flash", 0.0)
+
+
+func _build_heal_chrome(healer: Unit, ally: Unit, hp_before: int) -> void:
+	for c in _chrome.get_children():
+		c.queue_free()
+	_left_hp = null
+	_right_hp = null
+	var vp := _root.size
+	var lc := _team_colors(healer)
+	var rc := _team_colors(ally)
+	_framed_panel(_chrome, Rect2(26, 22, 240, 40), lc[0], TRIM)
+	_panel_label(_chrome, Vector2(26, 28), healer.unit_def.display_name, 20, Color(0.98, 0.96, 0.9), 240)
+	_framed_panel(_chrome, Rect2(vp.x - 266, 22, 240, 40), rc[0], TRIM)
+	_panel_label(_chrome, Vector2(vp.x - 266, 28), ally.unit_def.display_name, 20, Color(0.98, 0.96, 0.9), 240)
+	# staff plate under the healer
+	var wname := healer.weapon().display_name if healer.weapon() != null else "Staff"
+	_framed_panel(_chrome, Rect2(26, vp.y - 72, 240, 40), Color(0.11, 0.30, 0.16, 0.96), TRIM)
+	_panel_label(_chrome, Vector2(26, vp.y - 66), wname, 18, Color(0.72, 1.0, 0.78), 240)
+	# the ally's HP trough (fills during the cast)
+	var bar := BattlePopupHPBar.new()
+	bar.max_hp = ally.max_hp()
+	bar.shown_hp = float(hp_before)
+	bar.position = Vector2(vp.x - 266, vp.y - 68)
+	bar.size = Vector2(220, 48)
+	_chrome.add_child(bar)
+	_right_hp = bar
+
+
+## Expanding green rings + rising motes over a point — the staff's blessing.
+## Rides the same aged-burst pipeline as strike VFX (see _draw_fx / _process).
+func _heal_glow(pos: Vector2) -> void:
+	_bursts.append({"pos": pos, "age": 0.0, "life": 0.6, "big": false, "kind": "heal"})
+	_fx.queue_redraw()
+	await get_tree().create_timer(0.55).timeout
+
+
+func _ally_heal_flash(spr: AnimatedSprite2D) -> void:
+	spr.modulate = Color(0.5, 1.0, 0.62)
+	var tw := create_tween()
+	tw.tween_property(spr, "modulate", Color(1, 1, 1, 1), 0.6).set_trans(Tween.TRANS_SINE)
 
 
 ## Real playback time of an animation with per-frame durations applied.
@@ -605,6 +698,16 @@ func _draw_fx() -> void:
 		var t: float = b["age"] / b["life"]
 		var pos: Vector2 = b["pos"]
 		var alpha := (1.0 - t)
+		if b.get("kind", "burst") == "heal":
+			# expanding green blessing rings + motes drifting up off the ally
+			for k in range(3):
+				var rr := 22.0 + t * 96.0 + k * 20.0
+				_fx.draw_arc(pos, rr, 0.0, TAU, 40, Color(0.42, 1.0, 0.56, alpha * 0.7), 4.0)
+			for m in range(8):
+				var mp := pos + Vector2.from_angle(TAU * m / 8.0) * (t * 64.0) \
+					- Vector2(0, t * 46.0)
+				_fx.draw_circle(mp, 5.0 * (1.0 - t), Color(0.72, 1.0, 0.74, alpha))
+			continue
 		if b.get("kind", "burst") == "slash":
 			# a crescent of 3 sweeping arcs slicing through the impact point,
 			# rotating with age — reads as the blade's afterglow
