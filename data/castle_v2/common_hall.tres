@@ -1,0 +1,74 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_arksm"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="2_61ppr"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="3_u6u5l"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="4_g2wwm"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="5_a6v0k"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_oi6le"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_7yd7r"]
+
+[sub_resource type="Resource" id="Resource_fy6pm"]
+script = ExtResource("3_u6u5l")
+id = "castle_common_hall"
+display_name = "Common Hall"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+enemy_spawns = Array[ExtResource("2_61ppr")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("2_61ppr")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 24
+height = 13
+terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 4, 4, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 4, 7, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 4, 4, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 4, 4, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+base_terrain = 7
+decor = Array[ExtResource("1_arksm")]([])
+visits = Array[ExtResource("4_g2wwm")]([])
+
+[sub_resource type="Resource" id="Resource_edv5t"]
+script = ExtResource("5_a6v0k")
+cell = Vector2i(0, 6)
+to_room = "entrance"
+spawn_cell = Vector2i(20, 6)
+label = "The Entrance Hall"
+
+[sub_resource type="Resource" id="Resource_3gu1d"]
+script = ExtResource("5_a6v0k")
+cell = Vector2i(23, 10)
+to_room = "quartermaster"
+spawn_cell = Vector2i(2, 5)
+label = "The Quartermaster"
+
+[sub_resource type="Resource" id="Resource_o5ueu"]
+script = ExtResource("6_oi6le")
+id = "kael_chat"
+label = "Talk to Kael"
+cell = Vector2i(6, 6)
+dialogue = "res://data/dialogue/castle_kael.json"
+npc_unit = "kael"
+
+[sub_resource type="Resource" id="Resource_op6nd"]
+script = ExtResource("6_oi6le")
+id = "fn_supports"
+label = "Gather by the fire (bonds)"
+cell = Vector2i(17, 3)
+
+[sub_resource type="Resource" id="Resource_2rofd"]
+script = ExtResource("6_oi6le")
+id = "fn_cook"
+label = "Cook at the fire-pits"
+cell = Vector2i(12, 9)
+requires_flag = "cooking_unlocked"
+
+[resource]
+script = ExtResource("7_7yd7r")
+id = "common_hall"
+display_name = "Common Hall"
+chapter = SubResource("Resource_fy6pm")
+doors = Array[ExtResource("5_a6v0k")]([SubResource("Resource_edv5t"), SubResource("Resource_3gu1d")])
+points = Array[ExtResource("6_oi6le")]([SubResource("Resource_o5ueu"), SubResource("Resource_op6nd"), SubResource("Resource_2rofd")])

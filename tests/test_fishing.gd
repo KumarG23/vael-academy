@@ -58,9 +58,9 @@ func test_fish_log_survives_save_round_trip():
 
 
 func test_waterside_hosts_the_fishing_spot():
-	var ws: RoomDef = load("res://data/castle/waterside.tres")
+	var ws: CastleRoomDef = load("res://data/castle_v2/waterside.tres")
 	var found := false
-	for s in ws.spots:
-		if s.id == "fn_fish":
+	for p in ws.points:
+		if p.id == "fn_fish":
 			found = true
 	assert_true(found)

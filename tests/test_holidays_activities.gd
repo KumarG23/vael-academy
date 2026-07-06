@@ -25,16 +25,16 @@ func test_festival_fires_once_and_unlocks_cooking():
 	assert_true(bool(Campaign.flags.get("cooking_unlocked", false)), "cooking unlocked diegetically")
 
 
-func test_cooking_spot_is_flag_gated():
-	var hall: RoomDef = load("res://data/castle/common_hall.tres")
-	var cook: RoomSpot = null
-	for s in hall.spots:
-		if s.id == "fn_cook":
-			cook = s
+func test_cooking_point_is_flag_gated():
+	var hall: CastleRoomDef = load("res://data/castle_v2/common_hall.tres")
+	var cook: CastlePoint = null
+	for p in hall.points:
+		if p.id == "fn_cook":
+			cook = p
 	assert_not_null(cook)
-	assert_false(_castle._spot_available(cook), "hidden before the festival")
+	assert_false(_castle._point_available(cook), "hidden before the festival")
 	Campaign.flags["cooking_unlocked"] = true
-	assert_true(_castle._spot_available(cook), "present after")
+	assert_true(_castle._point_available(cook), "present after")
 
 
 func test_cooking_grows_a_bond_once_per_week():

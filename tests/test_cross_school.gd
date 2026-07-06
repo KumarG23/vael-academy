@@ -39,10 +39,13 @@ func test_the_first_spark_opens_ember():
 	Campaign.flags["festival_seen"] = true
 	var castle: CastleScene = (load("res://scenes/castle/castle.tscn") as PackedScene).instantiate()
 	add_child_autofree(castle)
-	castle.enter_room("library", 0.72)
-	var vp := castle.get_viewport_rect().size
-	castle._avatar_pos = Vector2(vp.x * 0.72, vp.y * 0.8)
-	castle._update_prompt(vp)
+	castle.enter_room("library", Vector2i(9, 10))
+	var beat: CastlePoint = null
+	for p in castle.room.points:
+		if p.id == "beat_first_spark":
+			beat = p
+	castle._avatar.position = castle._grid.cell_center(beat.cell)
+	castle._update_prompt()
 	castle.activate_nearest()
 	# drive the scene through the beat (events fire as lines advance)
 	var guard := 0

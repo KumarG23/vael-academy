@@ -1,0 +1,67 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_ujmad"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="2_djfns"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="3_ogc6f"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="4_hl16a"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="5_ig5l2"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_s1inm"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_s4lwo"]
+
+[sub_resource type="Resource" id="Resource_1krgf"]
+script = ExtResource("3_ogc6f")
+id = "castle_waterside"
+display_name = "The Waterside"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+enemy_spawns = Array[ExtResource("2_djfns")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("2_djfns")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 22
+height = 12
+terrain = PackedInt32Array(5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 5, 5, 5, 5, 11, 11, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 11, 11, 5, 5, 5, 5, 1, 1, 0, 0, 0, 0, 0, 11, 11, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 5, 5, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+base_terrain = 0
+decor = Array[ExtResource("1_ujmad")]([])
+visits = Array[ExtResource("4_hl16a")]([])
+
+[sub_resource type="Resource" id="Resource_tx0t1"]
+script = ExtResource("5_ig5l2")
+cell = Vector2i(13, 10)
+to_room = "campus"
+spawn_cell = Vector2i(1, 12)
+label = "Back to the Campus"
+
+[sub_resource type="Resource" id="Resource_77myd"]
+script = ExtResource("6_s1inm")
+id = "liora_chat"
+label = "Talk to Liora"
+cell = Vector2i(6, 5)
+dialogue = "res://data/dialogue/castle_liora.json"
+npc_unit = "liora"
+
+[sub_resource type="Resource" id="Resource_uvrwl"]
+script = ExtResource("6_s1inm")
+id = "fn_fish"
+label = "Cast a line"
+cell = Vector2i(10, 4)
+
+[sub_resource type="Resource" id="Resource_1e4pc"]
+script = ExtResource("6_s1inm")
+id = "lake"
+label = "Look out over the lake"
+cell = Vector2i(14, 5)
+dialogue = "res://data/dialogue/castle_lake.json"
+
+[resource]
+script = ExtResource("7_s4lwo")
+id = "waterside"
+display_name = "The Waterside"
+chapter = SubResource("Resource_1krgf")
+doors = Array[ExtResource("5_ig5l2")]([SubResource("Resource_tx0t1")])
+points = Array[ExtResource("6_s1inm")]([SubResource("Resource_77myd"), SubResource("Resource_uvrwl"), SubResource("Resource_1e4pc")])

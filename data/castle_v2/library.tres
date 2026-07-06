@@ -1,0 +1,61 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_wjooe"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="2_yfh5s"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="3_xliny"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="4_uaxnd"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="5_s4hpw"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_08xbw"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_kox5i"]
+
+[sub_resource type="Resource" id="Resource_s1rb6"]
+script = ExtResource("3_xliny")
+id = "castle_library"
+display_name = "Library Tower"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+enemy_spawns = Array[ExtResource("2_yfh5s")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("2_yfh5s")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 18
+height = 12
+terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 8, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 8, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 8, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 8, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 4)
+base_terrain = 7
+decor = Array[ExtResource("1_wjooe")]([])
+visits = Array[ExtResource("4_uaxnd")]([])
+
+[sub_resource type="Resource" id="Resource_6osvo"]
+script = ExtResource("5_s4hpw")
+cell = Vector2i(9, 11)
+to_room = "campus"
+spawn_cell = Vector2i(5, 10)
+label = "Out to the Campus"
+
+[sub_resource type="Resource" id="Resource_ibxr4"]
+script = ExtResource("6_08xbw")
+id = "lore_shelf"
+label = "Read the open volume"
+cell = Vector2i(3, 4)
+dialogue = "res://data/dialogue/castle_lore.json"
+
+[sub_resource type="Resource" id="Resource_b48mr"]
+script = ExtResource("6_08xbw")
+id = "beat_first_spark"
+label = "That shelf again — the fourth fire"
+cell = Vector2i(14, 4)
+dialogue = "res://data/dialogue/beat_first_spark.json"
+requires_flag = "festival_seen"
+
+[resource]
+script = ExtResource("7_kox5i")
+id = "library"
+display_name = "Library Tower"
+chapter = SubResource("Resource_s1rb6")
+doors = Array[ExtResource("5_s4hpw")]([SubResource("Resource_6osvo")])
+points = Array[ExtResource("6_08xbw")]([SubResource("Resource_ibxr4"), SubResource("Resource_b48mr")])

@@ -1,0 +1,108 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_dpv8n"]
+[ext_resource type="Texture2D" path="res://assets/art_review/campus_v2/great_hall_v2.png" id="2_6qvxc"]
+[ext_resource type="Texture2D" path="res://assets/art_review/campus_v2/library_v2.png" id="3_ai1ht"]
+[ext_resource type="Texture2D" path="res://assets/art_review/campus_v2/dormitory_v2.png" id="4_f74iw"]
+[ext_resource type="Texture2D" path="res://assets/art_review/campus_v2/gatehouse_v2.png" id="5_2d4n7"]
+[ext_resource type="Texture2D" path="res://assets/art_review/campus_v2/fountain_plaza.png" id="6_jwa8k"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="7_paakx"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="8_acp3c"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="9_7dm1n"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="10_jfhq2"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="11_1lmnc"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="12_mjo6b"]
+
+[sub_resource type="Resource" id="Resource_n3t42"]
+script = ExtResource("1_dpv8n")
+texture = ExtResource("2_6qvxc")
+cell = Vector2i(15, 8)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_0jgc3"]
+script = ExtResource("1_dpv8n")
+texture = ExtResource("3_ai1ht")
+cell = Vector2i(5, 8)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_l2821"]
+script = ExtResource("1_dpv8n")
+texture = ExtResource("4_f74iw")
+cell = Vector2i(24, 8)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_dktx4"]
+script = ExtResource("1_dpv8n")
+texture = ExtResource("5_2d4n7")
+cell = Vector2i(15, 19)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_fspfm"]
+script = ExtResource("1_dpv8n")
+texture = ExtResource("6_jwa8k")
+cell = Vector2i(21, 13)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_y03vi"]
+script = ExtResource("8_acp3c")
+id = "castle_campus"
+display_name = "The Campus"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+enemy_spawns = Array[ExtResource("7_paakx")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("7_paakx")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 30
+height = 20
+terrain = PackedInt32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 1, 1, 1, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 12, 12, 12, 12, 12, 12, 12, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 12, 12, 12, 12, 12, 12, 12, 12, 0, 1, 0, 12, 12, 12, 12, 12, 12, 12, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 11, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 1, 1, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 12, 12, 12, 12, 12, 12, 12, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+base_terrain = 0
+decor = Array[ExtResource("1_dpv8n")]([SubResource("Resource_n3t42"), SubResource("Resource_0jgc3"), SubResource("Resource_l2821"), SubResource("Resource_dktx4"), SubResource("Resource_fspfm")])
+visits = Array[ExtResource("9_7dm1n")]([])
+
+[sub_resource type="Resource" id="Resource_c75hk"]
+script = ExtResource("10_jfhq2")
+cell = Vector2i(15, 9)
+to_room = "entrance"
+spawn_cell = Vector2i(11, 11)
+label = "The Great Hall"
+
+[sub_resource type="Resource" id="Resource_suhdh"]
+script = ExtResource("10_jfhq2")
+cell = Vector2i(5, 9)
+to_room = "library"
+spawn_cell = Vector2i(9, 10)
+label = "The Library Tower"
+
+[sub_resource type="Resource" id="Resource_rsiwk"]
+script = ExtResource("10_jfhq2")
+cell = Vector2i(24, 9)
+to_room = "dorm_hall"
+spawn_cell = Vector2i(2, 4)
+label = "The Dormitories"
+
+[sub_resource type="Resource" id="Resource_jpqr2"]
+script = ExtResource("10_jfhq2")
+cell = Vector2i(29, 12)
+to_room = "training"
+spawn_cell = Vector2i(2, 6)
+label = "The Training Grounds"
+
+[sub_resource type="Resource" id="Resource_xhh7j"]
+script = ExtResource("10_jfhq2")
+cell = Vector2i(0, 12)
+to_room = "waterside"
+spawn_cell = Vector2i(12, 10)
+label = "The Waterside"
+
+[resource]
+script = ExtResource("12_mjo6b")
+id = "campus"
+display_name = "The Campus"
+chapter = SubResource("Resource_y03vi")
+doors = Array[ExtResource("10_jfhq2")]([SubResource("Resource_c75hk"), SubResource("Resource_suhdh"), SubResource("Resource_rsiwk"), SubResource("Resource_jpqr2"), SubResource("Resource_xhh7j")])

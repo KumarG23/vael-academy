@@ -1,0 +1,58 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_cxk1e"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="2_mpydw"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="3_3mu86"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="4_a5tt7"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="5_45n2k"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_6quln"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_wxp14"]
+
+[sub_resource type="Resource" id="Resource_r7akp"]
+script = ExtResource("3_3mu86")
+id = "castle_war_room"
+display_name = "War Room"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+enemy_spawns = Array[ExtResource("2_mpydw")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("2_mpydw")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 16
+height = 11
+terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 7, 4, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+base_terrain = 7
+decor = Array[ExtResource("1_cxk1e")]([])
+visits = Array[ExtResource("4_a5tt7")]([])
+
+[sub_resource type="Resource" id="Resource_i73g0"]
+script = ExtResource("5_45n2k")
+cell = Vector2i(15, 5)
+to_room = "entrance"
+spawn_cell = Vector2i(2, 6)
+label = "The Entrance Hall"
+
+[sub_resource type="Resource" id="Resource_qouui"]
+script = ExtResource("6_6quln")
+id = "fn_deploy"
+label = "The mission table"
+cell = Vector2i(7, 4)
+
+[sub_resource type="Resource" id="Resource_1j7wg"]
+script = ExtResource("6_6quln")
+id = "fn_save"
+label = "Record the day's log"
+cell = Vector2i(3, 8)
+
+[resource]
+script = ExtResource("7_wxp14")
+id = "war_room"
+display_name = "War Room"
+chapter = SubResource("Resource_r7akp")
+doors = Array[ExtResource("5_45n2k")]([SubResource("Resource_i73g0")])
+points = Array[ExtResource("6_6quln")]([SubResource("Resource_qouui"), SubResource("Resource_1j7wg")])
