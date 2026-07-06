@@ -12,6 +12,15 @@
  },
  "wren": {
   "cid": "357dfb36-3847-40f1-945f-8989bb4e69f9",
+  "phase": "strikes",
+  "base_folder": "wren_battle_pro"
+ },
+ "serra": {
+  "cid": "d40d9a93-7610-44c5-b556-894ef5b9fecf",
+  "phase": "anims1"
+ },
+ "tm_soldier": {
+  "cid": "c48d4fe2-e14e-45ac-8453-23bd43e5b971",
   "phase": "base_creating"
  }
 }

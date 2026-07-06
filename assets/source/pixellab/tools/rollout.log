@@ -6,3 +6,16 @@ brenna: DONE | generations_remaining: 3541
   queued hit_east
   queued ko_east
   queued attack_wind_east
+  queued crit_wind_east
+wren: anims1 queued
+serra: base creating -> d40d9a93-7610-44c5-b556-894ef5b9fecf
+  queued attack_strike_east
+  queued crit_strike_east
+wren: strikes queued (chained)
+  queued idle_east
+  queued hit_east
+  queued ko_east
+  queued attack_wind_east
+  queued crit_wind_east
+serra: anims1 queued
+tm_soldier: base creating -> c48d4fe2-e14e-45ac-8453-23bd43e5b971
