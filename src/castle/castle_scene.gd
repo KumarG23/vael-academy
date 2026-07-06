@@ -67,7 +67,8 @@ func _ready() -> void:
 	_support_state = SupportRegistry.build_state()
 	_support_state.apply_save_state(Campaign.support_save)
 	_tiles = TerrainTiles.new()
-	_tiles.show_behind_parent = true  # castle draws walls/door markers above
+	_tiles.show_behind_parent = true  # castle draws walls/props/markers above
+	_tiles.draw_props = false         # props drawn in _draw, ABOVE the walls
 	add_child(_tiles)
 	_avatar = AnimatedSprite2D.new()
 	_avatar.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -408,6 +409,18 @@ func _draw() -> void:
 					if above_open:
 						draw_rect(Rect2(r.position.x, r.position.y, cs, cs * 0.10),
 							Color(0.40, 0.36, 0.44), true)
+	# authored props draw ABOVE the walls/ceiling (so shelves against the back
+	# wall aren't hidden behind it), y-sorted so lower props overlap higher ones
+	var props := room.chapter.decor.duplicate()
+	props.sort_custom(func(a, b): return a.cell.y < b.cell.y)
+	for d: MapDecor in props:
+		if d == null or d.texture == null:
+			continue
+		var scale := cs / 32.0  # decor authored at 32px (TerrainTiles.TILE)
+		var w: float = d.texture.get_width() * scale
+		var h: float = d.texture.get_height() * scale
+		draw_texture_rect(d.texture, Rect2(d.cell.x * cs + (cs - w) * 0.5 + d.offset.x,
+			d.cell.y * cs + cs - h + d.offset.y, w, h), false)
 	var pulse := 0.5 + 0.3 * sin(_door_pulse * 3.2)
 	for d in room.doors:
 		var c := Vector2((d.cell.x + 0.5) * cs, (d.cell.y + 0.5) * cs)

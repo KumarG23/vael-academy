@@ -55,6 +55,13 @@ var _base_region: Rect2
 var _base_set_name := ""
 
 
+## When false, the authored scenery props (chapter.decor) are NOT drawn here —
+## the owner draws them in a layer ABOVE its walls (the castle does this so
+## furniture against a wall isn't hidden behind it). Terrain-feature decor
+## (springs/pillars) still renders here.
+var draw_props := true
+
+
 func setup(grid: Grid, chapter: ChapterDef) -> void:
 	_grid = grid
 	_chapter = chapter
@@ -196,9 +203,10 @@ func _draw() -> void:
 			var t := _chapter.get_terrain(x, y)
 			if _decor.has(t):
 				items.append({"tex": _decor[t], "cell": Vector2i(x, y), "off": Vector2.ZERO})
-	for d in _chapter.decor:
-		if d != null and d.texture != null:
-			items.append({"tex": d.texture, "cell": d.cell, "off": d.offset})
+	if draw_props:
+		for d in _chapter.decor:
+			if d != null and d.texture != null:
+				items.append({"tex": d.texture, "cell": d.cell, "off": d.offset})
 	items.sort_custom(func(a, b): return a["cell"].y < b["cell"].y)
 	for it in items:
 		var tex: Texture2D = it["tex"]
