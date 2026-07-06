@@ -15,6 +15,8 @@ var casual: bool = false
 var chapter_id: String = "mock_battle"
 ## WO-5.3a: the chosen house — drives roster, theming, and (in 5.6) rivals.
 var house_id: String = "emberwing"
+## Neal's playtest rule (FE3H): once sworn, the house binds for the playthrough.
+var house_locked: bool = false
 ## WO-6.4: the waterside fish log (fish name -> count), part of the save.
 var fish_log: Dictionary = {}
 ## WO-7.1: the academy year, week by week (saved). The calendar data lives in
@@ -38,6 +40,7 @@ var _skip_next_hub_reset := false
 
 ## Start a brand-new campaign (called from New Game / WO-4.3).
 func reset_new_game(is_casual: bool, seed_value: int = 1) -> void:
+	house_locked = false
 	set_house("emberwing")  # the prologue precedes the choice; 5.3b flows it
 	fish_log = {}
 	week = 1
@@ -86,7 +89,7 @@ func advance_week() -> void:
 ## Choose the player's house (WO-5.3a): flips the Roster and everything
 ## downstream that reads house_id (battle theming; rivals ride WO-5.6).
 func set_house(id: String) -> void:
-	if not Roster.HOUSE_ROSTERS.has(id):
+	if not Roster.HOUSE_ROSTERS.has(id) or house_locked:
 		return
 	house_id = id
 	Roster.active_house = id
@@ -162,6 +165,7 @@ func to_dict() -> Dictionary:
 		"fish_log": fish_log.duplicate(true),
 		"week": week,
 		"flags": flags.duplicate(true),
+		"house_locked": house_locked,
 		"last_result": last_result,
 		"training_used": training_used,
 		"rng_state": str(_training_rng.state_value()),
@@ -173,10 +177,12 @@ func from_dict(data: Dictionary) -> void:
 	support_save = (data.get("support_save", {}) as Dictionary).duplicate(true)
 	casual = bool(data.get("casual", false))
 	chapter_id = str(data.get("chapter_id", "mock_battle"))
-	set_house(str(data.get("house_id", "emberwing")))
 	fish_log = (data.get("fish_log", {}) as Dictionary).duplicate(true)
 	week = int(data.get("week", 1))
 	flags = (data.get("flags", {}) as Dictionary).duplicate(true)
+	house_locked = false
+	set_house(str(data.get("house_id", "emberwing")))
+	house_locked = bool(data.get("house_locked", false))
 	last_result = str(data.get("last_result", ""))
 	training_used = bool(data.get("training_used", false))
 	_training_rng = CombatRNG.new(1)

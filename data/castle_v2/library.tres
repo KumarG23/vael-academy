@@ -114,10 +114,31 @@ cell = Vector2i(14, 4)
 dialogue = "res://data/dialogue/beat_first_spark.json"
 requires_flag = "festival_seen"
 
+[sub_resource type="Resource" id="Resource_uaxnd"]
+script = ExtResource("6_08xbw")
+id = "shelf_wardstones"
+label = "Browse: the Standing Wards"
+cell = Vector2i(2, 3)
+dialogue = "res://data/dialogue/lore_wardstones.json"
+
+[sub_resource type="Resource" id="Resource_s4hpw"]
+script = ExtResource("6_08xbw")
+id = "shelf_houses"
+label = "Browse: the Three Lines"
+cell = Vector2i(13, 3)
+dialogue = "res://data/dialogue/lore_houses.json"
+
+[sub_resource type="Resource" id="Resource_08xbw"]
+script = ExtResource("6_08xbw")
+id = "shelf_magic"
+label = "Browse: First-Flame"
+cell = Vector2i(15, 8)
+dialogue = "res://data/dialogue/lore_magic.json"
+
 [resource]
 script = ExtResource("7_kox5i")
 id = "library"
 display_name = "Library Tower"
 chapter = SubResource("Resource_s1rb6")
 doors = Array[ExtResource("5_s4hpw")]([SubResource("Resource_6osvo")])
-points = Array[ExtResource("6_08xbw")]([SubResource("Resource_ibxr4"), SubResource("Resource_b48mr")])
+points = Array[ExtResource("6_08xbw")]([SubResource("Resource_ibxr4"), SubResource("Resource_b48mr"), SubResource("Resource_uaxnd"), SubResource("Resource_s4hpw"), SubResource("Resource_08xbw")])

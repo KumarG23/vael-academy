@@ -47,6 +47,7 @@ func test_walking_into_a_door_changes_rooms():
 	var events: Array = []
 	_castle.room_changed.connect(func(id): events.append(id))
 	var door: CastleDoor = _castle.room.doors[0]
+	_castle._door_armed = true  # as after any real step off a doorway
 	_castle._avatar.position = _castle._grid.cell_center(door.cell)
 	_castle._check_door()
 	assert_eq(_castle.room.id, door.to_room, "walk-in transition, no button")
@@ -131,6 +132,10 @@ func test_quartermaster_and_house_oath():
 	_castle._open_function("fn_house")
 	_castle._choose_house(1)
 	assert_eq(Campaign.house_id, "tidemark")
+	assert_true(Campaign.house_locked, "the oath binds (FE3H rule)")
+	Campaign.set_house("thornrook")
+	assert_eq(Campaign.house_id, "tidemark", "locked — no house hopping")
+	Campaign.house_locked = false
 	Campaign.set_house("emberwing")
 
 
@@ -143,3 +148,10 @@ func test_support_scene_launches_from_the_castle():
 	c2._view_hall_entry(0)
 	assert_not_null(c2._dialogue)
 	Campaign.support_save = {}
+
+
+func test_spawning_on_a_door_cannot_bounce_back():
+	# the dorm-loop bug: doors stay disarmed until you step off them
+	_castle.enter_room("dorm_hall", Vector2i(0, 4))  # ON the exit door
+	_castle._check_door()
+	assert_eq(_castle.room.id, "dorm_hall", "no instant bounce")

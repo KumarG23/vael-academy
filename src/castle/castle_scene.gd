@@ -33,9 +33,14 @@ var _camera: Camera2D
 var _ui: CanvasLayer
 var _prompt: Label
 var _date_label: Label
+var _toast_label: Label
+var _toast_left := 0.0
 var _dialogue: DialogueScene = null
 var _nearest_point: CastlePoint = null
 var _door_pulse := 0.0
+## Doors re-arm only after the avatar leaves a door cell — spawning beside
+## (or on) a doorway can never bounce you straight back (the dorm loop bug).
+var _door_armed := false
 
 # room functions (v1 handlers, unchanged names — tests ride on these)
 var _music: AudioStreamPlayer
@@ -81,6 +86,17 @@ func _ready() -> void:
 	_date_label.add_theme_constant_override("outline_size", 5)
 	_date_label.position = Vector2(get_viewport_rect().size.x - 430, 12)
 	_ui.add_child(_date_label)
+	_toast_label = Label.new()
+	_toast_label.add_theme_font_size_override("font_size", 24)
+	_toast_label.add_theme_color_override("font_color", Color(0.98, 0.94, 0.75))
+	_toast_label.add_theme_color_override("font_outline_color", Color(0.1, 0.08, 0.05))
+	_toast_label.add_theme_constant_override("outline_size", 7)
+	_toast_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_toast_label.position = Vector2(get_viewport_rect().size.x * 0.5 - 260, 60)
+	_toast_label.custom_minimum_size = Vector2(520, 0)
+	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_toast_label.visible = false
+	_ui.add_child(_toast_label)
 	_menu = ChoiceMenu.new()
 	var house: HouseDef = load("res://data/houses/%s.tres" % Campaign.house_id)
 	if house != null:
@@ -158,6 +174,7 @@ func enter_room(room_id: String, spawn := Vector2i(-1, -1)) -> void:
 	if cell == Vector2i(-1, -1):
 		cell = Vector2i(room.chapter.width / 2, room.chapter.height / 2)
 	_avatar.position = _grid.cell_center(cell)
+	_door_armed = false
 	_spawn_npcs()
 	_setup_camera()
 	queue_redraw()
@@ -210,6 +227,10 @@ func busy() -> bool:
 
 func _process(delta: float) -> void:
 	_door_pulse += delta
+	if _toast_left > 0.0:
+		_toast_left -= delta
+		if _toast_left <= 0.0:
+			_toast_label.visible = false
 	queue_redraw()  # door markers pulse
 	if room == null or busy():
 		return
@@ -257,10 +278,15 @@ func _face(move: Vector2) -> void:
 
 func _check_door() -> void:
 	var cell := _grid.world_to_cell(_avatar.position)
+	var on_door := false
 	for d in room.doors:
-		if d.cell == cell and _rooms.has(d.to_room):
-			enter_room(d.to_room, d.spawn_cell)
-			return
+		if d.cell == cell:
+			on_door = true
+			if _door_armed and _rooms.has(d.to_room):
+				enter_room(d.to_room, d.spawn_cell)
+				return
+	if not on_door:
+		_door_armed = true
 
 
 func _update_prompt() -> void:
@@ -333,6 +359,12 @@ func _draw() -> void:
 		var tri := PackedVector2Array([c + Vector2(0, -cs * 0.16),
 			c + Vector2(cs * 0.13, cs * 0.08), c + Vector2(-cs * 0.13, cs * 0.08)])
 		draw_colored_polygon(tri, Color(1.0, 0.92, 0.55, pulse))
+		if d.label != "":
+			var font := ThemeDB.fallback_font
+			draw_string_outline(font, c + Vector2(-150, -cs * 0.55), d.label,
+				HORIZONTAL_ALIGNMENT_CENTER, 300, 30, 8, Color(0.1, 0.08, 0.05, 0.9))
+			draw_string(font, c + Vector2(-150, -cs * 0.55), d.label,
+				HORIZONTAL_ALIGNMENT_CENTER, 300, 30, Color(1.0, 0.94, 0.7, 0.55 + pulse * 0.4))
 
 
 # --- the date + scheduled set-pieces (WO-7.1/7.3, ported) ----------------------
@@ -396,8 +428,9 @@ func _open_function(fn: String) -> void:
 
 
 func _toast(text: String) -> void:
-	_prompt.text = text
-	_prompt.visible = true
+	_toast_label.text = text
+	_toast_label.visible = true
+	_toast_left = 2.6
 
 
 func _level_xp_text(id: String) -> String:
@@ -503,6 +536,9 @@ func _inspect_unit(index: int) -> void:
 
 
 func _open_house_choice() -> void:
+	if Campaign.house_locked:
+		_toast("Your oath is sworn: House %s, for this year and always." % Campaign.house_id.capitalize())
+		return
 	_menu_context = "house"
 	var labels: Array = []
 	for id in ["emberwing", "tidemark", "thornrook"]:
@@ -514,9 +550,10 @@ func _open_house_choice() -> void:
 
 func _choose_house(index: int) -> void:
 	Campaign.set_house(["emberwing", "tidemark", "thornrook"][index])
+	Campaign.house_locked = true  # FE3H rule: the oath binds for the playthrough
 	_roster_defs = Roster.player_units()
 	_close_menu()
-	_toast("Sworn to House %s." % Campaign.house_id.capitalize())
+	_toast("Sworn to House %s — for this year and always." % Campaign.house_id.capitalize())
 
 
 func _start_fishing() -> void:

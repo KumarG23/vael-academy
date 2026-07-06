@@ -100,9 +100,16 @@ to_room = "waterside"
 spawn_cell = Vector2i(12, 10)
 label = "The Waterside"
 
+[sub_resource type="Resource" id="Resource_dpv8n"]
+script = ExtResource("11_1lmnc")
+id = "fn_deploy"
+label = "Mission Board"
+cell = Vector2i(17, 12)
+
 [resource]
 script = ExtResource("12_mjo6b")
 id = "campus"
 display_name = "The Campus"
 chapter = SubResource("Resource_y03vi")
 doors = Array[ExtResource("10_jfhq2")]([SubResource("Resource_c75hk"), SubResource("Resource_suhdh"), SubResource("Resource_rsiwk"), SubResource("Resource_jpqr2"), SubResource("Resource_xhh7j")])
+points = Array[ExtResource("11_1lmnc")]([SubResource("Resource_dpv8n")])
