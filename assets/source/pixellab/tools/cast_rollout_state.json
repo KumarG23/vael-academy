@@ -12,15 +12,30 @@
  },
  "wren": {
   "cid": "357dfb36-3847-40f1-945f-8989bb4e69f9",
-  "phase": "strikes",
+  "phase": "done",
   "base_folder": "wren_battle_pro"
  },
  "serra": {
   "cid": "d40d9a93-7610-44c5-b556-894ef5b9fecf",
-  "phase": "anims1"
+  "phase": "done",
+  "base_folder": "serra_battle_pro"
  },
  "tm_soldier": {
   "cid": "c48d4fe2-e14e-45ac-8453-23bd43e5b971",
+  "phase": "done",
+  "base_folder": "tm_soldier_battle_pro"
+ },
+ "tm_knight": {
+  "cid": "410feb44-fcaa-44d7-a702-cb7d79fd3a1c",
+  "phase": "strikes",
+  "base_folder": "tm_knight_battle_pro"
+ },
+ "tm_mage": {
+  "cid": "1fe80913-10db-46f7-9f42-09c087fcd66b",
+  "phase": "anims1"
+ },
+ "bandit": {
+  "cid": "a5f1ff84-0db5-423a-be70-2b79cbfeddc3",
   "phase": "base_creating"
  }
 }
