@@ -120,6 +120,8 @@ func _ready() -> void:
 	Engine.time_scale = 1.0  # defensive: never inherit a hit-stop freeze from before
 	if chapter == null:
 		chapter = _build_fallback_chapter()
+	if Campaign.active:
+		player_house_id = Campaign.house_id  # WO-5.3a: theming follows the choice
 	_terrain_db = TerrainDB.create_default()
 	_grid = chapter.make_grid()
 	_rng = CombatRNG.new(combat_seed if combat_seed >= 0 else int(Time.get_ticks_usec()))

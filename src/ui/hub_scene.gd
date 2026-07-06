@@ -53,11 +53,16 @@ func _menu_pos() -> Vector2:
 	return Vector2(get_viewport_rect().size.x * 0.60, 150)
 
 
+func _house() -> HouseDef:
+	return load("res://data/houses/%s.tres" % Campaign.house_id)
+
+
 func _open_main() -> void:
 	_context = "main"
+	var house := _house()
 	_info = [
 		"Welcome back to Vael Academy.",
-		"House Emberwing musters for the inter-house Mock Battle.",
+		"House %s musters for the inter-house Mock Battle." % house.display_name,
 		"",
 		"Roster: " + ", ".join(_roster_names()),
 	]
@@ -65,9 +70,9 @@ func _open_main() -> void:
 	if last != "":
 		_info.append("")
 		_info.append("Last battle: " + last.to_upper())
-	_menu.open("Vael Academy — Emberwing", [
+	_menu.open("Vael Academy — " + house.display_name, [
 		"Common Hall", "Training Grounds", "Quartermaster", "Mission Board",
-		"Save Game", "Return to Title",
+		"Choose House", "Save Game", "Return to Title",
 	], _menu_pos())
 	queue_redraw()
 
@@ -84,6 +89,8 @@ func _on_chosen(index: int) -> void:
 			_play_support_entry(index)
 		"mission":
 			_do_mission(index)
+		"house":
+			_choose_house(index)
 
 
 func _on_cancelled() -> void:
@@ -97,8 +104,31 @@ func _do_main(index: int) -> void:
 		1: _open_training()
 		2: _open_quartermaster()
 		3: _open_mission()
-		4: _save_game()
-		5: _return_to_title()
+		4: _open_house_choice()
+		5: _save_game()
+		6: _return_to_title()
+
+
+# --- house choice (WO-5.3a mechanism; the 5.3b prologue flow replaces this
+# hub entry with the arrival + in-character pitches) ---------------------------
+
+func _open_house_choice() -> void:
+	_context = "house"
+	_info = ["Every student swears to one Great House.",
+		"The choice sets your roster and colors — and your rivals.", ""]
+	var labels: Array = []
+	for id in ["emberwing", "tidemark", "thornrook"]:
+		var house: HouseDef = load("res://data/houses/%s.tres" % id)
+		var mark := "  *" if id == Campaign.house_id else ""
+		labels.append("%s — the %s%s" % [house.display_name, house.banner_animal, mark])
+	_menu.open("Choose House", labels, _menu_pos())
+	queue_redraw()
+
+
+func _choose_house(index: int) -> void:
+	Campaign.set_house(["emberwing", "tidemark", "thornrook"][index])
+	_roster_defs = Roster.player_units()
+	_open_main()
 
 
 # --- Common Hall --------------------------------------------------------------

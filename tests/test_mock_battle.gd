@@ -36,7 +36,7 @@ func test_chapter_data_is_authored_correctly():
 	assert_eq(chapter.boss_unit_id, "serra")
 	assert_true(chapter.non_lethal, "the Mock Battle is non-lethal")
 	assert_eq(chapter.enemy_spawns.size(), 7, "6 Tidemark students + Serra")
-	assert_eq(chapter.deploy_cells.size(), 7, "deploy cells for the house + Kai (WO-5.2)")
+	assert_eq(chapter.deploy_cells.size(), 9, "cells for every fieldable unit across all houses (WO-5.3a)")
 
 
 func test_chapter_terrain_uses_landmarks_meaningfully():

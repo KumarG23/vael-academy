@@ -17,10 +17,28 @@ extends RefCounted
 const PLAYER_IDS: Array[String] = ["perrin", "kael", "brenna", "wren", "dain", "liora"]
 const PROTAGONIST_ID := "kai"
 
+## WO-5.3a: rosters per house, keyed by data/units FILE basenames. Emberwing is
+## final (5.2); Tidemark/Thornrook are PROVISIONAL single-member rosters until
+## WO-5.4/5.5 author their students. The active house is set by Campaign.
+const HOUSE_ROSTERS := {
+	"emberwing": ["perrin", "kael", "brenna", "wren", "dain", "liora"],
+	"tidemark": ["serra_prologue"],
+	"thornrook": ["corin"],
+}
+static var active_house := "emberwing"
+
+
+## Roster file basenames for the active house.
+static func roster_files() -> Array:
+	return HOUSE_ROSTERS.get(active_house, HOUSE_ROSTERS["emberwing"])
+
 
 ## Roster ids + the protagonist appended (§4) — every id the player fields.
 static func all_player_ids() -> Array[String]:
-	var ids := PLAYER_IDS.duplicate()
+	var ids: Array[String] = []
+	for f in roster_files():
+		var def: UnitDef = load("res://data/units/%s.tres" % f)
+		ids.append(def.id)
 	ids.append(PROTAGONIST_ID)
 	return ids
 
@@ -28,9 +46,11 @@ static func all_player_ids() -> Array[String]:
 ## Fresh UnitDefs for the fielded units: the house roster, then Kai appended.
 static func player_units() -> Array[UnitDef]:
 	var out: Array[UnitDef] = []
-	for id in all_player_ids():
-		var def: UnitDef = load("res://data/units/%s.tres" % id)
+	for f in roster_files():
+		var def: UnitDef = load("res://data/units/%s.tres" % f)
 		out.append(def.duplicate())
+	var kai: UnitDef = load("res://data/units/%s.tres" % PROTAGONIST_ID)
+	out.append(kai.duplicate())
 	return out
 
 
@@ -45,4 +65,6 @@ static func deploy_cells() -> Dictionary:
 		"perrin": Vector2i(2, 8),
 		"dain": Vector2i(4, 7),
 		"liora": Vector2i(2, 9),
+		"serra": Vector2i(3, 8),
+		"corin": Vector2i(4, 8),
 	}

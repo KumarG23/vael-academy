@@ -13,6 +13,8 @@ var unit_states: Dictionary = {}     # id -> Unit.save_state() dict
 var support_save: Dictionary = {}
 var casual: bool = false
 var chapter_id: String = "mock_battle"
+## WO-5.3a: the chosen house — drives roster, theming, and (in 5.6) rivals.
+var house_id: String = "emberwing"
 var last_result: String = ""         # "victory" / "defeat" / ""
 ## True while the player is deployed — the battle applies campaign state only then,
 ## so tests that load the battle scene directly are unaffected.
@@ -28,6 +30,7 @@ var _skip_next_hub_reset := false
 
 ## Start a brand-new campaign (called from New Game / WO-4.3).
 func reset_new_game(is_casual: bool, seed_value: int = 1) -> void:
+	set_house("emberwing")  # the prologue precedes the choice; 5.3b flows it
 	unit_states = {}
 	support_save = {}
 	casual = is_casual
@@ -46,6 +49,15 @@ func begin_hub_visit() -> void:
 		_skip_next_hub_reset = false
 		return
 	training_used = false
+
+
+## Choose the player's house (WO-5.3a): flips the Roster and everything
+## downstream that reads house_id (battle theming; rivals ride WO-5.6).
+func set_house(id: String) -> void:
+	if not Roster.HOUSE_ROSTERS.has(id):
+		return
+	house_id = id
+	Roster.active_house = id
 
 
 ## Mark the player as deployed so the next battle applies campaign state.
@@ -112,6 +124,7 @@ func to_dict() -> Dictionary:
 		"support_save": support_save.duplicate(true),
 		"casual": casual,
 		"chapter_id": chapter_id,
+		"house_id": house_id,
 		"last_result": last_result,
 		"training_used": training_used,
 		"rng_state": str(_training_rng.state_value()),
@@ -123,6 +136,7 @@ func from_dict(data: Dictionary) -> void:
 	support_save = (data.get("support_save", {}) as Dictionary).duplicate(true)
 	casual = bool(data.get("casual", false))
 	chapter_id = str(data.get("chapter_id", "mock_battle"))
+	set_house(str(data.get("house_id", "emberwing")))
 	last_result = str(data.get("last_result", ""))
 	training_used = bool(data.get("training_used", false))
 	_training_rng = CombatRNG.new(1)
