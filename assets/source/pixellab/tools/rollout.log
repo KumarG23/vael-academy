@@ -1,0 +1,8 @@
+  kael PROCESSED: [('idle', 9), ('hit', 7), ('ko', 9), ('attack_wind', 9), ('attack_strike', 9), ('crit_wind', 9), ('crit_strike', 9), ('attack', 18), ('crit', 18)]
+kael: DONE | generations_remaining: 3541
+  brenna PROCESSED: [('idle', 9), ('hit', 7), ('ko', 9), ('attack_wind', 9), ('attack_strike', 9), ('crit_wind', 9), ('crit_strike', 9), ('attack', 18), ('crit', 18)]
+brenna: DONE | generations_remaining: 3541
+  queued idle_east
+  queued hit_east
+  queued ko_east
+  queued attack_wind_east

@@ -2,10 +2,16 @@
  "kai_stab_done": true,
  "kael": {
   "cid": "ad6bff11-c981-43a4-862b-a060121455ef",
-  "phase": "anims1"
+  "phase": "done",
+  "base_folder": "kael_battle_pro"
  },
  "brenna": {
   "cid": "0f1bfeee-05ad-42c7-9fb5-934f3f64dc22",
-  "phase": "anims1"
+  "phase": "done",
+  "base_folder": "brenna_battle_pro"
+ },
+ "wren": {
+  "cid": "357dfb36-3847-40f1-945f-8989bb4e69f9",
+  "phase": "base_creating"
  }
 }
