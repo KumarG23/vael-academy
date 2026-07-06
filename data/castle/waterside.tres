@@ -26,10 +26,16 @@ x = 0.35
 dialogue = "res://data/dialogue/castle_liora.json"
 npc_unit = "liora"
 
+[sub_resource type="Resource" id="Resource_0qqp1"]
+script = ExtResource("4_qw5lk")
+id = "fn_fish"
+label = "Cast a line"
+x = 0.82
+
 [resource]
 script = ExtResource("3_sbd60")
 id = "waterside"
 display_name = "The Waterside"
 backdrop = ExtResource("1_0bbi0")
 exits = Array[ExtResource("2_0qqp1")]([SubResource("Resource_wttdi")])
-spots = Array[ExtResource("4_qw5lk")]([SubResource("Resource_hvmj1"), SubResource("Resource_0bbi0")])
+spots = Array[ExtResource("4_qw5lk")]([SubResource("Resource_hvmj1"), SubResource("Resource_0bbi0"), SubResource("Resource_0qqp1")])

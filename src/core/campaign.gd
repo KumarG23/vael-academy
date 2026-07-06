@@ -15,6 +15,8 @@ var casual: bool = false
 var chapter_id: String = "mock_battle"
 ## WO-5.3a: the chosen house — drives roster, theming, and (in 5.6) rivals.
 var house_id: String = "emberwing"
+## WO-6.4: the waterside fish log (fish name -> count), part of the save.
+var fish_log: Dictionary = {}
 var last_result: String = ""         # "victory" / "defeat" / ""
 ## True while the player is deployed — the battle applies campaign state only then,
 ## so tests that load the battle scene directly are unaffected.
@@ -31,6 +33,7 @@ var _skip_next_hub_reset := false
 ## Start a brand-new campaign (called from New Game / WO-4.3).
 func reset_new_game(is_casual: bool, seed_value: int = 1) -> void:
 	set_house("emberwing")  # the prologue precedes the choice; 5.3b flows it
+	fish_log = {}
 	unit_states = {}
 	support_save = {}
 	casual = is_casual
@@ -125,6 +128,7 @@ func to_dict() -> Dictionary:
 		"casual": casual,
 		"chapter_id": chapter_id,
 		"house_id": house_id,
+		"fish_log": fish_log.duplicate(true),
 		"last_result": last_result,
 		"training_used": training_used,
 		"rng_state": str(_training_rng.state_value()),
@@ -137,6 +141,7 @@ func from_dict(data: Dictionary) -> void:
 	casual = bool(data.get("casual", false))
 	chapter_id = str(data.get("chapter_id", "mock_battle"))
 	set_house(str(data.get("house_id", "emberwing")))
+	fish_log = (data.get("fish_log", {}) as Dictionary).duplicate(true)
 	last_result = str(data.get("last_result", ""))
 	training_used = bool(data.get("training_used", false))
 	_training_rng = CombatRNG.new(1)

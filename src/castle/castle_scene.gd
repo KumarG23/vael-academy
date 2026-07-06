@@ -135,7 +135,7 @@ func _spawn_npcs(vp: Vector2) -> void:
 
 
 func _process(delta: float) -> void:
-	if room == null or _dialogue != null or menu_busy():
+	if room == null or _dialogue != null or menu_busy() or _fishing != null:
 		return
 	var vp := get_viewport_rect().size
 	var move := Vector2.ZERO
@@ -181,7 +181,7 @@ func _update_prompt(vp: Vector2) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _dialogue != null or room == null or menu_busy():
+	if _dialogue != null or room == null or menu_busy() or _fishing != null:
 		return
 	if event.is_action_pressed("ui_accept") or event.is_action_pressed("cursor_confirm"):
 		activate_nearest()
@@ -234,6 +234,31 @@ func _open_function(fn: String) -> void:
 			_open_quartermaster()
 		"fn_house":
 			_open_house_choice()
+		"fn_fish":
+			_start_fishing()
+
+
+# --- 6.4: fishing ---------------------------------------------------------------
+
+var _fishing: FishingGame = null
+
+
+func _start_fishing() -> void:
+	if _fishing != null:
+		return
+	_fishing = FishingGame.new()
+	_fishing.finished.connect(_on_fishing_done)
+	add_child(_fishing)
+
+
+func _on_fishing_done(result: Dictionary) -> void:
+	if result["caught"]:
+		var fish: String = result["fish"]
+		_toast("Caught a %s! (x%d)" % [fish, int(Campaign.fish_log.get(fish, 1))])
+	else:
+		_toast("...it got away.")
+	_fishing.queue_free()
+	_fishing = null
 
 
 # --- 6.2b: Quartermaster inspect + the house oath ------------------------------
