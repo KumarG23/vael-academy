@@ -94,3 +94,49 @@ func test_system_menu_replaces_leave():
 	assert_eq(_castle._menu_context, "system")
 	_castle._do_system(2)  # Back
 	assert_eq(_castle._menu_context, "")
+
+
+# --- WO-6.2b: remaining rooms --------------------------------------------------
+
+func test_quartermaster_inspects_units():
+	_castle._open_function("fn_roster")
+	assert_eq(_castle._menu_context, "quarter")
+	_castle._inspect_unit(0)
+	assert_not_null(_castle._stats_panel, "the stats panel opened")
+
+
+func test_house_oath_from_the_entrance():
+	_castle._open_function("fn_house")
+	assert_eq(_castle._menu_context, "house")
+	_castle._choose_house(1)
+	assert_eq(Campaign.house_id, "tidemark")
+	Campaign.set_house("emberwing")
+
+
+# --- WO-6.3: NPCs in rooms -----------------------------------------------------
+
+func test_three_npcs_stand_in_their_rooms():
+	var npcs := {}
+	for rid in _castle._rooms:
+		for s in _castle._rooms[rid].spots:
+			if s.npc_unit != "":
+				npcs[s.npc_unit] = rid
+				assert_true(FileAccess.file_exists(s.dialogue), s.npc_unit + " talks")
+	assert_gte(npcs.size(), 3, "at least three housemates placed: " + str(npcs))
+
+
+func test_npc_sprites_spawn_with_the_room():
+	_castle.enter_room("training", 0.5)
+	assert_gt(_castle._npc_sprites.size(), 0, "Brenna stands at the grounds")
+
+
+func test_support_scene_launches_from_the_castle():
+	Campaign.support_save = {"points": {"kai_kael": 25}, "ranks": {"kai_kael": "C"}, "viewed": {}}
+	var c2: CastleScene = (load("res://scenes/castle/castle.tscn") as PackedScene).instantiate()
+	add_child_autofree(c2)
+	c2._open_hall_archive()
+	assert_eq(c2._menu_context, "hall")
+	assert_gt(c2._hall_entries.size(), 0, "the C scene is unlocked")
+	c2._view_hall_entry(0)
+	assert_not_null(c2._dialogue, "the support scene is playing in the castle")
+	Campaign.support_save = {}

@@ -25,9 +25,16 @@ to_room = "dorm_hall"
 label = "Up to the Dormitories"
 spawn_x = 0.1
 
+[sub_resource type="Resource" id="Resource_lwtq5"]
+script = ExtResource("4_gp68j")
+id = "fn_house"
+label = "The Oath Wall"
+x = 0.28
+
 [resource]
 script = ExtResource("3_b4k21")
 id = "entrance"
 display_name = "Entrance Hall"
 backdrop = ExtResource("1_lwtq5")
 exits = Array[ExtResource("2_gs2wk")]([SubResource("Resource_m60os"), SubResource("Resource_8qj0a"), SubResource("Resource_ai2sk")])
+spots = Array[ExtResource("4_gp68j")]([SubResource("Resource_lwtq5")])

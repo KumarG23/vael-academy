@@ -112,7 +112,26 @@ func enter_room(room_id: String, spawn_x := 0.5) -> void:
 	var vp := get_viewport_rect().size
 	_avatar_pos = Vector2(vp.x * spawn_x, vp.y * (room.floor_top + room.floor_bottom) * 0.5)
 	_avatar.position = _avatar_pos
+	_spawn_npcs(vp)
 	room_changed.emit(room_id)
+
+
+## WO-6.3: housemates stand at their spots (idle loop from their map frames).
+func _spawn_npcs(vp: Vector2) -> void:
+	for n in _npc_sprites:
+		n.queue_free()
+	_npc_sprites.clear()
+	for spot in room.spots:
+		if spot.npc_unit == "":
+			continue
+		var npc := AnimatedSprite2D.new()
+		npc.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		npc.scale = Vector2.ONE * AVATAR_SCALE
+		npc.sprite_frames = _build_walk_frames(spot.npc_unit)
+		npc.play("idle")
+		npc.position = Vector2(vp.x * spot.x, vp.y * (room.floor_top + room.floor_bottom) * 0.5)
+		add_child(npc)
+		_npc_sprites.append(npc)
 
 
 func _process(delta: float) -> void:
@@ -196,6 +215,8 @@ func menu_busy() -> bool:
 func _close_menu() -> void:
 	_menu_context = ""
 	_menu.close()
+	if _stats_panel != null:
+		_stats_panel.visible = false
 
 
 func _open_function(fn: String) -> void:
@@ -209,6 +230,54 @@ func _open_function(fn: String) -> void:
 		"fn_save":
 			Campaign.save_to_slot(0)
 			_toast("Game saved.")
+		"fn_roster":
+			_open_quartermaster()
+		"fn_house":
+			_open_house_choice()
+
+
+# --- 6.2b: Quartermaster inspect + the house oath ------------------------------
+
+var _stats_panel: UnitStatsPanel = null
+var _npc_sprites: Array = []  # WO-6.3: standing housemates, rebuilt per room
+
+
+func _open_quartermaster() -> void:
+	_menu_context = "quarter"
+	var labels: Array = []
+	for def in _roster_defs:
+		labels.append("%s   %s" % [def.display_name, _level_xp_text(def.id)])
+	_menu.open("Quartermaster — Roster", labels, _menu_pos())
+
+
+func _inspect_unit(index: int) -> void:
+	var def := _roster_defs[index]
+	var scratch := Unit.new()
+	scratch.setup(def.duplicate(), Grid.new(1, 1), Vector2i.ZERO)
+	if Campaign.has_unit_state(def.id):
+		scratch.apply_progression_state(Campaign.get_unit_state(def.id))
+	if _stats_panel == null:
+		_stats_panel = UnitStatsPanel.new()
+		add_child(_stats_panel)
+	_stats_panel.show_unit(scratch)
+	scratch.free()
+
+
+func _open_house_choice() -> void:
+	_menu_context = "house"
+	var labels: Array = []
+	for id in ["emberwing", "tidemark", "thornrook"]:
+		var house: HouseDef = load("res://data/houses/%s.tres" % id)
+		var mark := "  *" if id == Campaign.house_id else ""
+		labels.append("%s — the %s%s" % [house.display_name, house.banner_animal, mark])
+	_menu.open("Swear to a House", labels, _menu_pos())
+
+
+func _choose_house(index: int) -> void:
+	Campaign.set_house(["emberwing", "tidemark", "thornrook"][index])
+	_roster_defs = Roster.player_units()
+	_close_menu()
+	_toast("Sworn to House %s." % Campaign.house_id.capitalize())
 
 
 func _toast(text: String) -> void:
@@ -283,6 +352,10 @@ func _on_menu_chosen(index: int) -> void:
 			_do_mission(index)
 		"hall":
 			_view_hall_entry(index)
+		"quarter":
+			_inspect_unit(index)
+		"house":
+			_choose_house(index)
 		"system":
 			_do_system(index)
 

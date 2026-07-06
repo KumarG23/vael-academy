@@ -11,9 +11,16 @@ to_room = "common_hall"
 x = 0.06
 spawn_x = 0.88
 
+[sub_resource type="Resource" id="Resource_3qb44"]
+script = ExtResource("4_3njsi")
+id = "fn_roster"
+label = "Review the roster"
+x = 0.4
+
 [resource]
 script = ExtResource("3_4s2lf")
 id = "quartermaster"
 display_name = "Quartermaster"
 backdrop = ExtResource("1_3qb44")
 exits = Array[ExtResource("2_n5dhx")]([SubResource("Resource_xci4k")])
+spots = Array[ExtResource("4_3njsi")]([SubResource("Resource_3qb44")])

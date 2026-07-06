@@ -8,3 +8,6 @@ extends Resource
 @export var label: String = ""
 @export var x: float = 0.5
 @export var dialogue: String = ""
+## WO-6.3: when set, this spot IS a person — the unit's idle sprite stands
+## here (walk-up-and-talk; art from assets/sprites/units/<id>/ as always).
+@export var npc_unit: String = ""

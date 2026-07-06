@@ -25,10 +25,18 @@ id = "fn_train"
 label = "Train a housemate"
 x = 0.35
 
+[sub_resource type="Resource" id="Resource_h1ryr"]
+script = ExtResource("4_qpwm5")
+id = "brenna_chat"
+label = "Talk to Brenna"
+x = 0.55
+dialogue = "res://data/dialogue/castle_brenna.json"
+npc_unit = "brenna"
+
 [resource]
 script = ExtResource("3_1mv0m")
 id = "training"
 display_name = "Training Grounds"
 backdrop = ExtResource("1_3xc32")
 exits = Array[ExtResource("2_h1ryr")]([SubResource("Resource_fa6mw")])
-spots = Array[ExtResource("4_qpwm5")]([SubResource("Resource_bttwv"), SubResource("Resource_3xc32")])
+spots = Array[ExtResource("4_qpwm5")]([SubResource("Resource_bttwv"), SubResource("Resource_3xc32"), SubResource("Resource_h1ryr")])

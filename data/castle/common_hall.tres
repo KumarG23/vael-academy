@@ -29,6 +29,7 @@ id = "kael_chat"
 label = "Talk to Kael"
 x = 0.3
 dialogue = "res://data/dialogue/castle_kael.json"
+npc_unit = "kael"
 
 [sub_resource type="Resource" id="Resource_7yfrx"]
 script = ExtResource("4_y04oi")
