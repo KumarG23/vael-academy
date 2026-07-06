@@ -12,29 +12,15 @@
 script = ExtResource("3_ogc6f")
 id = "castle_waterside"
 display_name = "The Waterside"
-objective = 0
-seize_cell = Vector2i(-1, -1)
-boss_unit_id = ""
-non_lethal = false
-enemy_spawns = Array[ExtResource("2_djfns")]([])
-deploy_cells = Dictionary[String, Vector2i]({})
-player_spawns = Array[ExtResource("2_djfns")]([])
-intro_dialogue = ""
-outro_dialogue = ""
-boss_quote_dialogue = ""
-boss_yield_dialogue = ""
 width = 22
 height = 12
 terrain = PackedInt32Array(5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 5, 5, 5, 5, 11, 11, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 11, 11, 5, 5, 5, 5, 1, 1, 0, 0, 0, 0, 0, 11, 11, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 5, 5, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-base_terrain = 0
-decor = Array[ExtResource("1_ujmad")]([])
-visits = Array[ExtResource("4_hl16a")]([])
 
 [sub_resource type="Resource" id="Resource_tx0t1"]
 script = ExtResource("5_ig5l2")
 cell = Vector2i(13, 10)
 to_room = "campus"
-spawn_cell = Vector2i(1, 16)
+spawn_cell = Vector2i(47, 22)
 label = "Back to the Campus"
 
 [sub_resource type="Resource" id="Resource_77myd"]

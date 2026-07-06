@@ -1,14 +1,14 @@
-[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3 uid="uid://bw686x1mqx744"]
 
-[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_37g3q"]
-[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner.png" id="2_w6v36"]
-[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="2_yfiys"]
-[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/rug_round.png" id="3_6026u"]
-[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="3_w6v36"]
-[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="4_6026u"]
-[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="5_oomt6"]
-[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_ox6ie"]
-[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_37n11"]
+[ext_resource type="Script" uid="uid://dvgys17r24nvh" path="res://src/core/map_decor.gd" id="1_37g3q"]
+[ext_resource type="Texture2D" uid="uid://ennn1v13wfiy" path="res://assets/art/pixellab/props/banner.png" id="2_w6v36"]
+[ext_resource type="Script" uid="uid://fsop5o0rjv2f" path="res://src/units/unit_spawn.gd" id="2_yfiys"]
+[ext_resource type="Texture2D" uid="uid://bdyeeascpxnsh" path="res://assets/art/pixellab/props/rug_round.png" id="3_6026u"]
+[ext_resource type="Script" uid="uid://b006s5nc8kf0a" path="res://src/core/chapter_def.gd" id="3_w6v36"]
+[ext_resource type="Script" uid="uid://bug3dayqi4xw1" path="res://src/core/visit_spot.gd" id="4_6026u"]
+[ext_resource type="Script" uid="uid://brwe7btw0x6xr" path="res://src/castle/castle_door.gd" id="5_oomt6"]
+[ext_resource type="Script" uid="uid://bbpvpvlq7i7tx" path="res://src/castle/castle_point.gd" id="6_ox6ie"]
+[ext_resource type="Script" uid="uid://donv63rfhvra5" path="res://src/castle/castle_room_def.gd" id="7_37n11"]
 
 [sub_resource type="Resource" id="Resource_oomt6"]
 script = ExtResource("1_37g3q")
@@ -30,29 +30,17 @@ offset = Vector2(16, 0)
 script = ExtResource("3_w6v36")
 id = "castle_entrance"
 display_name = "Entrance Hall"
-objective = 0
-seize_cell = Vector2i(-1, -1)
-boss_unit_id = ""
-non_lethal = false
-enemy_spawns = Array[ExtResource("2_yfiys")]([])
-deploy_cells = Dictionary[String, Vector2i]({})
-player_spawns = Array[ExtResource("2_yfiys")]([])
-intro_dialogue = ""
-outro_dialogue = ""
-boss_quote_dialogue = ""
-boss_yield_dialogue = ""
 width = 22
 height = 13
 terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 4, 4, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 4, 4, 0, 8, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 8, 0, 4, 7, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 7, 4, 0, 8, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 8, 0, 4, 4, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 4, 4, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
 base_terrain = 7
 decor = Array[ExtResource("1_37g3q")]([SubResource("Resource_oomt6"), SubResource("Resource_ox6ie"), SubResource("Resource_37n11")])
-visits = Array[ExtResource("4_6026u")]([])
 
 [sub_resource type="Resource" id="Resource_mnmbj"]
 script = ExtResource("5_oomt6")
 cell = Vector2i(11, 12)
 to_room = "campus"
-spawn_cell = Vector2i(18, 14)
+spawn_cell = Vector2i(18, 15)
 label = "Out to the Campus"
 
 [sub_resource type="Resource" id="Resource_0thba"]

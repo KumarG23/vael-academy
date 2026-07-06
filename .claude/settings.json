@@ -17,7 +17,6 @@
       "mcp__godot-mcp-pro__simulate_key",
       "mcp__godot-mcp-pro__simulate_mouse_click",
       "WebSearch",
-
       "Edit(**)",
       "Write(**)",
       "Edit(//private/tmp/claude-501/**)",
@@ -33,7 +32,10 @@
       "Bash(python3 gen.py *)",
       "Bash(python3 gen2.py *)",
       "Bash(python3 /private/tmp/claude-501/*)",
-      "Bash(/Applications/Aseprite.app/Contents/MacOS/aseprite *)"
+      "mcp__aseprite-mcp-pro__*",
+      "Bash(launchctl kickstart -k gui/*/com.neal.aseprite-mcp-pro)",
+      "Bash(python3 assets/sprites/sources/generators/*.py)",
+      "Bash(python3 assets/sprites/sources/generators/*)"
     ]
   }
 }

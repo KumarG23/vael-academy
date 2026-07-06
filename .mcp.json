@@ -5,6 +5,10 @@
       "args": [
         "/Users/nealsharma/Downloads/godot-mcp-pro-v1.15.0/server/build/index.js"
       ]
+    },
+    "aseprite-mcp-pro": {
+      "type": "http",
+      "url": "http://127.0.0.1:8003/mcp"
     }
   }
 }

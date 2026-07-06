@@ -1,0 +1,31 @@
+CAST2 ROLLOUT: 14 kits -> ['perrin', 'dain', 'liora', 'osric', 'elowen', 'isolde', 'fenn', 'bertram', 'corin', 'thessaly', 'corvin', 'marlow', 'vesper', 'rurik']
+perrin: base creating -> f7072ded-9f55-4dc6-b995-5ee9291620e9
+  queued idle_east
+  queued hit_east
+  queued ko_east
+  queued attack_wind_east
+  queued crit_wind_east
+perrin: anims1 queued
+dain: base creating -> 646b9e81-afdd-4236-980e-e2d4471ff69d
+  queued attack_strike_east
+  queued crit_strike_east
+perrin: strikes queued (chained)
+  queued idle_east
+  queued hit_east
+  queued ko_east
+  queued attack_wind_east
+  queued crit_wind_east
+dain: anims1 queued
+  perrin PROCESSED: [('idle', 9), ('hit', 7), ('ko', 9), ('attack_wind', 9), ('attack_strike', 9), ('crit_wind', 9), ('crit_strike', 9), ('attack', 18), ('crit', 18)]
+perrin: DONE | generations_remaining: 2881
+liora: base creating -> d5c6a14a-bc69-40e4-9a96-c7a217e4eefb
+  queued attack_strike_east
+  queued crit_strike_east
+dain: strikes queued (chained)
+  queued idle_east
+  queued hit_east
+  queued ko_east
+  queued attack_wind_east
+  queued crit_wind_east
+liora: anims1 queued
+osric: base creating -> 656c6b98-0176-409a-a774-1db6332330c7
