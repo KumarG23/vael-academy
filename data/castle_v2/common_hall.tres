@@ -9,8 +9,12 @@
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="4_g2wwm"]
 [ext_resource type="Script" path="res://src/castle/castle_door.gd" id="5_a6v0k"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/rug_round.png" id="5_fy6pm"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bookshelf.png" id="6_3gu1d"]
 [ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_oi6le"]
 [ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_7yd7r"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner.png" id="7_o5ueu"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="8_op6nd"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="9_2rofd"]
 
 [sub_resource type="Resource" id="Resource_6wlsf"]
 script = ExtResource("1_arksm")
@@ -68,6 +72,38 @@ texture = ExtResource("5_fy6pm")
 cell = Vector2i(11, 11)
 offset = Vector2(16, 0)
 
+[sub_resource type="Resource" id="Resource_wux2p"]
+script = ExtResource("1_arksm")
+texture = ExtResource("6_3gu1d")
+cell = Vector2i(2, 1)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_0734v"]
+script = ExtResource("1_arksm")
+texture = ExtResource("6_3gu1d")
+cell = Vector2i(21, 1)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_ktu7m"]
+script = ExtResource("1_arksm")
+texture = ExtResource("7_o5ueu")
+cell = Vector2i(10, 1)
+
+[sub_resource type="Resource" id="Resource_lxc3q"]
+script = ExtResource("1_arksm")
+texture = ExtResource("7_o5ueu")
+cell = Vector2i(13, 1)
+
+[sub_resource type="Resource" id="Resource_0rh2v"]
+script = ExtResource("1_arksm")
+texture = ExtResource("8_op6nd")
+cell = Vector2i(2, 11)
+
+[sub_resource type="Resource" id="Resource_pt0ut"]
+script = ExtResource("1_arksm")
+texture = ExtResource("9_2rofd")
+cell = Vector2i(21, 11)
+
 [sub_resource type="Resource" id="Resource_fy6pm"]
 script = ExtResource("3_u6u5l")
 id = "castle_common_hall"
@@ -85,9 +121,9 @@ boss_quote_dialogue = ""
 boss_yield_dialogue = ""
 width = 24
 height = 13
-terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 4, 4, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4, 7, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4, 4, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4, 4, 0, 0, 7, 12, 12, 12, 7, 7, 0, 0, 0, 0, 7, 12, 12, 12, 7, 7, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 4, 4, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4, 7, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4, 4, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4, 4, 0, 0, 7, 12, 12, 12, 7, 7, 0, 0, 0, 0, 7, 12, 12, 12, 7, 7, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
 base_terrain = 7
-decor = Array[ExtResource("1_arksm")]([SubResource("Resource_6wlsf"), SubResource("Resource_he016"), SubResource("Resource_vu5ct"), SubResource("Resource_be5ag"), SubResource("Resource_k3di5"), SubResource("Resource_ly684"), SubResource("Resource_3piny"), SubResource("Resource_beqb5"), SubResource("Resource_do4fx"), SubResource("Resource_6fj2l")])
+decor = Array[ExtResource("1_arksm")]([SubResource("Resource_6wlsf"), SubResource("Resource_he016"), SubResource("Resource_vu5ct"), SubResource("Resource_be5ag"), SubResource("Resource_k3di5"), SubResource("Resource_ly684"), SubResource("Resource_3piny"), SubResource("Resource_beqb5"), SubResource("Resource_do4fx"), SubResource("Resource_6fj2l"), SubResource("Resource_wux2p"), SubResource("Resource_0734v"), SubResource("Resource_ktu7m"), SubResource("Resource_lxc3q"), SubResource("Resource_0rh2v"), SubResource("Resource_pt0ut")])
 visits = Array[ExtResource("4_g2wwm")]([])
 
 [sub_resource type="Resource" id="Resource_edv5t"]

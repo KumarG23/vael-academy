@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="5_c7ef6"]
 [ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_8dhsu"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="6_sr3hq"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner.png" id="7_i7vg2"]
 [ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_m6n4r"]
 
 [sub_resource type="Resource" id="Resource_b2cvr"]
@@ -50,6 +51,26 @@ script = ExtResource("1_jeic6")
 texture = ExtResource("6_sr3hq")
 cell = Vector2i(2, 8)
 
+[sub_resource type="Resource" id="Resource_aeq5j"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("6_sr3hq")
+cell = Vector2i(2, 8)
+
+[sub_resource type="Resource" id="Resource_vwxeu"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("5_c7ef6")
+cell = Vector2i(13, 8)
+
+[sub_resource type="Resource" id="Resource_1bkbi"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("7_i7vg2")
+cell = Vector2i(7, 1)
+
+[sub_resource type="Resource" id="Resource_eqdmp"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("7_i7vg2")
+cell = Vector2i(8, 1)
+
 [sub_resource type="Resource" id="Resource_i7vg2"]
 script = ExtResource("3_1x836")
 id = "castle_quartermaster"
@@ -69,7 +90,7 @@ width = 16
 height = 10
 terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
 base_terrain = 7
-decor = Array[ExtResource("1_jeic6")]([SubResource("Resource_b2cvr"), SubResource("Resource_qraeu"), SubResource("Resource_cea65"), SubResource("Resource_ar1ln"), SubResource("Resource_pwocm"), SubResource("Resource_ugo7n"), SubResource("Resource_gf8of")])
+decor = Array[ExtResource("1_jeic6")]([SubResource("Resource_b2cvr"), SubResource("Resource_qraeu"), SubResource("Resource_cea65"), SubResource("Resource_ar1ln"), SubResource("Resource_pwocm"), SubResource("Resource_ugo7n"), SubResource("Resource_gf8of"), SubResource("Resource_aeq5j"), SubResource("Resource_vwxeu"), SubResource("Resource_1bkbi"), SubResource("Resource_eqdmp")])
 visits = Array[ExtResource("4_jubc7")]([])
 
 [sub_resource type="Resource" id="Resource_c7ef6"]

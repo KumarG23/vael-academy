@@ -1,14 +1,18 @@
-[gd_resource type="Resource" script_class="CastleRoomDef" format=3 uid="uid://bnw1gxic86o3f"]
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
 
-[ext_resource type="Script" uid="uid://dvgys17r24nvh" path="res://src/core/map_decor.gd" id="1_86bf7"]
-[ext_resource type="Texture2D" uid="uid://dijwu73wlw6pn" path="res://assets/art/pixellab/props/bed.png" id="2_1w0am"]
-[ext_resource type="Script" uid="uid://fsop5o0rjv2f" path="res://src/units/unit_spawn.gd" id="2_oe2qo"]
-[ext_resource type="Script" uid="uid://b006s5nc8kf0a" path="res://src/core/chapter_def.gd" id="3_1w0am"]
-[ext_resource type="Texture2D" uid="uid://bdyeeascpxnsh" path="res://assets/art/pixellab/props/rug_round.png" id="3_35n0j"]
-[ext_resource type="Script" uid="uid://bug3dayqi4xw1" path="res://src/core/visit_spot.gd" id="4_35n0j"]
-[ext_resource type="Script" uid="uid://brwe7btw0x6xr" path="res://src/castle/castle_door.gd" id="5_kabiy"]
-[ext_resource type="Script" uid="uid://bbpvpvlq7i7tx" path="res://src/castle/castle_point.gd" id="6_5jqbf"]
-[ext_resource type="Script" uid="uid://donv63rfhvra5" path="res://src/castle/castle_room_def.gd" id="7_mobup"]
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_86bf7"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bed.png" id="2_1w0am"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="2_oe2qo"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="3_1w0am"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/rug_round.png" id="3_35n0j"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="4_35n0j"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="4_mobup"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="5_kabiy"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="5_wokpd"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_5jqbf"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bookshelf.png" id="6_aqprb"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner.png" id="7_f0j18"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_mobup"]
 
 [sub_resource type="Resource" id="Resource_kabiy"]
 script = ExtResource("1_86bf7")
@@ -66,15 +70,59 @@ texture = ExtResource("3_35n0j")
 cell = Vector2i(12, 4)
 offset = Vector2(16, 0)
 
+[sub_resource type="Resource" id="Resource_5gdr1"]
+script = ExtResource("1_86bf7")
+texture = ExtResource("4_mobup")
+cell = Vector2i(2, 4)
+
+[sub_resource type="Resource" id="Resource_srpw3"]
+script = ExtResource("1_86bf7")
+texture = ExtResource("5_wokpd")
+cell = Vector2i(21, 4)
+
+[sub_resource type="Resource" id="Resource_udaqm"]
+script = ExtResource("1_86bf7")
+texture = ExtResource("6_aqprb")
+cell = Vector2i(11, 1)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_yyt13"]
+script = ExtResource("1_86bf7")
+texture = ExtResource("7_f0j18")
+cell = Vector2i(6, 1)
+
+[sub_resource type="Resource" id="Resource_i1sf7"]
+script = ExtResource("1_86bf7")
+texture = ExtResource("7_f0j18")
+cell = Vector2i(16, 1)
+
+[sub_resource type="Resource" id="Resource_qmiht"]
+script = ExtResource("1_86bf7")
+texture = ExtResource("3_35n0j")
+cell = Vector2i(11, 5)
+offset = Vector2(16, 0)
+
 [sub_resource type="Resource" id="Resource_wokpd"]
 script = ExtResource("3_1w0am")
 id = "castle_dorm_hall"
 display_name = "Dormitory Hall"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+enemy_spawns = Array[ExtResource("2_oe2qo")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("2_oe2qo")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
 width = 24
 height = 9
-terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
 base_terrain = 7
-decor = Array[ExtResource("1_86bf7")]([SubResource("Resource_kabiy"), SubResource("Resource_5jqbf"), SubResource("Resource_mobup"), SubResource("Resource_q0k4f"), SubResource("Resource_abwnv"), SubResource("Resource_i4kux"), SubResource("Resource_s040r"), SubResource("Resource_cqfa2"), SubResource("Resource_3oxii"), SubResource("Resource_yiu17"), SubResource("Resource_cym72")])
+decor = Array[ExtResource("1_86bf7")]([SubResource("Resource_kabiy"), SubResource("Resource_5jqbf"), SubResource("Resource_mobup"), SubResource("Resource_q0k4f"), SubResource("Resource_abwnv"), SubResource("Resource_i4kux"), SubResource("Resource_s040r"), SubResource("Resource_cqfa2"), SubResource("Resource_3oxii"), SubResource("Resource_yiu17"), SubResource("Resource_cym72"), SubResource("Resource_5gdr1"), SubResource("Resource_srpw3"), SubResource("Resource_udaqm"), SubResource("Resource_yyt13"), SubResource("Resource_i1sf7"), SubResource("Resource_qmiht")])
+visits = Array[ExtResource("4_35n0j")]([])
 
 [sub_resource type="Resource" id="Resource_aqprb"]
 script = ExtResource("5_kabiy")

@@ -6,15 +6,20 @@
  },
  "dain": {
   "cid": "646b9e81-afdd-4236-980e-e2d4471ff69d",
-  "phase": "strikes",
+  "phase": "done",
   "base_folder": "dain_battle_pro"
  },
  "liora": {
   "cid": "d5c6a14a-bc69-40e4-9a96-c7a217e4eefb",
-  "phase": "anims1"
+  "phase": "done",
+  "base_folder": "liora_battle_pro"
  },
  "osric": {
   "cid": "656c6b98-0176-409a-a774-1db6332330c7",
+  "phase": "anims1"
+ },
+ "elowen": {
+  "cid": "1186c401-e091-4e85-8817-fd04547ad23d",
   "phase": "base_creating"
  }
 }

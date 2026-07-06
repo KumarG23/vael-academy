@@ -29,3 +29,18 @@ dain: strikes queued (chained)
   queued crit_wind_east
 liora: anims1 queued
 osric: base creating -> 656c6b98-0176-409a-a774-1db6332330c7
+  dain PROCESSED: [('idle', 9), ('hit', 7), ('ko', 9), ('attack_wind', 9), ('attack_strike', 9), ('crit_wind', 9), ('crit_strike', 9), ('attack', 18), ('crit', 18)]
+dain: DONE | generations_remaining: 2769
+  queued attack_strike_east
+  queued crit_strike_east
+liora: strikes queued (chained)
+  queued idle_east
+  queued hit_east
+  queued ko_east
+  queued attack_wind_east
+  queued crit_wind_east
+osric: anims1 queued
+  liora PROCESSED: [('idle', 9), ('hit', 7), ('ko', 9), ('attack_wind', 9), ('attack_strike', 9), ('crit_wind', 9), ('crit_strike', 9), ('attack', 18), ('crit', 18)]
+liora: DONE | generations_remaining: 2719
+elowen: base creating -> 1186c401-e091-4e85-8817-fd04547ad23d
+  queued attack_strike_east
