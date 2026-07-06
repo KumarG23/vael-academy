@@ -1206,7 +1206,7 @@ func _on_result_dismissed() -> void:
 	# scene run standalone (tests/dev) just reloads for another attempt.
 	if Campaign.active:
 		if _battle_victory:
-			get_tree().change_scene_to_file("res://scenes/hub/hub.tscn")
+			get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
 		else:
 			get_tree().change_scene_to_file("res://scenes/title/title.tscn")
 	else:

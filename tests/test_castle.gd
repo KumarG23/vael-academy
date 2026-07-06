@@ -54,3 +54,43 @@ func test_all_spot_dialogues_exist():
 		for s in _castle._rooms[rid].spots:
 			if s.dialogue != "":
 				assert_true(FileAccess.file_exists(s.dialogue), s.id)
+
+
+# --- WO-6.2a: room functions -------------------------------------------------
+
+func test_function_spots_live_in_their_rooms():
+	var expect := {"training": "fn_train", "war_room": "fn_deploy",
+		"common_hall": "fn_supports"}
+	for rid in expect:
+		var found := false
+		for s in _castle._rooms[rid].spots:
+			if s.id == expect[rid]:
+				found = true
+		assert_true(found, "%s hosts %s" % [rid, expect[rid]])
+
+
+func test_training_from_the_castle_grants_xp():
+	Campaign.reset_new_game(false)
+	Campaign.begin_hub_visit()
+	var first: UnitDef = _castle._roster_defs[0]
+	_castle._open_training()
+	assert_eq(_castle._menu_context, "training")
+	_castle._do_train(0)
+	assert_eq(int(Campaign.get_unit_state(first.id).get("xp", -1)), 10)
+	assert_false(Campaign.can_train(), "one training per visit, castle edition")
+	Campaign.reset_new_game(false)
+
+
+func test_mission_menu_opens_and_stand_down_closes():
+	_castle._open_function("fn_deploy")
+	assert_eq(_castle._menu_context, "mission")
+	_castle._do_mission(1)  # stand down
+	assert_eq(_castle._menu_context, "", "menu released")
+	assert_false(Campaign.active, "no deploy on stand-down")
+
+
+func test_system_menu_replaces_leave():
+	_castle._open_system_menu()
+	assert_eq(_castle._menu_context, "system")
+	_castle._do_system(2)  # Back
+	assert_eq(_castle._menu_context, "")

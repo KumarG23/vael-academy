@@ -30,10 +30,16 @@ label = "Talk to Kael"
 x = 0.3
 dialogue = "res://data/dialogue/castle_kael.json"
 
+[sub_resource type="Resource" id="Resource_7yfrx"]
+script = ExtResource("4_y04oi")
+id = "fn_supports"
+label = "Gather by the fire (bonds)"
+x = 0.62
+
 [resource]
 script = ExtResource("3_wf24f")
 id = "common_hall"
 display_name = "Common Hall"
 backdrop = ExtResource("1_7yfrx")
 exits = Array[ExtResource("2_6i52v")]([SubResource("Resource_mwmug"), SubResource("Resource_ji3ki"), SubResource("Resource_oq36d")])
-spots = Array[ExtResource("4_y04oi")]([SubResource("Resource_58nix")])
+spots = Array[ExtResource("4_y04oi")]([SubResource("Resource_58nix"), SubResource("Resource_7yfrx")])

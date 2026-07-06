@@ -5,7 +5,7 @@ extends Control
 ## hub → back here via "Return to Title". Placeholder painted-title until AW-5;
 ## the three house stripes reflect that all three houses are equal now (§4).
 
-const HUB_SCENE := "res://scenes/hub/hub.tscn"
+const HUB_SCENE := "res://scenes/castle/castle.tscn"  # WO-6.2a: the castle IS the home now
 const MAX_SLOTS := 3
 
 var _menu: ChoiceMenu

@@ -19,10 +19,16 @@ label = "Inspect the training dummy"
 x = 0.7
 dialogue = "res://data/dialogue/castle_dummy.json"
 
+[sub_resource type="Resource" id="Resource_3xc32"]
+script = ExtResource("4_qpwm5")
+id = "fn_train"
+label = "Train a housemate"
+x = 0.35
+
 [resource]
 script = ExtResource("3_1mv0m")
 id = "training"
 display_name = "Training Grounds"
 backdrop = ExtResource("1_3xc32")
 exits = Array[ExtResource("2_h1ryr")]([SubResource("Resource_fa6mw")])
-spots = Array[ExtResource("4_qpwm5")]([SubResource("Resource_bttwv")])
+spots = Array[ExtResource("4_qpwm5")]([SubResource("Resource_bttwv"), SubResource("Resource_3xc32")])

@@ -27,6 +27,12 @@ var _avatar_pos: Vector2
 var _prompt: Label
 var _dialogue: DialogueScene = null
 var _nearest: Resource = null  # RoomExit or RoomSpot in range
+# WO-6.2a: room functions run on the same menu widget the hub used
+var _menu: ChoiceMenu
+var _menu_context := ""
+var _roster_defs: Array[UnitDef] = []
+var _support_state: SupportState
+var _hall_entries: Array = []
 
 
 func _ready() -> void:
@@ -49,6 +55,19 @@ func _ready() -> void:
 	_prompt.add_theme_color_override("font_outline_color", Color(0.1, 0.08, 0.05))
 	_prompt.add_theme_constant_override("outline_size", 6)
 	add_child(_prompt)
+	# WO-6.2a: the castle IS the between-battle home now (the menu hub is
+	# retired from the flow) — it owns the hub-visit lifecycle.
+	Campaign.begin_hub_visit()
+	_roster_defs = Roster.player_units()
+	_support_state = SupportRegistry.build_state()
+	_support_state.apply_save_state(Campaign.support_save)
+	_menu = ChoiceMenu.new()
+	var house: HouseDef = load("res://data/houses/%s.tres" % Campaign.house_id)
+	if house != null:
+		_menu.accent = house.secondary_color
+	_menu.chosen.connect(_on_menu_chosen)
+	_menu.cancelled.connect(_close_menu)
+	add_child(_menu)
 	var target := next_room if next_room != "" else START_ROOM
 	var spawn := next_spawn_x if next_spawn_x >= 0.0 else 0.5
 	next_room = ""
@@ -97,7 +116,7 @@ func enter_room(room_id: String, spawn_x := 0.5) -> void:
 
 
 func _process(delta: float) -> void:
-	if room == null or _dialogue != null:
+	if room == null or _dialogue != null or menu_busy():
 		return
 	var vp := get_viewport_rect().size
 	var move := Vector2.ZERO
@@ -143,13 +162,13 @@ func _update_prompt(vp: Vector2) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _dialogue != null or room == null:
+	if _dialogue != null or room == null or menu_busy():
 		return
 	if event.is_action_pressed("ui_accept") or event.is_action_pressed("cursor_confirm"):
 		activate_nearest()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("ui_cancel"):
-		_leave_castle()
+		_open_system_menu()
 
 
 func activate_nearest() -> void:
@@ -158,8 +177,129 @@ func activate_nearest() -> void:
 	elif _nearest is RoomSpot:
 		var spot: RoomSpot = _nearest
 		spot_activated.emit(spot.id)
-		if spot.dialogue != "" and FileAccess.file_exists(spot.dialogue):
+		if spot.id.begins_with("fn_"):
+			_open_function(spot.id)
+		elif spot.dialogue != "" and FileAccess.file_exists(spot.dialogue):
 			_play_dialogue(spot.dialogue)
+
+
+# --- room functions (WO-6.2a): the hub's systems, in their rooms ---------------
+
+func _menu_pos() -> Vector2:
+	return Vector2(60, 110)
+
+
+func menu_busy() -> bool:
+	return _menu_context != ""
+
+
+func _close_menu() -> void:
+	_menu_context = ""
+	_menu.close()
+
+
+func _open_function(fn: String) -> void:
+	match fn:
+		"fn_train":
+			_open_training()
+		"fn_deploy":
+			_open_mission()
+		"fn_supports":
+			_open_hall_archive()
+		"fn_save":
+			Campaign.save_to_slot(0)
+			_toast("Game saved.")
+
+
+func _toast(text: String) -> void:
+	_prompt.text = text
+	_prompt.visible = true
+
+
+func _level_xp_text(id: String) -> String:
+	var st := Campaign.get_unit_state(id)
+	return "Lv %d  %d xp" % [int(st.get("level", 1)), int(st.get("xp", 0))]
+
+
+func _open_training() -> void:
+	_menu_context = "training"
+	var labels: Array = []
+	for def in _roster_defs:
+		labels.append("%s   %s" % [def.display_name, _level_xp_text(def.id)])
+	_menu.open("Training Grounds", labels, _menu_pos())
+
+
+func _do_train(index: int) -> void:
+	var def := _roster_defs[index]
+	if not Campaign.can_train():
+		_toast("Already trained this visit.")
+		_close_menu()
+		return
+	Campaign.train_unit(def.id)
+	_toast("%s trained: +%d XP" % [def.display_name, CampaignState.TRAINING_XP])
+	_close_menu()
+
+
+func _open_mission() -> void:
+	_menu_context = "mission"
+	_menu.open("War Room — Mission", ["Deploy to the Mock Battle", "Stand down"], _menu_pos())
+
+
+func _do_mission(index: int) -> void:
+	_close_menu()
+	if index == 0:
+		Campaign.deploy()
+		get_tree().change_scene_to_file(
+			HubScene.BATTLE_SCENE_FOR_HOUSE.get(Campaign.house_id, HubScene.BATTLE_SCENE))
+
+
+func _open_hall_archive() -> void:
+	_menu_context = "hall"
+	_hall_entries = _support_state.unlocked_conversations_for_unit("kai")
+	if _hall_entries.is_empty():
+		_toast("No bonds strong enough yet — fight beside your housemates.")
+		return
+	var labels: Array = []
+	for c in _hall_entries:
+		labels.append(str(c["label"]) + ("   ✓" if bool(c.get("viewed", false)) else ""))
+	_menu.open("Common Hall — Bonds", labels, _menu_pos())
+
+
+func _view_hall_entry(index: int) -> void:
+	var entry: Dictionary = _hall_entries[index]
+	_close_menu()
+	var path := str(entry.get("path", ""))
+	if path != "" and FileAccess.file_exists(path):
+		_play_dialogue(path)
+		_support_state.mark_viewed(str(entry["pair_id"]), str(entry["rank"]))
+		Campaign.support_save = _support_state.save_state()
+
+
+func _on_menu_chosen(index: int) -> void:
+	match _menu_context:
+		"training":
+			_do_train(index)
+		"mission":
+			_do_mission(index)
+		"hall":
+			_view_hall_entry(index)
+		"system":
+			_do_system(index)
+
+
+func _open_system_menu() -> void:
+	_menu_context = "system"
+	_menu.open("Vael Academy", ["Save Game", "Return to Title", "Back"], _menu_pos())
+
+
+func _do_system(index: int) -> void:
+	_close_menu()
+	match index:
+		0:
+			Campaign.save_to_slot(0)
+			_toast("Game saved.")
+		1:
+			get_tree().change_scene_to_file("res://scenes/title/title.tscn")
 
 
 func _play_dialogue(path: String) -> void:
@@ -171,5 +311,4 @@ func _play_dialogue(path: String) -> void:
 	_dialogue.play(DialogueScript.from_file(path))
 
 
-func _leave_castle() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/hub.tscn")
+
