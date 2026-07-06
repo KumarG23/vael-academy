@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_blesse"]
+
+[resource]
+script = ExtResource("1_blesse")
+id = "blessed_ward"
+display_name = "Blessed Ward"
+description = "Faith answers back. +2 resistance."
+unlock_level = 5
+stat_bonuses = {
+"res": 2
+}

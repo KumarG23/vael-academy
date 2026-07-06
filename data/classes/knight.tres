@@ -1,6 +1,8 @@
 [gd_resource type="Resource" script_class="ClassDef" format=3]
 
 [ext_resource type="Script" path="res://src/units/class_def.gd" id="1_pptha"]
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="21_skdef"]
+[ext_resource type="Resource" path="res://data/skills/shield_wall.tres" id="20_skill"]
 
 [resource]
 script = ExtResource("1_pptha")
@@ -8,3 +10,4 @@ id = "knight"
 display_name = "Knight"
 token_letter = "K"
 movement_type = 1
+skills = Array[ExtResource("21_skdef")]([ExtResource("20_skill")])

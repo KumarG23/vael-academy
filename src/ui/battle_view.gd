@@ -988,11 +988,12 @@ func _combatant_for(unit: Unit, assumed_cell: Vector2i) -> Combatant:
 	# Support and House Camaraderie bonuses fold into the same combat inputs.
 	var bonus := _support_bonus_for(unit, assumed_cell)
 	var cam := _camaraderie_bonus_for(unit, assumed_cell)
+	var sk := unit.skill_combat_bonus()  # WO-8.1: same fold as supports
 	c.apply_support_bonus({
-		"hit": int(bonus["hit"]) + int(cam["hit"]),
-		"avoid": int(bonus["avoid"]) + int(cam["avoid"]),
-		"damage": int(bonus["damage"]) + int(cam["damage"]),
-		"crit": int(bonus["crit"]) + int(cam["crit"]),
+		"hit": int(bonus["hit"]) + int(cam["hit"]) + int(sk["hit"]),
+		"avoid": int(bonus["avoid"]) + int(cam["avoid"]) + int(sk["avoid"]),
+		"damage": int(bonus["damage"]) + int(cam["damage"]) + int(sk["damage"]),
+		"crit": int(bonus["crit"]) + int(cam["crit"]) + int(sk["crit"]),
 	})
 	return c
 

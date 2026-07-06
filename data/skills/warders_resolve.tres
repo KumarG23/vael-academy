@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_warder"]
+
+[resource]
+script = ExtResource("1_warder")
+id = "warders_resolve"
+display_name = "Warder's Resolve"
+description = "He cannot stand by. +5 hit, +5 avoid."
+unlock_level = 3
+hit = 5
+avoid = 5

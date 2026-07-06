@@ -1,6 +1,8 @@
 [gd_resource type="Resource" script_class="ClassDef" format=3]
 
 [ext_resource type="Script" path="res://src/units/class_def.gd" id="1_cvlr1"]
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="21_skdef"]
+[ext_resource type="Resource" path="res://data/skills/momentum.tres" id="20_skill"]
 
 [resource]
 script = ExtResource("1_cvlr1")
@@ -8,3 +10,4 @@ id = "cavalier"
 display_name = "Cavalier"
 token_letter = "C"
 movement_type = 2
+skills = Array[ExtResource("21_skdef")]([ExtResource("20_skill")])

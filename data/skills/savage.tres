@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_savage"]
+
+[resource]
+script = ExtResource("1_savage")
+id = "savage"
+display_name = "Savage"
+description = "No form, all fury. +1 damage."
+unlock_level = 3
+damage = 1

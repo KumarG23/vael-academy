@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_phalan"]
+
+[resource]
+script = ExtResource("1_phalan")
+id = "phalanx"
+display_name = "Phalanx"
+description = "Drilled to hold the line. +10 avoid."
+unlock_level = 8
+avoid = 10

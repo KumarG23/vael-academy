@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_shield"]
+
+[resource]
+script = ExtResource("1_shield")
+id = "shield_wall"
+display_name = "Shield Wall"
+description = "An unbreakable guard. +2 defense."
+unlock_level = 5
+stat_bonuses = {
+"def": 2
+}

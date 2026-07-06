@@ -1,9 +1,12 @@
 [gd_resource type="Resource" script_class="ClassDef" format=3]
 
 [ext_resource type="Script" path="res://src/units/class_def.gd" id="1_3lo8d"]
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="21_skdef"]
+[ext_resource type="Resource" path="res://data/skills/blessed_ward.tres" id="20_skill"]
 
 [resource]
 script = ExtResource("1_3lo8d")
 id = "cleric"
 display_name = "Cleric"
 token_letter = "C"
+skills = Array[ExtResource("21_skdef")]([ExtResource("20_skill")])

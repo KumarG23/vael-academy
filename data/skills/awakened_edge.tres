@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_awaken"]
+
+[resource]
+script = ExtResource("1_awaken")
+id = "awakened_edge"
+display_name = "Awakened Edge"
+description = "The wardstone's gift, answered. +10 hit, +10 avoid, +1 damage."
+unlock_level = 5
+hit = 10
+avoid = 10
+damage = 1

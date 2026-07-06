@@ -168,7 +168,10 @@ func _setup_sprite_frames(id: String) -> void:
 ## Effective value of a stat key (UnitDef base + level-up bonus).
 func stat(key: String) -> int:
 	var base: int = unit_def.get(_STAT_FIELD[key]) if unit_def != null else 0
-	return base + int(_stat_bonus.get(key, 0))
+	var skill_mod := 0
+	for sk in active_skills():
+		skill_mod += int(sk.stat_bonuses.get(key, 0))
+	return base + int(_stat_bonus.get(key, 0)) + skill_mod
 
 
 func max_hp() -> int:
@@ -267,6 +270,36 @@ func promote() -> Dictionary:
 	xp = 0
 	queue_redraw()
 	return {"class_name": target.display_name, "bonuses": bonuses, "mov": target.promo_mov}
+
+
+## WO-8.1: the skills this unit currently knows — DERIVED from class + level
+## (no acquisition bookkeeping, nothing new in saves). A promoted unit keeps
+## its base class's skills up to the promotion floor (level 10): any legally
+## promoted unit had at least reached it.
+func active_skills() -> Array[SkillDef]:
+	var out: Array[SkillDef] = []
+	var base: ClassDef = unit_def.char_class if unit_def != null else null
+	if base != null:
+		var base_cap := Promotion.MIN_LEVEL if _class_override != null else level
+		for sk in base.skills:
+			if sk != null and sk.unlock_level <= base_cap:
+				out.append(sk)
+	if _class_override != null:
+		for sk in _class_override.skills:
+			if sk != null and sk.unlock_level <= level:
+				out.append(sk)
+	return out
+
+
+## Summed combat modifiers from active skills (folded into the Combatant
+## alongside supports/camaraderie — same forecast/resolver path).
+func skill_combat_bonus() -> Dictionary:
+	var total := {"hit": 0, "avoid": 0, "damage": 0, "crit": 0}
+	for sk in active_skills():
+		var b := sk.combat_bonus()
+		for key in total:
+			total[key] += int(b[key])
+	return total
 
 
 func can_attack() -> bool:

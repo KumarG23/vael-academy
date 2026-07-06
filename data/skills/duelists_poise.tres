@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_duelis"]
+
+[resource]
+script = ExtResource("1_duelis")
+id = "duelists_poise"
+display_name = "Duelist's Poise"
+description = "Footwork honed in single combat. +10 avoid."
+unlock_level = 5
+avoid = 10

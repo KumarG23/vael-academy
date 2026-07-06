@@ -11,6 +11,9 @@ enum MovementType { FOOT, ARMORED, MOUNTED }
 @export var token_letter: String = "?"
 @export var movement_type: MovementType = MovementType.FOOT
 
+## Passive skills this class grants (WO-8.1), gated by SkillDef.unlock_level.
+@export var skills: Array[SkillDef] = []
+
 ## The class this one promotes into (§3). Null means it can't promote (either a
 ## base class with no path yet, or an already-promoted class).
 @export var promoted_class: ClassDef

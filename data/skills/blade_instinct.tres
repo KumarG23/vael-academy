@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_blade_"]
+
+[resource]
+script = ExtResource("1_blade_")
+id = "blade_instinct"
+display_name = "Blade Instinct"
+description = "The edge finds the seam on its own. +10 crit."
+unlock_level = 1
+crit = 10
