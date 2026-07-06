@@ -13,7 +13,11 @@ const KIT_DIR := "res://assets/art/pixellab/%s/%s_east"
 const KIT_ANIMS := ["idle", "attack", "hit", "ko"]
 ## Optional extras loaded when present; never required by has_kit. "crit" is
 ## the class-flavored critical choreography (falls back to "attack").
-const KIT_EXTRA_ANIMS := ["crit"]
+## The *_wind/*_strike pairs are chained two-part choreography: the strike
+## segment's first frame IS the wind-up's last, and the seam between them is
+## the exact impact moment (all hit effects fire there at once).
+const KIT_EXTRA_ANIMS := ["crit", "attack_wind", "attack_strike",
+	"crit_wind", "crit_strike"]
 ## Generic enemy unit ids share one design's kit (mirrors the walk-frame
 ## promotion mapping).
 const KIT_ALIASES := {
@@ -409,6 +413,21 @@ func _apply_strike_timing(frames: SpriteFrames) -> void:
 			else:
 				dur = 0.45   # ...into the strike: near-instant
 			frames.set_frame(anim, i, frames.get_frame_texture(anim, i), dur)
+	# chained pairs: the wind-up accelerates into the seam; the strike segment
+	# IS the impact and plays hot from its first frame
+	for anim in ["attack_wind", "crit_wind"]:
+		if not frames.has_animation(anim):
+			continue
+		var n2 := frames.get_frame_count(anim)
+		for i in range(n2):
+			var f2 := float(i) / maxf(n2 - 1, 1.0)
+			frames.set_frame(anim, i, frames.get_frame_texture(anim, i),
+				1.15 if f2 < 0.5 else 0.7)
+	for anim in ["attack_strike", "crit_strike"]:
+		if not frames.has_animation(anim):
+			continue
+		for i in range(frames.get_frame_count(anim)):
+			frames.set_frame(anim, i, frames.get_frame_texture(anim, i), 0.7)
 
 
 ## Afterimage ghosts trailing a dashing battler (Lyn's blur-dash read).
@@ -442,7 +461,12 @@ func _play_strike(strike) -> void:
 	var dir := 1.0 if striker_left else -1.0
 	var home := actor_holder.position
 	var contact := Vector2(target_holder.position.x - dir * 120.0, home.y)  # stay on own ground line
-	var anim := "crit" if strike.was_crit and actor.sprite_frames.has_animation("crit") else "attack"
+	var base := "crit" if strike.was_crit and actor.sprite_frames.has_animation("crit") else "attack"
+	# chained two-part choreography when the kit has it: the seam between
+	# wind-up and strike segments is the exact impact frame
+	var paired: bool = actor.sprite_frames.has_animation(base + "_wind") \
+		and actor.sprite_frames.has_animation(base + "_strike")
+	var anim := (base + "_wind") if paired else base
 	var swing := _swing_time(actor.sprite_frames, anim)
 
 	# crits stage themselves: a beat of stillness, then a BLUR dash
@@ -455,7 +479,7 @@ func _play_strike(strike) -> void:
 	_ghost_trail(actor, actor_holder, 4 if strike.was_crit else 2)
 	await run.finished
 	actor.play(anim)
-	if strike.was_crit:
+	if strike.was_crit and not paired:
 		# over-the-top: the crit rides an aerial arc onto the target
 		var arc := create_tween()
 		arc.tween_property(actor_holder, "position:y", contact.y - 110.0, 0.22) \
@@ -463,9 +487,13 @@ func _play_strike(strike) -> void:
 		arc.tween_property(actor_holder, "position:y", contact.y, 0.16) \
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 		_ghost_trail(actor, actor_holder, 5)
-	# impact lands late in the swing (these choreographies strike at the end;
-	# the timing curve compresses the tail so it still feels instant)
-	await get_tree().create_timer(maxf(swing * 0.78, 0.18)).timeout
+	if paired:
+		# the wind-up runs to its final frame; impact fires AT the seam
+		await actor.animation_finished
+		actor.play(base + "_strike")
+	else:
+		# single-segment kits: impact lands late in the swing
+		await get_tree().create_timer(maxf(swing * 0.78, 0.18)).timeout
 
 	var impact_pos := Vector2(target_holder.position.x - dir * 40.0,
 		target_holder.position.y - 40.0)
