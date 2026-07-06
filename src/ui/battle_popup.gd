@@ -81,6 +81,10 @@ var _crit_flash: ColorRect
 var _fx: Control
 var _miss_label: Label
 var _bursts: Array = []  # active starbursts: {pos, age, life, big}
+## Projectile style per side for this exchange: "" melee, "arrow" bow, "magic"
+## tome. Ranged attackers don't run in — they loose/cast from where they stand.
+var _left_proj := ""
+var _right_proj := ""
 
 # chrome rebuilt per exchange
 var _chrome: Control
@@ -318,7 +322,7 @@ func _build_chrome(attacker: Unit, defender: Unit, exchange: Dictionary) -> void
 ## Common staging for both attack and heal cut-ins: pick the scene backdrop by
 ## `stage_terrain`, load both battlers, scale and plant their feet on the ground
 ## line. Returns whether a painted scene background was used (vs the washed map).
-func _stage_battlers(left_id: String, right_id: String, map_shot: Texture2D) -> bool:
+func _stage_battlers(left_id: String, right_id: String, map_shot: Texture2D, gap := 190.0) -> bool:
 	var bg_name: String = BG_FOR_TERRAIN.get(stage_terrain, "bg_plains")
 	var bg_path := "%s/%s.png" % [BG_DIR, bg_name]
 	var scene_bg := ResourceLoader.exists(bg_path)
@@ -335,26 +339,79 @@ func _stage_battlers(left_id: String, right_id: String, map_shot: Texture2D) -> 
 		var spr: AnimatedSprite2D = [_left_sprite, _right_sprite][i2]
 		var holder: Control = [_left_holder, _right_holder][i2]
 		_apply_strike_timing(spr.sprite_frames)
-		var h := _kit_frame_height(spr.sprite_frames)
-		var sc := clampf(TARGET_BATTLER_PX / h, 1.0, 9.0)
+		var frame_h := _kit_frame_height(spr.sprite_frames)
+		# scale by the STANDING FIGURE's height, not the frame — kit frames are
+		# cropped to the union of all anims, so a tall crit (Wren's light pillar)
+		# inflates the canvas and would shrink the idle figure. Every battler now
+		# reads at the same on-screen size.
+		var b := _idle_bounds(spr.sprite_frames)
+		var content_h: float = maxf(b.y - b.x, 8.0)
+		var sc := clampf(TARGET_BATTLER_PX / content_h, 1.0, 9.0)
 		spr.scale = Vector2.ONE * sc
-		var x := _root.size.x * 0.5 + (-190.0 if i2 == 0 else 190.0)
-		# feet on the scene's ground line regardless of battler size — using
-		# the idle stance's real baseline, not the frame bottom
-		var feet_y := _root.size.y * (GROUND_FRAC if scene_bg else 0.5) \
-			+ (0.0 if scene_bg else 46.0 + h * sc * 0.5)
-		holder.position = Vector2(x,
-			feet_y - h * sc * 0.5 + _kit_ground_gap(spr.sprite_frames) * sc)
+		var x := _root.size.x * 0.5 + (-gap if i2 == 0 else gap)
+		# plant the figure's FEET (content bottom) on the scene's ground line
+		var feet_off: float = b.y - frame_h * 0.5   # feet offset from frame center
+		holder.position = Vector2(x, _ground_line(scene_bg) - feet_off * sc)
 	return scene_bg
+
+
+## Where battler feet sit, in screen y. Scene backgrounds have their floor line
+## at a per-terrain fraction (indoor floors sit lower than field horizons — the
+## castle "floating" fix); the washed-map platform plants them near center.
+func _ground_line(scene_bg: bool) -> float:
+	if not scene_bg:
+		return _root.size.y * 0.5 + 58.0
+	var frac := GROUND_FRAC
+	match BG_FOR_TERRAIN.get(stage_terrain, "bg_plains"):
+		"bg_hall": frac = 0.82
+		"bg_fort": frac = 0.80
+	return _root.size.y * frac
+
+
+## Projectile/advance style for a unit: bows loose an arrow, tomes hurl a bolt,
+## everything else closes to melee. Ranged styles suppress the run-in.
+func _proj_style(u: Unit) -> String:
+	var w := u.weapon()
+	if w == null:
+		return ""
+	if w.weapon_type == WeaponDef.WeaponType.TOME:
+		return "magic"
+	if w.weapon_type == WeaponDef.WeaponType.BOW:
+		return "arrow"
+	return ""
+
+
+## The idle figure's vertical content bounds within the frame: Vector2(top,
+## bottom_exclusive) of non-transparent rows. Used to size + plant battlers.
+func _idle_bounds(frames: SpriteFrames) -> Vector2:
+	if not frames.has_animation("idle"):
+		return Vector2(0, 32)
+	var img := frames.get_frame_texture("idle", 0).get_image()
+	var top := -1
+	var bottom := 0
+	for y in range(img.get_height()):
+		var solid := false
+		for x in range(0, img.get_width(), 2):
+			if img.get_pixel(x, y).a > 0.1:
+				solid = true
+				break
+		if solid:
+			if top < 0:
+				top = y
+			bottom = y
+	if top < 0:
+		return Vector2(0, float(img.get_height()))
+	return Vector2(top, bottom + 1)
 
 
 ## before the popup opens (becomes the washed backdrop, FE field-battle style).
 func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
-		exchange: Dictionary = {}, map_shot: Texture2D = null) -> void:
-	# scene background by the defender's terrain; washed map as the fallback
-	var bg_name: String = BG_FOR_TERRAIN.get(stage_terrain, "bg_plains")
-	var bg_path := "%s/%s.png" % [BG_DIR, bg_name]
-	var scene_bg := _stage_battlers(attacker.unit_id(), defender.unit_id(), map_shot)
+		exchange: Dictionary = {}, map_shot: Texture2D = null, dist: int = 1) -> void:
+	_left_proj = _proj_style(attacker)
+	_right_proj = _proj_style(defender)
+	# a range-2 clash stands the fighters farther apart (Neal: show the distance)
+	var gap := 300.0 if dist >= 2 else 190.0
+	var scene_bg := _stage_battlers(attacker.unit_id(), defender.unit_id(), map_shot, gap)
 	_build_chrome(attacker, defender, exchange)
 	_left_sprite.play("idle")
 	_right_sprite.play("idle")
@@ -383,6 +440,8 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 ## bathed in it as their HP bar refills. `hp_before` is the ally's HP prior to
 ## the heal being applied (the bar fills from there to their current HP).
 func play_heal(healer: Unit, ally: Unit, hp_before: int, map_shot: Texture2D = null) -> void:
+	_left_proj = ""
+	_right_proj = ""
 	var scene_bg := _stage_battlers(healer.unit_id(), ally.unit_id(), map_shot)
 	_build_heal_chrome(healer, ally, hp_before)
 	_left_sprite.play("idle")
@@ -552,8 +611,11 @@ func _play_strike(strike) -> void:
 	var target_holder := _right_holder if striker_left else _left_holder
 	var target_bar := _right_hp if striker_left else _left_hp
 	var dir := 1.0 if striker_left else -1.0
+	var proj := _left_proj if striker_left else _right_proj  # "" melee, else ranged
 	var home := actor_holder.position
-	var contact := Vector2(target_holder.position.x - dir * 120.0, home.y)  # stay on own ground line
+	# melee closes in; ranged (bow/tome) looses from where it stands (Neal: mages
+	# shouldn't run forward — they're not melee)
+	var contact := home if proj != "" else Vector2(target_holder.position.x - dir * 120.0, home.y)
 	var base := "crit" if strike.was_crit and actor.sprite_frames.has_animation("crit") else "attack"
 	# chained two-part choreography when the kit has it: the seam between
 	# wind-up and strike segments is the exact impact frame
@@ -569,10 +631,11 @@ func _play_strike(strike) -> void:
 	var run := create_tween()
 	run.tween_property(actor_holder, "position", contact, 0.10 if strike.was_crit else 0.16) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_ghost_trail(actor, actor_holder, 4 if strike.was_crit else 2)
+	if proj == "":
+		_ghost_trail(actor, actor_holder, 4 if strike.was_crit else 2)
 	await run.finished
 	actor.play(anim)
-	if strike.was_crit and not paired:
+	if strike.was_crit and not paired and proj == "":
 		# over-the-top: the crit rides an aerial arc onto the target
 		var arc := create_tween()
 		arc.tween_property(actor_holder, "position:y", contact.y - 110.0, 0.22) \
@@ -590,6 +653,10 @@ func _play_strike(strike) -> void:
 
 	var impact_pos := Vector2(target_holder.position.x - dir * 40.0,
 		target_holder.position.y - 40.0)
+	# ranged: the arrow/bolt crosses the gap and lands the hit on arrival
+	if proj != "":
+		_projectile(actor_holder.position + Vector2(dir * 70.0, -46.0), impact_pos, dir, proj)
+		await get_tree().create_timer(0.16).timeout
 	if strike.connected:
 		var lethal: bool = strike.defender_hp_after <= 0
 		target.play("ko" if lethal and target.sprite_frames.has_animation("ko") else "hit")
@@ -677,6 +744,13 @@ func _burst(pos: Vector2, big: bool) -> void:
 	_fx.queue_redraw()
 
 
+## A flying arrow or magic bolt crossing from a ranged attacker to the target.
+func _projectile(from: Vector2, to: Vector2, dir: float, style: String) -> void:
+	_bursts.append({"pos": from, "to": to, "age": 0.0, "life": 0.18, "big": false,
+		"kind": "proj", "style": style, "dir": dir})
+	_fx.queue_redraw()
+
+
 ## The sweeping blade-arc light that follows a strike (the Lyn slash read).
 func _slash_arc(pos: Vector2, dir: float, big: bool) -> void:
 	_bursts.append({"pos": pos, "age": 0.0, "life": 0.26 if big else 0.2, "big": big,
@@ -698,6 +772,20 @@ func _draw_fx() -> void:
 		var t: float = b["age"] / b["life"]
 		var pos: Vector2 = b["pos"]
 		var alpha := (1.0 - t)
+		if b.get("kind", "burst") == "proj":
+			var to: Vector2 = b["to"]
+			var cur := pos.lerp(to, t)
+			if b["style"] == "magic":
+				_fx.draw_circle(cur, 11.0, Color(0.55, 0.35, 0.95, 0.9))
+				_fx.draw_circle(cur, 6.0, Color(0.85, 0.75, 1.0, 1.0))
+				_fx.draw_circle(cur - (to - pos).normalized() * 16.0, 6.0, Color(0.55, 0.35, 0.95, 0.4))
+			else:  # arrow: a streak with a head
+				var d: float = b["dir"]
+				var tail := cur - Vector2(d * 34.0, 0)
+				_fx.draw_line(tail, cur, Color(0.95, 0.92, 0.8, 0.95), 3.0)
+				_fx.draw_line(cur, cur - Vector2(d * 9.0, 5.0), Color(0.8, 0.78, 0.7, 0.95), 3.0)
+				_fx.draw_line(cur, cur - Vector2(d * 9.0, -5.0), Color(0.8, 0.78, 0.7, 0.95), 3.0)
+			continue
 		if b.get("kind", "burst") == "heal":
 			# expanding green blessing rings + motes drifting up off the ally
 			for k in range(3):

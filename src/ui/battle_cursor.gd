@@ -28,6 +28,7 @@ var _grid: Grid
 var _initialized := false
 var _held_dir := Vector2i.ZERO
 var _repeat_timer := 0.0
+var _pulse := 0.0  # drives the cursor's brightness pulse
 ## When false, the cursor ignores all input (e.g. while a menu is open).
 var active := true
 
@@ -77,7 +78,11 @@ func cancel() -> void:
 
 
 func _process(delta: float) -> void:
-	if _grid == null or not active:
+	if _grid == null:
+		return
+	_pulse += delta
+	queue_redraw()  # keep the pulse animating
+	if not active:
 		return
 	step_repeat(_poll_direction(), delta)
 
@@ -142,14 +147,21 @@ func _draw() -> void:
 		var fill := Color(selected_color.r, selected_color.g, selected_color.b, 0.20)
 		draw_rect(srect, fill, true)
 		draw_rect(srect, selected_color, false, 3.0)
-	_draw_cursor_brackets(Rect2(cell.x * cs, cell.y * cs, cs, cs))
+	var rect := Rect2(cell.x * cs, cell.y * cs, cs, cs)
+	var pulse := 0.5 + 0.5 * sin(_pulse * 5.0)  # 0..1
+	# pulsing glow fill + a bright breathing border so the cursor never gets
+	# lost over busy terrain (Neal's playtest: it was hard to see)
+	draw_rect(rect, Color(1.0, 0.95, 0.5, 0.10 + 0.16 * pulse), true)
+	draw_rect(rect.grow(-2.0), Color(1.0, 0.97, 0.62, 0.45 + 0.45 * pulse), false, 3.0)
+	_draw_cursor_brackets(rect, pulse)
 
 
-func _draw_cursor_brackets(rect: Rect2) -> void:
+func _draw_cursor_brackets(rect: Rect2, pulse: float) -> void:
 	# Corner brackets so the cursor reads clearly over any terrain/standee.
 	var cs: float = rect.size.x
-	var arm: float = cs * 0.28
-	var w := 4.0
+	var arm: float = cs * 0.32
+	var w := 5.0 + 2.0 * pulse
+	var col := Color(1.0, 0.96, 0.5, 0.85 + 0.15 * pulse)
 	var p := rect.position
 	var corners := [
 		[p, Vector2(arm, 0), Vector2(0, arm)],
@@ -159,5 +171,5 @@ func _draw_cursor_brackets(rect: Rect2) -> void:
 	]
 	for c in corners:
 		var origin: Vector2 = c[0]
-		draw_line(origin, origin + c[1], cursor_color, w)
-		draw_line(origin, origin + c[2], cursor_color, w)
+		draw_line(origin, origin + c[1], col, w)
+		draw_line(origin, origin + c[2], col, w)
