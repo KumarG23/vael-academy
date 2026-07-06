@@ -29,6 +29,9 @@ var _terrain_db := TerrainDB.create_default()
 var _tiles: TerrainTiles
 var _avatar: AnimatedSprite2D
 var _npc_sprites: Array = []
+## Ambient walkers (points whose id starts "walker_"): {sprite, home, target,
+## wait} — they pace their little patch of campus and make the place breathe.
+var _walkers: Array = []
 var _camera: Camera2D
 var _ui: CanvasLayer
 var _prompt: Label
@@ -204,6 +207,7 @@ func _spawn_npcs() -> void:
 	for n in _npc_sprites:
 		n.queue_free()
 	_npc_sprites.clear()
+	_walkers.clear()
 	for p in room.points:
 		if p.npc_unit == "" or not _point_available(p):
 			continue
@@ -215,6 +219,37 @@ func _spawn_npcs() -> void:
 		npc.position = _grid.cell_center(p.cell)
 		add_child(npc)
 		_npc_sprites.append(npc)
+		if p.id.begins_with("walker_"):
+			_walkers.append({"sprite": npc, "home": p.cell, "point": p,
+				"target": npc.position, "wait": randf_range(0.5, 2.5)})
+
+
+## The campus breathes: walkers drift a couple of cells around home, pause,
+## drift again. Their interaction point follows them.
+func _tick_walkers(delta: float) -> void:
+	for w in _walkers:
+		var spr: AnimatedSprite2D = w["sprite"]
+		if w["wait"] > 0.0:
+			w["wait"] -= delta
+			if spr.animation != "idle":
+				spr.play("idle")
+			if w["wait"] <= 0.0:
+				var home: Vector2i = w["home"]
+				var cand := home + Vector2i(randi_range(-2, 2), randi_range(-2, 2))
+				if room.chapter.in_bounds(cand.x, cand.y) 						and not _terrain_db.is_impassable(room.chapter.get_terrain(cand.x, cand.y)):
+					w["target"] = _grid.cell_center(cand)
+			continue
+		var to: Vector2 = w["target"] - spr.position
+		if to.length() < 6.0:
+			w["wait"] = randf_range(1.5, 4.0)
+			continue
+		var step := to.normalized() * (WALK_SPEED * 0.35) * delta
+		spr.position += step
+		spr.flip_h = step.x < 0.0
+		if spr.animation != "walk":
+			spr.play("walk")
+		var p: CastlePoint = w["point"]
+		p.cell = _grid.world_to_cell(spr.position)  # the chat follows them
 
 
 func _point_available(p: CastlePoint) -> bool:
@@ -247,6 +282,7 @@ func _process(delta: float) -> void:
 		_check_door()
 	elif _avatar.animation != "idle":
 		_avatar.play("idle")
+	_tick_walkers(delta)
 	_camera.position = _camera.position.lerp(_camera_clamp(_avatar.position),
 		minf(1.0, delta * 10.0))
 	_update_prompt()

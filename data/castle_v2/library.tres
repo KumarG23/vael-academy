@@ -96,7 +96,7 @@ visits = Array[ExtResource("4_uaxnd")]([])
 script = ExtResource("5_s4hpw")
 cell = Vector2i(9, 11)
 to_room = "campus"
-spawn_cell = Vector2i(5, 10)
+spawn_cell = Vector2i(6, 14)
 label = "Out to the Campus"
 
 [sub_resource type="Resource" id="Resource_ibxr4"]
@@ -135,10 +135,18 @@ label = "Browse: First-Flame"
 cell = Vector2i(15, 8)
 dialogue = "res://data/dialogue/lore_magic.json"
 
+[sub_resource type="Resource" id="Resource_byncm"]
+script = ExtResource("6_08xbw")
+id = "alaric_chat"
+label = "Ask Keeper Alaric"
+cell = Vector2i(12, 5)
+dialogue = "res://data/dialogue/castle_alaric.json"
+npc_unit = "alaric"
+
 [resource]
 script = ExtResource("7_kox5i")
 id = "library"
 display_name = "Library Tower"
 chapter = SubResource("Resource_s1rb6")
 doors = Array[ExtResource("5_s4hpw")]([SubResource("Resource_6osvo")])
-points = Array[ExtResource("6_08xbw")]([SubResource("Resource_ibxr4"), SubResource("Resource_b48mr"), SubResource("Resource_uaxnd"), SubResource("Resource_s4hpw"), SubResource("Resource_08xbw")])
+points = Array[ExtResource("6_08xbw")]([SubResource("Resource_ibxr4"), SubResource("Resource_b48mr"), SubResource("Resource_uaxnd"), SubResource("Resource_s4hpw"), SubResource("Resource_08xbw"), SubResource("Resource_byncm")])

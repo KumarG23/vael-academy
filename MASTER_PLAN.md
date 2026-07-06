@@ -235,7 +235,10 @@ Spatial references locked by Neal: **Chrono Trigger, Fire Emblem: Three Houses, 
 - **WO-9.9 VFX & transitions.** Scene fades, battle intro wipes, weather/ambience layers on maps and campus.
 - **WO-9.10 Controller support.** Full pad navigation everywhere.
 
-### M10+ — Beyond year one *(deliberately loose; extend when the school slice is fun)*
+### M10 — The Town of Vael *(Neal, 2026-07-06 — BACK BURNER until the campus is right)*
+Vael Academy sits in the town of **Vael**: bustling merchants, streets and shops, and a massive castle where the king lives. Built with the campus toolkit (top-down spaces, walk-in doors, wandering NPCs, building fronts). The campus gatehouse's south road is the future entrance. Not before the campus feels finished.
+
+### M11+ — Beyond year one *(deliberately loose; extend when the school slice is fun)*
 - Chapter 2 with real permadeath stakes; the wardstone mystery becomes visible; the escalation past the academy. Design when we get there.
 
 ---
