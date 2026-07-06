@@ -143,8 +143,20 @@ func _ready() -> void:
 	_setup_ui()
 	_setup_juice()
 	_spawn_units()
+	_focus_player_start()
 	queue_redraw()
 	_begin_battle()
+
+
+## Open on the player's team: cursor on the first living player unit (the
+## lord), camera snapped there — not drifting in from the map's center.
+func _focus_player_start() -> void:
+	for u in _units:
+		if u.team == 0 and u.is_alive():
+			_cursor.move_to(u.cell)
+			break
+	var cs := float(_grid.cell_size)
+	_camera.position = _camera_clamp(Vector2(_cursor.cell) * cs + Vector2(cs, cs) * 0.5)
 
 
 ## Chapter opening: play the intro dialogue (if any), then start the player phase.
@@ -1117,7 +1129,8 @@ func _process(delta: float) -> void:
 	if _camera_follow != null and is_instance_valid(_camera_follow):
 		focus = _camera_follow.position + Vector2(cs, cs) * 0.5
 	elif _cursor != null:
-		focus = _cursor.position + Vector2(cs, cs) * 0.5
+		# the cursor node never moves — it draws at its cell; follow the cell
+		focus = Vector2(_cursor.cell) * cs + Vector2(cs, cs) * 0.5
 	else:
 		return
 	_camera.position = _camera.position.lerp(_camera_clamp(focus), minf(1.0, delta * 9.0))

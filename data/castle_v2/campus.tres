@@ -190,7 +190,7 @@ visits = Array[ExtResource("19_dc2jp")]([])
 script = ExtResource("20_p138m")
 cell = Vector2i(6, 13)
 to_room = "library"
-spawn_cell = Vector2i(9, 10)
+spawn_cell = Vector2i(11, 16)
 label = "The Library Tower"
 
 [sub_resource type="Resource" id="Resource_utwiv"]
