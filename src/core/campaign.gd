@@ -17,6 +17,10 @@ var chapter_id: String = "mock_battle"
 var house_id: String = "emberwing"
 ## WO-6.4: the waterside fish log (fish name -> count), part of the save.
 var fish_log: Dictionary = {}
+## WO-7.1: the academy year, week by week (saved). The calendar data lives in
+## data/calendar/year_one.tres; this is just the cursor.
+var week: int = 1
+var _calendar: Array[CalendarEventDef] = []
 var last_result: String = ""         # "victory" / "defeat" / ""
 ## True while the player is deployed — the battle applies campaign state only then,
 ## so tests that load the battle scene directly are unaffected.
@@ -34,6 +38,7 @@ var _skip_next_hub_reset := false
 func reset_new_game(is_casual: bool, seed_value: int = 1) -> void:
 	set_house("emberwing")  # the prologue precedes the choice; 5.3b flows it
 	fish_log = {}
+	week = 1
 	unit_states = {}
 	support_save = {}
 	casual = is_casual
@@ -52,6 +57,27 @@ func begin_hub_visit() -> void:
 		_skip_next_hub_reset = false
 		return
 	training_used = false
+
+
+## The academy year (WO-7.1) --------------------------------------------------
+
+func calendar() -> Array[CalendarEventDef]:
+	if _calendar.is_empty():
+		var res = load("res://data/calendar/year_one.tres")
+		if res != null:
+			_calendar = res.events
+	return _calendar
+
+
+func current_event() -> CalendarEventDef:
+	for e in calendar():
+		if e.week == week:
+			return e
+	return null
+
+
+func advance_week() -> void:
+	week += 1
 
 
 ## Choose the player's house (WO-5.3a): flips the Roster and everything
@@ -117,6 +143,8 @@ func capture(states: Dictionary, support: Dictionary, result: String) -> void:
 		unit_states[id] = states[id]
 	support_save = support.duplicate(true)
 	last_result = result
+	if result == "victory":
+		advance_week()  # the week's battle is won — the year moves on (WO-7.1)
 
 
 # --- save / load --------------------------------------------------------------
@@ -129,6 +157,7 @@ func to_dict() -> Dictionary:
 		"chapter_id": chapter_id,
 		"house_id": house_id,
 		"fish_log": fish_log.duplicate(true),
+		"week": week,
 		"last_result": last_result,
 		"training_used": training_used,
 		"rng_state": str(_training_rng.state_value()),
@@ -142,6 +171,7 @@ func from_dict(data: Dictionary) -> void:
 	chapter_id = str(data.get("chapter_id", "mock_battle"))
 	set_house(str(data.get("house_id", "emberwing")))
 	fish_log = (data.get("fish_log", {}) as Dictionary).duplicate(true)
+	week = int(data.get("week", 1))
 	last_result = str(data.get("last_result", ""))
 	training_used = bool(data.get("training_used", false))
 	_training_rng = CombatRNG.new(1)

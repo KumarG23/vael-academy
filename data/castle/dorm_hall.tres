@@ -19,9 +19,15 @@ label = "To the Waterside"
 x = 0.94
 spawn_x = 0.1
 
+[sub_resource type="Resource" id="Resource_1chlr"]
+script = ExtResource("4_2omos")
+id = "fn_rest"
+label = "Rest until next week"
+
 [resource]
 script = ExtResource("3_0i410")
 id = "dorm_hall"
 display_name = "Dormitory Hall"
 backdrop = ExtResource("1_1chlr")
 exits = Array[ExtResource("2_qmrwt")]([SubResource("Resource_bq1ow"), SubResource("Resource_cparc")])
+spots = Array[ExtResource("4_2omos")]([SubResource("Resource_1chlr")])

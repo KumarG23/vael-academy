@@ -25,6 +25,7 @@ var _backdrop: TextureRect
 var _avatar: AnimatedSprite2D
 var _avatar_pos: Vector2
 var _prompt: Label
+var _date_label: Label
 var _dialogue: DialogueScene = null
 var _nearest: Resource = null  # RoomExit or RoomSpot in range
 # WO-6.2a: room functions run on the same menu widget the hub used
@@ -49,6 +50,14 @@ func _ready() -> void:
 	_avatar.scale = Vector2.ONE * AVATAR_SCALE
 	_avatar.sprite_frames = _build_walk_frames("kai")
 	add_child(_avatar)
+	_date_label = Label.new()
+	_date_label.add_theme_font_size_override("font_size", 18)
+	_date_label.add_theme_color_override("font_color", Color(0.95, 0.88, 0.6))
+	_date_label.add_theme_color_override("font_outline_color", Color(0.1, 0.08, 0.05))
+	_date_label.add_theme_constant_override("outline_size", 5)
+	_date_label.position = Vector2(get_viewport_rect().size.x - 430, 12)
+	add_child(_date_label)
+	_refresh_date()
 	_prompt = Label.new()
 	_prompt.add_theme_font_size_override("font_size", 22)
 	_prompt.add_theme_color_override("font_color", Color(0.98, 0.9, 0.55))
@@ -236,6 +245,8 @@ func _open_function(fn: String) -> void:
 			_open_house_choice()
 		"fn_fish":
 			_start_fishing()
+		"fn_rest":
+			_rest_week()
 
 
 # --- 6.4: fishing ---------------------------------------------------------------
@@ -334,17 +345,43 @@ func _do_train(index: int) -> void:
 	_close_menu()
 
 
+func _refresh_date() -> void:
+	var e := Campaign.current_event()
+	_date_label.text = "Week %d — %s" % [Campaign.week, e.label if e != null else "The year is done"]
+
+
 func _open_mission() -> void:
 	_menu_context = "mission"
-	_menu.open("War Room — Mission", ["Deploy to the Mock Battle", "Stand down"], _menu_pos())
+	var e := Campaign.current_event()
+	if e == null or e.kind != CalendarEventDef.Kind.BATTLE:
+		_toast("No mission this week — the year has its own pace.")
+		_menu_context = ""
+		return
+	_menu.open("War Room — " + e.label, ["Deploy", "Stand down"], _menu_pos())
 
 
 func _do_mission(index: int) -> void:
 	_close_menu()
 	if index == 0:
+		var e := Campaign.current_event()
+		if e == null:
+			return
+		var scene := ChapterRegistry.scene_for(e.chapter_id, Campaign.house_id)
+		if scene == "":
+			_toast("That chapter isn't authored yet.")
+			return
 		Campaign.deploy()
-		get_tree().change_scene_to_file(
-			HubScene.BATTLE_SCENE_FOR_HOUSE.get(Campaign.house_id, HubScene.BATTLE_SCENE))
+		get_tree().change_scene_to_file(scene)
+
+
+func _rest_week() -> void:
+	Campaign.advance_week()
+	_refresh_date()
+	var e := Campaign.current_event()
+	if e != null and e.kind == CalendarEventDef.Kind.HOLIDAY:
+		_toast("It's %s! The whole castle is celebrating." % e.label)
+	else:
+		_toast("A week passes at Vael...")
 
 
 func _open_hall_archive() -> void:
