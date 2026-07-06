@@ -151,7 +151,7 @@ func open_equip_menu() -> void:
 	_v._menu_items = []
 	var labels: Array = []
 	for it in _v._selected.inventory.items:
-		if it.is_weapon():
+		if it.is_weapon() and _v._selected.can_use_weapon(it.weapon()):
 			_v._menu_items.append(it)
 			var eq := " *" if it == _v._selected.inventory.equipped_weapon_item() else ""
 			labels.append("%s (%d)%s" % [it.display_name(), it.uses, eq])

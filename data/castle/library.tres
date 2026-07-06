@@ -17,10 +17,18 @@ id = "lore_shelf"
 label = "Read the open volume"
 dialogue = "res://data/dialogue/castle_lore.json"
 
+[sub_resource type="Resource" id="Resource_cnhxx"]
+script = ExtResource("4_j2x5l")
+id = "beat_first_spark"
+label = "That shelf again — the fourth fire"
+x = 0.72
+dialogue = "res://data/dialogue/beat_first_spark.json"
+requires_flag = "festival_seen"
+
 [resource]
 script = ExtResource("3_h8bj0")
 id = "library"
 display_name = "Library"
 backdrop = ExtResource("1_cnhxx")
 exits = Array[ExtResource("2_f6qmt")]([SubResource("Resource_yqtj1")])
-spots = Array[ExtResource("4_j2x5l")]([SubResource("Resource_0h1lt")])
+spots = Array[ExtResource("4_j2x5l")]([SubResource("Resource_0h1lt"), SubResource("Resource_cnhxx")])

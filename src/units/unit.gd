@@ -302,6 +302,17 @@ func skill_combat_bonus() -> Dictionary:
 	return total
 
 
+## WO-8.2: whether this unit may wield `w`. Only Kai is gated — his schools
+## open through story beats (broader than any house lane, §4/M8); everyone
+## else is already locked to their lane by their kit.
+func can_use_weapon(w: WeaponDef) -> bool:
+	if w == null or w.school == "":
+		return true
+	if unit_def == null or unit_def.id != "kai":
+		return true
+	return bool(Campaign.flags.get("school_" + w.school, false))
+
+
 func can_attack() -> bool:
 	var w := weapon()
 	return w != null and w.can_attack()

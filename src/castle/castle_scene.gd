@@ -497,10 +497,21 @@ func _do_system(index: int) -> void:
 func _play_dialogue(path: String) -> void:
 	_dialogue = DialogueScene.new()
 	add_child(_dialogue)
+	_dialogue.event_triggered.connect(_on_dialogue_event)
 	_dialogue.finished.connect(func():
 		_dialogue.queue_free()
 		_dialogue = null)
 	_dialogue.play(DialogueScript.from_file(path))
+
+
+## Story-beat events from castle scenes (WO-8.2: school unlocks, and any
+## future flag-setters ride the same hook).
+func _on_dialogue_event(event_name: String, params: Dictionary) -> void:
+	match event_name:
+		"unlock_school":
+			Campaign.flags["school_" + str(params.get("school", ""))] = true
+		"set_flag":
+			Campaign.flags[str(params.get("flag", ""))] = true
 
 
 

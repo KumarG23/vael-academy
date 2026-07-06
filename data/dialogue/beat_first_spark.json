@@ -1,0 +1,10 @@
+[
+ {"speaker": "", "text": "The library after the festival. The four-fires question won't leave Kai alone — and neither will Liora, who followed him in carrying her tome."},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "You keep circling that shelf like it owes you money. Here. Hold my tome. HOLD it, don't cradle it."},
+ {"speaker": "Kai", "portrait": "kai", "text": "It's warm—"},
+ {"speaker": "", "text": "The mark on Kai's brow flares. The tome's first page lights like kindling — and the flame BOWS."},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "...Kai. Students train YEARS for first-flame. It just curtsied at you."},
+ {"event": "unlock_school", "school": "ember"},
+ {"speaker": "Kai", "portrait": "kai", "text": "Four fires at the festival. Four founding lines. Liora — what if the fourth line didn't end?"},
+ {"speaker": "", "text": "The school of Ember answers Kai's hand now. (Ember tomes are yours to wield.)"}
+]

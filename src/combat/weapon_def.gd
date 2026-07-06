@@ -17,6 +17,10 @@ enum WeaponType { SWORD, AXE, LANCE, BOW, TOME, STAFF }
 @export var max_uses: int = 40
 ## HP a staff restores (base, before the healer's MAG). Ignored by non-staves.
 @export var heal_amount: int = 0
+## WO-8.2: the school of magic a tome belongs to ("" = mundane weapon).
+## Kai — uniquely — can only wield tomes whose school his story has opened
+## (Campaign flag `school_<name>`); house students are born to their lane.
+@export var school: String = ""
 
 
 ## Tomes deal magical damage (MAG vs RES); everything else is physical (STR vs DEF).
