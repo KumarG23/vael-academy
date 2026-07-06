@@ -386,7 +386,10 @@ func _on_cursor_cancelled(_cell: Vector2i) -> void:
 
 func _try_select(cell: Vector2i) -> void:
 	var u := unit_at(cell)
-	if u == null or not u.is_alive():
+	if u == null:
+		_menu_ctrl.open_field_menu()  # empty tile → End Turn / Objective
+		return
+	if not u.is_alive():
 		return
 	if u.team != 0 or u.has_acted:
 		_open_stats_for(u)  # anyone who can't act can still be inspected (WO-4.4)
@@ -1182,6 +1185,11 @@ func _setup_ui() -> void:
 	_stats_panel.closed.connect(_on_stats_closed)
 	_ui_layer.add_child(_stats_panel)
 	_apply_house_theme()
+
+
+## Flash the objective (field menu → Objective).
+func _toast_objective() -> void:
+	_turn_banner.announce(_objective_text(), true)
 
 
 func _objective_text() -> String:

@@ -46,6 +46,24 @@ func unviewed_conversations(unit_id: String) -> Array:
 	return out
 
 
+## Field menu (playtest 3): confirm on an empty tile to end the turn without
+## walking every unit first, or check the objective.
+func open_field_menu() -> void:
+	_v._menu_actions = []
+	open_menu("field", "Field", ["End Turn", "Objective", "Cancel"])
+
+
+func field_choice(index: int) -> void:
+	_v._menu.close()
+	_v._cursor.active = true
+	_v._phase = _v.Phase.IDLE
+	match index:
+		0:
+			_v._end_player_phase()
+		1:
+			_v._toast_objective()
+
+
 func open_menu(context: String, title: String, labels: Array) -> void:
 	_v._menu_context = context
 	_v._phase = _v.Phase.MENU
@@ -57,6 +75,8 @@ func choose(index: int) -> void:
 	if _v._busy:
 		return
 	match _v._menu_context:
+		"field":
+			field_choice(index)
 		"action":
 			await do_action(_v._menu_actions[index])
 		"item":
@@ -77,6 +97,10 @@ func cancel() -> void:
 	match _v._menu_context:
 		"action":
 			_v._undo_move_and_deselect()  # cancel the command menu = take the move back
+		"field":
+			_v._menu.close()
+			_v._cursor.active = true
+			_v._phase = _v.Phase.IDLE
 		_:
 			open_action_menu()            # any submenu -> back to the command menu
 
