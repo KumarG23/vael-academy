@@ -148,9 +148,11 @@ def zip_anims(zdata, base_folder):
                      if n.startswith(f"{base_folder}/animations/")))
 
 def find_folder(anims, slug):
-    n = slug.replace("-", "_").lower()
-    hits = [a for a in anims if a.replace("-", "_").lower().startswith(n[:40])]
-    return hits[0] if hits else None
+    key = re.sub(r"[^a-z0-9]", "", slug.lower())[:30]
+    for a in anims:
+        if re.sub(r"[^a-z0-9]", "", a.lower()).startswith(key):
+            return a
+    return None
 
 def last_frame_b64(zdata, base_folder, slug):
     z, anims = zip_anims(zdata, base_folder)
