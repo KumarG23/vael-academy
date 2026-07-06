@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/archer.tres" id="1_thescl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_theswp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_thesud"]
+[ext_resource type="Resource" path="res://data/classes/sniper.tres" id="9_thespr"]
+[ext_resource type="Resource" path="res://data/weapons/iron_bow.tres" id="4_theswn"]
+
+[resource]
+script = ExtResource("3_thesud")
+id = "thessaly"
+display_name = "Thessaly"
+promotion_class = ExtResource("9_thespr")
+char_class = ExtResource("1_thescl")
+house_id = "thornrook"
+weapon = ExtResource("4_theswn")
+max_hp = 20
+strength = 7
+skill = 11
+speed = 7
+luck = 4
+defense = 3
+resistance = 3
+movement = 5
+growth_hp = 55
+growth_str = 45
+growth_skl = 65
+growth_spd = 45
+growth_lck = 30
+growth_def = 20
+growth_res = 25

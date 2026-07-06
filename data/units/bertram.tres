@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/soldier.tres" id="1_bertcl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_bertwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_bertud"]
+[ext_resource type="Resource" path="res://data/classes/sentinel.tres" id="9_bertpr"]
+[ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="4_bertwn"]
+
+[resource]
+script = ExtResource("3_bertud")
+id = "bertram"
+display_name = "Bertram"
+promotion_class = ExtResource("9_bertpr")
+char_class = ExtResource("1_bertcl")
+house_id = "tidemark"
+weapon = ExtResource("4_bertwn")
+max_hp = 25
+strength = 8
+skill = 7
+speed = 6
+luck = 4
+defense = 7
+resistance = 2
+movement = 5
+growth_hp = 75
+growth_str = 45
+growth_skl = 40
+growth_spd = 35
+growth_lck = 30
+growth_def = 45
+growth_res = 25

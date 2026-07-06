@@ -165,6 +165,16 @@ deploy_cells = Dictionary[String, Vector2i]({
 "liora": Vector2i(2, 11),
 "serra": Vector2i(3, 11),
 "corin": Vector2i(4, 12),
+"osric": Vector2i(0, 12),
+"elowen": Vector2i(0, 13),
+"isolde": Vector2i(1, 11),
+"fenn": Vector2i(2, 10),
+"bertram": Vector2i(3, 10),
+"thessaly": Vector2i(6, 12),
+"corvin": Vector2i(6, 13),
+"marlow": Vector2i(7, 12),
+"vesper": Vector2i(7, 13),
+"rurik": Vector2i(4, 10),
 "perrin": Vector2i(1, 12),
 "wren": Vector2i(3, 13)
 })

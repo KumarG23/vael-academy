@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/archer.tres" id="1_fenncl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_fennwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_fennud"]
+[ext_resource type="Resource" path="res://data/classes/tempest.tres" id="9_fennpr"]
+[ext_resource type="Resource" path="res://data/weapons/iron_bow.tres" id="4_fennwn"]
+
+[resource]
+script = ExtResource("3_fennud")
+id = "fenn"
+display_name = "Fenn"
+promotion_class = ExtResource("9_fennpr")
+char_class = ExtResource("1_fenncl")
+house_id = "tidemark"
+weapon = ExtResource("4_fennwn")
+max_hp = 21
+strength = 7
+skill = 8
+speed = 9
+luck = 5
+defense = 4
+resistance = 2
+movement = 6
+growth_hp = 60
+growth_str = 40
+growth_skl = 50
+growth_spd = 55
+growth_lck = 40
+growth_def = 25
+growth_res = 20

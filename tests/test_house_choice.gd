@@ -24,12 +24,14 @@ func test_default_house_is_emberwing():
 
 func test_choosing_thornrook_flips_the_roster():
 	Campaign.set_house("thornrook")
-	assert_eq(_fielded_ids(), ["corin", "kai"], "provisional Thornrook roster + protagonist")
+	assert_eq(_fielded_ids(), ["corin", "thessaly", "corvin", "marlow", "vesper", "rurik", "kai"],
+		"full Thornrook house + protagonist (WO-5.5)")
 
 
 func test_choosing_tidemark_flips_the_roster():
 	Campaign.set_house("tidemark")
-	assert_eq(_fielded_ids(), ["serra", "kai"], "provisional Tidemark roster + protagonist")
+	assert_eq(_fielded_ids(), ["serra", "osric", "elowen", "isolde", "fenn", "bertram", "kai"],
+		"full Tidemark house + protagonist (WO-5.4)")
 
 
 func test_unknown_house_is_rejected():

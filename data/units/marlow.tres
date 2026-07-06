@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/myrmidon.tres" id="1_marlcl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_marlwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_marlud"]
+[ext_resource type="Resource" path="res://data/classes/assassin.tres" id="9_marlpr"]
+[ext_resource type="Resource" path="res://data/weapons/iron_sword.tres" id="4_marlwn"]
+
+[resource]
+script = ExtResource("3_marlud")
+id = "marlow"
+display_name = "Marlow"
+promotion_class = ExtResource("9_marlpr")
+char_class = ExtResource("1_marlcl")
+house_id = "thornrook"
+weapon = ExtResource("4_marlwn")
+max_hp = 20
+strength = 6
+skill = 9
+speed = 10
+luck = 6
+defense = 3
+resistance = 3
+movement = 6
+growth_hp = 55
+growth_str = 35
+growth_skl = 55
+growth_spd = 60
+growth_lck = 45
+growth_def = 20
+growth_res = 25

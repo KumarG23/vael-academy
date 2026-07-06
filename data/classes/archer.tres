@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_archr"]
+
+[resource]
+script = ExtResource("1_archr")
+id = "archer"
+display_name = "Archer"
+token_letter = "R"

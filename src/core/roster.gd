@@ -22,8 +22,8 @@ const PROTAGONIST_ID := "kai"
 ## WO-5.4/5.5 author their students. The active house is set by Campaign.
 const HOUSE_ROSTERS := {
 	"emberwing": ["perrin", "kael", "brenna", "wren", "dain", "liora"],
-	"tidemark": ["serra_prologue"],
-	"thornrook": ["corin"],
+	"tidemark": ["serra_prologue", "osric", "elowen", "isolde", "fenn", "bertram"],
+	"thornrook": ["corin", "thessaly", "corvin", "marlow", "vesper", "rurik"],
 }
 static var active_house := "emberwing"
 
@@ -67,4 +67,8 @@ static func deploy_cells() -> Dictionary:
 		"liora": Vector2i(2, 9),
 		"serra": Vector2i(3, 8),
 		"corin": Vector2i(4, 8),
+		"osric": Vector2i(2, 6), "elowen": Vector2i(3, 6),
+		"isolde": Vector2i(4, 6), "fenn": Vector2i(2, 5), "bertram": Vector2i(3, 5),
+		"thessaly": Vector2i(2, 6), "corvin": Vector2i(3, 6),
+		"marlow": Vector2i(4, 6), "vesper": Vector2i(2, 5), "rurik": Vector2i(3, 5),
 	}

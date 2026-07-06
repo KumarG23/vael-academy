@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/fighter.tres" id="1_ruricl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_ruriwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_ruriud"]
+[ext_resource type="Resource" path="res://data/classes/berserker.tres" id="9_ruripr"]
+[ext_resource type="Resource" path="res://data/weapons/iron_axe.tres" id="4_ruriwn"]
+
+[resource]
+script = ExtResource("3_ruriud")
+id = "rurik"
+display_name = "Rurik"
+promotion_class = ExtResource("9_ruripr")
+char_class = ExtResource("1_ruricl")
+house_id = "thornrook"
+weapon = ExtResource("4_ruriwn")
+max_hp = 27
+strength = 10
+skill = 5
+speed = 6
+luck = 2
+defense = 5
+resistance = 1
+movement = 5
+growth_hp = 85
+growth_str = 60
+growth_skl = 30
+growth_spd = 35
+growth_lck = 20
+growth_def = 35
+growth_res = 15

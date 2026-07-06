@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/cleric.tres" id="1_vespcl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_vespwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_vespud"]
+[ext_resource type="Resource" path="res://data/classes/alchemist.tres" id="9_vesppr"]
+[ext_resource type="Resource" path="res://data/weapons/heal.tres" id="4_vespwn"]
+
+[resource]
+script = ExtResource("3_vespud")
+id = "vesper"
+display_name = "Vesper"
+promotion_class = ExtResource("9_vesppr")
+char_class = ExtResource("1_vespcl")
+house_id = "thornrook"
+weapon = ExtResource("4_vespwn")
+max_hp = 18
+strength = 1
+magic = 8
+skill = 8
+speed = 7
+luck = 4
+defense = 2
+resistance = 7
+movement = 5
+growth_hp = 50
+growth_str = 5
+growth_mag = 55
+growth_skl = 50
+growth_spd = 40
+growth_lck = 30
+growth_def = 15
+growth_res = 45

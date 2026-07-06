@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/mage.tres" id="1_isolcl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_isolwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_isolud"]
+[ext_resource type="Resource" path="res://data/classes/hierophant.tres" id="9_isolpr"]
+[ext_resource type="Resource" path="res://data/weapons/fire.tres" id="4_isolwn"]
+
+[resource]
+script = ExtResource("3_isolud")
+id = "isolde"
+display_name = "Isolde"
+promotion_class = ExtResource("9_isolpr")
+char_class = ExtResource("1_isolcl")
+house_id = "tidemark"
+weapon = ExtResource("4_isolwn")
+max_hp = 20
+strength = 2
+magic = 9
+skill = 8
+speed = 6
+luck = 3
+defense = 3
+resistance = 7
+movement = 5
+growth_hp = 50
+growth_str = 5
+growth_mag = 60
+growth_skl = 50
+growth_spd = 35
+growth_lck = 25
+growth_def = 20
+growth_res = 45

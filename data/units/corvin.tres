@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/mage.tres" id="1_corvcl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_corvwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_corvud"]
+[ext_resource type="Resource" path="res://data/classes/sage.tres" id="9_corvpr"]
+[ext_resource type="Resource" path="res://data/weapons/fire.tres" id="4_corvwn"]
+
+[resource]
+script = ExtResource("3_corvud")
+id = "corvin"
+display_name = "Corvin"
+promotion_class = ExtResource("9_corvpr")
+char_class = ExtResource("1_corvcl")
+house_id = "thornrook"
+weapon = ExtResource("4_corvwn")
+max_hp = 19
+strength = 2
+magic = 9
+skill = 9
+speed = 6
+luck = 3
+defense = 2
+resistance = 6
+movement = 5
+growth_hp = 50
+growth_str = 5
+growth_mag = 60
+growth_skl = 55
+growth_spd = 35
+growth_lck = 25
+growth_def = 15
+growth_res = 45

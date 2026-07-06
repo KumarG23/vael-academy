@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/cleric.tres" id="1_elowcl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_elowwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_elowud"]
+[ext_resource type="Resource" path="res://data/classes/bishop.tres" id="9_elowpr"]
+[ext_resource type="Resource" path="res://data/weapons/heal.tres" id="4_elowwn"]
+
+[resource]
+script = ExtResource("3_elowud")
+id = "elowen"
+display_name = "Elowen"
+promotion_class = ExtResource("9_elowpr")
+char_class = ExtResource("1_elowcl")
+house_id = "tidemark"
+weapon = ExtResource("4_elowwn")
+max_hp = 19
+strength = 1
+magic = 8
+skill = 6
+speed = 6
+luck = 7
+defense = 2
+resistance = 8
+movement = 5
+growth_hp = 50
+growth_str = 5
+growth_mag = 55
+growth_skl = 40
+growth_spd = 40
+growth_lck = 45
+growth_def = 15
+growth_res = 50
