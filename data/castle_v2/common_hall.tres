@@ -2,11 +2,71 @@
 
 [ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_arksm"]
 [ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="2_61ppr"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/fireplace.png" id="2_a6v0k"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/long_table.png" id="3_oi6le"]
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="3_u6u5l"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bench.png" id="4_7yd7r"]
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="4_g2wwm"]
 [ext_resource type="Script" path="res://src/castle/castle_door.gd" id="5_a6v0k"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/rug_round.png" id="5_fy6pm"]
 [ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_oi6le"]
 [ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_7yd7r"]
+
+[sub_resource type="Resource" id="Resource_6wlsf"]
+script = ExtResource("1_arksm")
+texture = ExtResource("2_a6v0k")
+cell = Vector2i(17, 1)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_he016"]
+script = ExtResource("1_arksm")
+texture = ExtResource("3_oi6le")
+cell = Vector2i(5, 5)
+
+[sub_resource type="Resource" id="Resource_vu5ct"]
+script = ExtResource("1_arksm")
+texture = ExtResource("3_oi6le")
+cell = Vector2i(5, 8)
+
+[sub_resource type="Resource" id="Resource_be5ag"]
+script = ExtResource("1_arksm")
+texture = ExtResource("3_oi6le")
+cell = Vector2i(15, 5)
+
+[sub_resource type="Resource" id="Resource_k3di5"]
+script = ExtResource("1_arksm")
+texture = ExtResource("3_oi6le")
+cell = Vector2i(15, 8)
+
+[sub_resource type="Resource" id="Resource_ly684"]
+script = ExtResource("1_arksm")
+texture = ExtResource("4_7yd7r")
+cell = Vector2i(5, 6)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_3piny"]
+script = ExtResource("1_arksm")
+texture = ExtResource("4_7yd7r")
+cell = Vector2i(15, 6)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_beqb5"]
+script = ExtResource("1_arksm")
+texture = ExtResource("4_7yd7r")
+cell = Vector2i(5, 9)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_do4fx"]
+script = ExtResource("1_arksm")
+texture = ExtResource("4_7yd7r")
+cell = Vector2i(15, 9)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_6fj2l"]
+script = ExtResource("1_arksm")
+texture = ExtResource("5_fy6pm")
+cell = Vector2i(11, 11)
+offset = Vector2(16, 0)
 
 [sub_resource type="Resource" id="Resource_fy6pm"]
 script = ExtResource("3_u6u5l")
@@ -25,9 +85,9 @@ boss_quote_dialogue = ""
 boss_yield_dialogue = ""
 width = 24
 height = 13
-terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 4, 4, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 4, 7, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 4, 4, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 9, 0, 0, 0, 0, 4, 4, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 4, 4, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4, 7, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4, 4, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4, 4, 0, 0, 7, 12, 12, 12, 7, 7, 0, 0, 0, 0, 7, 12, 12, 12, 7, 7, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
 base_terrain = 7
-decor = Array[ExtResource("1_arksm")]([])
+decor = Array[ExtResource("1_arksm")]([SubResource("Resource_6wlsf"), SubResource("Resource_he016"), SubResource("Resource_vu5ct"), SubResource("Resource_be5ag"), SubResource("Resource_k3di5"), SubResource("Resource_ly684"), SubResource("Resource_3piny"), SubResource("Resource_beqb5"), SubResource("Resource_do4fx"), SubResource("Resource_6fj2l")])
 visits = Array[ExtResource("4_g2wwm")]([])
 
 [sub_resource type="Resource" id="Resource_edv5t"]

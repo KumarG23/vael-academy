@@ -1,12 +1,54 @@
 [gd_resource type="Resource" script_class="CastleRoomDef" format=3]
 
 [ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_jeic6"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/counter.png" id="2_8dhsu"]
 [ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="2_ws61n"]
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="3_1x836"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/weapon_rack.png" id="3_m6n4r"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/armor_stand.png" id="4_i7vg2"]
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="4_jubc7"]
 [ext_resource type="Script" path="res://src/castle/castle_door.gd" id="5_2pscd"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="5_c7ef6"]
 [ext_resource type="Script" path="res://src/castle/castle_point.gd" id="6_8dhsu"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="6_sr3hq"]
 [ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="7_m6n4r"]
+
+[sub_resource type="Resource" id="Resource_b2cvr"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("2_8dhsu")
+cell = Vector2i(8, 3)
+
+[sub_resource type="Resource" id="Resource_qraeu"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("3_m6n4r")
+cell = Vector2i(2, 1)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_cea65"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("3_m6n4r")
+cell = Vector2i(4, 1)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_ar1ln"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("4_i7vg2")
+cell = Vector2i(12, 1)
+
+[sub_resource type="Resource" id="Resource_pwocm"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("4_i7vg2")
+cell = Vector2i(13, 1)
+
+[sub_resource type="Resource" id="Resource_ugo7n"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("5_c7ef6")
+cell = Vector2i(13, 8)
+
+[sub_resource type="Resource" id="Resource_gf8of"]
+script = ExtResource("1_jeic6")
+texture = ExtResource("6_sr3hq")
+cell = Vector2i(2, 8)
 
 [sub_resource type="Resource" id="Resource_i7vg2"]
 script = ExtResource("3_1x836")
@@ -27,7 +69,7 @@ width = 16
 height = 10
 terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
 base_terrain = 7
-decor = Array[ExtResource("1_jeic6")]([])
+decor = Array[ExtResource("1_jeic6")]([SubResource("Resource_b2cvr"), SubResource("Resource_qraeu"), SubResource("Resource_cea65"), SubResource("Resource_ar1ln"), SubResource("Resource_pwocm"), SubResource("Resource_ugo7n"), SubResource("Resource_gf8of")])
 visits = Array[ExtResource("4_jubc7")]([])
 
 [sub_resource type="Resource" id="Resource_c7ef6"]
