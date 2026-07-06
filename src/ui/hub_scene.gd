@@ -78,8 +78,8 @@ func _open_main() -> void:
 		_info.append("")
 		_info.append("Last battle: " + last.to_upper())
 	_menu.open("Vael Academy — " + house.display_name, [
-		"Common Hall", "Training Grounds", "Quartermaster", "Mission Board",
-		"Choose House", "Save Game", "Return to Title",
+		"Explore the Castle", "Common Hall", "Training Grounds", "Quartermaster",
+		"Mission Board", "Choose House", "Save Game", "Return to Title",
 	], _menu_pos())
 	queue_redraw()
 
@@ -107,13 +107,14 @@ func _on_cancelled() -> void:
 
 func _do_main(index: int) -> void:
 	match index:
-		0: _open_common_hall()
-		1: _open_training()
-		2: _open_quartermaster()
-		3: _open_mission()
-		4: _open_house_choice()
-		5: _save_game()
-		6: _return_to_title()
+		0: get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
+		1: _open_common_hall()
+		2: _open_training()
+		3: _open_quartermaster()
+		4: _open_mission()
+		5: _open_house_choice()
+		6: _save_game()
+		7: _return_to_title()
 
 
 # --- house choice (WO-5.3a mechanism; the 5.3b prologue flow replaces this

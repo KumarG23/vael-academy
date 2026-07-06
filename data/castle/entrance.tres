@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/rooms/room_entrance.png" id="1_lwtq5"]
+[ext_resource type="Script" path="res://src/castle/room_exit.gd" id="2_gs2wk"]
+[ext_resource type="Script" path="res://src/castle/room_def.gd" id="3_b4k21"]
+[ext_resource type="Script" path="res://src/castle/room_spot.gd" id="4_gp68j"]
+
+[sub_resource type="Resource" id="Resource_m60os"]
+script = ExtResource("2_gs2wk")
+to_room = "war_room"
+label = "To the War Room"
+x = 0.08
+spawn_x = 0.85
+
+[sub_resource type="Resource" id="Resource_8qj0a"]
+script = ExtResource("2_gs2wk")
+to_room = "common_hall"
+label = "To the Common Hall"
+x = 0.92
+spawn_x = 0.12
+
+[sub_resource type="Resource" id="Resource_ai2sk"]
+script = ExtResource("2_gs2wk")
+to_room = "dorm_hall"
+label = "Up to the Dormitories"
+spawn_x = 0.1
+
+[resource]
+script = ExtResource("3_b4k21")
+id = "entrance"
+display_name = "Entrance Hall"
+backdrop = ExtResource("1_lwtq5")
+exits = Array[ExtResource("2_gs2wk")]([SubResource("Resource_m60os"), SubResource("Resource_8qj0a"), SubResource("Resource_ai2sk")])

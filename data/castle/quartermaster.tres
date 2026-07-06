@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/rooms/room_quartermaster.png" id="1_3qb44"]
+[ext_resource type="Script" path="res://src/castle/room_exit.gd" id="2_n5dhx"]
+[ext_resource type="Script" path="res://src/castle/room_def.gd" id="3_4s2lf"]
+[ext_resource type="Script" path="res://src/castle/room_spot.gd" id="4_3njsi"]
+
+[sub_resource type="Resource" id="Resource_xci4k"]
+script = ExtResource("2_n5dhx")
+to_room = "common_hall"
+x = 0.06
+spawn_x = 0.88
+
+[resource]
+script = ExtResource("3_4s2lf")
+id = "quartermaster"
+display_name = "Quartermaster"
+backdrop = ExtResource("1_3qb44")
+exits = Array[ExtResource("2_n5dhx")]([SubResource("Resource_xci4k")])
