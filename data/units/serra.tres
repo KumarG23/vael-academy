@@ -3,6 +3,7 @@
 [ext_resource type="Resource" path="res://data/classes/knight.tres" id="1_hp521"]
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_mirx0"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_pxlqk"]
+[ext_resource type="Resource" path="res://data/classes/leviathan.tres" id="9_promoserr"]
 [ext_resource type="Script" path="res://src/items/item_def.gd" id="4_xqxbx"]
 [ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="5_7gca4"]
 
@@ -10,6 +11,7 @@
 script = ExtResource("3_pxlqk")
 id = "serra"
 display_name = "Serra"
+promotion_class = ExtResource("9_promoserr")
 char_class = ExtResource("1_hp521")
 house_id = "tidemark"
 team = 1

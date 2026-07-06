@@ -7,6 +7,10 @@ extends Resource
 @export var id: String = ""
 @export var display_name: String = ""
 @export var char_class: ClassDef
+## Unique promotion target (§10 AW-8 ladder, Neal-approved 2026-07-05): no two
+## characters share a promoted name, so promotions are per-CHARACTER. When
+## null, the class's own promoted_class applies (generic units).
+@export var promotion_class: ClassDef
 ## House membership (Emberwing/Tidemark/Thornrook); "" until WO-3.4 wires HouseDef.
 @export var house_id: String = ""
 ## Team side for the slice: 0 = player, 1 = enemy.

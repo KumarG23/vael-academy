@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_assassin"]
+
+[resource]
+script = ExtResource("1_assassin")
+id = "assassin"
+display_name = "Assassin"
+token_letter = "A"
+promo_hp = 2
+promo_str = 2
+promo_mag = 0
+promo_skl = 4
+promo_spd = 4
+promo_lck = 2
+promo_def = 0
+promo_res = 1
+promo_mov = 1

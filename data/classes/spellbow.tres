@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_spellbow"]
+
+[resource]
+script = ExtResource("1_spellbow")
+id = "spellbow"
+display_name = "Spellbow"
+token_letter = "S"
+promo_hp = 3
+promo_str = 2
+promo_mag = 2
+promo_skl = 3
+promo_spd = 2
+promo_lck = 1
+promo_def = 1
+promo_res = 2
+promo_mov = 1

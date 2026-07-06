@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_sentinel"]
+
+[resource]
+script = ExtResource("1_sentinel")
+id = "sentinel"
+display_name = "Sentinel"
+token_letter = "S"
+movement_type = 1
+promo_hp = 4
+promo_str = 2
+promo_mag = 0
+promo_skl = 2
+promo_spd = 1
+promo_lck = 1
+promo_def = 4
+promo_res = 2
+promo_mov = 1

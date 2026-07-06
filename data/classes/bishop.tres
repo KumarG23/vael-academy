@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_bishop"]
+
+[resource]
+script = ExtResource("1_bishop")
+id = "bishop"
+display_name = "Bishop"
+token_letter = "B"
+promo_hp = 2
+promo_str = 0
+promo_mag = 3
+promo_skl = 2
+promo_spd = 2
+promo_lck = 2
+promo_def = 1
+promo_res = 4
+promo_mov = 1

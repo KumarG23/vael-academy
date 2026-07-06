@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="UnitDef" format=3]
 
-[ext_resource type="Resource" path="res://data/classes/myrmidon.tres" id="1_8aydn"]
+[ext_resource type="Resource" path="res://data/classes/lord.tres" id="1_8aydn"]
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_ir1nh"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_wii57"]
 [ext_resource type="Script" path="res://src/items/item_def.gd" id="4_piscl"]

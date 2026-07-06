@@ -3,6 +3,7 @@
 [ext_resource type="Resource" path="res://data/classes/cleric.tres" id="1_m0fs6"]
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_7bc2b"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_c0j2v"]
+[ext_resource type="Resource" path="res://data/classes/saint.tres" id="9_promowren"]
 [ext_resource type="Script" path="res://src/items/item_def.gd" id="4_pep3u"]
 [ext_resource type="Resource" path="res://data/weapons/heal.tres" id="5_45n3e"]
 
@@ -10,6 +11,7 @@
 script = ExtResource("3_c0j2v")
 id = "wren"
 display_name = "Wren"
+promotion_class = ExtResource("9_promowren")
 char_class = ExtResource("1_m0fs6")
 house_id = "emberwing"
 weapon = ExtResource("5_45n3e")

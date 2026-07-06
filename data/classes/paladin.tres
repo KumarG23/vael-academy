@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_paladin"]
+
+[resource]
+script = ExtResource("1_paladin")
+id = "paladin"
+display_name = "Paladin"
+token_letter = "P"
+movement_type = 2
+promo_hp = 3
+promo_str = 2
+promo_mag = 0
+promo_skl = 2
+promo_spd = 2
+promo_lck = 1
+promo_def = 2
+promo_res = 2
+promo_mov = 2

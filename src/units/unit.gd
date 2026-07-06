@@ -237,8 +237,17 @@ func move_points() -> int:
 	return (unit_def.movement if unit_def != null else 5) + _move_bonus
 
 
+## This unit's promotion target: the per-character unique class when the def
+## carries one (approved ladder), else the class's own path.
+func promotion_target() -> ClassDef:
+	if unit_def != null and unit_def.promotion_class != null:
+		return unit_def.promotion_class
+	var c := current_class()
+	return c.promoted_class if c != null else null
+
+
 func can_promote() -> bool:
-	return Promotion.is_eligible(current_class(), level)
+	return promotion_target() != null and level >= Promotion.MIN_LEVEL
 
 
 ## Promote to the current class's promoted class: apply flat stat bonuses, gain any
@@ -247,7 +256,7 @@ func can_promote() -> bool:
 func promote() -> Dictionary:
 	if not can_promote():
 		return {}
-	var target := current_class().promoted_class
+	var target := promotion_target()
 	var bonuses := target.promotion_stat_bonuses()
 	for key in bonuses:
 		_stat_bonus[key] = int(_stat_bonus.get(key, 0)) + int(bonuses[key])

@@ -3,12 +3,14 @@
 [ext_resource type="Resource" path="res://data/classes/knight.tres" id="1_srpcl"]
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_srpwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_srpud"]
+[ext_resource type="Resource" path="res://data/classes/leviathan.tres" id="9_promoserr"]
 [ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="4_srpln"]
 
 [resource]
 script = ExtResource("3_srpud")
 id = "serra"
 display_name = "Serra"
+promotion_class = ExtResource("9_promoserr")
 char_class = ExtResource("1_srpcl")
 house_id = "tidemark"
 weapon = ExtResource("4_srpln")

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" path="res://src/units/class_def.gd" id="1_tempest"]
+
+[resource]
+script = ExtResource("1_tempest")
+id = "tempest"
+display_name = "Tempest"
+token_letter = "T"
+promo_hp = 3
+promo_str = 2
+promo_mag = 0
+promo_skl = 2
+promo_spd = 4
+promo_lck = 2
+promo_def = 1
+promo_res = 2
+promo_mov = 1
