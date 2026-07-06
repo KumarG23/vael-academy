@@ -85,6 +85,11 @@ var _bursts: Array = []  # active starbursts: {pos, age, life, big}
 ## tome. Ranged attackers don't run in — they loose/cast from where they stand.
 var _left_proj := ""
 var _right_proj := ""
+## Attacker XP readout, filled after the blow lands (playtest 3).
+var _xp_panel: Control
+var _xp_shown := 0.0
+var _xp_gain := 0
+var _xp_leveled := false
 
 # chrome rebuilt per exchange
 var _chrome: Control
@@ -173,6 +178,13 @@ func _ready() -> void:
 	_chrome = Control.new()
 	_chrome.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(_chrome)
+	# attacker XP bar (filled after the blow)
+	_xp_panel = Control.new()
+	_xp_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_xp_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_xp_panel.draw.connect(_draw_xp_panel)
+	_xp_panel.visible = false
+	_root.add_child(_xp_panel)
 
 
 ## FE diorama pedestal: the base terrain's tile drawn straight from its
@@ -406,9 +418,14 @@ func _idle_bounds(frames: SpriteFrames) -> Vector2:
 
 ## before the popup opens (becomes the washed backdrop, FE field-battle style).
 func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
-		exchange: Dictionary = {}, map_shot: Texture2D = null, dist: int = 1) -> void:
+		exchange: Dictionary = {}, map_shot: Texture2D = null, dist: int = 1,
+		xp_from: int = 0, xp_gain: int = 0) -> void:
 	_left_proj = _proj_style(attacker)
 	_right_proj = _proj_style(defender)
+	_xp_gain = xp_gain
+	_xp_leveled = false
+	_xp_shown = float(xp_from % 100)
+	_xp_panel.visible = false
 	# a range-2 clash stands the fighters farther apart (Neal: show the distance)
 	var gap := 300.0 if dist >= 2 else 190.0
 	var scene_bg := _stage_battlers(attacker.unit_id(), defender.unit_id(), map_shot, gap)
@@ -425,11 +442,27 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 		await _play_strike(strike)
 		await get_tree().create_timer(0.28).timeout
 
+	# XP earned: fill the attacker's bar right here in the popup (Neal's ask)
+	if _xp_gain > 0:
+		_xp_panel.visible = true
+		_xp_panel.queue_redraw()
+		await get_tree().create_timer(0.25).timeout
+		var target := _xp_shown + float(_xp_gain)
+		var fill := create_tween()
+		fill.tween_property(self, "_xp_shown", target, 0.55).set_trans(Tween.TRANS_SINE)
+		await fill.finished
+		if target >= 100.0:
+			_xp_leveled = true
+			_screen_flash(0.5)
+			_xp_panel.queue_redraw()
+			await get_tree().create_timer(0.5).timeout
+
 	await get_tree().create_timer(0.4).timeout
 	var out := create_tween()
 	out.tween_property(_root, "modulate:a", 0.0, 0.16)
 	await out.finished
 	_root.visible = false
+	_xp_panel.visible = false
 	for s in [_left_sprite, _right_sprite]:
 		s.modulate.a = 1.0
 		(s.material as ShaderMaterial).set_shader_parameter("flash", 0.0)
@@ -759,12 +792,38 @@ func _slash_arc(pos: Vector2, dir: float, big: bool) -> void:
 
 
 func _process(delta: float) -> void:
+	if _xp_panel != null and _xp_panel.visible:
+		_xp_panel.queue_redraw()
 	if _bursts.is_empty():
 		return
 	for b in _bursts:
 		b["age"] += delta
 	_bursts = _bursts.filter(func(b): return b["age"] < b["life"])
 	_fx.queue_redraw()
+
+
+## The attacker's XP bar (bottom-left, above the weapon plate), filling after a
+## connected/killing blow with a "+N" and a level-up flash on wrap.
+func _draw_xp_panel() -> void:
+	var vp := _root.size
+	var x := 26.0
+	var y := vp.y - 182.0
+	_xp_panel.draw_rect(Rect2(x, y, 340, 28), Color(0.08, 0.09, 0.13, 0.95), true)
+	_xp_panel.draw_rect(Rect2(x, y, 340, 28), TRIM, false, 2.0)
+	var font := ThemeDB.fallback_font
+	_xp_panel.draw_string(font, Vector2(x + 10, y + 20), "XP", HORIZONTAL_ALIGNMENT_LEFT, -1, 15,
+		Color(0.95, 0.9, 0.55))
+	var bx := x + 46
+	var shown := _xp_shown if _xp_shown < 100.0 else _xp_shown - 100.0
+	_xp_panel.draw_rect(Rect2(bx, y + 8, 236, 13), Color(0.15, 0.13, 0.05), true)
+	_xp_panel.draw_rect(Rect2(bx, y + 8, 236 * clampf(shown / 100.0, 0.0, 1.0), 13),
+		Color(0.95, 0.82, 0.35), true)
+	if _xp_leveled:
+		_xp_panel.draw_string(font, Vector2(x + 292, y + 20), "LEVEL UP!",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.6, 1.0, 0.6))
+	elif _xp_gain > 0:
+		_xp_panel.draw_string(font, Vector2(x + 292, y + 20), "+%d" % _xp_gain,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.6, 1.0, 0.6))
 
 
 func _draw_fx() -> void:

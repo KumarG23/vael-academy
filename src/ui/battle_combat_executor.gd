@@ -37,7 +37,13 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 		var ex := CombatForecast.exchange(atk_c, def_c, dist)
 		_v._battle_popup.stage_terrain = _v.chapter.get_terrain(defender.cell.x, defender.cell.y)
 		var shot := ImageTexture.create_from_image(_v.get_viewport().get_texture().get_image())
-		await _v._battle_popup.play_exchange(attacker, defender, result.strikes, ex, shot, dist)
+		# XP the player attacker will earn — shown filling in the popup after the blow
+		var atk_xp := 0
+		if attacker.team == 0:
+			atk_xp = CombatXP.award(attacker.level, def_level,
+				side_connected(result, false), result.defender_defeated())
+		await _v._battle_popup.play_exchange(attacker, defender, result.strikes, ex, shot, dist,
+			attacker.xp, atk_xp)
 		for strike in result.strikes:
 			var target := attacker if strike.is_counter else defender
 			if strike.connected:
