@@ -178,6 +178,20 @@ func map_sprite_offset() -> Vector2:
 	return Vector2(0, -_grid.cell_size * 0.06) if _grid != null else Vector2.ZERO
 
 
+## Which way the on-map sprite currently faces (art faces east/right by default;
+## flip_h true = facing west/left). Used so an attack/heal on a straight-up or
+## straight-down tile keeps the unit's facing instead of snapping it around.
+func facing_right() -> bool:
+	return _anim == null or not _anim.flip_h
+
+
+## Turn the on-map sprite to face left/right (e.g. toward the tile it's acting
+## on), so the unit keeps that facing after an attack/heal.
+func set_facing(face_right: bool) -> void:
+	if _anim != null:
+		_anim.flip_h = not face_right
+
+
 ## Effective value of a stat key (UnitDef base + level-up bonus).
 func stat(key: String) -> int:
 	var base: int = unit_def.get(_STAT_FIELD[key]) if unit_def != null else 0

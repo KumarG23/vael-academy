@@ -45,6 +45,8 @@ var _weapon: Sprite2D
 var _fx: Node2D
 var _fx_items: Array = []
 var _rest_rot := -0.5
+var _aim_parent := Vector2.INF   # target position in the rig's PARENT space (for lunges)
+var _aim_fx := Vector2.INF        # target position in the FX layer's local space (for hit FX)
 
 
 static func has_rig(unit_id: String) -> bool:
@@ -109,9 +111,16 @@ func _process(delta: float) -> void:
 	_fx.queue_redraw()
 
 
-## `aim_global` is the target's world position; ranged/cast attacks fly to it
-## (diagonals included). Pass nothing (Vector2.INF) to fire straight ahead.
+## `aim_global` is the target's world position; ranged/cast attacks fly to it and
+## melee lunges drive toward it (any direction — up/down/diagonal, not just
+## sideways). Pass nothing (Vector2.INF) to fire straight ahead.
 func play_attack(weapon_type: int, aim_global := Vector2.INF) -> void:
+	if not (is_inf(aim_global.x) or is_inf(aim_global.y)) and get_parent() != null:
+		_aim_parent = (get_parent() as Node2D).to_local(aim_global)
+		_aim_fx = _fx.to_local(aim_global)
+	else:
+		_aim_parent = Vector2.INF
+		_aim_fx = Vector2.INF
 	match weapon_type:
 		WeaponDef.WeaponType.LANCE:
 			await _stab()
@@ -133,51 +142,91 @@ func _aim_local(aim_global: Vector2) -> Vector2:
 	return _fx.to_local(aim_global)
 
 
+## Unit vector (in PARENT space) from the rig toward the target tile, so a lunge
+## drives at the real target — up, down, or diagonal — not just sideways. Falls
+## back to the facing direction when no target was supplied.
+func _lunge_dir() -> Vector2:
+	if is_inf(_aim_parent.x) or is_inf(_aim_parent.y):
+		return Vector2(signf(scale.x), 0.0)
+	var d := _aim_parent - position
+	return d.normalized() if d.length() > 1.0 else Vector2(signf(scale.x), 0.0)
+
+
+## Angle (rig-local) from the fighter to the target tile, so a melee swing can be
+## rotated to actually point at the target — up, down, or diagonal. 0 when the
+## target is level to the right, which is how the swings are tuned. The pivot and
+## _aim_fx share the rig's local frame (flip included), so this stays correct
+## whichever way the unit faces.
+func _aim_angle() -> float:
+	if is_inf(_aim_fx.x) or is_inf(_aim_fx.y):
+		return 0.0
+	return _aim_fx.angle()
+
+
+## How far to drive on the strike: a fraction of the gap to the target, capped so
+## it reads as a lunge (not a teleport onto the target).
+func _lunge_reach(frac: float, cap_cells: float) -> float:
+	var cap: float = absf(scale.x) * 32.0 * cap_cells   # scale.x carries cell/32
+	if is_inf(_aim_parent.x) or is_inf(_aim_parent.y):
+		return cap * 0.5
+	var gap := (_aim_parent - position).length()
+	return minf(gap * frac, cap) if gap > 1.0 else cap * 0.5
+
+
 ## Lance: a THRUST, not a swing — level the point forward and drive the whole
-## sprite in hard, then pull back.
+## sprite in hard toward the target tile, then pull back.
 func _stab() -> void:
+	var home := position
+	var dir := _lunge_dir()
+	var reach := _lunge_reach(0.42, 0.6)
+	var aim := _aim_angle()
+	_pivot.rotation = _rest_rot + aim   # level the point at the target tile
 	var wind := create_tween().set_parallel(true)
-	wind.tween_property(_pivot, "rotation", _rest_rot - 0.25, 0.18).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	wind.tween_property(_pivot, "rotation", _rest_rot + aim - 0.25, 0.18).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	wind.tween_property(_body, "rotation", -0.08, 0.18).set_trans(Tween.TRANS_SINE)
-	wind.tween_property(self, "position:x", position.x - 4.0 * scale.x, 0.18)
+	wind.tween_property(self, "position", home - dir * (reach * 0.22), 0.18)
 	await wind.finished
-	var hx := position.x
 	var hit := create_tween().set_parallel(true)
-	hit.tween_property(_pivot, "rotation", _rest_rot + 0.15, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(_pivot, "rotation", _rest_rot + aim + 0.15, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.06, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	hit.tween_property(self, "position:x", hx + 18.0 * scale.x, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(self, "position", home + dir * reach, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await hit.finished
 	_thrust_streak()
 	impact.emit()
 	await get_tree().create_timer(0.09).timeout
-	await _recover(hx)
+	await _recover(home)
 
 
-## Melee: the weapon arcs and the whole sprite lunges + tilts with it. `heavy`
-## (axe) winds bigger and lands harder.
+## Melee: the weapon arcs and the whole sprite lunges + tilts toward the target
+## tile. `heavy` (axe) winds bigger and lands harder.
 func _swing(heavy: bool) -> void:
 	var back := -2.0 if heavy else -1.6
 	var thru := 1.5 if heavy else 1.3
+	var home := position
+	var dir := _lunge_dir()
+	var reach := _lunge_reach(0.32 if heavy else 0.30, 0.5)
+	var aim := _aim_angle()
+	_pivot.rotation = _rest_rot + aim   # aim the swing at the target tile
 	var wind := create_tween().set_parallel(true)
-	wind.tween_property(_pivot, "rotation", _rest_rot + back, 0.20).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	wind.tween_property(_pivot, "rotation", _rest_rot + aim + back, 0.20).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	wind.tween_property(_body, "rotation", -0.22, 0.20).set_trans(Tween.TRANS_SINE)
-	wind.tween_property(self, "position:x", position.x - 4.0 * scale.x, 0.20)
+	wind.tween_property(self, "position", home - dir * (reach * 0.25), 0.20)
 	await wind.finished
-	var hx := position.x
 	var hit := create_tween().set_parallel(true)
-	hit.tween_property(_pivot, "rotation", _rest_rot + thru, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(_pivot, "rotation", _rest_rot + aim + thru, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.24, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	hit.tween_property(self, "position:x", hx + 13.0 * scale.x, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(self, "position", home + dir * reach, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await hit.finished
 	_slash_trail(heavy)
 	impact.emit()
 	await get_tree().create_timer(0.12 if heavy else 0.08).timeout
-	await _recover(hx)
+	await _recover(home)
 
 
 func _shoot(aim_global: Vector2) -> void:
 	# draw back (body leans), hold, loose — the arrow streaks to the target
 	var dest := _aim_local(aim_global)
+	var home := position
 	var w := create_tween().set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.35, 0.26).set_trans(Tween.TRANS_SINE)
 	w.tween_property(_body, "rotation", -0.1, 0.26).set_trans(Tween.TRANS_SINE)
@@ -189,11 +238,12 @@ func _shoot(aim_global: Vector2) -> void:
 	await get_tree().create_timer(PROJ_TIME).timeout
 	impact.emit()
 	await get_tree().create_timer(0.08).timeout
-	await _recover(position.x)
+	await _recover(home)
 
 
 func _magic(aim_global: Vector2) -> void:
 	var dest := _aim_local(aim_global)
+	var home := position
 	var w := create_tween().set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.3, 0.28).set_trans(Tween.TRANS_SINE)
 	w.tween_property(_body, "rotation", -0.06, 0.28).set_trans(Tween.TRANS_SINE)
@@ -206,10 +256,11 @@ func _magic(aim_global: Vector2) -> void:
 	impact.emit()
 	_cast_burst_at(dest)
 	await get_tree().create_timer(0.14).timeout
-	await _recover(position.x)
+	await _recover(home)
 
 
 func _heal(aim_global := Vector2.INF) -> void:
+	var home := position
 	var w := create_tween()
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.5, 0.26).set_trans(Tween.TRANS_SINE)
 	await w.finished
@@ -218,14 +269,14 @@ func _heal(aim_global := Vector2.INF) -> void:
 	impact.emit()
 	_heal_bloom(aim_global)
 	await get_tree().create_timer(0.3).timeout
-	await _recover(position.x)
+	await _recover(home)
 
 
-func _recover(hx: float) -> void:
+func _recover(home: Vector2) -> void:
 	var r := create_tween().set_parallel(true)
 	r.tween_property(_pivot, "rotation", _rest_rot, 0.26).set_trans(Tween.TRANS_SINE)
 	r.tween_property(_body, "rotation", 0.0, 0.26).set_trans(Tween.TRANS_SINE)
-	r.tween_property(self, "position:x", hx, 0.26).set_trans(Tween.TRANS_SINE)
+	r.tween_property(self, "position", home, 0.26).set_trans(Tween.TRANS_SINE)
 	await r.finished
 
 
@@ -234,10 +285,22 @@ func _recover(hx: float) -> void:
 func _tip() -> Vector2:
 	return _fx.to_local(_pivot.global_position)
 
+# Point partway from the hand toward the target tile, so the hit FX lands on the
+## target for any direction (up/down/diagonal), not just to the side.
+func _hit_point(frac: float) -> Vector2:
+	if is_inf(_aim_fx.x) or is_inf(_aim_fx.y):
+		return _tip()
+	return _tip().lerp(_aim_fx, frac)
+
 func _slash_trail(heavy: bool) -> void:
-	_fx_items.append({"kind": "slash", "pos": _tip(), "age": 0.0, "life": 0.3, "big": heavy})
+	_fx_items.append({"kind": "slash", "pos": _hit_point(0.55), "age": 0.0, "life": 0.3, "big": heavy})
 func _thrust_streak() -> void:
-	_fx_items.append({"kind": "streak", "pos": _tip(), "age": 0.0, "life": 0.22})
+	var from := _tip()
+	var to := _aim_fx if not (is_inf(_aim_fx.x) or is_inf(_aim_fx.y)) else from + Vector2(46, 0)
+	var nd := (to - from)
+	nd = nd.normalized() if nd.length() > 0.1 else Vector2.RIGHT
+	_fx_items.append({"kind": "streak", "pos": from.lerp(to, 0.45), "ndir": nd, "perp": nd.orthogonal(),
+		"age": 0.0, "life": 0.22})
 func _cast_gather() -> void:
 	_fx_items.append({"kind": "gather", "pos": _tip(), "age": 0.0, "life": 0.3})
 func _projectile(dest: Vector2, style: String) -> void:
@@ -262,7 +325,7 @@ func _draw_fx() -> void:
 						Color(0.85, 1.0, 0.9, a * 0.85), 3.0 - k)
 			"streak":
 				for k in range(3):
-					_fx.draw_line(it["pos"] + Vector2(0, k*3-3), it["pos"] + Vector2(46, k*3-3),
+					_fx.draw_line(it["pos"] - it["ndir"]*23.0 + it["perp"]*float(k*3-3), it["pos"] + it["ndir"]*23.0 + it["perp"]*float(k*3-3),
 						Color(1,1,0.88,a), 2.6 - k*0.6)
 			"gather":
 				_fx.draw_circle(it["pos"], 12.0 * (1.0 - t), Color(0.85,0.75,1.0,a))
