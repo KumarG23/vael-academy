@@ -174,7 +174,8 @@ func set_weapon(weapon_type: int) -> void:
 		rest = 0.0
 	_rest_rot = rest
 	_pivot.rotation = _rest_rot
-	_weapon.visible = true
+	# a beast has no weapon sprite — its lunge + slash arc read as a claw swipe
+	_weapon.visible = _unit_id != "sable"
 
 
 func _process(delta: float) -> void:

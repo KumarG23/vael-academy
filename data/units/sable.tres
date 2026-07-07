@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/beast.tres" id="1_bc"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="2_su"]
+[ext_resource type="Resource" path="res://data/weapons/claw.tres" id="3_cw"]
+
+[resource]
+script = ExtResource("2_su")
+id = "sable"
+display_name = "Sable"
+char_class = ExtResource("1_bc")
+house_id = "thornrook"
+weapon = ExtResource("3_cw")
+max_hp = 24
+strength = 8
+magic = 0
+skill = 9
+speed = 12
+luck = 5
+defense = 5
+resistance = 3
+movement = 7
+growth_hp = 65
+growth_str = 45
+growth_mag = 0
+growth_skl = 55
+growth_spd = 65
+growth_lck = 30
+growth_def = 25
+growth_res = 25
