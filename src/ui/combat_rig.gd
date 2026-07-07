@@ -164,6 +164,9 @@ func set_weapon(weapon_type: int) -> void:
 		th = maxf(1.0, float(_weapon.texture.get_height()))
 	var gf: Vector2 = GRIP_FRAC.get(weapon_type, Vector2(0.0, 0.5))
 	_weapon.position = -Vector2(gf.x * tw, gf.y * th) * wsc
+	# a bow is held OUT in front of the body, not on top of it
+	if weapon_type == WeaponDef.WeaponType.BOW:
+		_weapon.position += Vector2(6.0, 0.0)
 	# bows/staves are held UPRIGHT; if the art is already tall, don't rotate it
 	# (library bow is wide and needs the rotation; signature bows are vertical).
 	var rest: float = cfg[2]
@@ -307,10 +310,17 @@ func _shoot(aim_global: Vector2) -> void:
 	await w.finished
 	await get_tree().create_timer(0.14).timeout
 	_pivot.rotation = _rest_rot
-	_projectile(dest, "arrow")
-	await get_tree().create_timer(PROJ_TIME).timeout
-	impact.emit()
-	await get_tree().create_timer(0.08).timeout
+	if _unit_id == "corin":
+		_beam(dest)  # spellbow: a green energy beam, not a plain arrow
+		await get_tree().create_timer(0.07).timeout
+		impact.emit()
+		_beam_burst(dest)
+		await get_tree().create_timer(0.18).timeout
+	else:
+		_projectile(dest, "arrow")
+		await get_tree().create_timer(PROJ_TIME).timeout
+		impact.emit()
+		await get_tree().create_timer(0.08).timeout
 	await _recover(home)
 
 
@@ -378,6 +388,10 @@ func _thrust_streak() -> void:
 		"age": 0.0, "life": 0.22})
 func _cast_gather() -> void:
 	_fx_items.append({"kind": "gather", "pos": _tip(), "age": 0.0, "life": 0.3})
+func _beam(dest: Vector2) -> void:
+	_fx_items.append({"kind": "beam", "pos": _tip(), "to": dest, "age": 0.0, "life": 0.24})
+func _beam_burst(dest: Vector2) -> void:
+	_fx_items.append({"kind": "gbrst", "pos": dest, "age": 0.0, "life": 0.3})
 func _projectile(dest: Vector2, style: String) -> void:
 	_fx_items.append({"kind": "proj", "pos": _tip(), "to": dest,
 		"style": style, "age": 0.0, "life": PROJ_TIME})
@@ -423,6 +437,17 @@ func _draw_fx() -> void:
 					_fx.draw_line(cur - dir * 22.0, cur, Color(0.95,0.92,0.8,0.95), 2.5)
 					_fx.draw_line(cur, cur - dir * 7.0 + perp * 4.0, Color(0.8,0.78,0.7,1.0), 2.5)
 					_fx.draw_line(cur, cur - dir * 7.0 - perp * 4.0, Color(0.8,0.78,0.7,1.0), 2.5)
+			"beam":
+				var be := 1.0 - t
+				_fx.draw_line(it["pos"], it["to"], Color(0.30, 1.0, 0.50, be * 0.30), 9.0)
+				_fx.draw_line(it["pos"], it["to"], Color(0.55, 1.0, 0.62, be * 0.7), 4.5)
+				_fx.draw_line(it["pos"], it["to"], Color(0.92, 1.0, 0.9, be), 1.8)
+			"gbrst":
+				for kg in range(8):
+					var ag := TAU * float(kg) / 8.0
+					var tp := (it["pos"] as Vector2) + Vector2(cos(ag), sin(ag)) * (6.0 + t * 22.0)
+					_fx.draw_circle(tp, maxf(1.0, 4.0 * (1.0 - t)), Color(0.4, 1.0, 0.55, (1.0 - t) * 0.6))
+				_fx.draw_circle(it["pos"], 5.0 + t * 8.0, Color(0.85, 1.0, 0.88, (1.0 - t) * 0.85))
 			"heal":
 				for k in range(3):
 					_fx.draw_arc(it["pos"], 14.0 + t*40.0 + k*10.0, 0.0, TAU, 26,
