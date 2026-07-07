@@ -401,6 +401,12 @@ func _heal_color() -> Color:
 		"wren": return Color(1.0, 0.76, 0.36)
 		"elowen": return Color(0.5, 0.82, 1.0)
 		_: return Color(0.42, 1.0, 0.56)
+func _heal_style() -> String:
+	match _unit_id:
+		"wren": return "motes"
+		"elowen": return "rays"
+		"vesper": return "cross"
+		_: return "arcs"
 func _cast_gather() -> void:
 	_fx_items.append({"kind": "gather", "pos": _tip(), "col": _magic_color(), "age": 0.0, "life": 0.3})
 func _beam(dest: Vector2) -> void:
@@ -415,7 +421,7 @@ func _cast_burst_at(dest: Vector2) -> void:
 func _heal_bloom(aim_global := Vector2.INF) -> void:
 	var at: Vector2 = _fx.to_local(aim_global) if not (is_inf(aim_global.x) or is_inf(aim_global.y)) \
 		else _fx.to_local(global_position) + Vector2(0, -6)
-	_fx_items.append({"kind": "heal", "pos": at, "col": _heal_color(), "age": 0.0, "life": 0.5})
+	_fx_items.append({"kind": "heal", "pos": at, "col": _heal_color(), "style": _heal_style(), "age": 0.0, "life": 0.5})
 
 func _draw_fx() -> void:
 	for it in _fx_items:
@@ -480,9 +486,28 @@ func _draw_fx() -> void:
 				_fx.draw_circle(it["pos"], 5.0 + t * 8.0, Color(0.85, 1.0, 0.88, (1.0 - t) * 0.85))
 			"heal":
 				var hc: Color = it.get("col", Color(0.42,1.0,0.56))
-				for k in range(3):
-					_fx.draw_arc(it["pos"], 14.0 + t*40.0 + k*10.0, 0.0, TAU, 26,
-						Color(hc.r, hc.g, hc.b, a*0.7), 3.0-k)
+				var hs: String = it.get("style", "arcs")
+				if hs == "motes":
+					_fx.draw_circle(it["pos"], 6.0 + t * 8.0, Color(hc.r, hc.g, hc.b, a * 0.35))
+					for k in range(6):
+						var kk := float(k)
+						var mp := (it["pos"] as Vector2) + Vector2(sin(kk * 2.3) * 10.0, -t * 30.0 - kk * 3.0)
+						_fx.draw_circle(mp, maxf(1.0, 3.0 * a), Color(hc.r, hc.g, hc.b, a * 0.9))
+				elif hs == "rays":
+					for k in range(5):
+						var kk2 := float(k)
+						var rx := (kk2 - 2.0) * 7.0
+						_fx.draw_line((it["pos"] as Vector2) + Vector2(rx, -42.0), (it["pos"] as Vector2) + Vector2(rx * 0.3, 4.0), Color(hc.r, hc.g, hc.b, a * 0.6 * (0.4 + 0.6 * absf(sin(float(t) * 6.0 + kk2)))), 2.5)
+					_fx.draw_circle(it["pos"], 5.0 + t * 10.0, Color(1, 1, 1, a * 0.8))
+					_fx.draw_circle(it["pos"], 3.0, Color(hc.r, hc.g, hc.b, a))
+				elif hs == "cross":
+					_fx.draw_arc(it["pos"], 6.0 + t * 28.0, 0.0, TAU, 28, Color(hc.r, hc.g, hc.b, a * 0.6), 2.0)
+					var cs := 9.0 * (1.0 - t * 0.3)
+					_fx.draw_line((it["pos"] as Vector2) - Vector2(cs, 0), (it["pos"] as Vector2) + Vector2(cs, 0), Color(hc.r, hc.g, hc.b, a * 0.95), 3.0)
+					_fx.draw_line((it["pos"] as Vector2) - Vector2(0, cs), (it["pos"] as Vector2) + Vector2(0, cs), Color(hc.r, hc.g, hc.b, a * 0.95), 3.0)
+				else:
+					for k in range(3):
+						_fx.draw_arc(it["pos"], 14.0 + t*40.0 + k*10.0, 0.0, TAU, 26, Color(hc.r, hc.g, hc.b, a*0.7), 3.0-k)
 			"tburst":
 				var bc: Color = it.get("col", Color(1.0, 0.4, 0.88))
 				var fb: float = it["age"] * 30.0
