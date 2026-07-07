@@ -50,6 +50,18 @@ const WEAPON_LEN := {
 	WeaponDef.WeaponType.STAFF: 22.0,
 }
 
+# Grip point as a FRACTION of the weapon sprite (x,y in 0..1), so a weapon of any
+# size/shape — library or a unique signature — attaches at the right point.
+# (These match the old library-weapon pixel grips when divided by their sizes.)
+const GRIP_FRAC := {
+	WeaponDef.WeaponType.SWORD: Vector2(0.02, 0.45),  # hilt end, mid-height
+	WeaponDef.WeaponType.LANCE: Vector2(0.08, 0.5),
+	WeaponDef.WeaponType.AXE:   Vector2(0.14, 0.5),
+	WeaponDef.WeaponType.BOW:   Vector2(0.5, 0.5),    # held at the bow's middle
+	WeaponDef.WeaponType.TOME:  Vector2(0.5, 0.5),
+	WeaponDef.WeaponType.STAFF: Vector2(0.5, 0.9),    # gripped near the base
+}
+
 var _unit_id := "kai"
 var _body: Sprite2D
 var _pivot: Node2D
@@ -143,8 +155,21 @@ func set_weapon(weapon_type: int) -> void:
 	var wsc: float = target / native
 	_weapon.scale = Vector2(wsc, wsc)
 	_weapon.centered = false
-	_weapon.position = -cfg[1] * wsc   # grip at the pivot
-	_rest_rot = cfg[2]
+	# grip as a fraction of the ACTUAL weapon size, so any weapon (library or a
+	# unique signature of any dimensions) attaches at the right point.
+	var tw := native
+	var th := native
+	if _weapon.texture != null:
+		tw = maxf(1.0, float(_weapon.texture.get_width()))
+		th = maxf(1.0, float(_weapon.texture.get_height()))
+	var gf: Vector2 = GRIP_FRAC.get(weapon_type, Vector2(0.0, 0.5))
+	_weapon.position = -Vector2(gf.x * tw, gf.y * th) * wsc
+	# bows/staves are held UPRIGHT; if the art is already tall, don't rotate it
+	# (library bow is wide and needs the rotation; signature bows are vertical).
+	var rest: float = cfg[2]
+	if (weapon_type == WeaponDef.WeaponType.BOW or weapon_type == WeaponDef.WeaponType.STAFF) and th >= tw:
+		rest = 0.0
+	_rest_rot = rest
 	_pivot.rotation = _rest_rot
 	_weapon.visible = true
 
@@ -384,8 +409,12 @@ func _draw_fx() -> void:
 				var p1: Vector2 = it["to"]
 				var cur: Vector2 = p0.lerp(p1, t)
 				if it["style"] == "bolt":
-					_fx.draw_circle(cur, 8.0, Color(0.6,0.4,0.95, 0.9))
-					_fx.draw_circle(cur, 4.0, Color(0.92,0.85,1.0, 1.0))
+					var fl: float = it["age"] * 42.0
+					for kf in range(5):
+						var kk := float(kf)
+						var off := Vector2(sin(fl + kk * 1.9) * 2.4, -kk * 2.6 - 1.0)
+						_fx.draw_circle(cur + off, maxf(1.0, 7.0 - kk * 1.2), Color(1.0, 0.42, 0.9, (1.0 - t) * (0.85 - kk * 0.14)))
+					_fx.draw_circle(cur, 3.4, Color(1.0, 0.86, 1.0, 1.0))
 				else:
 					# arrow oriented along its flight path (handles diagonals)
 					var dir: Vector2 = (p1 - p0)
@@ -399,5 +428,9 @@ func _draw_fx() -> void:
 					_fx.draw_arc(it["pos"], 14.0 + t*40.0 + k*10.0, 0.0, TAU, 26,
 						Color(0.42,1.0,0.56, a*0.7), 3.0-k)
 			"tburst":
-				_fx.draw_circle(it["pos"], 8.0 + t*26.0, Color(0.6,0.4,0.95, a*0.7))
-				_fx.draw_circle(it["pos"], 4.0 + t*14.0, Color(0.92,0.85,1.0, a*0.9))
+				var fb: float = it["age"] * 30.0
+				for kb in range(8):
+					var ang := TAU * float(kb) / 8.0 + fb * 0.15
+					var tip := (it["pos"] as Vector2) + Vector2(cos(ang), sin(ang)) * (8.0 + t * 26.0)
+					_fx.draw_circle(tip, maxf(1.0, 5.0 * (1.0 - t)), Color(1.0, 0.4, 0.88, a * 0.6))
+				_fx.draw_circle(it["pos"], 5.0 + t * 12.0, Color(1.0, 0.82, 1.0, a * 0.85))
