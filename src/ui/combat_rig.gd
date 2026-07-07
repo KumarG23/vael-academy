@@ -23,7 +23,7 @@ const PROJ_TIME := 0.28       # projectile travel time (impact syncs to arrival)
 const HAND_GRIP := {
 	Facing.EAST: Vector2(5, 3),
 	Facing.WEST: Vector2(5, 3),
-	Facing.NORTH: Vector2(-2, 4),
+	Facing.NORTH: Vector2(0, -5),   # up at his shoulders so the raised blade clears the body
 	Facing.SOUTH: Vector2(2, 5),
 }
 
@@ -141,10 +141,7 @@ func set_weapon(weapon_type: int) -> void:
 	_weapon.position = -cfg[1] * wsc   # grip at the pivot
 	_rest_rot = cfg[2]
 	_pivot.rotation = _rest_rot
-	# Back view: the fighter swings away from the camera, so a flat side-weapon
-	# reads as slicing through him. Hide it and let the body lunge + slash arc
-	# carry the hit (the weapon is realistically occluded behind him anyway).
-	_weapon.visible = _facing != Facing.NORTH
+	_weapon.visible = true
 
 
 func _process(delta: float) -> void:
@@ -339,7 +336,9 @@ func _hit_point(frac: float) -> Vector2:
 	return _tip().lerp(_aim_fx, frac)
 
 func _slash_trail(heavy: bool) -> void:
-	_fx_items.append({"kind": "slash", "pos": _hit_point(0.55), "age": 0.0, "life": 0.3, "big": heavy})
+	# centered at the hand; a crescent that opens toward the target and expands
+	_fx_items.append({"kind": "slash", "pos": _tip(), "ang": _aim_angle(),
+		"age": 0.0, "life": 0.3, "big": heavy})
 func _thrust_streak() -> void:
 	var from := _tip()
 	var to := _aim_fx if not (is_inf(_aim_fx.x) or is_inf(_aim_fx.y)) else from + Vector2(46, 0)
@@ -365,9 +364,9 @@ func _draw_fx() -> void:
 		var a := 1.0 - t
 		match it["kind"]:
 			"slash":
-				var rr := (18.0 if it.get("big", false) else 14.0)
+				var rr := (22.0 if it.get("big", false) else 17.0)
 				for k in range(3):
-					_fx.draw_arc(it["pos"], rr + k * 5.0, -1.7 + t * 2.4, 0.9 + t * 2.4, 20,
+					_fx.draw_arc(it["pos"], (rr + k * 4.0) * (0.8 + t * 0.5), float(it.get("ang",0.0)) - 1.15, float(it.get("ang",0.0)) + 1.15, 22,
 						Color(0.85, 1.0, 0.9, a * 0.85), 3.0 - k)
 			"streak":
 				for k in range(3):
