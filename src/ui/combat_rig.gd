@@ -42,7 +42,10 @@ func setup(unit_id: String, facing_right: bool, rig_scale: float) -> void:
 	_unit_id = unit_id
 	scale = Vector2((1.0 if facing_right else -1.0) * rig_scale, rig_scale)
 	_body = Sprite2D.new()
-	_body.texture = load(MAP_DIR % unit_id + "/walk_f1.png")
+	# prefer a weaponless combat body (the map sprite with its baked-in weapon
+	# removed) so the swung weapon isn't doubled; fall back to the walk frame.
+	var wl := "res://assets/art/cutout/%s/body_map.png" % unit_id
+	_body.texture = load(wl) if ResourceLoader.exists(wl) else load(MAP_DIR % unit_id + "/walk_f1.png")
 	_body.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(_body)
 	_pivot = Node2D.new()
@@ -90,6 +93,8 @@ func _process(delta: float) -> void:
 
 func play_attack(weapon_type: int, reach := 120.0) -> void:
 	match weapon_type:
+		WeaponDef.WeaponType.LANCE:
+			await _stab()
 		WeaponDef.WeaponType.BOW:
 			await _shoot(reach)
 		WeaponDef.WeaponType.TOME:
@@ -98,6 +103,26 @@ func play_attack(weapon_type: int, reach := 120.0) -> void:
 			await _heal()
 		_:
 			await _swing(weapon_type == WeaponDef.WeaponType.AXE)
+
+
+## Lance: a THRUST, not a swing — level the point forward and drive the whole
+## sprite in hard, then pull back.
+func _stab() -> void:
+	var wind := create_tween().set_parallel(true)
+	wind.tween_property(_pivot, "rotation", _rest_rot - 0.25, 0.18).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	wind.tween_property(_body, "rotation", -0.08, 0.18).set_trans(Tween.TRANS_SINE)
+	wind.tween_property(self, "position:x", position.x - 14.0 * scale.x, 0.18)
+	await wind.finished
+	var hx := position.x
+	var hit := create_tween().set_parallel(true)
+	hit.tween_property(_pivot, "rotation", _rest_rot + 0.15, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(_body, "rotation", 0.06, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(self, "position:x", hx + 58.0 * scale.x, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await hit.finished
+	_thrust_streak()
+	impact.emit()
+	await get_tree().create_timer(0.09).timeout
+	await _recover(hx)
 
 
 ## Melee: the weapon arcs and the whole sprite lunges + tilts with it. `heavy`
@@ -175,6 +200,8 @@ func _tip() -> Vector2:
 
 func _slash_trail(heavy: bool) -> void:
 	_fx_items.append({"kind": "slash", "pos": _tip(), "age": 0.0, "life": 0.3, "big": heavy})
+func _thrust_streak() -> void:
+	_fx_items.append({"kind": "streak", "pos": _tip(), "age": 0.0, "life": 0.22})
 func _cast_gather() -> void:
 	_fx_items.append({"kind": "gather", "pos": _tip(), "age": 0.0, "life": 0.3})
 func _projectile(reach: float, style: String) -> void:
@@ -195,6 +222,10 @@ func _draw_fx() -> void:
 				for k in range(3):
 					_fx.draw_arc(it["pos"], rr + k * 5.0, -1.7 + t * 2.4, 0.9 + t * 2.4, 20,
 						Color(0.85, 1.0, 0.9, a * 0.85), 3.0 - k)
+			"streak":
+				for k in range(3):
+					_fx.draw_line(it["pos"] + Vector2(0, k*3-3), it["pos"] + Vector2(46, k*3-3),
+						Color(1,1,0.88,a), 2.6 - k*0.6)
 			"gather":
 				_fx.draw_circle(it["pos"], 12.0 * (1.0 - t), Color(0.85,0.75,1.0,a))
 			"proj":
