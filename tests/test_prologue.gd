@@ -49,7 +49,7 @@ func test_kai_is_the_lord():
 
 
 func test_heir_guests_match_their_bible_identities():
-	assert_eq(_unit("perrin").unit_def.char_class.id, "cavalier")
+	assert_eq(_unit("perrin").unit_def.char_class.id, "paladin")
 	assert_eq(_unit("perrin").unit_def.house_id, "emberwing")
 	assert_eq(_unit("serra").unit_def.char_class.id, "knight")
 	assert_true(_unit("serra").unit_def.weapon.display_name.contains("Lance"))

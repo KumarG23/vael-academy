@@ -42,4 +42,4 @@ func test_new_units_match_their_bible_identities():
 	assert_gt(defs["dain"].strength, 8, "STR bruiser")
 	assert_eq(defs["liora"].char_class.id, "mage")
 	assert_gt(defs["liora"].magic, defs["liora"].strength, "MAG glass cannon")
-	assert_eq(defs["perrin"].char_class.id, "cavalier")
+	assert_eq(defs["perrin"].char_class.id, "paladin")
