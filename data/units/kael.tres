@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://src/items/item_def.gd" id="5_3vi7m"]
 [ext_resource type="Resource" path="res://data/items/vulnerary.tres" id="6_sb42r"]
 [ext_resource type="Resource" path="res://data/items/promotion_seal.tres" id="7_pb1sp"]
-[ext_resource type="Resource" path="res://data/weapons/iron_sword.tres" id="8_q4i23"]
+[ext_resource type="Resource" path="res://data/weapons/sig_kael.tres" id="8_q4i23"]
 
 [resource]
 script = ExtResource("4_2aegx")

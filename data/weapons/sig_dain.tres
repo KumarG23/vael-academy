@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="1_w"]
+
+[resource]
+script = ExtResource("1_w")
+id = "sig_dain"
+display_name = "Brazen Cleaver"
+weapon_type = 1
+might = 11
+hit = 72
+crit = 8
+weight = 12

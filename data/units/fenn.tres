@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_fennwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_fennud"]
 [ext_resource type="Resource" path="res://data/classes/tempest.tres" id="9_fennpr"]
-[ext_resource type="Resource" path="res://data/weapons/iron_bow.tres" id="4_fennwn"]
+[ext_resource type="Resource" path="res://data/weapons/sig_fenn.tres" id="4_fennwn"]
 
 [resource]
 script = ExtResource("3_fennud")

@@ -91,5 +91,5 @@ func test_c_rank_bonus_visibly_changes_forecast():
 	var boosted_hit := int(_view._forecast_panel._atk["hit"])
 	var boosted_counter_hit := int(_view._forecast_panel._def["hit"])
 
-	assert_eq(boosted_hit, base_hit + 5, "Kael's C support gives +5 hit")
+	assert_eq(boosted_hit, mini(base_hit + 5, 100), "Kael's C support gives +5 hit (displayed hit clamps at 100)")
 	assert_eq(boosted_counter_hit, base_counter_hit - 5, "Kael's C support avoid lowers enemy counter hit")

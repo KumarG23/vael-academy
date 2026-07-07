@@ -38,7 +38,7 @@ func test_new_units_match_their_bible_identities():
 	for def in Roster.player_units():
 		defs[def.id] = def
 	assert_eq(defs["dain"].char_class.id, "fighter")
-	assert_true(defs["dain"].weapon.display_name.contains("Axe"), "Dain swings an axe")
+	assert_eq(defs["dain"].weapon.weapon_type, WeaponDef.WeaponType.AXE, "Dain swings an axe")
 	assert_gt(defs["dain"].strength, 8, "STR bruiser")
 	assert_eq(defs["liora"].char_class.id, "mage")
 	assert_gt(defs["liora"].magic, defs["liora"].strength, "MAG glass cannon")

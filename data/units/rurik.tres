@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_ruriwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_ruriud"]
 [ext_resource type="Resource" path="res://data/classes/berserker.tres" id="9_ruripr"]
-[ext_resource type="Resource" path="res://data/weapons/iron_axe.tres" id="4_ruriwn"]
+[ext_resource type="Resource" path="res://data/weapons/sig_rurik.tres" id="4_ruriwn"]
 
 [resource]
 script = ExtResource("3_ruriud")

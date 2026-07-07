@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="1_w"]
+
+[resource]
+script = ExtResource("1_w")
+id = "sig_serra"
+display_name = "Tide Heir's Lance"
+weapon_type = 2
+might = 9
+hit = 87
+weight = 9

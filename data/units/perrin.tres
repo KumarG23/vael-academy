@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_prnwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_prnud"]
 [ext_resource type="Resource" path="res://data/classes/paladin.tres" id="9_promoperr"]
-[ext_resource type="Resource" path="res://data/weapons/iron_sword.tres" id="4_prnsw"]
+[ext_resource type="Resource" path="res://data/weapons/sig_perrin.tres" id="4_prnsw"]
 
 [resource]
 script = ExtResource("3_prnud")

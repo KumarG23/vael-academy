@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_osriwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_osriud"]
 [ext_resource type="Resource" path="res://data/classes/general.tres" id="9_osripr"]
-[ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="4_osriwn"]
+[ext_resource type="Resource" path="res://data/weapons/sig_osric.tres" id="4_osriwn"]
 
 [resource]
 script = ExtResource("3_osriud")

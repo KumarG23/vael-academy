@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_elowwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_elowud"]
 [ext_resource type="Resource" path="res://data/classes/bishop.tres" id="9_elowpr"]
-[ext_resource type="Resource" path="res://data/weapons/heal.tres" id="4_elowwn"]
+[ext_resource type="Resource" path="res://data/weapons/sig_elowen.tres" id="4_elowwn"]
 
 [resource]
 script = ExtResource("3_elowud")

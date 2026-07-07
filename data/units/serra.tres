@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_pxlqk"]
 [ext_resource type="Resource" path="res://data/classes/leviathan.tres" id="9_promoserr"]
 [ext_resource type="Script" path="res://src/items/item_def.gd" id="4_xqxbx"]
-[ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="5_7gca4"]
+[ext_resource type="Resource" path="res://data/weapons/sig_serra.tres" id="5_7gca4"]
 
 [resource]
 script = ExtResource("3_pxlqk")

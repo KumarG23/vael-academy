@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_corvwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_corvud"]
 [ext_resource type="Resource" path="res://data/classes/sage.tres" id="9_corvpr"]
-[ext_resource type="Resource" path="res://data/weapons/fire.tres" id="4_corvwn"]
+[ext_resource type="Resource" path="res://data/weapons/sig_corvin.tres" id="4_corvwn"]
 
 [resource]
 script = ExtResource("3_corvud")

@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_c0j2v"]
 [ext_resource type="Resource" path="res://data/classes/saint.tres" id="9_promowren"]
 [ext_resource type="Script" path="res://src/items/item_def.gd" id="4_pep3u"]
-[ext_resource type="Resource" path="res://data/weapons/heal.tres" id="5_45n3e"]
+[ext_resource type="Resource" path="res://data/weapons/sig_wren.tres" id="5_45n3e"]
 
 [resource]
 script = ExtResource("3_c0j2v")

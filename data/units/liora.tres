@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_lrwpn"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_lrudf"]
 [ext_resource type="Resource" path="res://data/classes/pyromancer.tres" id="9_promolior"]
-[ext_resource type="Resource" path="res://data/weapons/fire.tres" id="4_lrfir"]
+[ext_resource type="Resource" path="res://data/weapons/sig_liora.tres" id="4_lrfir"]
 
 [resource]
 script = ExtResource("3_lrudf")

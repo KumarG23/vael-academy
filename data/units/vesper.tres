@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_vespwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_vespud"]
 [ext_resource type="Resource" path="res://data/classes/alchemist.tres" id="9_vesppr"]
-[ext_resource type="Resource" path="res://data/weapons/heal.tres" id="4_vespwn"]
+[ext_resource type="Resource" path="res://data/weapons/sig_vesper.tres" id="4_vespwn"]
 
 [resource]
 script = ExtResource("3_vespud")

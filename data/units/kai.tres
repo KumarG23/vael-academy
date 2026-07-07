@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_wii57"]
 [ext_resource type="Script" path="res://src/items/item_def.gd" id="4_piscl"]
 [ext_resource type="Resource" path="res://data/items/vulnerary.tres" id="5_it74a"]
-[ext_resource type="Resource" path="res://data/weapons/iron_sword.tres" id="6_bmpqd"]
+[ext_resource type="Resource" path="res://data/weapons/sig_kai.tres" id="6_bmpqd"]
 
 [resource]
 script = ExtResource("3_wii57")

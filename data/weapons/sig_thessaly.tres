@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="1_w"]
+
+[resource]
+script = ExtResource("1_w")
+id = "sig_thessaly"
+display_name = "Silent Yew"
+weapon_type = 3
+might = 7
+hit = 90
+crit = 12
+max_range = 2

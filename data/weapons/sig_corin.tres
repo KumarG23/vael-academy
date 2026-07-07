@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="1_w"]
+
+[resource]
+script = ExtResource("1_w")
+id = "sig_corin"
+display_name = "Stagward Longbow"
+weapon_type = 3
+might = 8
+hit = 92
+crit = 5
+max_range = 2

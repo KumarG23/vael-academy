@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_isolwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_isolud"]
 [ext_resource type="Resource" path="res://data/classes/hierophant.tres" id="9_isolpr"]
-[ext_resource type="Resource" path="res://data/weapons/fire.tres" id="4_isolwn"]
+[ext_resource type="Resource" path="res://data/weapons/sig_isolde.tres" id="4_isolwn"]
 
 [resource]
 script = ExtResource("3_isolud")

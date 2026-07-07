@@ -6,7 +6,7 @@
 [ext_resource type="Resource" path="res://data/classes/bastion.tres" id="9_promobren"]
 [ext_resource type="Script" path="res://src/items/item_def.gd" id="4_iccmm"]
 [ext_resource type="Resource" path="res://data/items/vulnerary.tres" id="5_0hu8m"]
-[ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="6_77ux1"]
+[ext_resource type="Resource" path="res://data/weapons/sig_brenna.tres" id="6_77ux1"]
 
 [resource]
 script = ExtResource("3_r81ns")

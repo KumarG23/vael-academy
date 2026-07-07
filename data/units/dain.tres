@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_dnwpn"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_dnudf"]
 [ext_resource type="Resource" path="res://data/classes/warrior.tres" id="9_promodain"]
-[ext_resource type="Resource" path="res://data/weapons/iron_axe.tres" id="4_dnaxe"]
+[ext_resource type="Resource" path="res://data/weapons/sig_dain.tres" id="4_dnaxe"]
 
 [resource]
 script = ExtResource("3_dnudf")
