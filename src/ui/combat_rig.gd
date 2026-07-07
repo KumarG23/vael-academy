@@ -15,15 +15,27 @@ const WEAPONS_DIR := "res://assets/art/cutout/weapons"
 const HAND := Vector2(5, 3)   # grip point on the map sprite (from its center)
 const PROJ_TIME := 0.28       # projectile travel time (impact syncs to arrival)
 
-# per weapon type: [source, grip offset on the weapon sprite, rest rotation]
-# [source, grip point on the weapon sprite, rest rotation, scale]
+# per weapon type: [source, grip point on the weapon sprite (native px), rest rotation]
 const WEAPON_CFG := {
-	WeaponDef.WeaponType.SWORD: ["kai_sword", Vector2(0, 9), -0.5, 0.42],
-	WeaponDef.WeaponType.LANCE: ["lib/lance", Vector2(6, 3), -0.35, 0.26],
-	WeaponDef.WeaponType.AXE:   ["lib/axe", Vector2(8, 11), -0.4, 0.30],
-	WeaponDef.WeaponType.BOW:   ["lib/bow", Vector2(23, 15), 1.55, 0.30],
-	WeaponDef.WeaponType.TOME:  ["lib/tome", Vector2(18, 13), 0.0, 0.34],
-	WeaponDef.WeaponType.STAFF: ["lib/staff", Vector2(7, 55), 0.1, 0.30],
+	WeaponDef.WeaponType.SWORD: ["kai_sword", Vector2(0, 9), -0.5],
+	WeaponDef.WeaponType.LANCE: ["lib/lance", Vector2(6, 3), -0.35],
+	WeaponDef.WeaponType.AXE:   ["lib/axe", Vector2(8, 11), -0.4],
+	WeaponDef.WeaponType.BOW:   ["lib/bow", Vector2(23, 15), 1.55],
+	WeaponDef.WeaponType.TOME:  ["lib/tome", Vector2(18, 13), 0.0],
+	WeaponDef.WeaponType.STAFF: ["lib/staff", Vector2(7, 55), 0.1],
+}
+
+# Target on-screen length (longest side, in map-sprite px) per weapon type. The
+# weapon auto-scales to hit this from its native texture size, so any source —
+# library weapon, unique drop, regenerated art — fits a 32px body without hand
+# tuning. Keep weapon PNGs tightly cropped (no transparent padding).
+const WEAPON_LEN := {
+	WeaponDef.WeaponType.SWORD: 16.0,
+	WeaponDef.WeaponType.LANCE: 22.0,
+	WeaponDef.WeaponType.AXE:   17.0,
+	WeaponDef.WeaponType.BOW:   15.0,
+	WeaponDef.WeaponType.TOME:  12.0,
+	WeaponDef.WeaponType.STAFF: 22.0,
 }
 
 var _unit_id := "kai"
@@ -73,8 +85,13 @@ func set_weapon(weapon_type: int) -> void:
 		path = "%s/sword.png" % WEAPONS_DIR
 	if ResourceLoader.exists(path):
 		_weapon.texture = load(path)
-	# scale the weapon to the map sprite (per-weapon; library weapons run big)
-	var wsc: float = cfg[3] if cfg.size() > 3 else 0.42
+	# auto-scale to the weapon type's target on-screen length from its native
+	# size, so weapons of any source size sit right on the 32px body.
+	var native := 1.0
+	if _weapon.texture != null:
+		native = maxf(1.0, float(maxi(_weapon.texture.get_width(), _weapon.texture.get_height())))
+	var target: float = WEAPON_LEN.get(weapon_type, 16.0)
+	var wsc: float = target / native
 	_weapon.scale = Vector2(wsc, wsc)
 	_weapon.centered = false
 	_weapon.position = -cfg[1] * wsc   # grip at the pivot

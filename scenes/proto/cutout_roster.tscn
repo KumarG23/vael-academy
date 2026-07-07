@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/proto/cutout_roster.gd" id="1_ros"]
+
+[node name="CutoutRoster" type="Node2D"]
+script = ExtResource("1_ros")
+
+[node name="BgLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="BG" type="ColorRect" parent="BgLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.13, 0.14, 0.19, 1)

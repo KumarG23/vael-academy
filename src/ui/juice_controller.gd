@@ -102,7 +102,8 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 			_hitstop_fire(cfg.hitstop_duration(strike.was_crit, is_kill))
 		else:
 			_spawn_miss(target.position))
-	await rig.play_attack(wt)
+	var reach: float = striker.position.distance_to(target.position) / 1.5
+	await rig.play_attack(wt, reach)
 	striker.visible = true
 	rig.queue_free()
 
