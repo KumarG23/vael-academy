@@ -21,9 +21,10 @@ extends Node2D
 ## Chapter dialogue (intro/outro/boss quotes, WO-4.1). Tests disable to skip the
 ## VN overlays; paths live on the ChapterDef so the test map is unaffected anyway.
 @export var dialogue_enabled: bool = true
-## WO-4.9: FE-style combat cut-in when both units have animation kits.
-## Only runs with strike_delay > 0, so tests never see it.
-@export var battle_popups_enabled: bool = true
+## Battle direction v2 (2026-07): the full-screen popup is RETIRED. Combat plays
+## ON THE MAP (unit lunges/attacks on its tile, camera pushes in on the clash).
+## Left as a toggle for now; default off. Tests never see either path (strike_delay 0).
+@export var battle_popups_enabled: bool = false
 
 const TERRAIN_TINTS := {
 	Terrain.Type.PLAINS: Color(0.0, 0.0, 0.0, 0.0),
@@ -1142,6 +1143,10 @@ const TARGET_CELL_PX := 72.0
 
 ## When set (enemy phase), the camera follows this unit instead of the cursor.
 var _camera_follow: Node2D = null
+## While an on-map exchange plays, a tween owns the camera (push-in on the
+## clash); the follow-lerp stands down.
+var _combat_cam_active := false
+var _combat_base_zoom := 1.0
 
 
 func _setup_camera() -> void:
@@ -1167,10 +1172,40 @@ func _camera_clamp(focus: Vector2) -> Vector2:
 	return out
 
 
+## Cinematic push-in on a clash: frame the midpoint of attacker + defender and
+## zoom in. The follow-lerp is suspended until _end_combat_cam.
+func _begin_combat_cam(a: Unit, b: Unit) -> void:
+	if _camera == null or _grid == null:
+		return
+	_combat_cam_active = true
+	_combat_base_zoom = _camera.zoom.x
+	var cs := float(_grid.cell_size)
+	var target_zoom := _combat_base_zoom * 1.9
+	var mid := (a.position + b.position) * 0.5 + Vector2(cs, cs) * 0.5
+	# clamp with the TARGET zoom so we don't drift off-map
+	var half := get_viewport_rect().size * 0.5 / target_zoom
+	var map := _grid.pixel_size()
+	mid.x = clampf(mid.x, half.x, map.x - half.x) if map.x > half.x * 2.0 else map.x * 0.5
+	mid.y = clampf(mid.y, half.y, map.y - half.y) if map.y > half.y * 2.0 else map.y * 0.5
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(_camera, "zoom", Vector2.ONE * target_zoom, 0.22).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(_camera, "position", mid, 0.22).set_trans(Tween.TRANS_SINE)
+	await tw.finished
+
+
+func _end_combat_cam() -> void:
+	if _camera == null:
+		return
+	var tw := create_tween()
+	tw.tween_property(_camera, "zoom", Vector2.ONE * _combat_base_zoom, 0.26).set_trans(Tween.TRANS_SINE)
+	await tw.finished
+	_combat_cam_active = false
+
+
 func _process(delta: float) -> void:
 	if not chapter.visits.is_empty():
 		queue_redraw()  # visit markers pulse
-	if _camera == null or _grid == null:
+	if _camera == null or _grid == null or _combat_cam_active:
 		return
 	var cs := float(_grid.cell_size)
 	var focus: Vector2
