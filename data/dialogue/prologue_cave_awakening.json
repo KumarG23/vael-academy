@@ -1,0 +1,13 @@
+[
+ {"speaker": "", "text": "Cool air, dripping stone, the ordinary dark of an ordinary cave. Until the old sword at Kai's hip goes warm against his leg."},
+ {"speaker": "Kai", "portrait": "kai", "text": "That's — that's new. Swords aren't supposed to do that. This one's never done that."},
+ {"speaker": "", "text": "Faint lines of light surface along the blade, like writing waking up. Ahead, the cave wall — not a wall. A seam. It splits, slow and soundless, and opens. Not because he pushed it. Because he's here."},
+ {"speaker": "Kai", "portrait": "kai", "text": "...okay. I've read enough stories to know this is the part where a smart person leaves."},
+ {"speaker": "Kai", "portrait": "kai", "text": "Never claimed to be a smart person."},
+ {"speaker": "", "text": "Beyond the door: a chamber that no forager built. And at its heart a stone hangs in the air, unsupported, ringed in slow runic light that is not firelight and not daylight and not anything he has a word for."},
+ {"speaker": "Kai", "portrait": "kai", "text": "It's just... waiting. Like it's been waiting a very long time."},
+ {"speaker": "Kai", "portrait": "kai", "text": "For what?"},
+ {"speaker": "", "text": "He reaches out. Of course he reaches out."},
+ {"event": "set_flag", "flag": "kai_awakened"},
+ {"speaker": "", "text": "The light does not answer gently."}
+]

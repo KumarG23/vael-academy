@@ -4,7 +4,7 @@ Companion to `MASTER_PLAN.md` and `WORLD_BIBLE.md`.
 
 ## 1. What It Is
 
-Officially, the kingdom's premier war college — blade, lance, bow, reason, and faith, organized into three houses, training the noble officer corps. Unofficially, built on the ruin of the Warders' old stronghold, and treated by a few senior faculty as a standing readiness in case the wards ever fail. Most students, and most teachers, have no idea that second purpose exists.
+Officially, the kingdom's premier war college — blade, lance, bow, reason, and faith, organized into three houses, training the noble officer corps. **Unofficially, it is built over a First Crown site** (`WORLD_BIBLE.md` §3): the old royal seat / sanctum at the historical heart of the kingdom, the Warders' stronghold raised *on top of* something far older. The Academy unknowingly — and, among a few of the oldest faculty, half-knowingly — **guards and studies the ancient royal magic**, mislabeled for generations as "ward lore." Its deepest foundations, its sealed rooms, and the oath the students swear all trace back to the First Crown, though almost no one alive understands that. Most students and teachers have no idea that second purpose exists.
 
 Students are 15–18 and **entirely noble-born — from the greatest houses down to the most minor, landless, or newly-raised lines, but noble all the same.** There has never been a common-born student at Vael. Kai is the first and only, ever (see §5). They come to learn blade, lance, bow, reason, and faith with one explicit goal: turn them into good, strong lords who benefit the kingdom. Everyone at Vael goes by first names — they're fellow students, not courtiers — except that one name in each house is one everybody already knows before they arrive: the house's actual heir (see `WORLD_BIBLE.md` §2 — Perrin, Serra, and Corin carry that weight for Emberwing, Tidemark, and Thornrook).
 
@@ -24,7 +24,7 @@ Design intent — the school should feel *alive*: NPCs where they belong (housem
 
 **Locations (the four that already exist as systems, now rooms + the new ones):**
 - **Common Hall** — the great feast hall, the houses' shared social heart. Meals with friends, rotating conversations, support scenes, the noticeboard of daily life.
-- **Library** — towering, ancient, under-catalogued. Where the wardstone lore hides in plain sight. Home to quizzes/study, research beats, and slow-drip mystery reveals. Almost certainly has a locked section.
+- **Library** — towering, ancient, under-catalogued. Where the truth about the First Crown hides in plain sight, filed under centuries of "ward lore" that gets the real thing *wrong*. Home to quizzes/study, research beats, and slow-drip mystery reveals. Its sealed **Restricted Stacks** (built) hold the records that don't fit the official story — the thread Corin of Thornrook is already closest to pulling.
 - **Training Grounds** — the old muster field. Sparring, weapon practice, the training-XP system, and where combat *lessons* (see teachers, §4) play out.
 - **Quartermaster** — armory and stores, once the Warders' own arsenal. Roster, inventory, trading, promotion items.
 - **Mission Board / War Room** — where assignments and briefings are posted and the next deployment is chosen. Less corkboard, more "the room where a war college does its actual job."
@@ -55,7 +55,7 @@ The academic year is the spine of the campaign — the player lives through one,
 - **Meals with friends** — the recurring small beat (Common Hall / cooking) that quietly builds bonds.
 - **Teacher lessons** — each house's teacher (see the character bibles) runs sessions that double as tutorial flavor and character texture.
 
-Underneath all of it, the kingdom's mystery (`WORLD_BIBLE.md` §4) escalates quietly — a strange rumor here, a wardstone incident there — so the feel-good year and the gathering threat are always running at once. That contrast is the engine of the whole tone.
+Underneath all of it, the kingdom's mystery (`WORLD_BIBLE.md` §3–4) escalates quietly — a rumor of the dead prince's agents, another impossible awakening elsewhere, something stirring in the old foundations under the school — so the feel-good year and the gathering threat are always running at once. That contrast is the engine of the whole tone.
 
 ## 4b. Campus Visual & Spatial Direction *(Neal, 2026-07-05)*
 
@@ -71,9 +71,9 @@ The campus is for **nobles**: huge, beautiful, slightly gaudy — gold trim, sta
 
 ## 5. Admission — By Ancient Law
 
-Standard path: noble children, enrolled at the right age, assigned by lineage. Kai arrives by a different door entirely, and it isn't charity or petition — **it's law.** By an old statute nobody's had reason to invoke in living memory, *any* child in whom magic and mana awaken must go to Vael Academy. Full stop. It was written for a kingdom where magic only ever meant a noble child — so it was never a hardship, just protocol. Nobody ever imagined it applying to a forager's son from Oakstead.
+Standard path: noble children, enrolled at the right age, assigned by lineage. Kai arrives by a different door entirely, and it isn't charity or petition — **it's law.** By an old statute nobody's had reason to invoke in living memory, *any* child in whom magic and mana awaken must go to Vael Academy. Full stop. **NEW CANON (spine v2):** the statute isn't really about schooling — it's a **First Crown protocol**, written into the Academy's founding, for the one thing that would matter: magic waking where it *shouldn't*. It was framed as "any child," but in a kingdom where magic only ever meant a noble child it was never a hardship, just dormant protocol — a tripwire nobody expected to trip. Nobody ever imagined it firing for a forager's son from Oakstead. That it fired *at all* is the first sign to those who understand it that something at the old source has stirred.
 
-The mechanism: the local garrison gets wind of "a boy in the town with magic." Word spreads — too strange to stay quiet. And the moment it's confirmed, the ancient law does the rest: a representative of the Academy is dispatched to collect Kai. Not a request. He's leaving, whether Oakstead, his parents, or Kai himself likes it. That compulsion is what forces the goodbye, and it's the hours before he's collected that his parents finally tell him the truth about where they found him (`CHARACTER_BIBLE_KAI.md` — Origin).
+The mechanism: the local garrison gets wind of "a boy in the town with magic." Word spreads — too strange to stay quiet. And the moment it's confirmed, the ancient law does the rest: a representative of the Academy — dispatched by **the director, who recognizes at once that an awakening like this cannot be ignored** — comes to collect Kai. Not a request. He's leaving, whether Oakstead, his parents, or Kai himself likes it. That compulsion forces the goodbye, and it's the hours before he's collected that his parents finally tell him the truth and give him the relic blade (`CHARACTER_BIBLE_KAI.md` — Origin). *(The director should be firm and knowing, never villainous — someone who understands the stakes and won't say so yet.)*
 
 The tension isn't over whether he's *allowed* in — the law settles that — it's over a commoner walking Vael's halls at all. Plenty at the Academy resent it even though the statute leaves them no say. Good friction to write: the law compels his presence; it can't compel anyone to accept it.
 
