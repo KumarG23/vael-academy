@@ -10,10 +10,22 @@ extends Node2D
 
 signal impact
 
+## Which way the fighter faces during the action. EAST/WEST use the side sprite
+## (WEST is flipped); NORTH/SOUTH use dedicated back/front bodies when the unit
+## has them (else they fall back to the side body).
+enum Facing { EAST, WEST, NORTH, SOUTH }
+
 const MAP_DIR := "res://assets/sprites/units/%s"
 const WEAPONS_DIR := "res://assets/art/cutout/weapons"
-const HAND := Vector2(5, 3)   # grip point on the map sprite (from its center)
 const PROJ_TIME := 0.28       # projectile travel time (impact syncs to arrival)
+
+# weapon grip point on the map sprite (from its center), per facing pose
+const HAND_GRIP := {
+	Facing.EAST: Vector2(5, 3),
+	Facing.WEST: Vector2(5, 3),
+	Facing.NORTH: Vector2(-2, 4),
+	Facing.SOUTH: Vector2(2, 5),
+}
 
 # per weapon type: [source, grip point on the weapon sprite (native px), rest rotation]
 const WEAPON_CFG := {
@@ -45,6 +57,8 @@ var _weapon: Sprite2D
 var _fx: Node2D
 var _fx_items: Array = []
 var _rest_rot := -0.5
+var _facing := Facing.EAST
+var _hand := Vector2(5, 3)
 var _aim_parent := Vector2.INF   # target position in the rig's PARENT space (for lunges)
 var _aim_fx := Vector2.INF        # target position in the FX layer's local space (for hit FX)
 
@@ -53,18 +67,25 @@ static func has_rig(unit_id: String) -> bool:
 	return ResourceLoader.exists("res://assets/sprites/units/%s/walk_f1.png" % unit_id)
 
 
-func setup(unit_id: String, facing_right: bool, rig_scale: float) -> void:
+## True if the unit has dedicated north/south (back/front) combat bodies, so the
+## rig can turn to face a vertical target instead of staying in profile.
+static func has_facing(unit_id: String, facing: int) -> bool:
+	var suffix := "_n" if facing == Facing.NORTH else ("_s" if facing == Facing.SOUTH else "")
+	return suffix != "" and ResourceLoader.exists("res://assets/art/cutout/%s/body_map%s.png" % [unit_id, suffix])
+
+
+func setup(unit_id: String, facing: int, rig_scale: float) -> void:
 	_unit_id = unit_id
-	scale = Vector2((1.0 if facing_right else -1.0) * rig_scale, rig_scale)
+	_facing = facing
+	var flip := -1.0 if facing == Facing.WEST else 1.0
+	scale = Vector2(flip * rig_scale, rig_scale)
+	_hand = HAND_GRIP.get(facing, HAND_GRIP[Facing.EAST])
 	_body = Sprite2D.new()
-	# prefer a weaponless combat body (the map sprite with its baked-in weapon
-	# removed) so the swung weapon isn't doubled; fall back to the walk frame.
-	var wl := "res://assets/art/cutout/%s/body_map.png" % unit_id
-	_body.texture = load(wl) if ResourceLoader.exists(wl) else load(MAP_DIR % unit_id + "/walk_f1.png")
+	_body.texture = _facing_body(unit_id, facing)
 	_body.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(_body)
 	_pivot = Node2D.new()
-	_pivot.position = HAND
+	_pivot.position = _hand
 	add_child(_pivot)
 	_weapon = Sprite2D.new()
 	_weapon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -73,6 +94,22 @@ func setup(unit_id: String, facing_right: bool, rig_scale: float) -> void:
 	_fx.z_index = 6
 	_fx.draw.connect(_draw_fx)
 	add_child(_fx)
+
+
+## The weaponless combat body for a facing: a dedicated back/front body when the
+## unit has one, otherwise the weaponless side body, otherwise the raw side walk
+## frame. So units without N/S art just keep their profile for vertical attacks.
+func _facing_body(unit_id: String, facing: int) -> Texture2D:
+	var suffix := "_n" if facing == Facing.NORTH else ("_s" if facing == Facing.SOUTH else "")
+	var candidates := [
+		"res://assets/art/cutout/%s/body_map%s.png" % [unit_id, suffix],  # weaponless facing
+		"res://assets/art/cutout/%s/body_map.png" % unit_id,              # weaponless side
+		MAP_DIR % unit_id + "/walk_f1.png",                               # raw side walk frame
+	]
+	for p in candidates:
+		if ResourceLoader.exists(p):
+			return load(p)
+	return null
 
 
 func set_weapon(weapon_type: int) -> void:

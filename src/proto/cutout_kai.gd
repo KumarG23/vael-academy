@@ -48,7 +48,7 @@ func _build_rig(wt: int) -> void:
 	_rig = CombatRig.new()
 	add_child(_rig)
 	_rig.position = _origin
-	_rig.setup("kai", true, SCALE)
+	_rig.setup("kai", CombatRig.Facing.EAST, SCALE)
 	_rig.set_weapon(wt)
 
 

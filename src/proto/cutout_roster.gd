@@ -53,7 +53,7 @@ func _build_rig(i: int) -> void:
 	var rig := CombatRig.new()
 	add_child(rig)
 	rig.position = _origins[i]
-	rig.setup(entry[0], true, SCALE)
+	rig.setup(entry[0], CombatRig.Facing.EAST, SCALE)
 	rig.set_weapon(entry[1])
 	if _rigs.size() > i:
 		_rigs[i] = rig

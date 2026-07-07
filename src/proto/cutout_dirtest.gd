@@ -12,8 +12,10 @@ const DIRS := [
 	["E", Vector2(1, 0)],
 	["N", Vector2(0, -1)],
 	["S", Vector2(0, 1)],
-	["NW", Vector2(-0.7, -0.7)],
+	["W", Vector2(-1, 0)],
 ]
+const UNIT := "kai"
+const WEAPON := WeaponDef.WeaponType.SWORD
 
 var _rigs: Array = []
 var _origins: Array = []
@@ -50,11 +52,15 @@ func _build(i: int) -> void:
 	var rig := CombatRig.new()
 	add_child(rig)
 	rig.position = _origins[i]
-	# face the aim like the live path does
-	var dx: float = _aims[i].x - _origins[i].x
-	var face_right := dx > 0.0 if absf(dx) > 1.0 else true
-	rig.setup("dain", face_right, SCALE)
-	rig.set_weapon(WeaponDef.WeaponType.AXE)
+	# 4-way facing like the live path
+	var d: Vector2 = _aims[i] - _origins[i]
+	var facing: int
+	if absf(d.x) >= absf(d.y):
+		facing = CombatRig.Facing.EAST if d.x > 0.0 else CombatRig.Facing.WEST
+	else:
+		facing = CombatRig.Facing.NORTH if d.y < 0.0 else CombatRig.Facing.SOUTH
+	rig.setup(UNIT, facing, SCALE)
+	rig.set_weapon(WEAPON)
 	if _rigs.size() > i:
 		_rigs[i] = rig
 	else:
@@ -74,5 +80,5 @@ func _loop() -> void:
 			_build(i)
 		await get_tree().create_timer(0.3).timeout
 		for i in DIRS.size():
-			_rigs[i].play_attack(WeaponDef.WeaponType.AXE, _aims[i])
+			_rigs[i].play_attack(WEAPON, _aims[i])
 		await get_tree().create_timer(1.0).timeout

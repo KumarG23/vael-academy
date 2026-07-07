@@ -85,12 +85,13 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 	# match the unit's on-map sprite exactly (same 32px source, same cell scale
 	# and offset) so swapping the rig in doesn't resize or shift the fighter.
 	rig.position = striker.position + striker.map_sprite_offset()
-	# face the target tile; keep current facing when it's straight up/down so we
-	# don't spin the unit around to attack empty space.
-	var dx := target.position.x - striker.position.x
-	var face_right := (dx > 0.0) if absf(dx) > 1.0 else striker.facing_right()
-	striker.set_facing(face_right)
-	rig.setup(striker.unit_id(), face_right, striker.map_sprite_scale())
+	# face the target tile (4-way when the unit has back/front art, else E/W)
+	var facing := _rig_facing(striker, target.position)
+	if facing == CombatRig.Facing.EAST:
+		striker.set_facing(true)
+	elif facing == CombatRig.Facing.WEST:
+		striker.set_facing(false)
+	rig.setup(striker.unit_id(), facing, striker.map_sprite_scale())
 	var wt: int = striker.weapon().weapon_type if striker.weapon() != null else 0
 	rig.set_weapon(wt)
 	striker.visible = false
@@ -124,16 +125,31 @@ func play_heal(healer: Unit, ally: Unit) -> bool:
 	var rig := CombatRig.new()
 	healer.get_parent().add_child(rig)
 	rig.position = healer.position + healer.map_sprite_offset()
-	var dx := ally.position.x - healer.position.x
-	var face_right := (dx > 0.0) if absf(dx) > 1.0 else healer.facing_right()
-	healer.set_facing(face_right)
-	rig.setup(healer.unit_id(), face_right, healer.map_sprite_scale())
+	var facing := _rig_facing(healer, ally.position)
+	if facing == CombatRig.Facing.EAST:
+		healer.set_facing(true)
+	elif facing == CombatRig.Facing.WEST:
+		healer.set_facing(false)
+	rig.setup(healer.unit_id(), facing, healer.map_sprite_scale())
 	rig.set_weapon(WeaponDef.WeaponType.STAFF)
 	healer.visible = false
 	await rig.play_attack(WeaponDef.WeaponType.STAFF, ally.global_position)
 	healer.visible = true
 	rig.queue_free()
 	return true
+
+
+## Which way the actor should face to act on `to`. Uses the dominant axis; only
+## turns to NORTH/SOUTH when the unit actually has back/front art, otherwise it
+## keeps its current side facing so it doesn't spin around on a vertical action.
+func _rig_facing(actor: Unit, to: Vector2) -> int:
+	var d := to - actor.position
+	if absf(d.x) >= absf(d.y):
+		return CombatRig.Facing.EAST if d.x > 0.0 else CombatRig.Facing.WEST
+	var want: int = CombatRig.Facing.NORTH if d.y < 0.0 else CombatRig.Facing.SOUTH
+	if CombatRig.has_facing(actor.unit_id(), want):
+		return want
+	return CombatRig.Facing.EAST if actor.facing_right() else CombatRig.Facing.WEST
 
 
 ## Non-blocking hit-stop: freeze real time briefly (the rig's tweens pause too —
