@@ -45,7 +45,7 @@ const WEAPON_LEN := {
 	WeaponDef.WeaponType.SWORD: 16.0,
 	WeaponDef.WeaponType.LANCE: 22.0,
 	WeaponDef.WeaponType.AXE:   17.0,
-	WeaponDef.WeaponType.BOW:   15.0,
+	WeaponDef.WeaponType.BOW:   20.0,
 	WeaponDef.WeaponType.TOME:  12.0,
 	WeaponDef.WeaponType.STAFF: 22.0,
 }
