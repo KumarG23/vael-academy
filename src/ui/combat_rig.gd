@@ -121,10 +121,15 @@ func set_weapon(weapon_type: int) -> void:
 	var cfg: Array = WEAPON_CFG.get(weapon_type, WEAPON_CFG[WeaponDef.WeaponType.SWORD])
 	var src: String = cfg[0]
 	var path := ""
-	if src.begins_with("lib/"):
+	# 1. the unit's own signature weapon (each hero swings their unique arm);
+	#    2. Kai's green blade; 3. the shared library weapon for this type.
+	var sig := "res://assets/art/cutout/%s/signature.png" % _unit_id
+	if ResourceLoader.exists(sig):
+		path = sig
+	elif _unit_id == "kai" and ResourceLoader.exists("res://assets/art/cutout/kai/sword.png"):
+		path = "res://assets/art/cutout/kai/sword.png"
+	elif src.begins_with("lib/"):
 		path = "%s/%s.png" % [WEAPONS_DIR, src.substr(4)]
-	elif _unit_id == "kai":
-		path = "res://assets/art/cutout/kai/sword.png"  # Kai's signature green blade
 	else:
 		path = "%s/sword.png" % WEAPONS_DIR
 	if ResourceLoader.exists(path):
