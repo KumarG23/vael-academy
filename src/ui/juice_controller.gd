@@ -40,6 +40,11 @@ func _process(delta: float) -> void:
 ## Play one strike's full presentation. Applies the resolved HP at the impact beat
 ## so the number and hp-bar land with the hit. Awaitable.
 func play_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: bool) -> void:
+	# Battle direction v2: if the attacker has a cut-out rig, swap it in and play
+	# the actual attack swing on its tile (not just a flat-sprite bump).
+	if CombatRig.has_rig(striker.unit_id()):
+		await _play_rig_strike(striker, target, strike, is_kill)
+		return
 	var home := striker.position
 	var toward := (target.position - home).normalized()
 	if toward == Vector2.ZERO:
@@ -66,6 +71,50 @@ func play_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: boo
 	var back := create_tween()
 	back.tween_property(striker, "position", home, cfg.recoil_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	await back.finished
+
+
+## Attacker swaps to its cut-out rig, plays the weapon's attack clip on its tile,
+## and the strike's effects (hp, number, shake, recoil, hit-stop) fire on the
+## rig's `impact` beat. Then the flat sprite is restored.
+func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: bool) -> void:
+	var toward := (target.position - striker.position).normalized()
+	if toward == Vector2.ZERO:
+		toward = Vector2.RIGHT
+	var rig := CombatRig.new()
+	striker.get_parent().add_child(rig)
+	rig.position = striker.position + Vector2(0, 34)  # feet toward the tile's base
+	rig.setup(striker.unit_id(), target.position.x >= striker.position.x, 1.5)
+	var wt: int = striker.weapon().weapon_type if striker.weapon() != null else 0
+	rig.set_weapon(wt)
+	striker.visible = false
+	var fired := [false]
+	rig.impact.connect(func() -> void:
+		if fired[0]:
+			return
+		fired[0] = true
+		if strike.connected:
+			target.set_hp(strike.defender_hp_after)
+			_spawn_number(target.position, strike)
+			_shake_amount = maxf(_shake_amount, cfg.shake_magnitude(strike.damage, strike.was_crit))
+			if cfg.wants_splash(strike.was_crit, is_kill):
+				_splash.play(striker.team, "CRIT" if strike.was_crit else "DOWN", cfg)
+			_recoil(target, toward)
+			_hitstop_fire(cfg.hitstop_duration(strike.was_crit, is_kill))
+		else:
+			_spawn_miss(target.position))
+	await rig.play_attack(wt)
+	striker.visible = true
+	rig.queue_free()
+
+
+## Non-blocking hit-stop: freeze real time briefly (the rig's tweens pause too —
+## the GBA crunch) and self-reset, without awaiting inside the impact callback.
+func _hitstop_fire(duration: float) -> void:
+	if duration <= 0.0:
+		return
+	Engine.time_scale = 0.0
+	get_tree().create_timer(duration, true, false, true).timeout.connect(func() -> void:
+		Engine.time_scale = 1.0)
 
 
 ## Death dissolve: fade + shrink, then the caller frees the node.
