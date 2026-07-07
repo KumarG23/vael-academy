@@ -417,7 +417,7 @@ func _projectile(dest: Vector2, style: String) -> void:
 	_fx_items.append({"kind": "proj", "pos": _tip(), "to": dest,
 		"style": style, "col": _magic_color(), "age": 0.0, "life": PROJ_TIME})
 func _cast_burst_at(dest: Vector2) -> void:
-	_fx_items.append({"kind": "tburst", "pos": dest, "col": _magic_color(), "age": 0.0, "life": 0.28})
+	_fx_items.append({"kind": "tburst", "pos": dest, "col": _magic_color(), "style": _magic_style(), "age": 0.0, "life": 0.28})
 func _heal_bloom(aim_global := Vector2.INF) -> void:
 	var at: Vector2 = _fx.to_local(aim_global) if not (is_inf(aim_global.x) or is_inf(aim_global.y)) \
 		else _fx.to_local(global_position) + Vector2(0, -6)
@@ -454,25 +454,25 @@ func _draw_fx() -> void:
 				else:
 					var mc: Color = it.get("col", Color(1.0, 0.42, 0.9))
 					if it["style"] == "crystal":
-						for ks in range(4):
-							var aa := TAU * float(ks) / 4.0 + float(it["age"]) * 7.0
-							var pp := cur + Vector2(cos(aa), sin(aa)) * 5.0
-							_fx.draw_line(pp - Vector2(0, 4), pp + Vector2(0, 4), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.9), 2.0)
-							_fx.draw_line(pp - Vector2(4, 0), pp + Vector2(4, 0), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.55), 1.5)
-						_fx.draw_circle(cur, 3.0, Color(0.85, 0.95, 1.0, 1.0))
+						var dc: Vector2 = (p1 - p0)
+						dc = dc.normalized() if dc.length() > 0.1 else Vector2.RIGHT
+						var pc := dc.orthogonal()
+						_fx.draw_colored_polygon(PackedVector2Array([cur + dc * 8.0, cur + pc * 3.5, cur - dc * 5.0, cur - pc * 3.5]), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.9))
+						_fx.draw_line(cur - dc * 5.0, cur + dc * 8.0, Color(0.92, 0.98, 1.0, 1.0 - t), 1.5)
 					elif it["style"] == "swirl":
-						for ko in range(4):
-							var a2 := TAU * float(ko) / 4.0 + float(it["age"]) * 9.0
-							var pp2 := cur + Vector2(cos(a2), sin(a2)) * (6.0 - t * 2.0)
-							_fx.draw_circle(pp2, maxf(1.0, 4.0 * (1.0 - t)), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.8))
-						_fx.draw_circle(cur, 3.0, Color(0.9, 1.0, 0.9, 1.0))
+						for ko in range(3):
+							var a2 := TAU * float(ko) / 3.0 + float(it["age"]) * 11.0
+							_fx.draw_circle(cur + Vector2(cos(a2), sin(a2)) * 6.0, maxf(1.0, 3.0 * (1.0 - t)), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.8))
+						_fx.draw_circle(cur, 5.0, Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.9))
+						_fx.draw_circle(cur, 2.5, Color(0.9, 1.0, 0.85, 1.0))
 					else:
-						var fl: float = it["age"] * 42.0
-						for kf in range(5):
+						var fl: float = float(it["age"]) * 40.0
+						var bk: Vector2 = (p1 - p0).normalized() if (p1 - p0).length() > 0.1 else Vector2.RIGHT
+						_fx.draw_circle(cur - bk * 6.0, maxf(1.0, 3.5 * (1.0 - t)), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.4))
+						for kf in range(4):
 							var kk := float(kf)
-							var off := Vector2(sin(fl + kk * 1.9) * 2.4, -kk * 2.6 - 1.0)
-							_fx.draw_circle(cur + off, maxf(1.0, 7.0 - kk * 1.2), Color(mc.r, mc.g, mc.b, (1.0 - t) * (0.85 - kk * 0.14)))
-						_fx.draw_circle(cur, 3.4, Color(1.0, 0.86, 1.0, 1.0))
+							_fx.draw_circle(cur + Vector2(sin(fl + kk * 2.1) * 2.0, cos(fl + kk * 1.6) * 2.0), maxf(1.0, 6.5 - kk * 1.3), Color(mc.r, mc.g, mc.b, (1.0 - t) * (0.75 - kk * 0.15)))
+						_fx.draw_circle(cur, 4.0, Color(1.0, 0.9, 0.7, 1.0))
 			"beam":
 				var be := 1.0 - t
 				_fx.draw_line(it["pos"], it["to"], Color(0.30, 1.0, 0.50, be * 0.30), 9.0)
@@ -510,9 +510,21 @@ func _draw_fx() -> void:
 						_fx.draw_arc(it["pos"], 14.0 + t*40.0 + k*10.0, 0.0, TAU, 26, Color(hc.r, hc.g, hc.b, a*0.7), 3.0-k)
 			"tburst":
 				var bc: Color = it.get("col", Color(1.0, 0.4, 0.88))
-				var fb: float = it["age"] * 30.0
-				for kb in range(8):
-					var ang := TAU * float(kb) / 8.0 + fb * 0.15
-					var tip := (it["pos"] as Vector2) + Vector2(cos(ang), sin(ang)) * (8.0 + t * 26.0)
-					_fx.draw_circle(tip, maxf(1.0, 5.0 * (1.0 - t)), Color(bc.r, bc.g, bc.b, a * 0.6))
-				_fx.draw_circle(it["pos"], 5.0 + t * 12.0, Color(1.0, 0.82, 1.0, a * 0.85))
+				var bs: String = it.get("style", "flame")
+				if bs == "crystal":
+					for kb in range(8):
+						var nd := Vector2(cos(TAU * float(kb) / 8.0), sin(TAU * float(kb) / 8.0))
+						_fx.draw_line((it["pos"] as Vector2) + nd * 4.0, (it["pos"] as Vector2) + nd * (8.0 + t * 30.0), Color(bc.r, bc.g, bc.b, a * 0.85), 3.0 * a + 1.0)
+					_fx.draw_circle(it["pos"], 4.0 + t * 6.0, Color(0.9, 0.98, 1.0, a * 0.9))
+				elif bs == "swirl":
+					for kb in range(6):
+						var av := TAU * float(kb) / 6.0 + float(it["age"]) * 2.0
+						var cv := (it["pos"] as Vector2) + Vector2(cos(av), sin(av)) * (8.0 + t * 22.0)
+						_fx.draw_arc(cv, 5.0 * a + 2.0, av, av + 2.6, 8, Color(bc.r, bc.g, bc.b, a * 0.8), 2.0)
+					_fx.draw_circle(it["pos"], 4.0 + t * 8.0, Color(0.7, 1.0, 0.6, a * 0.6))
+				else:
+					for kb in range(10):
+						var af := TAU * float(kb) / 10.0 + float(it["age"]) * 3.0
+						var rf := (6.0 + t * 30.0) * (0.6 + 0.4 * sin(float(kb) * 1.7))
+						_fx.draw_circle((it["pos"] as Vector2) + Vector2(cos(af), sin(af)) * rf, maxf(1.0, 6.0 * a), Color(bc.r, bc.g, bc.b, a * 0.6))
+					_fx.draw_circle(it["pos"], 6.0 + t * 14.0, Color(1.0, 0.85, 0.6, a * 0.8))
