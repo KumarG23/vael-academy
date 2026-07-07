@@ -83,9 +83,14 @@ func setup(unit_id: String, facing: int, rig_scale: float) -> void:
 	_body = Sprite2D.new()
 	_body.texture = _facing_body(unit_id, facing)
 	_body.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_body.z_index = 0
 	add_child(_body)
 	_pivot = Node2D.new()
 	_pivot.position = _hand
+	# back view: the weapon is on the far side of the fighter, so draw it BEHIND
+	# the body (only the raised blade shows above the silhouette) instead of
+	# slicing through him. Front/side: weapon in front.
+	_pivot.z_index = -1 if facing == Facing.NORTH else 1
 	add_child(_pivot)
 	_weapon = Sprite2D.new()
 	_weapon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -136,6 +141,10 @@ func set_weapon(weapon_type: int) -> void:
 	_weapon.position = -cfg[1] * wsc   # grip at the pivot
 	_rest_rot = cfg[2]
 	_pivot.rotation = _rest_rot
+	# Back view: the fighter swings away from the camera, so a flat side-weapon
+	# reads as slicing through him. Hide it and let the body lunge + slash arc
+	# carry the hit (the weapon is realistically occluded behind him anyway).
+	_weapon.visible = _facing != Facing.NORTH
 
 
 func _process(delta: float) -> void:
