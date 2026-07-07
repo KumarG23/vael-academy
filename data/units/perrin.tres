@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="UnitDef" format=3]
 
-[ext_resource type="Resource" path="res://data/classes/cavalier.tres" id="1_prncl"]
+[ext_resource type="Resource" path="res://data/classes/paladin.tres" id="1_prncl"]
 [ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_prnwp"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_prnud"]
 [ext_resource type="Resource" path="res://data/classes/paladin.tres" id="9_promoperr"]
