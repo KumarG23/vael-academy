@@ -51,6 +51,10 @@ func _move_attack(mover: Unit, dest: Vector2i, target_cell: Vector2i) -> void:
 		await wait_physics_frames(1)
 		guard += 1
 	await _view._on_menu_chosen(_view._menu_actions.find("attack"))
+	# AW-26: Kael carries two physical weapons, so Attack opens a weapon picker;
+	# the equipped weapon is index 0.
+	if _view._menu_context in ["attack_weapon", "magic_spell"]:
+		await _view._on_menu_chosen(0)
 	_view._handle_targeting_confirm(target_cell)
 	await _wait_idle()
 

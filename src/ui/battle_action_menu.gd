@@ -16,8 +16,13 @@ func open_action_menu() -> void:
 	var unit: Unit = _v._selected
 	var labels: Array = []
 	_v._menu_actions = []
-	if unit.can_attack() and not _v._attackable_targets(unit.cell, unit).is_empty():
+	# AW-26: Attack lists physical weapons, Magic lists tomes — each category
+	# appears only if the unit carries a weapon of that kind that can hit
+	# something from here (picking the weapon/spell comes next, in a submenu).
+	if not attack_weapons(unit, false).is_empty():
 		_v._menu_actions.append("attack"); labels.append("Attack")
+	if not attack_weapons(unit, true).is_empty():
+		_v._menu_actions.append("magic"); labels.append("Magic")
 	var w := unit.weapon()
 	if w != null and w.is_staff() and not _v._heal_targets(unit.cell, unit).is_empty():
 		_v._menu_actions.append("heal"); labels.append("Heal")
@@ -79,6 +84,8 @@ func choose(index: int) -> void:
 			field_choice(index)
 		"action":
 			await do_action(_v._menu_actions[index])
+		"attack_weapon", "magic_spell":
+			pick_attack_weapon(index)
 		"item":
 			await use_consumable(index)
 		"equip":
@@ -108,9 +115,9 @@ func cancel() -> void:
 func do_action(id: String) -> void:
 	match id:
 		"attack":
-			_v._menu.close()
-			_v._cursor.active = true
-			_v._begin_targeting(false)
+			begin_attack_category(false)
+		"magic":
+			begin_attack_category(true)
 		"heal":
 			_v._menu.close()
 			_v._cursor.active = true
@@ -133,6 +140,62 @@ func do_action(id: String) -> void:
 		"wait":
 			_v._menu.close()
 			_v._finish_action()
+
+
+## AW-26 — Attack/Magic weapon selection ---------------------------------------
+## Weapons in a category the unit can actually use from here. `magic` = tomes
+## (offensive spells); otherwise physical arms (sword/axe/lance/bow). Staves are
+## the Heal command, never listed here. Only weapons with a live target are kept,
+## and the currently-equipped one is placed first so the default pick is a no-op.
+func attack_weapons(unit: Unit, magic: bool) -> Array:
+	var out: Array = []
+	var equipped: InventoryItem = unit.inventory.equipped_weapon_item()
+	for it in unit.inventory.items:
+		if not it.is_weapon():
+			continue
+		var w := it.weapon()
+		if not w.can_attack() or w.is_magical() != magic:
+			continue
+		if not unit.can_use_weapon(w):
+			continue
+		if _v._weapon_has_target(unit, w):
+			out.append(it)
+	if equipped != null and out.has(equipped):
+		out.erase(equipped)
+		out.insert(0, equipped)
+	return out
+
+
+## Chose Attack or Magic: with one usable weapon, equip it and go straight to
+## targeting; with several, open the weapon/spell picker first.
+func begin_attack_category(magic: bool) -> void:
+	var weps := attack_weapons(_v._selected, magic)
+	if weps.size() <= 1:
+		if weps.size() == 1:
+			_v._selected.inventory.equip(weps[0])
+		_v._menu.close()
+		_v._cursor.active = true
+		_v._begin_targeting(false)
+	else:
+		open_weapon_menu(magic, weps)
+
+
+func open_weapon_menu(magic: bool, weps: Array) -> void:
+	_v._menu_items = weps
+	var labels: Array = []
+	var equipped: InventoryItem = _v._selected.inventory.equipped_weapon_item()
+	for it in weps:
+		var eq := " *" if it == equipped else ""
+		labels.append("%s (%d)%s" % [it.display_name(), it.uses, eq])
+	open_menu("magic_spell" if magic else "attack_weapon", "Magic" if magic else "Attack", labels)
+
+
+## Picked a specific weapon/spell: equip it, then target with it.
+func pick_attack_weapon(index: int) -> void:
+	_v._selected.inventory.equip(_v._menu_items[index])
+	_v._menu.close()
+	_v._cursor.active = true
+	_v._begin_targeting(false)
 
 
 ## Consumables the unit can meaningfully use right now: a Vulnerary only when

@@ -32,6 +32,10 @@ func _move_and_pick(select: Vector2i, dest: Vector2i, action_id: String, mover: 
 	var idx: int = _view._menu_actions.find(action_id)
 	assert_true(idx >= 0, "menu offers '%s'" % action_id)
 	await _view._on_menu_chosen(idx)
+	# AW-26: Attack/Magic pick a weapon first when the unit carries more than one;
+	# the equipped weapon is index 0.
+	if _view._menu_context in ["attack_weapon", "magic_spell"]:
+		await _view._on_menu_chosen(0)
 
 
 func _sure_hit(u: Unit) -> void:

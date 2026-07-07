@@ -306,6 +306,18 @@ func _attackable_targets(from_cell: Vector2i, unit: Unit) -> Array[Unit]:
 	return out
 
 
+## AW-26: does `unit` have any enemy in reach of the specific weapon `w` from its
+## current cell? Powers the Attack/Magic weapon-choice menus, which gate a
+## category on whether ANY weapon in it can actually hit something right now.
+func _weapon_has_target(unit: Unit, w: WeaponDef) -> bool:
+	if w == null or not w.can_attack():
+		return false
+	for u in _units:
+		if u.team != unit.team and u.is_alive() and w.in_range(_manhattan(unit.cell, u.cell)):
+			return true
+	return false
+
+
 ## Living, damaged allies (excluding self) a staff-user could heal from `from_cell`.
 func _heal_targets(from_cell: Vector2i, unit: Unit) -> Array[Unit]:
 	var out: Array[Unit] = []

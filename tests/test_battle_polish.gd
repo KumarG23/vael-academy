@@ -45,7 +45,10 @@ func test_cancelling_targeting_returns_to_the_command_menu():
 	await _wait_menu()
 	var idx: int = _view._menu_actions.find("attack")
 	assert_true(idx >= 0, "Attack offered beside an enemy")
-	await _view._on_menu_chosen(idx)                # -> targeting + forecast
+	await _view._on_menu_chosen(idx)                # -> weapon picker (Kael) or targeting
+	# AW-26: Kael carries two physical weapons, so Attack opens a weapon picker first.
+	if _view._menu_context in ["attack_weapon", "magic_spell"]:
+		await _view._on_menu_chosen(0)              # equipped weapon -> targeting + forecast
 
 	_view._on_cursor_cancelled(Vector2i.ZERO)
 	assert_eq(_view._menu_context, "action", "targeting cancel reopens the command menu")
