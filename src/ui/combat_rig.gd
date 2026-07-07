@@ -13,6 +13,7 @@ signal impact
 const MAP_DIR := "res://assets/sprites/units/%s"
 const WEAPONS_DIR := "res://assets/art/cutout/weapons"
 const HAND := Vector2(5, 3)   # grip point on the map sprite (from its center)
+const PROJ_TIME := 0.28       # projectile travel time (impact syncs to arrival)
 
 # per weapon type: [source, grip offset on the weapon sprite, rest rotation]
 # [source, grip point on the weapon sprite, rest rotation, scale]
@@ -148,28 +149,35 @@ func _swing(heavy: bool) -> void:
 
 
 func _shoot(reach: float) -> void:
+	# draw back (body leans), hold, loose — the arrow streaks the full gap
 	var w := create_tween().set_parallel(true)
-	w.tween_property(_body, "rotation", -0.08, 0.24).set_trans(Tween.TRANS_SINE)
-	w.tween_property(self, "position:x", position.x - 8.0 * scale.x, 0.24)
+	w.tween_property(_pivot, "rotation", _rest_rot - 0.35, 0.26).set_trans(Tween.TRANS_SINE)
+	w.tween_property(_body, "rotation", -0.1, 0.26).set_trans(Tween.TRANS_SINE)
+	w.tween_property(self, "position:x", position.x - 6.0 * scale.x, 0.26)
 	await w.finished
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.14).timeout
+	_pivot.rotation = _rest_rot
 	_projectile(reach, "arrow")
-	await get_tree().create_timer(0.16).timeout
+	await get_tree().create_timer(PROJ_TIME).timeout
 	impact.emit()
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.08).timeout
 	await _recover(position.x)
 
 
 func _magic(reach: float) -> void:
-	var w := create_tween()
-	w.tween_property(_body, "rotation", -0.06, 0.24).set_trans(Tween.TRANS_SINE)
+	# structured like _shoot (which renders reliably): a parallel wind tween
+	var w := create_tween().set_parallel(true)
+	w.tween_property(_pivot, "rotation", _rest_rot - 0.3, 0.28).set_trans(Tween.TRANS_SINE)
+	w.tween_property(_body, "rotation", -0.06, 0.28).set_trans(Tween.TRANS_SINE)
 	await w.finished
 	_cast_gather()
 	await get_tree().create_timer(0.26).timeout
+	_pivot.rotation = _rest_rot
 	_projectile(reach, "bolt")
-	await get_tree().create_timer(0.18).timeout
+	await get_tree().create_timer(PROJ_TIME).timeout
 	impact.emit()
-	await get_tree().create_timer(0.1).timeout
+	_cast_burst_at(reach)
+	await get_tree().create_timer(0.14).timeout
 	await _recover(position.x)
 
 
@@ -207,7 +215,9 @@ func _cast_gather() -> void:
 func _projectile(reach: float, style: String) -> void:
 	var from := _tip()
 	_fx_items.append({"kind": "proj", "pos": from, "to": from + Vector2(reach, -8),
-		"style": style, "age": 0.0, "life": 0.18})
+		"style": style, "age": 0.0, "life": PROJ_TIME})
+func _cast_burst_at(reach: float) -> void:
+	_fx_items.append({"kind": "tburst", "pos": _tip() + Vector2(reach, -8), "age": 0.0, "life": 0.28})
 func _heal_bloom() -> void:
 	_fx_items.append({"kind": "heal", "pos": _fx.to_local(global_position) + Vector2(0, -6),
 		"age": 0.0, "life": 0.5})
@@ -241,3 +251,6 @@ func _draw_fx() -> void:
 				for k in range(3):
 					_fx.draw_arc(it["pos"], 14.0 + t*40.0 + k*10.0, 0.0, TAU, 26,
 						Color(0.42,1.0,0.56, a*0.7), 3.0-k)
+			"tburst":
+				_fx.draw_circle(it["pos"], 8.0 + t*26.0, Color(0.6,0.4,0.95, a*0.7))
+				_fx.draw_circle(it["pos"], 4.0 + t*14.0, Color(0.92,0.85,1.0, a*0.9))
