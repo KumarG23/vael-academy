@@ -334,7 +334,7 @@ func _magic(aim_global: Vector2) -> void:
 	_cast_gather()
 	await get_tree().create_timer(0.26).timeout
 	_pivot.rotation = _rest_rot
-	_projectile(dest, "bolt")
+	_projectile(dest, _magic_style())
 	await get_tree().create_timer(PROJ_TIME).timeout
 	impact.emit()
 	_cast_burst_at(dest)
@@ -386,21 +386,36 @@ func _thrust_streak() -> void:
 	nd = nd.normalized() if nd.length() > 0.1 else Vector2.RIGHT
 	_fx_items.append({"kind": "streak", "pos": from.lerp(to, 0.45), "ndir": nd, "perp": nd.orthogonal(),
 		"age": 0.0, "life": 0.22})
+func _magic_style() -> String:
+	match _unit_id:
+		"isolde": return "crystal"
+		"corvin": return "swirl"
+		_: return "flame"
+func _magic_color() -> Color:
+	match _unit_id:
+		"isolde": return Color(0.40, 0.72, 1.0)
+		"corvin": return Color(0.42, 1.0, 0.55)
+		_: return Color(1.0, 0.42, 0.9)
+func _heal_color() -> Color:
+	match _unit_id:
+		"wren": return Color(1.0, 0.76, 0.36)
+		"elowen": return Color(0.5, 0.82, 1.0)
+		_: return Color(0.42, 1.0, 0.56)
 func _cast_gather() -> void:
-	_fx_items.append({"kind": "gather", "pos": _tip(), "age": 0.0, "life": 0.3})
+	_fx_items.append({"kind": "gather", "pos": _tip(), "col": _magic_color(), "age": 0.0, "life": 0.3})
 func _beam(dest: Vector2) -> void:
 	_fx_items.append({"kind": "beam", "pos": _tip(), "to": dest, "age": 0.0, "life": 0.24})
 func _beam_burst(dest: Vector2) -> void:
 	_fx_items.append({"kind": "gbrst", "pos": dest, "age": 0.0, "life": 0.3})
 func _projectile(dest: Vector2, style: String) -> void:
 	_fx_items.append({"kind": "proj", "pos": _tip(), "to": dest,
-		"style": style, "age": 0.0, "life": PROJ_TIME})
+		"style": style, "col": _magic_color(), "age": 0.0, "life": PROJ_TIME})
 func _cast_burst_at(dest: Vector2) -> void:
-	_fx_items.append({"kind": "tburst", "pos": dest, "age": 0.0, "life": 0.28})
+	_fx_items.append({"kind": "tburst", "pos": dest, "col": _magic_color(), "age": 0.0, "life": 0.28})
 func _heal_bloom(aim_global := Vector2.INF) -> void:
 	var at: Vector2 = _fx.to_local(aim_global) if not (is_inf(aim_global.x) or is_inf(aim_global.y)) \
 		else _fx.to_local(global_position) + Vector2(0, -6)
-	_fx_items.append({"kind": "heal", "pos": at, "age": 0.0, "life": 0.5})
+	_fx_items.append({"kind": "heal", "pos": at, "col": _heal_color(), "age": 0.0, "life": 0.5})
 
 func _draw_fx() -> void:
 	for it in _fx_items:
@@ -417,26 +432,41 @@ func _draw_fx() -> void:
 					_fx.draw_line(it["pos"] - it["ndir"]*23.0 + it["perp"]*float(k*3-3), it["pos"] + it["ndir"]*23.0 + it["perp"]*float(k*3-3),
 						Color(1,1,0.88,a), 2.6 - k*0.6)
 			"gather":
-				_fx.draw_circle(it["pos"], 12.0 * (1.0 - t), Color(0.85,0.75,1.0,a))
+				var gc: Color = it.get("col", Color(0.85,0.75,1.0))
+				_fx.draw_circle(it["pos"], 12.0 * (1.0 - t), Color(gc.r, gc.g, gc.b, a))
 			"proj":
 				var p0: Vector2 = it["pos"]
 				var p1: Vector2 = it["to"]
 				var cur: Vector2 = p0.lerp(p1, t)
-				if it["style"] == "bolt":
-					var fl: float = it["age"] * 42.0
-					for kf in range(5):
-						var kk := float(kf)
-						var off := Vector2(sin(fl + kk * 1.9) * 2.4, -kk * 2.6 - 1.0)
-						_fx.draw_circle(cur + off, maxf(1.0, 7.0 - kk * 1.2), Color(1.0, 0.42, 0.9, (1.0 - t) * (0.85 - kk * 0.14)))
-					_fx.draw_circle(cur, 3.4, Color(1.0, 0.86, 1.0, 1.0))
-				else:
-					# arrow oriented along its flight path (handles diagonals)
+				if it["style"] == "arrow":
 					var dir: Vector2 = (p1 - p0)
 					dir = dir.normalized() if dir.length() > 0.1 else Vector2.RIGHT
 					var perp := dir.orthogonal()
 					_fx.draw_line(cur - dir * 22.0, cur, Color(0.95,0.92,0.8,0.95), 2.5)
 					_fx.draw_line(cur, cur - dir * 7.0 + perp * 4.0, Color(0.8,0.78,0.7,1.0), 2.5)
 					_fx.draw_line(cur, cur - dir * 7.0 - perp * 4.0, Color(0.8,0.78,0.7,1.0), 2.5)
+				else:
+					var mc: Color = it.get("col", Color(1.0, 0.42, 0.9))
+					if it["style"] == "crystal":
+						for ks in range(4):
+							var aa := TAU * float(ks) / 4.0 + float(it["age"]) * 7.0
+							var pp := cur + Vector2(cos(aa), sin(aa)) * 5.0
+							_fx.draw_line(pp - Vector2(0, 4), pp + Vector2(0, 4), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.9), 2.0)
+							_fx.draw_line(pp - Vector2(4, 0), pp + Vector2(4, 0), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.55), 1.5)
+						_fx.draw_circle(cur, 3.0, Color(0.85, 0.95, 1.0, 1.0))
+					elif it["style"] == "swirl":
+						for ko in range(4):
+							var a2 := TAU * float(ko) / 4.0 + float(it["age"]) * 9.0
+							var pp2 := cur + Vector2(cos(a2), sin(a2)) * (6.0 - t * 2.0)
+							_fx.draw_circle(pp2, maxf(1.0, 4.0 * (1.0 - t)), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.8))
+						_fx.draw_circle(cur, 3.0, Color(0.9, 1.0, 0.9, 1.0))
+					else:
+						var fl: float = it["age"] * 42.0
+						for kf in range(5):
+							var kk := float(kf)
+							var off := Vector2(sin(fl + kk * 1.9) * 2.4, -kk * 2.6 - 1.0)
+							_fx.draw_circle(cur + off, maxf(1.0, 7.0 - kk * 1.2), Color(mc.r, mc.g, mc.b, (1.0 - t) * (0.85 - kk * 0.14)))
+						_fx.draw_circle(cur, 3.4, Color(1.0, 0.86, 1.0, 1.0))
 			"beam":
 				var be := 1.0 - t
 				_fx.draw_line(it["pos"], it["to"], Color(0.30, 1.0, 0.50, be * 0.30), 9.0)
@@ -449,13 +479,15 @@ func _draw_fx() -> void:
 					_fx.draw_circle(tp, maxf(1.0, 4.0 * (1.0 - t)), Color(0.4, 1.0, 0.55, (1.0 - t) * 0.6))
 				_fx.draw_circle(it["pos"], 5.0 + t * 8.0, Color(0.85, 1.0, 0.88, (1.0 - t) * 0.85))
 			"heal":
+				var hc: Color = it.get("col", Color(0.42,1.0,0.56))
 				for k in range(3):
 					_fx.draw_arc(it["pos"], 14.0 + t*40.0 + k*10.0, 0.0, TAU, 26,
-						Color(0.42,1.0,0.56, a*0.7), 3.0-k)
+						Color(hc.r, hc.g, hc.b, a*0.7), 3.0-k)
 			"tburst":
+				var bc: Color = it.get("col", Color(1.0, 0.4, 0.88))
 				var fb: float = it["age"] * 30.0
 				for kb in range(8):
 					var ang := TAU * float(kb) / 8.0 + fb * 0.15
 					var tip := (it["pos"] as Vector2) + Vector2(cos(ang), sin(ang)) * (8.0 + t * 26.0)
-					_fx.draw_circle(tip, maxf(1.0, 5.0 * (1.0 - t)), Color(1.0, 0.4, 0.88, a * 0.6))
+					_fx.draw_circle(tip, maxf(1.0, 5.0 * (1.0 - t)), Color(bc.r, bc.g, bc.b, a * 0.6))
 				_fx.draw_circle(it["pos"], 5.0 + t * 12.0, Color(1.0, 0.82, 1.0, a * 0.85))
