@@ -104,9 +104,16 @@ func execute_heal(healer: Unit, ally: Unit) -> void:
 	var amount: int = healer.weapon().heal_amount + healer.stat("mag")
 	var hp_before: int = ally.current_hp
 	var healed: int = ally.heal(amount)
-	# FE-style heal cut-in when animations are on; tests (strike_delay 0) and
-	# not-yet-kitted units fall back to the floating "+N" over the map.
-	if _v.strike_delay > 0.0 and _v.battle_popups_enabled and _v._battle_popup != null \
+	# On-map staff heal via the combat rig (battle direction v2): the healer
+	# casts on its tile and a bloom lands on the ally. Falls back to the legacy
+	# popup cut-in if that's still enabled, then to a floating "+N" (tests,
+	# strike_delay 0, un-rigged units).
+	if _v.strike_delay > 0.0 and _v._juice != null and CombatRig.has_rig(healer.unit_id()):
+		await _v._begin_combat_cam(healer, ally)
+		await _v._juice.play_heal(healer, ally)
+		_v._pop_text(ally.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
+		await _v._end_combat_cam()
+	elif _v.strike_delay > 0.0 and _v.battle_popups_enabled and _v._battle_popup != null \
 			and BattlePopup.has_kit(healer.unit_id()) and BattlePopup.has_kit(ally.unit_id()):
 		_v._battle_popup.stage_terrain = _v.chapter.get_terrain(ally.cell.x, ally.cell.y)
 		var shot := ImageTexture.create_from_image(_v.get_viewport().get_texture().get_image())

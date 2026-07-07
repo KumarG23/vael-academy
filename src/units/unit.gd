@@ -165,6 +165,19 @@ func _setup_sprite_frames(id: String) -> void:
 	_anim.play("idle")
 
 
+## The scale the on-map sprite renders at: map sprites are authored at 32px and
+## scaled up to the cell. Overlays (the combat rig) match this so they don't
+## shrink or balloon relative to the unit.
+func map_sprite_scale() -> float:
+	return (float(_grid.cell_size) / 32.0) if _grid != null else 1.0
+
+
+## Local offset of the on-map sprite from the unit's cell-center origin, so an
+## overlay can sit exactly where the sprite sits.
+func map_sprite_offset() -> Vector2:
+	return Vector2(0, -_grid.cell_size * 0.06) if _grid != null else Vector2.ZERO
+
+
 ## Effective value of a stat key (UnitDef base + level-up bonus).
 func stat(key: String) -> int:
 	var base: int = unit_def.get(_STAT_FIELD[key]) if unit_def != null else 0

@@ -82,8 +82,10 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 		toward = Vector2.RIGHT
 	var rig := CombatRig.new()
 	striker.get_parent().add_child(rig)
-	rig.position = striker.position + Vector2(0, 34)  # feet toward the tile's base
-	rig.setup(striker.unit_id(), target.position.x >= striker.position.x, 1.5)
+	# match the unit's on-map sprite exactly (same 32px source, same cell scale
+	# and offset) so swapping the rig in doesn't resize or shift the fighter.
+	rig.position = striker.position + striker.map_sprite_offset()
+	rig.setup(striker.unit_id(), target.position.x >= striker.position.x, striker.map_sprite_scale())
 	var wt: int = striker.weapon().weapon_type if striker.weapon() != null else 0
 	rig.set_weapon(wt)
 	striker.visible = false
@@ -102,10 +104,28 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 			_hitstop_fire(cfg.hitstop_duration(strike.was_crit, is_kill))
 		else:
 			_spawn_miss(target.position))
-	var reach: float = striker.position.distance_to(target.position) / 1.5
-	await rig.play_attack(wt, reach)
+	# aim ranged attacks at the real target (diagonals included), not straight ahead
+	await rig.play_attack(wt, target.global_position)
 	striker.visible = true
 	rig.queue_free()
+
+
+## Staff heal on the map: the healer swaps to its rig, plays the staff cast
+## gesture, and a heal bloom lands on the ally. Awaitable; returns false (no-op)
+## when the healer has no rig so the caller can fall back to float-text.
+func play_heal(healer: Unit, ally: Unit) -> bool:
+	if not CombatRig.has_rig(healer.unit_id()):
+		return false
+	var rig := CombatRig.new()
+	healer.get_parent().add_child(rig)
+	rig.position = healer.position + healer.map_sprite_offset()
+	rig.setup(healer.unit_id(), ally.position.x >= healer.position.x, healer.map_sprite_scale())
+	rig.set_weapon(WeaponDef.WeaponType.STAFF)
+	healer.visible = false
+	await rig.play_attack(WeaponDef.WeaponType.STAFF, ally.global_position)
+	healer.visible = true
+	rig.queue_free()
+	return true
 
 
 ## Non-blocking hit-stop: freeze real time briefly (the rig's tweens pause too —

@@ -109,18 +109,28 @@ func _process(delta: float) -> void:
 	_fx.queue_redraw()
 
 
-func play_attack(weapon_type: int, reach := 120.0) -> void:
+## `aim_global` is the target's world position; ranged/cast attacks fly to it
+## (diagonals included). Pass nothing (Vector2.INF) to fire straight ahead.
+func play_attack(weapon_type: int, aim_global := Vector2.INF) -> void:
 	match weapon_type:
 		WeaponDef.WeaponType.LANCE:
 			await _stab()
 		WeaponDef.WeaponType.BOW:
-			await _shoot(reach)
+			await _shoot(aim_global)
 		WeaponDef.WeaponType.TOME:
-			await _magic(reach)
+			await _magic(aim_global)
 		WeaponDef.WeaponType.STAFF:
-			await _heal()
+			await _heal(aim_global)
 		_:
 			await _swing(weapon_type == WeaponDef.WeaponType.AXE)
+
+
+## Target in the FX layer's local space (accounts for the rig's scale + facing
+## flip). Falls back to a point straight ahead when no aim is supplied.
+func _aim_local(aim_global: Vector2) -> Vector2:
+	if is_inf(aim_global.x) or is_inf(aim_global.y):
+		return _tip() + Vector2(120, -8)
+	return _fx.to_local(aim_global)
 
 
 ## Lance: a THRUST, not a swing — level the point forward and drive the whole
@@ -129,13 +139,13 @@ func _stab() -> void:
 	var wind := create_tween().set_parallel(true)
 	wind.tween_property(_pivot, "rotation", _rest_rot - 0.25, 0.18).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	wind.tween_property(_body, "rotation", -0.08, 0.18).set_trans(Tween.TRANS_SINE)
-	wind.tween_property(self, "position:x", position.x - 14.0 * scale.x, 0.18)
+	wind.tween_property(self, "position:x", position.x - 4.0 * scale.x, 0.18)
 	await wind.finished
 	var hx := position.x
 	var hit := create_tween().set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + 0.15, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.06, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	hit.tween_property(self, "position:x", hx + 58.0 * scale.x, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(self, "position:x", hx + 18.0 * scale.x, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await hit.finished
 	_thrust_streak()
 	impact.emit()
@@ -151,13 +161,13 @@ func _swing(heavy: bool) -> void:
 	var wind := create_tween().set_parallel(true)
 	wind.tween_property(_pivot, "rotation", _rest_rot + back, 0.20).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	wind.tween_property(_body, "rotation", -0.22, 0.20).set_trans(Tween.TRANS_SINE)
-	wind.tween_property(self, "position:x", position.x - 12.0 * scale.x, 0.20)
+	wind.tween_property(self, "position:x", position.x - 4.0 * scale.x, 0.20)
 	await wind.finished
 	var hx := position.x
 	var hit := create_tween().set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + thru, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.24, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	hit.tween_property(self, "position:x", hx + 40.0 * scale.x, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(self, "position:x", hx + 13.0 * scale.x, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await hit.finished
 	_slash_trail(heavy)
 	impact.emit()
@@ -165,24 +175,25 @@ func _swing(heavy: bool) -> void:
 	await _recover(hx)
 
 
-func _shoot(reach: float) -> void:
-	# draw back (body leans), hold, loose — the arrow streaks the full gap
+func _shoot(aim_global: Vector2) -> void:
+	# draw back (body leans), hold, loose — the arrow streaks to the target
+	var dest := _aim_local(aim_global)
 	var w := create_tween().set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.35, 0.26).set_trans(Tween.TRANS_SINE)
 	w.tween_property(_body, "rotation", -0.1, 0.26).set_trans(Tween.TRANS_SINE)
-	w.tween_property(self, "position:x", position.x - 6.0 * scale.x, 0.26)
+	w.tween_property(self, "position:x", position.x - 3.0 * scale.x, 0.26)
 	await w.finished
 	await get_tree().create_timer(0.14).timeout
 	_pivot.rotation = _rest_rot
-	_projectile(reach, "arrow")
+	_projectile(dest, "arrow")
 	await get_tree().create_timer(PROJ_TIME).timeout
 	impact.emit()
 	await get_tree().create_timer(0.08).timeout
 	await _recover(position.x)
 
 
-func _magic(reach: float) -> void:
-	# structured like _shoot (which renders reliably): a parallel wind tween
+func _magic(aim_global: Vector2) -> void:
+	var dest := _aim_local(aim_global)
 	var w := create_tween().set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.3, 0.28).set_trans(Tween.TRANS_SINE)
 	w.tween_property(_body, "rotation", -0.06, 0.28).set_trans(Tween.TRANS_SINE)
@@ -190,22 +201,22 @@ func _magic(reach: float) -> void:
 	_cast_gather()
 	await get_tree().create_timer(0.26).timeout
 	_pivot.rotation = _rest_rot
-	_projectile(reach, "bolt")
+	_projectile(dest, "bolt")
 	await get_tree().create_timer(PROJ_TIME).timeout
 	impact.emit()
-	_cast_burst_at(reach)
+	_cast_burst_at(dest)
 	await get_tree().create_timer(0.14).timeout
 	await _recover(position.x)
 
 
-func _heal() -> void:
+func _heal(aim_global := Vector2.INF) -> void:
 	var w := create_tween()
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.5, 0.26).set_trans(Tween.TRANS_SINE)
 	await w.finished
 	_cast_gather()
 	await get_tree().create_timer(0.26).timeout
 	impact.emit()
-	_heal_bloom()
+	_heal_bloom(aim_global)
 	await get_tree().create_timer(0.3).timeout
 	await _recover(position.x)
 
@@ -229,15 +240,15 @@ func _thrust_streak() -> void:
 	_fx_items.append({"kind": "streak", "pos": _tip(), "age": 0.0, "life": 0.22})
 func _cast_gather() -> void:
 	_fx_items.append({"kind": "gather", "pos": _tip(), "age": 0.0, "life": 0.3})
-func _projectile(reach: float, style: String) -> void:
-	var from := _tip()
-	_fx_items.append({"kind": "proj", "pos": from, "to": from + Vector2(reach, -8),
+func _projectile(dest: Vector2, style: String) -> void:
+	_fx_items.append({"kind": "proj", "pos": _tip(), "to": dest,
 		"style": style, "age": 0.0, "life": PROJ_TIME})
-func _cast_burst_at(reach: float) -> void:
-	_fx_items.append({"kind": "tburst", "pos": _tip() + Vector2(reach, -8), "age": 0.0, "life": 0.28})
-func _heal_bloom() -> void:
-	_fx_items.append({"kind": "heal", "pos": _fx.to_local(global_position) + Vector2(0, -6),
-		"age": 0.0, "life": 0.5})
+func _cast_burst_at(dest: Vector2) -> void:
+	_fx_items.append({"kind": "tburst", "pos": dest, "age": 0.0, "life": 0.28})
+func _heal_bloom(aim_global := Vector2.INF) -> void:
+	var at: Vector2 = _fx.to_local(aim_global) if not (is_inf(aim_global.x) or is_inf(aim_global.y)) \
+		else _fx.to_local(global_position) + Vector2(0, -6)
+	_fx_items.append({"kind": "heal", "pos": at, "age": 0.0, "life": 0.5})
 
 func _draw_fx() -> void:
 	for it in _fx_items:
@@ -256,14 +267,20 @@ func _draw_fx() -> void:
 			"gather":
 				_fx.draw_circle(it["pos"], 12.0 * (1.0 - t), Color(0.85,0.75,1.0,a))
 			"proj":
-				var cur: Vector2 = (it["pos"] as Vector2).lerp(it["to"], t)
+				var p0: Vector2 = it["pos"]
+				var p1: Vector2 = it["to"]
+				var cur: Vector2 = p0.lerp(p1, t)
 				if it["style"] == "bolt":
 					_fx.draw_circle(cur, 8.0, Color(0.6,0.4,0.95, 0.9))
 					_fx.draw_circle(cur, 4.0, Color(0.92,0.85,1.0, 1.0))
 				else:
-					_fx.draw_line(cur - Vector2(22,0), cur, Color(0.95,0.92,0.8,0.95), 2.5)
-					_fx.draw_line(cur, cur - Vector2(7,4), Color(0.8,0.78,0.7,1.0), 2.5)
-					_fx.draw_line(cur, cur - Vector2(7,-4), Color(0.8,0.78,0.7,1.0), 2.5)
+					# arrow oriented along its flight path (handles diagonals)
+					var dir: Vector2 = (p1 - p0)
+					dir = dir.normalized() if dir.length() > 0.1 else Vector2.RIGHT
+					var perp := dir.orthogonal()
+					_fx.draw_line(cur - dir * 22.0, cur, Color(0.95,0.92,0.8,0.95), 2.5)
+					_fx.draw_line(cur, cur - dir * 7.0 + perp * 4.0, Color(0.8,0.78,0.7,1.0), 2.5)
+					_fx.draw_line(cur, cur - dir * 7.0 - perp * 4.0, Color(0.8,0.78,0.7,1.0), 2.5)
 			"heal":
 				for k in range(3):
 					_fx.draw_arc(it["pos"], 14.0 + t*40.0 + k*10.0, 0.0, TAU, 26,

@@ -71,5 +71,5 @@ func _loop() -> void:
 			_build_rig(entry[0])
 			_label.text = "Kai — " + entry[1]
 			await get_tree().create_timer(0.35).timeout
-			await _rig.play_attack(entry[0], REACH)
+			await _rig.play_attack(entry[0], _origin + Vector2(REACH * SCALE, -30))
 			await get_tree().create_timer(0.6).timeout

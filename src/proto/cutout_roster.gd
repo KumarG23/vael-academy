@@ -81,6 +81,6 @@ func _loop() -> void:
 			_build_rig(i)
 		await get_tree().create_timer(0.3).timeout
 		for i in ROSTER.size():
-			await _rigs[i].play_attack(ROSTER[i][1], REACH)
+			await _rigs[i].play_attack(ROSTER[i][1], _origins[i] + Vector2(REACH * 0.9, -30))
 			await get_tree().create_timer(0.2).timeout
 		await get_tree().create_timer(0.5).timeout
