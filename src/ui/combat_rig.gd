@@ -164,8 +164,8 @@ func set_weapon(weapon_type: int) -> void:
 		th = maxf(1.0, float(_weapon.texture.get_height()))
 	var gf: Vector2 = GRIP_FRAC.get(weapon_type, Vector2(0.0, 0.5))
 	_weapon.position = -Vector2(gf.x * tw, gf.y * th) * wsc
-	# a bow is held OUT in front of the body, not on top of it
-	if weapon_type == WeaponDef.WeaponType.BOW:
+	# bows and tomes are held OUT in front of the body, not on top of it
+	if weapon_type == WeaponDef.WeaponType.BOW or weapon_type == WeaponDef.WeaponType.TOME:
 		_weapon.position += Vector2(6.0, 0.0)
 	# bows/staves are held UPRIGHT; if the art is already tall, don't rotate it
 	# (library bow is wide and needs the rotation; signature bows are vertical).
