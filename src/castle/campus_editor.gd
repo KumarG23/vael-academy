@@ -27,7 +27,11 @@ const BUILDINGS := [
 	"res://assets/art/pixellab/buildings/dorm_emberwing.png",
 	"res://assets/art/pixellab/buildings/dorm_tidemark.png",
 	"res://assets/art/pixellab/buildings/dorm_thornrook.png",
-	"res://assets/art/pixellab/buildings/colosseum.png",
+	"res://assets/art/pixellab/buildings/arena_spire.png",
+	"res://assets/art/pixellab/buildings/arena_spire_a.png",
+	"res://assets/art/pixellab/buildings/arena_spire_b.png",
+	"res://assets/art/pixellab/buildings/arena_spire_c.png",
+	"res://assets/art/pixellab/buildings/arena_spire_d.png",
 ]
 const TERRAINS := [
 	["Grass", Terrain.Type.PLAINS], ["Path", Terrain.Type.PATH],
@@ -36,6 +40,26 @@ const TERRAINS := [
 	["Water", Terrain.Type.WATER], ["Forest", Terrain.Type.FOREST],
 	["Embers", Terrain.Type.EMBERS], ["Spring", Terrain.Type.SPRING],
 ]
+const HELP_TEXT := """✎  CAMPUS EDITOR — CONTROLS
+
+  `                toggle the editor on / off
+  H                show / hide this help
+  Tab              switch  Props ⇄ Terrain
+  [   ]            cycle the brush / terrain
+
+  Left-click       drop the brush, or pick up a prop
+  drag             move the held prop
+  R-click  ·  X    delete the prop under the cursor
+  Arrows           nudge a held prop  (else pan the view)
+
+  Mouse-wheel      zoom in / out
+  +   -            zoom in / out
+  F                fit the whole map on screen
+
+  S                save this room to disk
+  Esc              drop selection, then exit"""
+const ZOOM_MIN := 0.06
+const ZOOM_MAX := 4.0
 
 var active := false
 var _castle
@@ -46,6 +70,7 @@ var _selected: MapDecor = null
 var _hover := Vector2i(-1, -1)
 var _dirty := false
 var _hud: Label
+var _help: PanelContainer
 
 
 func setup(castle) -> void:
@@ -60,12 +85,37 @@ func setup(castle) -> void:
 	_hud.add_theme_font_size_override("font_size", 15)
 	_hud.visible = false
 	_castle._ui.add_child(_hud)
+	_build_help()
+
+
+## The full controls card (H to toggle). Shows automatically when you enter edit.
+func _build_help() -> void:
+	_help = PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.06, 0.05, 0.09, 0.93)
+	sb.border_color = Color(0.96, 0.82, 0.4, 0.85)
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(7)
+	for m in ["left", "right", "top", "bottom"]:
+		sb.set("content_margin_" + m, 22.0)
+	_help.add_theme_stylebox_override("panel", sb)
+	var lbl := Label.new()
+	lbl.text = HELP_TEXT
+	lbl.add_theme_font_size_override("font_size", 16)
+	lbl.add_theme_color_override("font_color", Color(0.95, 0.92, 0.78))
+	_help.add_child(lbl)
+	_help.position = Vector2(get_viewport().get_visible_rect().size.x - 400, 96)
+	_help.visible = false
+	_castle._ui.add_child(_help)
 
 
 func toggle() -> void:
 	active = not active
 	_selected = null
 	_hud.visible = active
+	_help.visible = active          # the controls card greets you on entry
+	if not active:
+		_castle._setup_camera()      # snap back to the avatar-follow view
 	_update_hud()
 	queue_redraw()
 
@@ -93,6 +143,10 @@ func handle_input(event: InputEvent) -> bool:
 		queue_redraw()
 		return true
 	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_zoom(1.12); return true
+		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_zoom(1.0 / 1.12); return true
 		_hover = _cell()
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_on_left_click()
@@ -130,10 +184,18 @@ func _on_key(kc: int) -> bool:
 				_castle.room.chapter.decor.erase(_selected); _selected = null; _touch()
 			else:
 				_delete_at(_hover)
-		KEY_LEFT: _nudge(Vector2i(-1, 0))
-		KEY_RIGHT: _nudge(Vector2i(1, 0))
-		KEY_UP: _nudge(Vector2i(0, -1))
-		KEY_DOWN: _nudge(Vector2i(0, 1))
+		KEY_LEFT: _nudge_or_pan(Vector2i(-1, 0))
+		KEY_RIGHT: _nudge_or_pan(Vector2i(1, 0))
+		KEY_UP: _nudge_or_pan(Vector2i(0, -1))
+		KEY_DOWN: _nudge_or_pan(Vector2i(0, 1))
+		KEY_F:
+			_fit_all()
+		KEY_EQUAL, KEY_KP_ADD:
+			_zoom(1.12)
+		KEY_MINUS, KEY_KP_SUBTRACT:
+			_zoom(1.0 / 1.12)
+		KEY_H:
+			_help.visible = not _help.visible
 		KEY_S:
 			_save()
 		KEY_ESCAPE:
@@ -160,6 +222,30 @@ func _nudge(delta: Vector2i) -> void:
 	if _selected != null:
 		_selected.cell += delta
 		_touch()
+
+
+## Arrows move the held prop; with nothing picked up they pan the camera so you
+## can range across a big map without walking.
+func _nudge_or_pan(delta: Vector2i) -> void:
+	if _selected != null:
+		_nudge(delta)
+	else:
+		var step := float(_castle._grid.cell_size) * 2.0
+		_castle._camera.position += Vector2(delta) * step
+
+
+func _zoom(factor: float) -> void:
+	var z: float = clampf(_castle._camera.zoom.x * factor, ZOOM_MIN, ZOOM_MAX)
+	_castle._camera.zoom = Vector2(z, z)
+
+
+## Frame the whole room on screen — the "see the whole campus" shortcut (F).
+func _fit_all() -> void:
+	var map: Vector2 = _castle._grid.pixel_size()
+	var vp := get_viewport().get_visible_rect().size
+	var z: float = clampf(minf(vp.x / map.x, vp.y / map.y) * 0.95, ZOOM_MIN, ZOOM_MAX)
+	_castle._camera.zoom = Vector2(z, z)
+	_castle._camera.position = map * 0.5
 
 
 func _place_brush(cell: Vector2i) -> void:
@@ -229,7 +315,7 @@ func _update_hud() -> void:
 	var star := " *unsaved*" if _dirty else ""
 	_hud.text = "✎ EDIT — %s   room: %s%s\n" % [_castle.room.id, _mode.to_upper(), star]
 	_hud.text += "brush: %s   ([ ] cycle · Tab prop/terrain)\n" % _brush_label()
-	_hud.text += "L-click place/pick · drag move · R-click/X delete · arrows nudge · S save · ` exit"
+	_hud.text += "wheel/± zoom · F fit map · S save · H help · ` exit"
 
 
 func _draw() -> void:

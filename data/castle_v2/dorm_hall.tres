@@ -110,6 +110,7 @@ objective = 0
 seize_cell = Vector2i(-1, -1)
 boss_unit_id = ""
 non_lethal = false
+is_arena = false
 enemy_spawns = Array[ExtResource("2_oe2qo")]([])
 deploy_cells = Dictionary[String, Vector2i]({})
 player_spawns = Array[ExtResource("2_oe2qo")]([])

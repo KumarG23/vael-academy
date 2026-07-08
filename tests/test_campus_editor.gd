@@ -47,6 +47,38 @@ func test_place_then_delete_a_prop():
 	assert_eq(decor.size(), before, "delete removes it, leaving the room as it was")
 
 
+func test_help_card_shows_on_entry_and_toggles():
+	assert_not_null(_ed._help, "the controls card is built")
+	assert_false(_ed._help.visible)
+	_ed.toggle()
+	assert_true(_ed._help.visible, "the card greets you when you open the editor")
+	_ed._on_key(KEY_H)
+	assert_false(_ed._help.visible, "H hides it")
+	_ed._on_key(KEY_H)
+	assert_true(_ed._help.visible, "H shows it again")
+
+
+func test_zoom_and_fit_change_the_camera():
+	_ed.toggle()
+	var z0: float = _castle._camera.zoom.x
+	_ed._zoom(2.0)
+	assert_almost_eq(_castle._camera.zoom.x, z0 * 2.0, 0.001, "zoom in scales the camera")
+	# clamp holds at the extremes
+	_ed._zoom(1000.0)
+	assert_lte(_castle._camera.zoom.x, _ed.ZOOM_MAX + 0.001, "zoom is capped")
+	_ed._fit_all()
+	var map: Vector2 = _castle._grid.pixel_size()
+	assert_almost_eq(_castle._camera.position.x, map.x * 0.5, 1.0, "fit centres on the map")
+
+
+func test_arrows_pan_when_nothing_is_held():
+	_ed.toggle()
+	_ed._selected = null
+	var p0: Vector2 = _castle._camera.position
+	_ed._nudge_or_pan(Vector2i(1, 0))
+	assert_gt(_castle._camera.position.x, p0.x, "with no prop held, arrows pan the view")
+
+
 func test_terrain_paint_changes_a_cell():
 	_ed.toggle()
 	_ed._mode = "terrain"

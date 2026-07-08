@@ -101,6 +101,31 @@ func test_function_points_live_in_their_rooms():
 		assert_true(found, "%s hosts %s" % [rid, expect[rid]])
 
 
+## AW-45: the Arena is its own sub-area (the Trial Spire) reached from the
+## Training Grounds, not a building tucked on the campus lawn.
+func test_arena_is_its_own_sub_area_off_the_training_yard():
+	assert_true(_castle._rooms.has("arena_grounds"), "the Trial Spire has its own map")
+	# the arena-entry function point lives in the grounds now, not on the campus
+	var grounds_has_entry := false
+	for p in _castle._rooms["arena_grounds"].points:
+		if p.id == "fn_arena":
+			grounds_has_entry = true
+	assert_true(grounds_has_entry, "you enter the arena from inside the grounds")
+	for p in _castle._rooms["campus"].points:
+		assert_ne(p.id, "fn_arena", "the campus no longer hosts the arena directly")
+	# the training yard gates through to the grounds, and the grounds gate back
+	var train_to_arena := false
+	for d in _castle._rooms["training"].doors:
+		if d.to_room == "arena_grounds":
+			train_to_arena = true
+	assert_true(train_to_arena, "the training yard opens onto the Trial Spire")
+	var arena_to_train := false
+	for d in _castle._rooms["arena_grounds"].doors:
+		if d.to_room == "training":
+			arena_to_train = true
+	assert_true(arena_to_train, "and the grounds lead back to the yard")
+
+
 func test_training_from_the_castle_grants_xp():
 	Campaign.reset_new_game(false)
 	Campaign.begin_hub_visit()
