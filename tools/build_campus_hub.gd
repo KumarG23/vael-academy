@@ -206,25 +206,38 @@ func _build_dorm(id: String, disp: String, accent: int, feature: String, student
 	print("%s err=%d" % [id, ResourceSaver.save(room, "res://data/castle_v2/%s.tres" % id)])
 
 
-## The Sealed Grove — an accessible wood with the First Crown standing stone.
+## The Sealed Grove — a lush GRASS-based wood (AW-46; base was FOREST → rendered
+## grey) with varied trees, wildflower meadows, glowing mushrooms, and a colossal
+## pulsing Wardtree at its sacred heart. Kept in sync with tools/build_grove.gd.
 func _build_grove() -> void:
-	_new_room("grove", "The Sealed Grove", 26, 24, T.FOREST)
-	# clearings of grass carved through the wood, a winding path to the stone
-	_fill(8, 2, 17, 21, T.PLAINS)
-	_fill(2, 10, 23, 12, T.PLAINS)
-	_fill(9, 2, 10, 20, T.PATH)
-	# scatter dense trees through the wooded frame
-	var rng := RandomNumberGenerator.new(); rng.seed = 41
-	for y in range(2, 22):
-		for x in range(2, 24):
-			if ch.get_terrain(x, y) == T.FOREST and rng.randf() < 0.35:
-				_prop("tree_big", x, y, true)
-	# the First Crown standing stone in a mossy clearing at the heart
-	_fill(11, 14, 15, 18, T.PLAINS)
-	_prop("rocks", 13, 16, true)
-	_point("first_crown_stone", "The First Crown Stone", 13, 17, "res://data/dialogue/lore_wardstones.json")
-	_prop("stump", 11, 8); _prop("bush", 16, 6); _prop("bush", 12, 19)
-	for f in [[10, 5], [15, 9], [11, 12]]:
-		ch.set_terrain(f[0], f[1], T.FLOWERS)
+	_new_room("grove", "The Sealed Grove", 26, 24, T.PLAINS)   # GRASS base = the fix
+	_fill(0, 0, 25, 2, T.FOREST); _fill(0, 20, 25, 23, T.FOREST)
+	_fill(0, 0, 2, 23, T.FOREST); _fill(23, 0, 25, 23, T.FOREST)
+	_fill(9, 1, 10, 12, T.PATH); _fill(7, 12, 18, 13, T.PATH)
+	_fill(8, 9, 17, 19, T.PLAINS)
+	for m in [[4, 5, 6, 8], [19, 5, 21, 8], [4, 15, 6, 18], [19, 15, 21, 18], [11, 6, 14, 8]]:
+		_fill(m[0], m[1], m[2], m[3], T.FLOWERS)
+	for t in [["pine_tree", 3, 2], ["magic_tree", 6, 2], ["blossom_tree", 14, 2],
+			["pine_tree", 18, 2], ["tree_big", 21, 2], ["willow_tree", 2, 6],
+			["pine_tree", 2, 11], ["dead_tree", 2, 16], ["tree_big", 23, 6],
+			["magic_tree", 23, 11], ["pine_tree", 23, 17], ["blossom_tree", 4, 21],
+			["willow_tree", 9, 22], ["pine_tree", 16, 22], ["dead_tree", 21, 21],
+			["magic_tree", 6, 19]]:
+		_prop(t[0], t[1], t[2], true)
+	for f in [["flowers_wild", 5, 6], ["flowers_wild", 20, 6], ["flowers_wild", 5, 16],
+			["flowers_wild", 20, 16], ["flowers_wild", 12, 7], ["flowers_wild", 15, 6],
+			["fern_bush", 7, 10], ["fern_bush", 18, 11], ["fern_bush", 8, 18],
+			["fern_bush", 17, 18], ["fern_bush", 5, 12], ["mushrooms_glow", 10, 17],
+			["mushrooms_glow", 15, 17], ["mushrooms_glow", 9, 8], ["mushrooms_glow", 16, 8],
+			["bush", 7, 6], ["bush", 19, 19], ["stump", 6, 15]]:
+		_prop(f[0], f[1], f[2])
+	_prop("great_wardtree", 12, 16)
+	for y in range(15, 17):
+		for x in range(11, 15):
+			ch.set_terrain(x, y, T.SITE)
+	_prop("rocks", 12, 18, true)
+	_point("first_crown_stone", "The First Crown Stone", 13, 18, "res://data/dialogue/lore_wardstones.json")
+	for mg in [[10, 18], [14, 18], [9, 16], [16, 16]]:
+		_prop("mushrooms_glow", mg[0], mg[1])
 	_door(9, 1, "campus", 6, 27, "◀ To the Campus")
 	print("grove err=%d" % ResourceSaver.save(room, "res://data/castle_v2/grove.tres"))

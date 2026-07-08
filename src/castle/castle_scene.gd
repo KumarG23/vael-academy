@@ -441,8 +441,19 @@ func _draw() -> void:
 		var scale := cs / 32.0  # decor authored at 32px (TerrainTiles.TILE)
 		var w: float = d.texture.get_width() * scale
 		var h: float = d.texture.get_height() * scale
-		draw_texture_rect(d.texture, Rect2(d.cell.x * cs + (cs - w) * 0.5 + d.offset.x,
-			d.cell.y * cs + cs - h + d.offset.y, w, h), false)
+		var rect := Rect2(d.cell.x * cs + (cs - w) * 0.5 + d.offset.x,
+			d.cell.y * cs + cs - h + d.offset.y, w, h)
+		# AW-46: the Sealed Grove's Wardtree breathes — a slow green aura pulses
+		# behind it and a soft emerald shimmer washes over its canopy.
+		if d.texture.resource_path.contains("great_wardtree"):
+			var t := 0.5 + 0.5 * sin(_door_pulse * 1.5)
+			var ctr := Vector2(rect.position.x + w * 0.5, rect.position.y + h * 0.44)
+			draw_circle(ctr, w * (0.60 + 0.10 * t), Color(0.34, 1.0, 0.5, 0.06 + 0.08 * t))
+			draw_circle(ctr, w * (0.42 + 0.06 * t), Color(0.6, 1.0, 0.72, 0.06 + 0.09 * t))
+			draw_texture_rect(d.texture, rect, false,
+				Color(1, 1, 1).lerp(Color(0.72, 1.0, 0.8), 0.28 * t))
+			continue
+		draw_texture_rect(d.texture, rect, false)
 	var pulse := 0.5 + 0.3 * sin(_door_pulse * 3.2)
 	for d in room.doors:
 		var c := Vector2((d.cell.x + 0.5) * cs, (d.cell.y + 0.5) * cs)

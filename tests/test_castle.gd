@@ -101,6 +101,38 @@ func test_function_points_live_in_their_rooms():
 		assert_true(found, "%s hosts %s" % [rid, expect[rid]])
 
 
+## AW-46: every room must sit on a base the tile renderer actually has atlases
+## for (PLAINS or FLOOR) — a FOREST base drew no grass and rendered GREY (the
+## Sealed Grove bug). This guard stops any room shipping grey again.
+func test_every_room_base_is_a_renderable_ground():
+	for rid in _castle._rooms:
+		var base: int = _castle._rooms[rid].chapter.base_terrain
+		assert_true(base == Terrain.Type.PLAINS or base == Terrain.Type.FLOOR,
+			"%s base terrain (%d) is grass or floor, not a bare/grey base" % [rid, base])
+
+
+## AW-46: the Sealed Grove is grass now, and lush — a mix of tree types plus the
+## Wardtree centrepiece.
+func test_the_grove_is_grass_and_lush():
+	var grove: CastleRoomDef = _castle._rooms["grove"]
+	assert_eq(grove.chapter.base_terrain, Terrain.Type.PLAINS, "the grove floor is grass")
+	var kinds := {}
+	var has_wardtree := false
+	for d in grove.chapter.decor:
+		if d == null or d.texture == null:
+			continue
+		var f := d.texture.resource_path.get_file().get_basename()
+		kinds[f] = true
+		if f == "great_wardtree":
+			has_wardtree = true
+	assert_true(has_wardtree, "the pulsing Wardtree stands at its heart")
+	var tree_types := 0
+	for k in ["magic_tree", "pine_tree", "blossom_tree", "willow_tree", "dead_tree"]:
+		if kinds.has(k):
+			tree_types += 1
+	assert_gte(tree_types, 4, "several kinds of tree fill the wood: " + str(kinds.keys()))
+
+
 ## AW-45: the Arena is its own sub-area (the Trial Spire) reached from the
 ## Training Grounds, not a building tucked on the campus lawn.
 func test_arena_is_its_own_sub_area_off_the_training_yard():

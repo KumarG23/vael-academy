@@ -13,7 +13,9 @@ extends Node2D
 ##   S  save the room            Esc  drop selection / leave edit
 
 const PROPS := [
-	"tree_big", "bush", "hedge", "flower_bed", "stump", "rocks", "street_lamp",
+	"tree_big", "magic_tree", "pine_tree", "blossom_tree", "willow_tree",
+	"dead_tree", "great_wardtree", "bush", "hedge", "fern_bush", "flower_bed",
+	"flowers_wild", "mushrooms_glow", "stump", "rocks", "street_lamp",
 	"bench", "bench_stone", "fence", "signpost", "well", "fireplace",
 	"statue_founder", "banner_pair", "notice_board", "tent", "cart", "barrels",
 	"crates", "bookshelf", "long_table",
