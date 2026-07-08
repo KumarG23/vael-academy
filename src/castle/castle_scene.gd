@@ -44,6 +44,7 @@ var _toast_label: Label
 var _toast_left := 0.0
 var _dialogue: DialogueScene = null
 var _journal: AcademyJournal = null  # AW-39: the J-key book UI
+var _editor: CampusEditor = null     # AW-44: the ` visual room editor
 var _nearest_point: CastlePoint = null
 var _door_pulse := 0.0
 ## Doors re-arm only after the avatar leaves a door cell — spawning beside
@@ -113,6 +114,9 @@ func _ready() -> void:
 	_menu.chosen.connect(_on_menu_chosen)
 	_menu.cancelled.connect(_close_menu)
 	_ui.add_child(_menu)
+	_editor = CampusEditor.new()  # AW-44: the in-game visual room editor (` to toggle)
+	add_child(_editor)
+	_editor.setup(self)
 	_start_music()
 	var target := next_room if next_room != "" else START_ROOM
 	var spawn := next_spawn
@@ -258,7 +262,8 @@ func _point_available(p: CastlePoint) -> bool:
 
 
 func busy() -> bool:
-	return _dialogue != null or _menu_context != "" or _fishing != null or _journal != null
+	return _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
+		or (_editor != null and _editor.active)
 
 
 func _process(delta: float) -> void:
@@ -347,6 +352,17 @@ func _update_prompt() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# AW-44: backtick/tilde toggles the visual room editor; while it's on, it eats
+	# all input (no walking / journal / interacting).
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_QUOTELEFT:
+		if _editor != null:
+			_editor.toggle()
+			get_viewport().set_input_as_handled()
+		return
+	if _editor != null and _editor.active:
+		if _editor.handle_input(event):
+			get_viewport().set_input_as_handled()
+		return
 	# AW-39: J opens the Academy Journal from anywhere in the castle.
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_J:
 		if _journal == null and not busy():
