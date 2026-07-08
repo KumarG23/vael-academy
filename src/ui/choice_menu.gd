@@ -70,16 +70,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("cursor_up"):
 		_index = (_index - 1 + _options.size()) % _options.size()
+		AudioManager.play_sfx("cursor")
 		queue_redraw()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("cursor_down"):
 		_index = (_index + 1) % _options.size()
+		AudioManager.play_sfx("cursor")
 		queue_redraw()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("cursor_confirm"):
+		AudioManager.play_sfx("confirm")
 		get_viewport().set_input_as_handled()
 		chosen.emit(_index)
 	elif event.is_action_pressed("cursor_cancel"):
+		AudioManager.play_sfx("cancel")
 		get_viewport().set_input_as_handled()
 		cancelled.emit()
 

@@ -103,6 +103,7 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 			return
 		fired[0] = true
 		if strike.connected:
+			AudioManager.play_sfx("crit" if strike.was_crit else "hit")  # AW-36
 			target.set_hp(strike.defender_hp_after)
 			_spawn_number(target.position, strike)
 			_shake_amount = maxf(_shake_amount, cfg.shake_magnitude(strike.damage, strike.was_crit))
@@ -111,6 +112,7 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 			_recoil(target, toward)
 			_hitstop_fire(cfg.hitstop_duration(strike.was_crit, is_kill))
 		else:
+			AudioManager.play_sfx("miss")  # AW-36
 			_spawn_miss(target.position))
 	# aim ranged attacks at the real target (diagonals included), not straight ahead
 	await rig.play_attack(wt, target.global_position)

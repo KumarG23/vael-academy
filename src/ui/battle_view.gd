@@ -139,6 +139,7 @@ func _ready() -> void:
 	_setup_houses()
 	_setup_supports()
 	_setup_terrain_tiles()
+	AudioManager.play_music("res://assets/audio/music/battle_theme.wav")  # AW-36
 	_setup_overlay()
 	_setup_range_overlay()
 	_setup_threat_overlay()

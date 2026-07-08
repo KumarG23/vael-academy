@@ -104,6 +104,7 @@ func execute_heal(healer: Unit, ally: Unit) -> void:
 	var amount: int = healer.weapon().heal_amount + healer.stat("mag")
 	var hp_before: int = ally.current_hp
 	var healed: int = ally.heal(amount)
+	AudioManager.play_sfx("heal")  # AW-36
 	# On-map staff heal via the combat rig (battle direction v2): the healer
 	# casts on its tile and a bloom lands on the ally. Falls back to the legacy
 	# popup cut-in if that's still enabled, then to a floating "+N" (tests,
@@ -158,6 +159,7 @@ func award_heal_xp(unit: Unit, healed: int) -> void:
 
 func apply_xp(unit: Unit, amount: int) -> void:
 	for result in unit.gain_xp(amount, _v._rng):
+		AudioManager.play_sfx("level_up")  # AW-36
 		await _v._level_up_screen.play(unit.unit_def.display_name, result)
 
 

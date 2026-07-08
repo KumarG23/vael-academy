@@ -125,18 +125,9 @@ func _ready() -> void:
 ## whole castle scene, so it carries across every room. Convention-based:
 ## plays whatever lives at assets/audio/music/campus_chill.mp3.
 func _start_music() -> void:
-	var path := "res://assets/audio/music/campus_chill.mp3"
-	if not ResourceLoader.exists(path):
-		return
-	var stream: AudioStream = load(path)
-	if stream is AudioStreamMP3:
-		stream.loop = true
-	_music = AudioStreamPlayer.new()
-	_music.stream = stream
-	_music.volume_db = -6.0
-	_music.autoplay = true
-	add_child(_music)
-	_music.play()
+	# AW-36: the campus bed now runs through the AudioManager autoload, which owns
+	# the single music voice across scenes (battle swaps to the battle theme).
+	AudioManager.play_music("res://assets/audio/music/campus_chill.mp3")
 
 
 func _load_rooms() -> void:
@@ -328,6 +319,7 @@ func _check_door() -> void:
 		if d.cell == cell:
 			on_door = true
 			if _door_armed and _rooms.has(d.to_room):
+				AudioManager.play_sfx("door")  # AW-36
 				enter_room(d.to_room, d.spawn_cell)
 				return
 	if not on_door:
