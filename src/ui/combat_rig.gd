@@ -63,6 +63,10 @@ const GRIP_FRAC := {
 }
 
 var _unit_id := "kai"
+# AW-31: the equipped weapon's identity, so FX vary per SPELL/WEAPON, not just
+# per caster — set via set_spell_meta() before an attack plays.
+var _weapon_id := ""
+var _weapon_school := ""
 var _body: Sprite2D
 var _pivot: Node2D
 var _weapon: Sprite2D
@@ -127,6 +131,13 @@ func _facing_body(unit_id: String, facing: int) -> Texture2D:
 		if ResourceLoader.exists(p):
 			return load(p)
 	return null
+
+
+## AW-31: tell the rig which specific weapon/spell is being used, so its FX
+## (element bolt, signature-blade trail) can differ from the caster's default.
+func set_spell_meta(weapon_id: String, school: String) -> void:
+	_weapon_id = weapon_id
+	_weapon_school = school
 
 
 func set_weapon(weapon_type: int) -> void:
@@ -379,7 +390,7 @@ func _hit_point(frac: float) -> Vector2:
 func _slash_trail(heavy: bool) -> void:
 	# centered at the hand; a crescent that opens toward the target and expands
 	_fx_items.append({"kind": "slash", "pos": _tip(), "ang": _aim_angle(),
-		"age": 0.0, "life": 0.3, "big": heavy})
+		"age": 0.0, "life": 0.3, "big": heavy, "col": _melee_color()})
 func _thrust_streak() -> void:
 	var from := _tip()
 	var to := _aim_fx if not (is_inf(_aim_fx.x) or is_inf(_aim_fx.y)) else from + Vector2(46, 0)
@@ -387,16 +398,39 @@ func _thrust_streak() -> void:
 	nd = nd.normalized() if nd.length() > 0.1 else Vector2.RIGHT
 	_fx_items.append({"kind": "streak", "pos": from.lerp(to, 0.45), "ndir": nd, "perp": nd.orthogonal(),
 		"age": 0.0, "life": 0.22})
+## AW-31: spell look is chosen by the tome's ELEMENT first (so Ember/Gale/Tide
+## each read distinctly and match the anima triangle), then the caster, then a
+## default. Element wins so a generic Fire tome and Liora's Soulflame share fire.
 func _magic_style() -> String:
+	match _weapon_school:
+		"ember": return "flame"
+		"gale": return "swirl"
+		"tide": return "crystal"
+		"reason": return "rays"
 	match _unit_id:
 		"isolde": return "crystal"
 		"corvin": return "swirl"
 		_: return "flame"
 func _magic_color() -> Color:
+	match _weapon_school:
+		"ember": return Color(1.0, 0.45, 0.15)   # fire
+		"gale": return Color(0.55, 1.0, 0.55)    # wind/nature
+		"tide": return Color(0.35, 0.70, 1.0)    # water
+		"reason": return Color(0.82, 0.55, 1.0)  # arcane
 	match _unit_id:
 		"isolde": return Color(0.40, 0.72, 1.0)
 		"corvin": return Color(0.42, 1.0, 0.55)
 		_: return Color(1.0, 0.42, 0.9)
+## Melee swing tint per SIGNATURE weapon — each hero's blade leaves its own trail.
+func _melee_color() -> Color:
+	match _weapon_id:
+		"sig_kai": return Color(0.42, 1.0, 0.55)   # Verdant Blade — green
+		"sig_dain": return Color(1.0, 0.55, 0.20)  # Brazen Cleaver — molten
+		"sig_kael": return Color(0.70, 0.90, 1.0)  # keen steel
+		"sig_perrin": return Color(1.0, 0.92, 0.55) # Oathlight — gold
+		"sig_marlow": return Color(0.80, 0.55, 1.0) # violet edge
+		"claw": return Color(0.75, 1.0, 0.70)      # Sable's claws — green
+		_: return Color(0.85, 1.0, 0.9)            # default steel gleam
 func _heal_color() -> Color:
 	match _unit_id:
 		"wren": return Color(1.0, 0.76, 0.36)
@@ -431,9 +465,10 @@ func _draw_fx() -> void:
 		match it["kind"]:
 			"slash":
 				var rr := (22.0 if it.get("big", false) else 17.0)
+				var sc: Color = it.get("col", Color(0.85, 1.0, 0.9))
 				for k in range(3):
 					_fx.draw_arc(it["pos"], (rr + k * 4.0) * (0.8 + t * 0.5), float(it.get("ang",0.0)) - 1.15, float(it.get("ang",0.0)) + 1.15, 22,
-						Color(0.85, 1.0, 0.9, a * 0.85), 3.0 - k)
+						Color(sc.r, sc.g, sc.b, a * 0.85), 3.0 - k)
 			"streak":
 				for k in range(3):
 					_fx.draw_line(it["pos"] - it["ndir"]*23.0 + it["perp"]*float(k*3-3), it["pos"] + it["ndir"]*23.0 + it["perp"]*float(k*3-3),

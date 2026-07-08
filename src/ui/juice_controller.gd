@@ -92,8 +92,10 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 	elif facing == CombatRig.Facing.WEST:
 		striker.set_facing(false)
 	rig.setup(striker.unit_id(), facing, striker.map_sprite_scale())
-	var wt: int = striker.weapon().weapon_type if striker.weapon() != null else 0
+	var w := striker.weapon()
+	var wt: int = w.weapon_type if w != null else 0
 	rig.set_weapon(wt)
+	rig.set_spell_meta(w.id if w != null else "", w.school if w != null else "")  # AW-31: per-weapon/spell FX
 	striker.visible = false
 	var fired := [false]
 	rig.impact.connect(func() -> void:

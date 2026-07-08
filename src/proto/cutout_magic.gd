@@ -2,12 +2,12 @@ extends Node2D
 const SCALE := 4.0
 const GAP := 130.0
 const CAST := [
-	["liora", WeaponDef.WeaponType.TOME, "Liora — flame"],
-	["isolde", WeaponDef.WeaponType.TOME, "Isolde — reason"],
-	["corvin", WeaponDef.WeaponType.TOME, "Corvin — nature"],
-	["wren", WeaponDef.WeaponType.STAFF, "Wren — amber"],
-	["elowen", WeaponDef.WeaponType.STAFF, "Elowen — tide"],
-	["vesper", WeaponDef.WeaponType.STAFF, "Vesper — green"],
+	["liora", WeaponDef.WeaponType.TOME, "Liora — Ember (fire)", "ember"],
+	["isolde", WeaponDef.WeaponType.TOME, "Isolde — Tide (water)", "tide"],
+	["corvin", WeaponDef.WeaponType.TOME, "Corvin — Gale (wind)", "gale"],
+	["wren", WeaponDef.WeaponType.STAFF, "Wren — amber heal", ""],
+	["elowen", WeaponDef.WeaponType.STAFF, "Elowen — tide heal", ""],
+	["vesper", WeaponDef.WeaponType.STAFF, "Vesper — cross heal", ""],
 ]
 var _rigs: Array = []
 var _origins: Array = []
@@ -27,6 +27,7 @@ func _build(i: int) -> void:
 	if _rigs.size() > i and _rigs[i] != null: _rigs[i].queue_free()
 	var r := CombatRig.new(); add_child(r); r.position = _origins[i]
 	r.setup(CAST[i][0], CombatRig.Facing.EAST, SCALE); r.set_weapon(CAST[i][1])
+	r.set_spell_meta("sig_" + CAST[i][0], CAST[i][3])  # AW-31: element-driven FX
 	if _rigs.size() > i: _rigs[i] = r
 	else: _rigs.append(r)
 func _tt() -> Texture2D:
