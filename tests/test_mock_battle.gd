@@ -32,10 +32,12 @@ func test_chapter_data_is_authored_correctly():
 	assert_eq(chapter.width, 20)
 	assert_eq(chapter.height, 15)
 	assert_eq(chapter.terrain.size(), 300, "full terrain grid")
-	assert_eq(chapter.objective, ChapterDef.Objective.DEFEAT_BOSS)
-	assert_eq(chapter.boss_unit_id, "serra")
+	# AW-30: a 3-house free-for-all — win by being the last house standing (ROUT
+	# over every rival), non-lethal (a mock battle, nobody truly falls).
+	assert_eq(chapter.objective, ChapterDef.Objective.ROUT)
+	assert_eq(chapter.boss_unit_id, "serra", "Serra still gets her boss quote")
 	assert_true(chapter.non_lethal, "the Mock Battle is non-lethal")
-	assert_eq(chapter.enemy_spawns.size(), 7, "6 Tidemark students + Serra")
+	assert_eq(chapter.enemy_spawns.size(), 14, "7 Tidemark (team 1) + 7 Thornrook (team 2)")
 	assert_eq(chapter.deploy_cells.size(), 20, "cells for every fieldable unit across all houses + Sable (WO-5.4/5.5)")
 
 
@@ -81,32 +83,36 @@ func test_dialogue_scripts_exist_and_parse():
 
 func test_forces_spawn_from_chapter_data():
 	assert_eq(_view._living_units_on_team(0).size(), 7, "the Emberwing house + Kai (WO-5.2)")
-	assert_eq(_view._living_units_on_team(1).size(), 7, "seven Tidemark units")
+	assert_eq(_view._living_units_on_team(1).size(), 7, "seven Tidemark units (team 1)")
+	assert_eq(_view._living_units_on_team(2).size(), 7, "seven Thornrook units (team 2, AW-30)")
+	assert_eq(_view._living_foes_of(0).size(), 14, "both rival houses are the player's foes")
 	var kai: Unit = _view.unit_by_id("kai")
 	assert_eq(kai.cell, Vector2i(2, 12), "Kai at his authored deploy cell")
 	assert_true(kai.is_lord(), "Kai is the lord (§4)")
 	assert_eq(_view._lord_unit, kai)
 	var serra: Unit = _view.unit_by_id("serra")
 	assert_eq(serra.cell, Vector2i(17, 2))
-	assert_eq(_view._boss_unit, serra, "Serra tracked as the objective boss")
+	assert_eq(_view._boss_unit, serra, "Serra tracked for her boss quote")
 	assert_eq(serra.ai_behavior(), AIBrain.Behavior.BOSS)
 
 
-func test_defeating_serra_wins_with_enemies_still_standing():
-	var serra: Unit = _view.unit_by_id("serra")
-	_view._kill(serra)
-	_view._check_objective()
-	assert_true(_view._battle_over, "battle ends when Serra yields")
-	assert_true(_view._battle_victory, "defeating the boss is victory")
-	assert_gt(_view._living_units_on_team(1).size(), 0, "other Tidemark students remain")
-
-
-func test_rout_also_wins():
+func test_felling_one_house_is_not_yet_victory():
+	# AW-30: rout all of Tidemark — but Thornrook still fields a house, so the
+	# player is NOT the last one standing yet.
 	for enemy in _view._living_units_on_team(1).duplicate():
 		_view._kill(enemy)
 	_view._check_objective()
+	assert_false(_view._battle_over, "another house still stands")
+	assert_gt(_view._living_units_on_team(2).size(), 0, "Thornrook remains")
+
+
+func test_last_house_standing_wins():
+	# Rout every rival across both houses -> the player's house is last standing.
+	for enemy in _view._living_foes_of(0).duplicate():
+		_view._kill(enemy)
+	_view._check_objective()
 	assert_true(_view._battle_over)
-	assert_true(_view._battle_victory)
+	assert_true(_view._battle_victory, "the last house standing wins")
 
 
 func test_lord_fall_still_loses_the_mock_battle():

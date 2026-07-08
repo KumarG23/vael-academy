@@ -23,6 +23,13 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/stump.png" id="12_myhfq"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/signpost.png" id="13_1gi5r"]
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="23_t5ycu"]
+[ext_resource type="Resource" path="res://data/units/corin.tres" id="30_thc"]
+[ext_resource type="Resource" path="res://data/units/thessaly.tres" id="31_tht"]
+[ext_resource type="Resource" path="res://data/units/corvin.tres" id="32_thv"]
+[ext_resource type="Resource" path="res://data/units/marlow.tres" id="33_thm"]
+[ext_resource type="Resource" path="res://data/units/vesper.tres" id="34_thp"]
+[ext_resource type="Resource" path="res://data/units/rurik.tres" id="35_thr"]
+[ext_resource type="Resource" path="res://data/units/sable.tres" id="36_ths"]
 
 [sub_resource type="Resource" id="Resource_wadgp"]
 script = ExtResource("1_euytt")
@@ -149,14 +156,63 @@ script = ExtResource("1_vyfsr")
 unit = ExtResource("8_8kt3g")
 cell = Vector2i(17, 2)
 
+[sub_resource type="Resource" id="Resource_thc"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("30_thc")
+cell = Vector2i(15, 13)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_tht"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("31_tht")
+cell = Vector2i(14, 13)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_thv"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("32_thv")
+cell = Vector2i(16, 13)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_thm"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("33_thm")
+cell = Vector2i(14, 14)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_thp"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("34_thp")
+cell = Vector2i(16, 14)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_thr"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("35_thr")
+cell = Vector2i(17, 14)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="Resource_ths"]
+script = ExtResource("1_vyfsr")
+unit = ExtResource("36_ths")
+cell = Vector2i(15, 14)
+team_override = 2
+ai_override = 0
+
 [resource]
 script = ExtResource("9_ro4ud")
 id = "mock_battle"
 display_name = "Chapter 1 — The Mock Battle"
-objective = 2
+objective = 0
 boss_unit_id = "serra"
 non_lethal = true
-enemy_spawns = Array[ExtResource("1_vyfsr")]([SubResource("Resource_xu6hg"), SubResource("Resource_eiwa8"), SubResource("Resource_ckb63"), SubResource("Resource_fqmd8"), SubResource("Resource_euytt"), SubResource("Resource_t5ycu"), SubResource("Resource_4hgxu")])
+enemy_spawns = Array[ExtResource("1_vyfsr")]([SubResource("Resource_xu6hg"), SubResource("Resource_eiwa8"), SubResource("Resource_ckb63"), SubResource("Resource_fqmd8"), SubResource("Resource_euytt"), SubResource("Resource_t5ycu"), SubResource("Resource_4hgxu"), SubResource("Resource_thc"), SubResource("Resource_tht"), SubResource("Resource_thv"), SubResource("Resource_thm"), SubResource("Resource_thp"), SubResource("Resource_thr"), SubResource("Resource_ths")])
 deploy_cells = Dictionary[String, Vector2i]({
 "brenna": Vector2i(2, 13),
 "dain": Vector2i(1, 13),
@@ -183,5 +239,5 @@ intro_dialogue = "res://data/dialogue/mock_battle_intro.json"
 outro_dialogue = "res://data/dialogue/mock_battle_outro.json"
 boss_quote_dialogue = "res://data/dialogue/serra_battle_quote.json"
 boss_yield_dialogue = "res://data/dialogue/serra_yield.json"
-terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 4, 0, 0, 0, 0, 0, 11, 0, 0, 11, 11, 0, 0, 0, 0, 0, 0, 2, 2, 2, 4, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 4, 0, 3, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 6, 6, 6, 6, 6, 0, 1, 1, 0, 0, 0, 0, 10, 0, 0, 1, 1, 1, 0, 0, 6, 0, 0, 0, 4, 0, 1, 4, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 5, 5, 0, 10, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 4, 0, 0, 0, 0, 0, 11, 0, 0, 11, 11, 0, 0, 0, 0, 0, 0, 2, 2, 2, 4, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 4, 0, 3, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 6, 6, 6, 6, 6, 0, 1, 1, 0, 0, 0, 0, 10, 0, 0, 1, 1, 1, 0, 0, 6, 0, 0, 0, 4, 0, 1, 4, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 13, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 14, 0, 0, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12, 0, 14, 14, 5, 5, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 5, 5, 0, 10, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 decor = Array[ExtResource("1_euytt")]([SubResource("Resource_wadgp"), SubResource("Resource_hosr7"), SubResource("Resource_f61vg"), SubResource("Resource_d5hqg"), SubResource("Resource_b5vgp"), SubResource("Resource_psmmd"), SubResource("Resource_8ws1r"), SubResource("Resource_ieu8s"), SubResource("Resource_myhfq"), SubResource("Resource_1gi5r"), SubResource("Resource_6743t"), SubResource("Resource_07a0u"), SubResource("Resource_aa0m1"), SubResource("Resource_dp87i"), SubResource("Resource_oreor"), SubResource("Resource_puigb"), SubResource("Resource_n3rf6"), SubResource("Resource_qdmj7")])

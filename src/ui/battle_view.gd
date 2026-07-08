@@ -642,6 +642,30 @@ func _living_units_on_team(team: int) -> Array[Unit]:
 	return out
 
 
+## AW-30: every living unit NOT on `team` — the player's foes across all rival
+## houses. In a 2-team chapter this is just the enemy; in the 3-house mock battle
+## it is Tidemark + Thornrook together, which is what "last house standing" counts.
+func _living_foes_of(team: int) -> Array[Unit]:
+	var out: Array[Unit] = []
+	for u in _units:
+		if u.team != team and u.is_alive():
+			out.append(u)
+	return out
+
+
+## Distinct non-player teams that still have a living unit, sorted — the AI sides
+## that take an enemy phase (1, then 2, ... in a free-for-all).
+func _nonplayer_teams() -> Array[int]:
+	var seen := {}
+	for u in _living_foes_of(0):
+		seen[u.team] = true
+	var teams: Array[int] = []
+	for t in seen:
+		teams.append(t)
+	teams.sort()
+	return teams
+
+
 func _all_player_units_acted() -> bool:
 	for u in _living_units_on_team(0):
 		if not u.has_acted:
@@ -699,12 +723,16 @@ func _end_player_phase() -> void:
 
 func _run_enemy_phase() -> void:
 	_busy = true
-	_apply_terrain_heal(1)
-	_apply_terrain_hazard(1)  # AW-29: Embers chip anyone who lingered
+	# AW-30: terrain effects fire for every AI side at the start of the shared
+	# enemy phase (Tidemark AND Thornrook in the 3-house mock battle).
+	for t in _nonplayer_teams():
+		_apply_terrain_heal(t)
+		_apply_terrain_hazard(t)  # AW-29: Embers chip anyone who lingered
 	_recompute_auras()  # AW-27: AI reads aura-buffed stats when predicting combat
 	_turn_banner.announce("Enemy Phase", false)
-	# Deterministic acting order (§5): stable by board position.
-	var enemies := _living_units_on_team(1)
+	# Every rival house acts this phase; deterministic acting order (§5) is a
+	# single stable sort across all of them by board position.
+	var enemies := _living_foes_of(0)
 	enemies.sort_custom(func(a, b): return AIBrain._cell_key(a.cell) < AIBrain._cell_key(b.cell))
 	for enemy in enemies:
 		if _battle_over:
@@ -729,7 +757,9 @@ func _check_objective() -> void:
 	var outcome := ObjectiveResolver.evaluate(
 		chapter.objective, chapter.seize_cell,
 		has_lord, _lord_alive, lord_cell,
-		_living_units_on_team(0).size(), _living_units_on_team(1).size(),
+		# AW-30: "enemies" = every rival across all houses, so ROUT means being
+		# the last house standing, not merely beating one side.
+		_living_units_on_team(0).size(), _living_foes_of(0).size(),
 		_boss_alive,
 	)
 	if outcome == ObjectiveResolver.Outcome.VICTORY:
