@@ -11,7 +11,9 @@ func _initialize() -> void:
 	ch.width = 17
 	ch.height = 15
 	ch.base_terrain = Terrain.Type.PLAINS
-	ch.fill(Terrain.Type.PLAINS)
+	# AW-48: the pit floor is PATH (the sandy/dirt wang set) — plain grass read as
+	# "an empty field", not a colosseum bout.
+	ch.fill(Terrain.Type.PATH)
 	# a wall ring (the colosseum barrier)
 	for x in range(ch.width):
 		ch.set_terrain(x, 0, Terrain.Type.WALL); ch.set_terrain(x, ch.height - 1, Terrain.Type.WALL)

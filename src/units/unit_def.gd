@@ -32,6 +32,11 @@ extends Resource
 ## Pack Hunter) without polluting generic Knight/Mage. Folded into
 ## Unit.active_skills() alongside class skills; they persist across promotion.
 @export var personal_skills: Array[SkillDef] = []
+## AW-48: sprite alias — when set, this unit renders with another unit's sprite
+## set (`assets/sprites/units/<sprite_id>/…`) instead of its own id. Lets
+## code-built units (arena waves) borrow real art without authoring frames.
+## "" = use `id` as always.
+@export var sprite_id: String = ""
 
 @export_group("Base Stats")
 @export var level: int = 1

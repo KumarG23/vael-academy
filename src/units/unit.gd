@@ -88,11 +88,11 @@ func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 	position = _grid.cell_center(cell)
 	_standee = null
 	if def != null and def.id != "":
-		var standee_path := "res://assets/standees/standee_%s.png" % def.id
+		var standee_path := "res://assets/standees/standee_%s.png" % sprite_id()
 		if ResourceLoader.exists(standee_path):
 			_standee = load(standee_path)
 			texture_filter = TEXTURE_FILTER_LINEAR  # painted art, not pixel art
-	_setup_sprite_frames(def.id if def != null else "")
+	_setup_sprite_frames(sprite_id() if def != null else "")
 	queue_redraw()
 
 
@@ -137,7 +137,7 @@ func set_sprite_variant(variant: String) -> void:
 	if variant == sprite_variant:
 		return
 	sprite_variant = variant
-	_setup_sprite_frames(unit_def.id if unit_def != null else "")
+	_setup_sprite_frames(sprite_id() if unit_def != null else "")
 
 
 ## AW-7/WO-4.7: build an AnimatedSprite2D from conventional walk frames.
@@ -355,6 +355,14 @@ func is_lord() -> bool:
 
 func unit_id() -> String:
 	return unit_def.id if unit_def != null else ""
+
+
+## AW-48: the id all sprite art resolves through — `UnitDef.sprite_id` lets a
+## code-built unit (arena waves) borrow another unit's frames; "" = its own id.
+func sprite_id() -> String:
+	if unit_def != null and unit_def.sprite_id != "":
+		return unit_def.sprite_id
+	return unit_id()
 
 
 func ai_behavior() -> AIBrain.Behavior:

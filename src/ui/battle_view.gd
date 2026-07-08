@@ -1309,6 +1309,11 @@ func _setup_camera() -> void:
 	var vp := get_viewport_rect().size
 	var fit := minf(vp.x / map.x, vp.y / map.y) * 0.96
 	var z := maxf(fit, TARGET_CELL_PX / float(_grid.cell_size))
+	# AW-48: the arena is a one-screen colosseum bout — fit the WHOLE pit so every
+	# wave spawn is visible (the zoomed default cut off the top/bottom spawn rows,
+	# which made the arena read as "empty and broken": Kai alone, foes offscreen).
+	if chapter.is_arena:
+		z = fit
 	_camera.zoom = Vector2(z, z)
 	_camera.position = _camera_clamp(map * 0.5)
 	_camera.make_current()

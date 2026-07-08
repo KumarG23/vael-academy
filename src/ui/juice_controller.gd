@@ -42,7 +42,7 @@ func _process(delta: float) -> void:
 func play_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: bool) -> void:
 	# Battle direction v2: if the attacker has a cut-out rig, swap it in and play
 	# the actual attack swing on its tile (not just a flat-sprite bump).
-	if CombatRig.has_rig(striker.unit_id()):
+	if CombatRig.has_rig(striker.sprite_id()):  # AW-48: rigs resolve via the sprite alias
 		await _play_rig_strike(striker, target, strike, is_kill)
 		return
 	var home := striker.position
@@ -91,7 +91,7 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 		striker.set_facing(true)
 	elif facing == CombatRig.Facing.WEST:
 		striker.set_facing(false)
-	rig.setup(striker.unit_id(), facing, striker.map_sprite_scale())
+	rig.setup(striker.sprite_id(), facing, striker.map_sprite_scale())
 	var w := striker.weapon()
 	var wt: int = w.weapon_type if w != null else 0
 	rig.set_weapon(wt)
@@ -124,7 +124,7 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 ## gesture, and a heal bloom lands on the ally. Awaitable; returns false (no-op)
 ## when the healer has no rig so the caller can fall back to float-text.
 func play_heal(healer: Unit, ally: Unit) -> bool:
-	if not CombatRig.has_rig(healer.unit_id()):
+	if not CombatRig.has_rig(healer.sprite_id()):
 		return false
 	var rig := CombatRig.new()
 	healer.get_parent().add_child(rig)
@@ -134,7 +134,7 @@ func play_heal(healer: Unit, ally: Unit) -> bool:
 		healer.set_facing(true)
 	elif facing == CombatRig.Facing.WEST:
 		healer.set_facing(false)
-	rig.setup(healer.unit_id(), facing, healer.map_sprite_scale())
+	rig.setup(healer.sprite_id(), facing, healer.map_sprite_scale())
 	rig.set_weapon(WeaponDef.WeaponType.STAFF)
 	healer.visible = false
 	await rig.play_attack(WeaponDef.WeaponType.STAFF, ally.global_position)
@@ -151,7 +151,7 @@ func _rig_facing(actor: Unit, to: Vector2) -> int:
 	if absf(d.x) >= absf(d.y):
 		return CombatRig.Facing.EAST if d.x > 0.0 else CombatRig.Facing.WEST
 	var want: int = CombatRig.Facing.NORTH if d.y < 0.0 else CombatRig.Facing.SOUTH
-	if CombatRig.has_facing(actor.unit_id(), want):
+	if CombatRig.has_facing(actor.sprite_id(), want):
 		return want
 	return CombatRig.Facing.EAST if actor.facing_right() else CombatRig.Facing.WEST
 
