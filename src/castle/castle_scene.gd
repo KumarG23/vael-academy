@@ -43,6 +43,7 @@ var _date_label: Label
 var _toast_label: Label
 var _toast_left := 0.0
 var _dialogue: DialogueScene = null
+var _journal: AcademyJournal = null  # AW-39: the J-key book UI
 var _nearest_point: CastlePoint = null
 var _door_pulse := 0.0
 ## Doors re-arm only after the avatar leaves a door cell — spawning beside
@@ -257,7 +258,7 @@ func _point_available(p: CastlePoint) -> bool:
 
 
 func busy() -> bool:
-	return _dialogue != null or _menu_context != "" or _fishing != null
+	return _dialogue != null or _menu_context != "" or _fishing != null or _journal != null
 
 
 func _process(delta: float) -> void:
@@ -346,6 +347,12 @@ func _update_prompt() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# AW-39: J opens the Academy Journal from anywhere in the castle.
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_J:
+		if _journal == null and not busy():
+			_open_journal()
+			get_viewport().set_input_as_handled()
+		return
 	if busy() or room == null:
 		return
 	if event.is_action_pressed("ui_accept") or event.is_action_pressed("cursor_confirm"):
@@ -353,6 +360,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("ui_cancel"):
 		_open_system_menu()
+
+
+func _open_journal() -> void:
+	AudioManager.play_sfx("confirm")
+	_journal = AcademyJournal.new()
+	_journal.closed.connect(func() -> void: _journal = null)
+	_ui.add_child(_journal)
 
 
 func activate_nearest() -> void:
