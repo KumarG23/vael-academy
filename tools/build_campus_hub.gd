@@ -34,7 +34,9 @@ func _prop(name: String, x: int, y: int, solid := false) -> void:
 
 
 func _bld(tex: String, ax: int, sx0: int, sx1: int, sy0: int, sy1: int) -> void:
-	_decor("res://assets/art_review/campus_v2/%s.png" % tex, ax, sy1)
+	# tex may be a bare campus_v2 name or a full res:// path (house dorm buildings).
+	var path := tex if tex.begins_with("res://") else "res://assets/art_review/campus_v2/%s.png" % tex
+	_decor(path, ax, sy1)
 	for y in range(sy0, sy1 + 1):
 		for x in range(sx0, sx1 + 1):
 			if ch.in_bounds(x, y):
@@ -161,7 +163,10 @@ func _build_dorm(id: String, disp: String, accent: int, feature: String, student
 	_frame()
 	_fill(2, 10, 27, 11, T.PATH)      # the avenue in from the campus gate
 	_fill(14, 5, 15, 11, T.PATH)      # up to the dorm
-	_bld("dormitory_v2", 14, 10, 19, 3, 6)
+	# the house's own magical dorm building (AW-42 PixelLab art), fallback to the
+	# generic manor if it hasn't been generated
+	var bld_path := "res://assets/art/pixellab/buildings/dorm_%s.png" % id.replace("_dorm", "")
+	_bld(bld_path if ResourceLoader.exists(bld_path) else "dormitory_v2", 14, 10, 19, 3, 6)
 	_fill(11, 13, 18, 17, T.CARPET)   # courtyard
 	for e in [[11, 13], [18, 13], [11, 17], [18, 17], [14, 15]]:
 		ch.set_terrain(e[0], e[1], accent)   # the house's magical courtyard tiles

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="CastleRoomDef" format=3]
 
 [ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_v2b6d"]
-[ext_resource type="Texture2D" path="res://assets/art_review/campus_v2/dormitory_v2.png" id="2_2bhgq"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/dorm_emberwing.png" id="2_2bhgq"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/fireplace.png" id="3_2egyh"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/statue_founder.png" id="4_wrjs4"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner_pair.png" id="5_bl4jh"]
@@ -19,6 +19,7 @@
 script = ExtResource("1_v2b6d")
 texture = ExtResource("2_2bhgq")
 cell = Vector2i(14, 6)
+offset = Vector2(16, 0)
 
 [sub_resource type="Resource" id="Resource_pq8bc"]
 script = ExtResource("1_v2b6d")

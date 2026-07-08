@@ -35,10 +35,53 @@ func _menu_pos() -> Vector2:
 	return Vector2(vp.x * 0.5 - 120, vp.y * 0.58)
 
 
+## AW-42: dev scene-jump targets (label, kind). Lets Neal hop into any part of
+## the game for checking without playing through — F6 is a Mac system key.
+const DEV_JUMPS := [
+	["▶ Campus (walk the school)", "castle"],
+	["▶ Mock Battle (3 houses)", "mock"],
+	["▶ House-Choice screen", "housechoice"],
+	["▶ Prologue battle", "prologue"],
+	["Back", "back"],
+]
+
+
 func _open_main() -> void:
 	_context = "main"
-	_menu.open("", ["New Game", "Load Game", "Quit"], _menu_pos())
+	_menu.open("", ["New Game", "Load Game", "Dev Jump ▶", "Quit"], _menu_pos())
 	queue_redraw()
+
+
+func _open_dev() -> void:
+	_context = "dev"
+	var labels: Array = []
+	for j in DEV_JUMPS:
+		labels.append(j[0])
+	_menu.open("Dev Jump", labels, _menu_pos())
+
+
+func _dev_jump(kind: String) -> void:
+	match kind:
+		"castle":
+			Campaign.reset_new_game(false)
+			Campaign.set_house("emberwing")
+			Campaign.house_locked = true  # mid-year, so it enters the castle hub
+			get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
+		"mock":
+			Campaign.reset_new_game(false)
+			Campaign.set_house("emberwing")
+			Campaign.deploy()
+			get_tree().change_scene_to_file("res://scenes/battle/mock_battle.tscn")
+		"housechoice":
+			Campaign.reset_new_game(false)
+			Campaign.active = true
+			get_tree().change_scene_to_file("res://scenes/flow/house_choice.tscn")
+		"prologue":
+			Campaign.reset_new_game(false)
+			Campaign.active = true
+			get_tree().change_scene_to_file("res://scenes/battle/prologue.tscn")
+		_:
+			_open_main()
 
 
 func _open_new_game() -> void:
@@ -71,7 +114,10 @@ func _on_chosen(index: int) -> void:
 			match index:
 				0: _open_new_game()
 				1: _open_load()
-				2: get_tree().quit()
+				2: _open_dev()
+				3: get_tree().quit()
+		"dev":
+			_dev_jump(DEV_JUMPS[index][1])
 		"new":
 			match index:
 				0: _start_new_game(false)
