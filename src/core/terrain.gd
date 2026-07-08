@@ -21,4 +21,9 @@ enum Type {
 	FLOWERS = 11, # wildflower meadow: plains stats, pure color variety
 	SITE = 12,    # invisible blocker under scenery props (houses, wells):
 	              # impassable, but the ground beneath the prop stays base fill
+	# AW-29 (Neal: terrain buffs/debuffs, strategy) — append-only.
+	EMBERS = 13,  # burning ground: passable HAZARD, chips 3 HP at turn start
+	              # (never lethal), no cover — don't end your turn here
+	MIRE = 14,    # sucking bog: DEBUFF — move cost 4, avoid -15 (easy to hit),
+	              # def -1, so caught units get punished
 }

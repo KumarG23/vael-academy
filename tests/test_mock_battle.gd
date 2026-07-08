@@ -149,6 +149,22 @@ func test_fort_heals_its_occupant_at_phase_start():
 	assert_eq(kai.current_hp, 10, "plains do not heal")
 
 
+# --- AW-29: terrain hazards chip HP at phase start (never lethal) -----------------
+
+func test_embers_chip_hp_but_never_kill():
+	var kai: Unit = _view.unit_by_id("kai")
+	var c := kai.cell
+	var prev: int = _view.chapter.get_terrain(c.x, c.y)
+	_view.chapter.set_terrain(c.x, c.y, Terrain.Type.EMBERS)
+	kai.current_hp = kai.max_hp()
+	_view._apply_terrain_hazard(0)
+	assert_eq(kai.current_hp, kai.max_hp() - 3, "Embers chip 3 HP a turn")
+	kai.current_hp = 1
+	_view._apply_terrain_hazard(0)
+	assert_eq(kai.current_hp, 1, "terrain never defeats a unit")
+	_view.chapter.set_terrain(c.x, c.y, prev)  # restore the shared resource
+
+
 # --- dialogue hooks -----------------------------------------------------------------
 
 func _find_dialogue(node: Node) -> DialogueScene:

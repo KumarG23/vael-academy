@@ -61,3 +61,28 @@ func test_helper_lookups():
 	assert_eq(_db.avoid(Terrain.Type.MOUNTAIN), 30)
 	assert_true(_db.is_impassable(Terrain.Type.WATER))
 	assert_false(_db.is_impassable(Terrain.Type.PLAINS))
+
+
+# --- AW-29: hazard + debuff tiles --------------------------------------------
+
+func test_embers_are_a_passable_hazard():
+	var i := _db.get_info(Terrain.Type.EMBERS)
+	assert_false(i.impassable, "you can walk through embers")
+	assert_eq(i.defense, 0, "no cover")
+	assert_eq(i.avoid, 0)
+	assert_eq(i.damage_per_turn, 3, "chips 3 HP a turn")
+	assert_eq(_db.damage_per_turn(Terrain.Type.EMBERS), 3)
+
+
+func test_mire_is_a_debuff():
+	var i := _db.get_info(Terrain.Type.MIRE)
+	assert_false(i.impassable)
+	assert_eq(i.move_cost, 4, "slows movement")
+	assert_eq(i.defense, -1, "worse defense")
+	assert_eq(i.avoid, -15, "easier to hit")
+	assert_eq(i.damage_per_turn, 0, "not a hazard, a debuff")
+
+
+func test_normal_terrain_deals_no_turn_damage():
+	assert_eq(_db.damage_per_turn(Terrain.Type.PLAINS), 0)
+	assert_eq(_db.damage_per_turn(Terrain.Type.FORT), 0)

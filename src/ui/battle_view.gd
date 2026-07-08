@@ -40,6 +40,8 @@ const TERRAIN_TINTS := {
 	Terrain.Type.SPRING: Color(0.35, 0.75, 0.85, 0.50),
 	Terrain.Type.FLOWERS: Color(0.85, 0.75, 0.35, 0.30),
 	Terrain.Type.SITE: Color(0, 0, 0, 0),
+	Terrain.Type.EMBERS: Color(0.85, 0.30, 0.12, 0.50),  # hazard — glowing coals
+	Terrain.Type.MIRE: Color(0.30, 0.28, 0.20, 0.55),    # debuff — murky bog
 }
 
 enum Phase { IDLE, SELECTED, MENU, TARGETING }
@@ -653,6 +655,7 @@ func _begin_player_phase() -> void:
 		u.has_acted = false
 		u.queue_redraw()
 	_apply_terrain_heal(0)
+	_apply_terrain_hazard(0)  # AW-29: Embers chip anyone who lingered
 	_recompute_auras()  # AW-27: keep aura stats fresh for overlays/inspection
 	_deselect()
 	if _threat_overlay.is_shown():
@@ -671,6 +674,19 @@ func _apply_terrain_heal(team: int) -> void:
 			_pop_text(u.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
 
 
+## AW-29 terrain hazards (Embers): chip HP at the owner's phase start. Never
+## lethal — a unit caught in the coals is left at 1 HP, not defeated by terrain.
+func _apply_terrain_hazard(team: int) -> void:
+	for u in _living_units_on_team(team):
+		var dmg := _terrain_db.damage_per_turn(chapter.get_terrain(u.cell.x, u.cell.y))
+		if dmg <= 0 or u.current_hp <= 1:
+			continue
+		var lost: int = mini(dmg, u.current_hp - 1)
+		u.current_hp -= lost
+		u.queue_redraw()
+		_pop_text(u.position, "-%d" % lost, Color(1.0, 0.5, 0.2))
+
+
 func _end_player_phase() -> void:
 	_deselect()
 	_turn.advance()  # -> enemy phase
@@ -684,6 +700,7 @@ func _end_player_phase() -> void:
 func _run_enemy_phase() -> void:
 	_busy = true
 	_apply_terrain_heal(1)
+	_apply_terrain_hazard(1)  # AW-29: Embers chip anyone who lingered
 	_recompute_auras()  # AW-27: AI reads aura-buffed stats when predicting combat
 	_turn_banner.announce("Enemy Phase", false)
 	# Deterministic acting order (§5): stable by board position.

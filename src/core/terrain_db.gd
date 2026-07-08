@@ -26,6 +26,10 @@ static func create_default() -> TerrainDB:
 		Terrain.Type.SPRING: TerrainInfo.new("Healing Spring", 1, 0, 10, false, 0.15),
 		Terrain.Type.FLOWERS: TerrainInfo.new("Meadow", 1, 0, 0),
 		Terrain.Type.SITE: TerrainInfo.new("Village", 0, 0, 0, true),
+		# AW-29 buff/debuff strategy tiles (name, move, def, avoid, impass, heal,
+		# block, damage): Embers hurt those who linger; the Mire exposes them.
+		Terrain.Type.EMBERS: TerrainInfo.new("Embers", 1, 0, 0, false, 0.0, false, 3),
+		Terrain.Type.MIRE: TerrainInfo.new("Mire", 4, -1, -15, false, 0.0, false, 0),
 	}
 	return db
 
@@ -47,6 +51,12 @@ func defense(type: Terrain.Type) -> int:
 func avoid(type: Terrain.Type) -> int:
 	var info: TerrainInfo = entries.get(type, null)
 	return info.avoid if info != null else 0
+
+
+## AW-29: flat HP lost at turn start on this terrain (hazard tiles). 0 elsewhere.
+func damage_per_turn(type: Terrain.Type) -> int:
+	var info: TerrainInfo = entries.get(type, null)
+	return info.damage_per_turn if info != null else 0
 
 
 func is_impassable(type: Terrain.Type) -> bool:
