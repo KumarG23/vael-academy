@@ -133,6 +133,34 @@ func test_the_grove_is_grass_and_lush():
 	assert_gte(tree_types, 4, "several kinds of tree fill the wood: " + str(kinds.keys()))
 
 
+## AW-47: per-area music — a room with its own track plays it; others fall back
+## to the shared campus bed.
+func test_rooms_can_have_their_own_music():
+	assert_eq(_castle._music_for_room("library"),
+		"res://assets/audio/music/rooms/library.mp3", "the library has its own theme")
+	assert_eq(_castle._music_for_room("campus"),
+		"res://assets/audio/music/campus_chill.mp3", "roomless areas play the campus bed")
+
+
+## AW-47: y-sort occlusion — standing on a prop's NORTH side (feet above its
+## base) and overlapping it puts the actor behind it; standing south is in front.
+func test_actor_occludes_behind_a_tall_prop():
+	_castle.enter_room("grove", Vector2i(10, 2))
+	var grove: CastleRoomDef = _castle._rooms["grove"]
+	var tree: MapDecor = null
+	for d in grove.chapter.decor:
+		if d != null and d.texture != null and d.texture.resource_path.contains("great_wardtree"):
+			tree = d
+	assert_not_null(tree, "the Wardtree is in the grove")
+	var cs := float(_castle._grid.cell_size)
+	# a cell well NORTH of (above) the trunk, overlapping the canopy → behind it
+	var north := _castle._grid.cell_center(Vector2i(tree.cell.x, tree.cell.y - 4))
+	assert_true(_castle._actor_behind_prop(north, tree, cs), "north of the trunk → drawn behind")
+	# a cell SOUTH of (below) the base → in front of it
+	var south := _castle._grid.cell_center(Vector2i(tree.cell.x, tree.cell.y + 4))
+	assert_false(_castle._actor_behind_prop(south, tree, cs), "south of the base → drawn in front")
+
+
 ## AW-45: the Arena is its own sub-area (the Trial Spire) reached from the
 ## Training Grounds, not a building tucked on the campus lawn.
 func test_arena_is_its_own_sub_area_off_the_training_yard():

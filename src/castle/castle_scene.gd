@@ -45,6 +45,7 @@ var _toast_left := 0.0
 var _dialogue: DialogueScene = null
 var _journal: AcademyJournal = null  # AW-39: the J-key book UI
 var _editor: CampusEditor = null     # AW-44: the ` visual room editor
+var _occluder: Node2D = null         # AW-47: y-sort occlusion overlay
 var _nearest_point: CastlePoint = null
 var _door_pulse := 0.0
 ## Doors re-arm only after the avatar leaves a door cell — spawning beside
@@ -77,6 +78,12 @@ func _ready() -> void:
 	_avatar.scale = Vector2.ONE * AVATAR_SCALE
 	_avatar.sprite_frames = _build_avatar_frames("kai")
 	add_child(_avatar)
+	# AW-47: y-sort occlusion overlay — redraws props above the actors when they
+	# stand behind them (drawn above the world via z_index; logic in draw_occluders)
+	_occluder = load("res://src/castle/occluder_overlay.gd").new()
+	_occluder.castle = self
+	_occluder.z_index = 20
+	add_child(_occluder)
 	_camera = Camera2D.new()
 	add_child(_camera)
 	_camera.make_current()
@@ -130,9 +137,21 @@ func _ready() -> void:
 ## whole castle scene, so it carries across every room. Convention-based:
 ## plays whatever lives at assets/audio/music/campus_chill.mp3.
 func _start_music() -> void:
-	# AW-36: the campus bed now runs through the AudioManager autoload, which owns
-	# the single music voice across scenes (battle swaps to the battle theme).
+	# AW-36: the campus bed runs through the AudioManager autoload, which owns the
+	# single music voice across scenes (battle swaps to the battle theme). AW-47:
+	# enter_room refines this to the room's own theme when one exists.
 	AudioManager.play_music("res://assets/audio/music/campus_chill.mp3")
+
+
+## Per-room music (AW-47): drop a file at assets/audio/music/rooms/<room_id>.{ogg,
+## mp3,wav} to give an area its own theme; otherwise the shared campus bed plays.
+## play_music no-ops on an unchanged track, so wandering bed-rooms won't restart it.
+func _music_for_room(room_id: String) -> String:
+	for ext in ["ogg", "mp3", "wav"]:
+		var p := "res://assets/audio/music/rooms/%s.%s" % [room_id, ext]
+		if ResourceLoader.exists(p):
+			return p
+	return "res://assets/audio/music/campus_chill.mp3"
 
 
 func _load_rooms() -> void:
@@ -172,6 +191,7 @@ func enter_room(room_id: String, spawn := Vector2i(-1, -1)) -> void:
 	if not _rooms.has(room_id):
 		return
 	room = _rooms[room_id]
+	AudioManager.play_music(_music_for_room(room_id))  # AW-47: per-area theme
 	_grid = room.chapter.make_grid()
 	_ceiling = float(_grid.cell_size) * 1.6 if room.chapter.base_terrain == Terrain.Type.FLOOR else 0.0
 	_tiles.setup(_grid, room.chapter)
@@ -273,6 +293,8 @@ func _process(delta: float) -> void:
 		if _toast_left <= 0.0:
 			_toast_label.visible = false
 	queue_redraw()  # door markers pulse
+	if _occluder != null:
+		_occluder.queue_redraw()  # AW-47: keep occlusion in step with the avatar
 	if room == null or busy():
 		return
 	var move := Vector2(Input.get_axis("ui_left", "ui_right"),
@@ -438,22 +460,7 @@ func _draw() -> void:
 	for d: MapDecor in props:
 		if d == null or d.texture == null:
 			continue
-		var scale := cs / 32.0  # decor authored at 32px (TerrainTiles.TILE)
-		var w: float = d.texture.get_width() * scale
-		var h: float = d.texture.get_height() * scale
-		var rect := Rect2(d.cell.x * cs + (cs - w) * 0.5 + d.offset.x,
-			d.cell.y * cs + cs - h + d.offset.y, w, h)
-		# AW-46: the Sealed Grove's Wardtree breathes — a slow green aura pulses
-		# behind it and a soft emerald shimmer washes over its canopy.
-		if d.texture.resource_path.contains("great_wardtree"):
-			var t := 0.5 + 0.5 * sin(_door_pulse * 1.5)
-			var ctr := Vector2(rect.position.x + w * 0.5, rect.position.y + h * 0.44)
-			draw_circle(ctr, w * (0.60 + 0.10 * t), Color(0.34, 1.0, 0.5, 0.06 + 0.08 * t))
-			draw_circle(ctr, w * (0.42 + 0.06 * t), Color(0.6, 1.0, 0.72, 0.06 + 0.09 * t))
-			draw_texture_rect(d.texture, rect, false,
-				Color(1, 1, 1).lerp(Color(0.72, 1.0, 0.8), 0.28 * t))
-			continue
-		draw_texture_rect(d.texture, rect, false)
+		_draw_prop(self, d, _prop_rect(d, cs), true)
 	var pulse := 0.5 + 0.3 * sin(_door_pulse * 3.2)
 	for d in room.doors:
 		var c := Vector2((d.cell.x + 0.5) * cs, (d.cell.y + 0.5) * cs)
@@ -468,6 +475,64 @@ func _draw() -> void:
 				HORIZONTAL_ALIGNMENT_CENTER, 300, 30, 8, Color(0.1, 0.08, 0.05, 0.9))
 			draw_string(font, c + Vector2(-150, -cs * 0.55), d.label,
 				HORIZONTAL_ALIGNMENT_CENTER, 300, 30, Color(1.0, 0.94, 0.7, 0.55 + pulse * 0.4))
+
+
+# --- prop drawing + y-sort occlusion (AW-46/AW-47) ------------------------------
+
+## Bottom-anchored screen rect for a decor prop (authored at 32px/tile).
+func _prop_rect(d: MapDecor, cs: float) -> Rect2:
+	var scale := cs / 32.0
+	var w: float = d.texture.get_width() * scale
+	var h: float = d.texture.get_height() * scale
+	return Rect2(d.cell.x * cs + (cs - w) * 0.5 + d.offset.x,
+		d.cell.y * cs + cs - h + d.offset.y, w, h)
+
+
+## Draws one scenery prop onto `canvas`. `aura` adds the Wardtree's pulsing
+## ground-glow (base pass only; the occlusion redraw passes false).
+func _draw_prop(canvas: CanvasItem, d: MapDecor, rect: Rect2, aura: bool) -> void:
+	if d.texture.resource_path.contains("great_wardtree"):
+		# AW-46: the Sealed Grove's Wardtree breathes — a green aura + emerald shimmer.
+		var t := 0.5 + 0.5 * sin(_door_pulse * 1.5)
+		if aura:
+			var ctr := Vector2(rect.position.x + rect.size.x * 0.5,
+				rect.position.y + rect.size.y * 0.44)
+			canvas.draw_circle(ctr, rect.size.x * (0.60 + 0.10 * t), Color(0.34, 1.0, 0.5, 0.06 + 0.08 * t))
+			canvas.draw_circle(ctr, rect.size.x * (0.42 + 0.06 * t), Color(0.6, 1.0, 0.72, 0.06 + 0.09 * t))
+		canvas.draw_texture_rect(d.texture, rect, false,
+			Color(1, 1, 1).lerp(Color(0.72, 1.0, 0.8), 0.28 * t))
+	else:
+		canvas.draw_texture_rect(d.texture, rect, false)
+
+
+## AW-47: an actor stands BEHIND a prop when its feet are above the prop's base
+## (it's on the prop's north side) and its body overlaps the prop's footprint.
+func _actor_behind_prop(actor_pos: Vector2, d: MapDecor, cs: float) -> bool:
+	var prop_feet := float(d.cell.y + 1) * cs
+	var feet := actor_pos.y + cs * 0.5
+	if prop_feet <= feet:
+		return false  # actor is level with / below the prop — it's in front
+	var ar := Rect2(actor_pos.x - cs * 0.5, actor_pos.y - cs * 0.6, cs, cs * 1.1)
+	return _prop_rect(d, cs).intersects(ar)
+
+
+## AW-47: called by the occluder overlay (drawn above the actors) — redraws every
+## prop an actor is standing behind, so you pass UNDER trees/buildings, not over.
+func draw_occluders(canvas: CanvasItem) -> void:
+	if room == null or _grid == null:
+		return
+	var cs := float(_grid.cell_size)
+	var actors: Array = [_avatar]
+	actors.append_array(_npc_sprites)
+	for d: MapDecor in room.chapter.decor:
+		if d == null or d.texture == null:
+			continue
+		for a in actors:
+			if a == null or not a.visible:
+				continue
+			if _actor_behind_prop(a.position, d, cs):
+				_draw_prop(canvas, d, _prop_rect(d, cs), false)
+				break
 
 
 # --- the date + scheduled set-pieces (WO-7.1/7.3, ported) ----------------------
