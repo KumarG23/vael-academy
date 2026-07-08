@@ -18,8 +18,9 @@ static func strike_stats(attacker: Combatant, defender: Combatant) -> Dictionary
 	var tri_hit := 0
 	var tri_dmg := 0
 	if defender.weapon != null:
-		tri_hit = WeaponTriangle.hit_bonus(attacker.weapon.weapon_type, defender.weapon.weapon_type)
-		tri_dmg = WeaponTriangle.dmg_bonus(attacker.weapon.weapon_type, defender.weapon.weapon_type)
+		# AW-28: element-aware — physical triangle by type, anima by school.
+		tri_hit = WeaponTriangle.hit_bonus_for(attacker.weapon, defender.weapon)
+		tri_dmg = WeaponTriangle.dmg_bonus_for(attacker.weapon, defender.weapon)
 
 	var hr := CombatMath.hit_rate(attacker.weapon.hit, attacker.skill, attacker.luck, tri_hit + attacker.support_hit)
 	var av := CombatMath.avoid_rate(defender.attack_speed(), defender.luck, defender.terrain_avoid + defender.support_avoid)
