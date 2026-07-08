@@ -37,7 +37,7 @@ func test_chapter_data_is_authored_correctly():
 	assert_eq(chapter.objective, ChapterDef.Objective.ROUT)
 	assert_eq(chapter.boss_unit_id, "serra", "Serra still gets her boss quote")
 	assert_true(chapter.non_lethal, "the Mock Battle is non-lethal")
-	assert_eq(chapter.enemy_spawns.size(), 14, "7 Tidemark (team 1) + 7 Thornrook (team 2)")
+	assert_eq(chapter.enemy_spawns.size(), 13, "6 Tidemark students (team 1) + 7 Thornrook (team 2)")
 	assert_eq(chapter.deploy_cells.size(), 20, "cells for every fieldable unit across all houses + Sable (WO-5.4/5.5)")
 
 
@@ -83,9 +83,9 @@ func test_dialogue_scripts_exist_and_parse():
 
 func test_forces_spawn_from_chapter_data():
 	assert_eq(_view._living_units_on_team(0).size(), 7, "the Emberwing house + Kai (WO-5.2)")
-	assert_eq(_view._living_units_on_team(1).size(), 7, "seven Tidemark units (team 1)")
+	assert_eq(_view._living_units_on_team(1).size(), 6, "six Tidemark students — Serra + her house (team 1)")
 	assert_eq(_view._living_units_on_team(2).size(), 7, "seven Thornrook units (team 2, AW-30)")
-	assert_eq(_view._living_foes_of(0).size(), 14, "both rival houses are the player's foes")
+	assert_eq(_view._living_foes_of(0).size(), 13, "both rival houses are the player's foes")
 	var kai: Unit = _view.unit_by_id("kai")
 	assert_eq(kai.cell, Vector2i(2, 12), "Kai at his authored deploy cell")
 	assert_true(kai.is_lord(), "Kai is the lord (§4)")
@@ -93,7 +93,9 @@ func test_forces_spawn_from_chapter_data():
 	var serra: Unit = _view.unit_by_id("serra")
 	assert_eq(serra.cell, Vector2i(17, 2))
 	assert_eq(_view._boss_unit, serra, "Serra tracked for her boss quote")
-	assert_eq(serra.ai_behavior(), AIBrain.Behavior.BOSS)
+	# AW-37: Serra is the Tidemark heir (student stats), a fighter in the FFA — not
+	# the old level-5 BOSS wall that was too strong for the exhibition.
+	assert_eq(serra.ai_behavior(), AIBrain.Behavior.AGGRESSOR)
 
 
 func test_felling_one_house_is_not_yet_victory():
@@ -135,9 +137,9 @@ func test_defeated_players_yield_and_are_never_permadead():
 
 
 func test_defeated_enemies_yield_without_permadeath_flags():
-	var scout: Unit = _view.unit_by_id("tm_scout")
-	_view._kill(scout)
-	assert_true(_view._defeated_unit_ids.has("tm_scout"))
+	var foe: Unit = _view.unit_by_id("osric")  # a Tidemark student
+	_view._kill(foe)
+	assert_true(_view._defeated_unit_ids.has("osric"))
 	assert_eq(_view._permadead_unit_ids.size(), 0)
 
 

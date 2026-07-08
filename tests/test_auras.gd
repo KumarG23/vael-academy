@@ -87,12 +87,12 @@ func _has_skill(u: Unit, id: String) -> bool:
 # --- battlefield recompute (positions decide who is buffed) --------------------
 
 func test_recompute_buffs_allies_in_range_only():
-	var serra: Unit = _view.unit_by_id("serra")            # boss, carries Tide-Ward
-	var guard: Unit = _view.unit_by_id("tm_guard")         # (16,2) — adjacent to Serra
-	var far: Unit = _view.unit_by_id("tm_soldier_a")       # (9,9) — well out of range
+	var serra: Unit = _view.unit_by_id("serra")            # Tidemark heir, carries Tide-Ward
+	var near: Unit = _view.unit_by_id("bertram")           # (16,2) — adjacent to Serra
+	var far: Unit = _view.unit_by_id("osric")              # (9,9) — well out of range
 
-	guard.clear_auras()
-	var guard_base := guard.stat("def")
+	near.clear_auras()
+	var near_base := near.stat("def")
 	far.clear_auras()
 	var far_base := far.stat("def")
 	serra.clear_auras()
@@ -100,7 +100,7 @@ func test_recompute_buffs_allies_in_range_only():
 
 	_view._recompute_auras()
 
-	assert_eq(guard.stat("def") - guard_base, 3, "ally beside Serra gains Tide-Ward +3 def")
+	assert_eq(near.stat("def") - near_base, 3, "ally beside Serra gains Tide-Ward +3 def")
 	assert_eq(far.stat("def") - far_base, 0, "distant ally is out of the aura")
 	assert_eq(serra.stat("def") - serra_base, 0, "Serra does not buff herself")
 

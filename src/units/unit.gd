@@ -169,8 +169,15 @@ func _setup_sprite_frames(id: String) -> void:
 	_has_walk_s = not (sets["walk_s"] as Array).is_empty()
 	frames.add_animation("idle")
 	frames.set_animation_speed("idle", 2.0)
-	for idx in idle_frame_indices(east.size()):
-		frames.add_frame("idle", load(east[idx - 1]))
+	# AW-37: an optional clear-faced idle override (a weaponless standing pose)
+	# so staff-carriers don't hold a staff across their face while standing/
+	# selected. Present as <dir>/idle_f1.png; otherwise the walk passing-poses.
+	var idle_override := "%s/idle_f1.png" % dir
+	if ResourceLoader.exists(idle_override):
+		frames.add_frame("idle", load(idle_override))
+	else:
+		for idx in idle_frame_indices(east.size()):
+			frames.add_frame("idle", load(east[idx - 1]))
 	_anim = AnimatedSprite2D.new()
 	_anim.sprite_frames = frames
 	_anim.texture_filter = TEXTURE_FILTER_NEAREST  # crisp pixels at any zoom
@@ -251,11 +258,24 @@ func _stop_idle_bob() -> void:
 		_anim.scale = _anim_base_scale
 
 
-## Signature accent colour for this unit — matches the combat rig's FX language:
-## Kai's Verdant green, a mage's anima element, a healer's light, else gold.
+## Signature accent colour for this unit — its hover glow + combat-FX hue. Named
+## heroes get their own colour (Kai's relic green, Perrin's gold, …); mages read
+## from their anima element; everyone else falls back to a warm gold.
+const SIGNATURE_COLORS := {
+	"kai": Color(0.42, 1.0, 0.55),      # relic green
+	"perrin": Color(1.0, 0.85, 0.30),   # gold
+	"kael": Color(0.62, 0.85, 1.0),     # keen steel-blue
+	"dain": Color(1.0, 0.55, 0.22),     # molten
+	"brenna": Color(0.72, 0.80, 1.0),   # bastion blue
+	"wren": Color(1.0, 0.80, 0.42),     # amber light
+	"serra": Color(0.40, 0.70, 1.0),    # tide
+	"corin": Color(0.55, 1.0, 0.55),    # stag green
+	"sable": Color(0.70, 1.0, 0.60),    # beast green
+}
 func signature_color() -> Color:
-	if unit_def != null and unit_def.id == "kai":
-		return Color(0.42, 1.0, 0.55)
+	var id := unit_def.id if unit_def != null else ""
+	if SIGNATURE_COLORS.has(id):
+		return SIGNATURE_COLORS[id]
 	var w := weapon()
 	if w != null:
 		match w.school:
@@ -721,108 +741,50 @@ func _draw_sprite_underlay() -> void:
 	_draw_hp_bar(cs * 0.32)
 
 
-## AW-34: a looping idle flourish while hovered, distinct per combat archetype
-## and drawn in the unit's signature colour — a blade raised & sheathed (Kai and
-## the fighters), a mage's orbiting element, a healer's rising light, an archer's
-## drawn bow, a beast's claw-flash. Stylised (not the literal weapon sprite) so it
-## reads cleanly over any map sprite.
+## AW-37: a calm looping hover idle in the unit's signature colour. Neal's call —
+## the literal-weapon choreographies read as noisy, so fighters/archers/beasts get
+## a soft breathing GLOW aura instead; mages keep the orbiting-element motes he
+## liked. Each character's hue comes from signature_color() (Kai green, Perrin
+## gold, Serra tide-blue, …), so hovering reads as "this one, and who they are."
 func _hover_archetype() -> String:
-	var cls := current_class()
-	if cls != null and cls.id == "beast":
-		return "beast"
-	if unit_def != null and unit_def.id == "kai":
-		return "blade"
 	var w := weapon()
-	if w == null:
-		return "beast"
-	match w.weapon_type:
-		WeaponDef.WeaponType.TOME: return "tome"
-		WeaponDef.WeaponType.STAFF: return "staff"
-		WeaponDef.WeaponType.BOW: return "bow"
-	return "blade"
+	if w != null and w.weapon_type == WeaponDef.WeaponType.TOME:
+		return "tome"
+	return "glow"
 
 
 func _draw_hover_flourish(cs: float) -> void:
 	var col := signature_color()
 	var p := fposmod(_hover_phase, 1.7) / 1.7  # normalised loop position
-	match _hover_archetype():
-		"blade": _flourish_blade(cs, col, p)
-		"tome": _flourish_tome(cs, col, p)
-		"staff": _flourish_staff(cs, col, p)
-		"bow": _flourish_bow(cs, col, p)
-		_: _flourish_beast(cs, col, p)
+	if _hover_archetype() == "tome":
+		_flourish_tome(cs, col, p)
+	else:
+		_flourish_glow(cs, col)
 
 
-## Raise the blade, let it flash at the apex, sheathe it — Kai's signature loop.
-func _flourish_blade(cs: float, col: Color, p: float) -> void:
-	var hilt := Vector2(cs * 0.26, -cs * 0.06)
-	var rest := 1.30    # angled down at the hip (sheathed)
-	var high := -1.30   # raised toward the sky
-	var ang := rest
-	var glow := 0.0
-	if p < 0.30:                       # raise
-		ang = lerpf(rest, high, _ease(p / 0.30))
-	elif p < 0.62:                     # hold + flash
-		ang = high
-		glow = sin((p - 0.30) / 0.32 * PI)
-	elif p < 0.82:                     # sheathe
-		ang = lerpf(high, rest, _ease((p - 0.62) / 0.20))
-	var dir := Vector2(cos(ang), sin(ang))
-	var length := cs * 0.5
-	var tip := hilt + dir * length
-	var perp := dir.orthogonal() * (cs * 0.09)
-	draw_line(hilt - perp * 0.6, hilt + perp * 0.6, Color(col.r, col.g, col.b, 0.8), 2.0)  # crossguard
-	draw_line(hilt, tip, Color(col.r, col.g, col.b, 0.9), 2.5)                              # blade
-	if glow > 0.0:
-		draw_circle(tip, cs * (0.06 + 0.10 * glow), Color(col.r, col.g, col.b, 0.55 * glow))
-		draw_circle(tip, cs * 0.04 * glow, Color(1, 1, 1, 0.9 * glow))
+## A soft breathing halo around the unit — reads around the sprite's silhouette
+## since it's drawn under the sprite and larger than it.
+func _flourish_glow(cs: float, col: Color) -> void:
+	var centre := Vector2(0, -cs * 0.18)
+	var pulse := 0.5 + 0.5 * sin(_hover_phase * 3.4)
+	for k in range(4):
+		var r := cs * (0.30 + k * 0.11) * (0.94 + 0.10 * pulse)
+		var a := (0.16 - k * 0.03) * (0.65 + 0.5 * pulse)
+		if a > 0.0:
+			draw_circle(centre, r, Color(col.r, col.g, col.b, a))
+	# a bright little core spark keeps it lively
+	draw_circle(centre, cs * 0.05, Color(col.r, col.g, col.b, 0.35 + 0.35 * pulse))
 
 
-## Two motes orbit the caster while a rune pulses at the core.
+## Two motes orbit the caster while a rune pulses at the core (mages keep this).
 func _flourish_tome(cs: float, col: Color, p: float) -> void:
-	var core := Vector2(cs * 0.22, -cs * 0.28)
+	var core := Vector2(cs * 0.10, -cs * 0.22)
 	var pulse := 0.5 + 0.5 * sin(p * TAU)
 	draw_circle(core, cs * (0.07 + 0.03 * pulse), Color(col.r, col.g, col.b, 0.35 + 0.35 * pulse))
 	for k in range(2):
 		var a := p * TAU + k * PI
-		var m := core + Vector2(cos(a), sin(a) * 0.55) * cs * 0.22
+		var m := core + Vector2(cos(a), sin(a) * 0.55) * cs * 0.24
 		draw_circle(m, cs * 0.045, Color(col.r, col.g, col.b, 0.95))
-
-
-## A spark climbs the staff and blooms at its head.
-func _flourish_staff(cs: float, col: Color, p: float) -> void:
-	var base := Vector2(cs * 0.24, cs * 0.05)
-	var head := Vector2(cs * 0.24, -cs * 0.42)
-	draw_line(base, head, Color(col.r, col.g, col.b, 0.55), 2.0)
-	var spark := base.lerp(head, _ease(fposmod(p * 1.4, 1.0)))
-	draw_circle(spark, cs * 0.05, Color(1, 1, 1, 0.9))
-	var bloom := 0.5 + 0.5 * sin(p * TAU)
-	draw_circle(head, cs * (0.05 + 0.06 * bloom), Color(col.r, col.g, col.b, 0.5 + 0.4 * bloom))
-
-
-## Nock, draw, and loose — an archer's ready loop.
-func _flourish_bow(cs: float, col: Color, p: float) -> void:
-	var c := Vector2(cs * 0.28, -cs * 0.2)
-	var r := cs * 0.26
-	draw_arc(c, r, -1.1, 1.1, 14, Color(col.r, col.g, col.b, 0.85), 2.0)  # the bow
-	var pull := _ease(fposmod(p * 1.3, 1.0))
-	var nock := c + Vector2(-r * 0.55 * pull, 0)
-	draw_line(c + Vector2(0, -r * 0.9), nock, Color(col.r, col.g, col.b, 0.7), 1.5)  # string top
-	draw_line(c + Vector2(0, r * 0.9), nock, Color(col.r, col.g, col.b, 0.7), 1.5)   # string bottom
-	draw_line(nock, nock + Vector2(r * 1.1, 0), Color(1, 1, 1, 0.85), 1.5)           # the arrow
-
-
-## Three claw glints rake across — a beast's twitchy idle.
-func _flourish_beast(cs: float, col: Color, p: float) -> void:
-	var sweep := _ease(fposmod(p * 1.5, 1.0))
-	var a := Color(col.r, col.g, col.b, 0.9 * (1.0 - sweep))
-	for k in range(3):
-		var off := Vector2(cs * (0.12 + 0.14 * sweep), -cs * (0.34 - k * 0.14))
-		draw_line(off, off + Vector2(cs * 0.16, cs * 0.12), a, 2.0)
-
-
-func _ease(x: float) -> float:
-	return x * x * (3.0 - 2.0 * x)  # smoothstep
 
 
 ## Banner-Saga-style painted standee: house ring at the feet, figure ~1.5 cells

@@ -8,7 +8,7 @@ signal chosen(index: int)
 signal cancelled
 
 const ROW_H := 34.0
-const PAD := 22.0
+const PAD := 30.0  # AW-37: a hair more so text clears the gold frame's inner edge
 const WIDTH := 240.0
 const MAX_WIDTH := 460.0
 
@@ -108,7 +108,7 @@ func _draw() -> void:
 		y += ROW_H
 	for i in range(_options.size()):
 		if i == _index:
-			draw_rect(Rect2(14, y - 22, _width - 28, ROW_H - 4), Color(0.30, 0.45, 0.85, 0.55), true)
+			draw_rect(Rect2(20, y - 22, _width - 40, ROW_H - 4), Color(0.30, 0.45, 0.85, 0.55), true)
 		draw_string(font, Vector2(PAD + 6, y), str(_options[i]), HORIZONTAL_ALIGNMENT_LEFT,
 			_width - PAD * 2, 20, Color.WHITE)
 		y += ROW_H

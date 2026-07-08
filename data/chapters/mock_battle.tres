@@ -3,18 +3,17 @@
 [ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_euytt"]
 [ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="1_vyfsr"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/well.png" id="2_euytt"]
-[ext_resource type="Resource" path="res://data/units/tm_soldier_a.tres" id="2_w7p4r"]
+[ext_resource type="Resource" path="res://data/units/osric.tres" id="2_w7p4r"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/archery_target.png" id="3_4hgxu"]
-[ext_resource type="Resource" path="res://data/units/tm_soldier_b.tres" id="3_uumbx"]
-[ext_resource type="Resource" path="res://data/units/tm_scout.tres" id="4_kwdgq"]
+[ext_resource type="Resource" path="res://data/units/elowen.tres" id="3_uumbx"]
+[ext_resource type="Resource" path="res://data/units/isolde.tres" id="4_kwdgq"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/fence.png" id="4_wadgp"]
-[ext_resource type="Resource" path="res://data/units/tm_armor.tres" id="5_87cys"]
+[ext_resource type="Resource" path="res://data/units/fenn.tres" id="5_87cys"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/tent.png" id="5_hosr7"]
-[ext_resource type="Resource" path="res://data/units/tm_adept.tres" id="6_1euil"]
+[ext_resource type="Resource" path="res://data/units/bertram.tres" id="6_1euil"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner.png" id="6_f61vg"]
-[ext_resource type="Resource" path="res://data/units/tm_guard.tres" id="7_17s8o"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="7_d5hqg"]
-[ext_resource type="Resource" path="res://data/units/serra.tres" id="8_8kt3g"]
+[ext_resource type="Resource" path="res://data/units/serra_prologue.tres" id="8_8kt3g"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="8_b5vgp"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/cart.png" id="9_psmmd"]
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="9_ro4ud"]
@@ -125,36 +124,43 @@ cell = Vector2i(5, 11)
 script = ExtResource("1_vyfsr")
 unit = ExtResource("2_w7p4r")
 cell = Vector2i(9, 9)
+team_override = 1
+ai_override = 0
 
 [sub_resource type="Resource" id="Resource_eiwa8"]
 script = ExtResource("1_vyfsr")
 unit = ExtResource("3_uumbx")
 cell = Vector2i(12, 11)
+team_override = 1
+ai_override = 0
 
 [sub_resource type="Resource" id="Resource_ckb63"]
 script = ExtResource("1_vyfsr")
 unit = ExtResource("4_kwdgq")
 cell = Vector2i(7, 6)
+team_override = 1
+ai_override = 0
 
 [sub_resource type="Resource" id="Resource_fqmd8"]
 script = ExtResource("1_vyfsr")
 unit = ExtResource("5_87cys")
 cell = Vector2i(11, 7)
+team_override = 1
+ai_override = 0
 
 [sub_resource type="Resource" id="Resource_euytt"]
 script = ExtResource("1_vyfsr")
 unit = ExtResource("6_1euil")
-cell = Vector2i(17, 5)
-
-[sub_resource type="Resource" id="Resource_t5ycu"]
-script = ExtResource("1_vyfsr")
-unit = ExtResource("7_17s8o")
 cell = Vector2i(16, 2)
+team_override = 1
+ai_override = 0
 
 [sub_resource type="Resource" id="Resource_4hgxu"]
 script = ExtResource("1_vyfsr")
 unit = ExtResource("8_8kt3g")
 cell = Vector2i(17, 2)
+team_override = 1
+ai_override = 0
 
 [sub_resource type="Resource" id="Resource_thc"]
 script = ExtResource("1_vyfsr")
@@ -212,7 +218,7 @@ display_name = "Chapter 1 — The Mock Battle"
 objective = 0
 boss_unit_id = "serra"
 non_lethal = true
-enemy_spawns = Array[ExtResource("1_vyfsr")]([SubResource("Resource_xu6hg"), SubResource("Resource_eiwa8"), SubResource("Resource_ckb63"), SubResource("Resource_fqmd8"), SubResource("Resource_euytt"), SubResource("Resource_t5ycu"), SubResource("Resource_4hgxu"), SubResource("Resource_thc"), SubResource("Resource_tht"), SubResource("Resource_thv"), SubResource("Resource_thm"), SubResource("Resource_thp"), SubResource("Resource_thr"), SubResource("Resource_ths")])
+enemy_spawns = Array[ExtResource("1_vyfsr")]([SubResource("Resource_xu6hg"), SubResource("Resource_eiwa8"), SubResource("Resource_ckb63"), SubResource("Resource_fqmd8"), SubResource("Resource_euytt"), SubResource("Resource_4hgxu"), SubResource("Resource_thc"), SubResource("Resource_tht"), SubResource("Resource_thv"), SubResource("Resource_thm"), SubResource("Resource_thp"), SubResource("Resource_thr"), SubResource("Resource_ths")])
 deploy_cells = Dictionary[String, Vector2i]({
 "brenna": Vector2i(2, 13),
 "dain": Vector2i(1, 13),
