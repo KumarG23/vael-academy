@@ -144,6 +144,13 @@ func _build_hub() -> void:
 		_prop("tree_big", xy[0], xy[1], true)
 	_point("fn_deploy", "Mission Board", cx, 20)
 	_point("maren_chat", "Talk to Warden Maren", 24, 20, "res://data/dialogue/castle_maren.json", "maren")
+	# AW-43: the Arena colosseum — a weekly proving ground on the west lawn
+	_decor("res://assets/art/pixellab/buildings/colosseum.png", 11, 25)
+	for ay in range(23, 26):
+		for ax in range(7, 16):
+			if ch.in_bounds(ax, ay):
+				ch.set_terrain(ax, ay, T.SITE)
+	_point("fn_arena", "Enter the Arena", 11, 27)
 	print("hub err=%d doors=%d" % [ResourceSaver.save(room, "res://data/castle_v2/campus.tres"), room.doors.size()])
 	var respawn := {"entrance": Vector2i(cx, 8), "library": Vector2i(8, 8),
 		"classroom": Vector2i(38, 8), "waterside": Vector2i(39, 27), "training": Vector2i(38, 13)}

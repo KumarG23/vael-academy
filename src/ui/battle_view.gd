@@ -149,6 +149,8 @@ func _ready() -> void:
 	_setup_ui()
 	_setup_juice()
 	_spawn_units()
+	if chapter.is_arena:
+		_arena_spawn_wave(1)  # AW-43: the first bout — Kai's already spawned solo
 	_focus_player_start()
 	queue_redraw()
 	_begin_battle()
@@ -755,6 +757,9 @@ func _run_enemy_phase() -> void:
 func _check_objective() -> void:
 	if _battle_over:
 		return
+	if chapter.is_arena:
+		_check_arena()
+		return
 	var has_lord := _lord_unit != null
 	var lord_cell := Vector2i(-1, -1)
 	if has_lord and _lord_alive and is_instance_valid(_lord_unit):
@@ -771,6 +776,65 @@ func _check_objective() -> void:
 		_end_battle(true)
 	elif outcome == ObjectiveResolver.Outcome.DEFEAT:
 		_end_battle(false)
+
+
+# --- AW-43: the Arena — Kai solo vs escalating waves --------------------------
+var _arena_wave := 0
+
+
+## A ring of walkable, empty edge cells the waves spawn onto.
+func _arena_spawn_cells() -> Array:
+	var out: Array = []
+	for x in range(2, chapter.width - 2, 2):
+		out.append(Vector2i(x, 1)); out.append(Vector2i(x, chapter.height - 2))
+	for y in range(3, chapter.height - 3, 2):
+		out.append(Vector2i(1, y)); out.append(Vector2i(chapter.width - 2, y))
+	var free: Array = []
+	for c in out:
+		if not _terrain_db.is_impassable(chapter.get_terrain(c.x, c.y)) and unit_at(c) == null:
+			free.append(c)
+	return free
+
+
+func _arena_spawn_wave(wave: int) -> void:
+	_arena_wave = wave
+	var cells := _arena_spawn_cells()
+	if cells.is_empty():
+		return
+	for s in ArenaController.wave_spawns(wave, cells):
+		add_unit(s["def"], s["cell"])
+	_turn_banner.announce("Wave %d" % wave, false)
+	_recompute_auras()
+
+
+## Kai down = the bout ends (he yields; the arena's magic means nobody dies). A
+## cleared floor summons the next, tougher wave and mends Kai a little.
+func _check_arena() -> void:
+	if not _lord_alive:
+		_arena_finish()
+		return
+	if _living_foes_of(0).is_empty():
+		if _lord_unit != null and is_instance_valid(_lord_unit):
+			var mended := _lord_unit.heal(int(_lord_unit.max_hp() * 0.30))
+			if mended > 0:
+				_pop_text(_lord_unit.position, "Restored +%d" % mended, Color(0.5, 1.0, 0.7))
+		_arena_spawn_wave(_arena_wave + 1)
+
+
+func _arena_finish() -> void:
+	if _battle_over:
+		return
+	var cleared := maxi(0, _arena_wave - 1)  # the wave you fell on doesn't count
+	var r := ArenaController.reward(cleared)
+	Campaign.flags["arena_used_this_week"] = true
+	Campaign.flags["arena_best_wave"] = maxi(int(Campaign.flags.get("arena_best_wave", 0)), cleared)
+	Campaign.flags["gold"] = int(Campaign.flags.get("gold", 0)) + int(r["gold"])
+	Campaign.flags["arena_credit"] = int(Campaign.flags.get("arena_credit", 0)) + int(r["credit"])
+	_battle_over = true
+	_battle_victory = true  # you always leave the arena with your winnings — no game over
+	_deselect()
+	_range_overlay.clear()
+	_result_screen.show_victory()
 
 
 func _end_battle(victory: bool) -> void:

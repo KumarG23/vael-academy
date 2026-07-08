@@ -20,6 +20,10 @@ enum Objective { ROUT, SEIZE, DEFEAT_BOSS }
 ## Non-lethal chapter (WO-4.1 Mock Battle): defeated units yield and retreat —
 ## flagged defeated, never permadead. Lord fall still loses the chapter.
 @export var non_lethal: bool = false
+## AW-43: when true this is the Arena — Kai solo vs procedural escalating waves
+## (ArenaController), no real death, rewards scale with depth. enemy_spawns is
+## empty; the waves are spawned in code.
+@export var is_arena: bool = false
 
 @export_group("Forces (WO-4.1)")
 ## Authored enemy force. Empty => the battle scene's legacy demo spawn is used.

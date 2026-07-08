@@ -501,6 +501,12 @@ func _open_function(fn: String) -> void:
 			_rest_week()
 		"fn_cook":
 			_open_cooking()
+		"fn_arena":
+			if bool(Campaign.flags.get("arena_used_this_week", false)):
+				_toast("The Arena's magic is spent — it reopens next week.")
+			else:
+				Campaign.deploy()
+				get_tree().change_scene_to_file("res://scenes/battle/arena.tscn")
 
 
 func _toast(text: String) -> void:

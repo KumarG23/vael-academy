@@ -30,7 +30,9 @@ func spawn_units() -> void:
 			var u: Unit = _v.add_unit(def, cells.get(def.id, Vector2i.ZERO))
 			if def.is_lord:
 				_v._lord_unit = u
-	if _v.chapter.enemy_spawns.is_empty():
+	if _v.chapter.is_arena:
+		pass  # AW-43: the Arena summons its own waves in code — no authored/demo foes
+	elif _v.chapter.enemy_spawns.is_empty():
 		spawn_demo_enemies()
 	else:
 		# Authored enemy force (WO-4.1). Defs are duplicated so runtime state

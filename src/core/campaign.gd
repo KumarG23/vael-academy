@@ -84,6 +84,7 @@ func current_event() -> CalendarEventDef:
 
 func advance_week() -> void:
 	week += 1
+	flags.erase("arena_used_this_week")  # AW-43: the Arena reopens each week
 
 
 ## Choose the player's house (WO-5.3a): flips the Roster and everything

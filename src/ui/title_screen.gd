@@ -39,6 +39,7 @@ func _menu_pos() -> Vector2:
 ## the game for checking without playing through — F6 is a Mac system key.
 const DEV_JUMPS := [
 	["▶ Campus (walk the school)", "castle"],
+	["▶ The Arena (Kai vs waves)", "arena"],
 	["▶ Mock Battle (3 houses)", "mock"],
 	["▶ House-Choice screen", "housechoice"],
 	["▶ Prologue battle", "prologue"],
@@ -67,6 +68,11 @@ func _dev_jump(kind: String) -> void:
 			Campaign.set_house("emberwing")
 			Campaign.house_locked = true  # mid-year, so it enters the castle hub
 			get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
+		"arena":
+			Campaign.reset_new_game(false)
+			Campaign.set_house("emberwing")
+			Campaign.deploy()
+			get_tree().change_scene_to_file("res://scenes/battle/arena.tscn")
 		"mock":
 			Campaign.reset_new_game(false)
 			Campaign.set_house("emberwing")
