@@ -6,6 +6,8 @@ extends Control
 ## the three house stripes reflect that all three houses are equal now (§4).
 
 const HUB_SCENE := "res://scenes/castle/castle.tscn"  # WO-6.2a: the castle IS the home now
+const PROLOGUE_SCENE := "res://scenes/battle/prologue.tscn"       # AW-38: the game opens on the raid
+const HOUSE_CHOICE_SCENE := "res://scenes/flow/house_choice.tscn"  # AW-38: then the oath
 const MAX_SLOTS := 3
 
 var _menu: ChoiceMenu
@@ -103,6 +105,9 @@ func _choose_slot(index: int) -> void:
 ## exercise the flow headless.
 func prepare_new_game(casual: bool) -> void:
 	Campaign.reset_new_game(casual, int(Time.get_ticks_usec()))
+	Campaign.active = true  # AW-38: the campaign is live from the prologue on, so
+	# the prologue battle routes through the campaign flow (→ house choice), not
+	# the standalone "reload the scene" path. The castle resets this per visit.
 
 
 ## Load a campaign save into the Campaign autoload. Returns success.
@@ -110,8 +115,19 @@ func prepare_load(slot: int, save_system: SaveSystem = null) -> bool:
 	return Campaign.load_from_slot(slot, save_system if save_system != null else _save_system)
 
 
+## AW-38: the campaign now opens with the prologue raid, then the house-choice
+## oath, then the castle year — routed by how far the save has come. A locked
+## house means the year's underway (the usual Load-into-castle case).
 func _enter_campaign() -> void:
-	get_tree().change_scene_to_file(HUB_SCENE)
+	get_tree().change_scene_to_file(next_campaign_scene())
+
+
+func next_campaign_scene() -> String:
+	if Campaign.house_locked:
+		return HUB_SCENE
+	if bool(Campaign.flags.get("prologue_done", false)):
+		return HOUSE_CHOICE_SCENE
+	return PROLOGUE_SCENE
 
 
 func _draw() -> void:

@@ -1404,7 +1404,13 @@ func _on_result_dismissed() -> void:
 	# scene run standalone (tests/dev) just reloads for another attempt.
 	if Campaign.active:
 		if _battle_victory:
-			get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
+			# AW-38: winning the prologue raid opens the house-choice oath; every
+			# later victory returns to the castle to carry on the year.
+			if chapter.id == "prologue" and not Campaign.house_locked:
+				Campaign.flags["prologue_done"] = true
+				get_tree().change_scene_to_file("res://scenes/flow/house_choice.tscn")
+			else:
+				get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
 		else:
 			get_tree().change_scene_to_file("res://scenes/title/title.tscn")
 	else:

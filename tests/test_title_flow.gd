@@ -34,7 +34,8 @@ func test_new_game_classic_resets_the_campaign():
 	_title.prepare_new_game(false)
 	assert_false(Campaign.casual, "Classic")
 	assert_false(Campaign.has_unit_state("kai"), "fresh campaign state")
-	assert_false(Campaign.active)
+	# AW-38: the campaign is live from the prologue onward (routes through the flow).
+	assert_true(Campaign.active, "a new game is a live campaign run")
 
 
 func test_new_game_casual_sets_the_flag():
