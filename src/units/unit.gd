@@ -63,6 +63,14 @@ var _standee: Texture2D = null
 ## when present — supersedes both the token and the standee. Pure presentation.
 var _anim: AnimatedSprite2D = null
 
+## AW-33: hover idle — the unit perks up (breathing bob) and shows a signature
+## gleam in its own colour while the cursor rests on it. Pure presentation.
+var _hovered := false
+var _hover_phase := 0.0
+var _idle_tween: Tween
+var _anim_base_pos := Vector2.ZERO
+var _anim_base_scale := Vector2.ONE
+
 
 func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 	unit_def = def
@@ -197,6 +205,68 @@ func facing_right() -> bool:
 func set_facing(face_right: bool) -> void:
 	if _anim != null:
 		_anim.flip_h = not face_right
+
+
+# --- AW-33: hover idle -------------------------------------------------------------
+
+## The cursor rested on (or left) this unit: start/stop a looping "perk up" — a
+## gentle breathing bob of the sprite plus a signature gleam above the head.
+func set_hovered(on: bool) -> void:
+	if on == _hovered:
+		return
+	_hovered = on
+	if on:
+		_hover_phase = 0.0
+		_start_idle_bob()
+	else:
+		_stop_idle_bob()
+	queue_redraw()
+
+
+func _start_idle_bob() -> void:
+	if _anim == null or _moving:
+		return
+	_anim_base_pos = _anim.position
+	_anim_base_scale = _anim.scale
+	if _idle_tween != null and _idle_tween.is_valid():
+		_idle_tween.kill()
+	_idle_tween = create_tween().set_loops()
+	# rise a touch and swell, then settle — a slow breath (~1.1s round trip).
+	_idle_tween.tween_property(_anim, "position:y", _anim_base_pos.y - 2.5, 0.55) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_idle_tween.parallel().tween_property(_anim, "scale", _anim_base_scale * 1.04, 0.55) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_idle_tween.tween_property(_anim, "position:y", _anim_base_pos.y, 0.55) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_idle_tween.parallel().tween_property(_anim, "scale", _anim_base_scale, 0.55) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func _stop_idle_bob() -> void:
+	if _idle_tween != null and _idle_tween.is_valid():
+		_idle_tween.kill()
+	_idle_tween = null
+	if _anim != null and _anim_base_scale != Vector2.ZERO:
+		_anim.position = _anim_base_pos
+		_anim.scale = _anim_base_scale
+
+
+## Signature accent colour for this unit — matches the combat rig's FX language:
+## Kai's Verdant green, a mage's anima element, a healer's light, else gold.
+func signature_color() -> Color:
+	if unit_def != null and unit_def.id == "kai":
+		return Color(0.42, 1.0, 0.55)
+	var w := weapon()
+	if w != null:
+		match w.school:
+			"ember": return Color(1.0, 0.55, 0.20)
+			"gale": return Color(0.55, 1.0, 0.55)
+			"tide": return Color(0.40, 0.70, 1.0)
+		if w.is_staff():
+			return Color(0.55, 1.0, 0.75)
+		if w.weapon_type == WeaponDef.WeaponType.BOW:
+			return Color(0.60, 1.0, 0.60)
+	return Color(0.96, 0.85, 0.42)  # gold
 
 
 ## Effective value of a stat key (UnitDef base + level-up bonus).
@@ -560,6 +630,9 @@ func _process(delta: float) -> void:
 	if _flash > 0.0:
 		_flash = maxf(0.0, _flash - delta * 4.0)
 		queue_redraw()
+	if _hovered:
+		_hover_phase += delta
+		queue_redraw()  # AW-33: pulse the signature gleam
 
 
 ## Animate along a cell path (as returned by Pathfinder.find_path). Awaitable.
@@ -643,7 +716,29 @@ func _draw_sprite_underlay() -> void:
 	_anim.modulate = Color(0.55, 0.55, 0.58) if has_acted else Color.WHITE
 	if _flash > 0.0:
 		_anim.modulate = Color(1.0 + _flash, 1.0 + _flash, 1.0 + _flash)
+	if _hovered:
+		_draw_hover_gleam(cs)
 	_draw_hp_bar(cs * 0.32)
+
+
+## AW-33: a small four-point sparkle above the unit's head, in its signature
+## colour, pulsing while hovered — the readable "this unit is highlighted" beat.
+func _draw_hover_gleam(cs: float) -> void:
+	var col := signature_color()
+	var pulse := 0.55 + 0.45 * sin(_hover_phase * 5.0)
+	var at := Vector2(cs * 0.30, -cs * 0.78)
+	var s := cs * (0.11 + 0.03 * pulse)
+	var pts := PackedVector2Array([
+		at + Vector2(0, -s), at + Vector2(s * 0.32, 0),
+		at + Vector2(0, s), at + Vector2(-s * 0.32, 0),
+	])
+	draw_colored_polygon(pts, Color(col.r, col.g, col.b, 0.9 * pulse))
+	var horiz := PackedVector2Array([
+		at + Vector2(-s, 0), at + Vector2(0, -s * 0.32),
+		at + Vector2(s, 0), at + Vector2(0, s * 0.32),
+	])
+	draw_colored_polygon(horiz, Color(col.r, col.g, col.b, 0.9 * pulse))
+	draw_circle(at, s * 0.28, Color(1, 1, 1, 0.9 * pulse))
 
 
 ## Banner-Saga-style painted standee: house ring at the feet, figure ~1.5 cells

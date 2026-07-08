@@ -350,8 +350,12 @@ func _update_hover_info(cell: Vector2i) -> void:
 	if _hover_info == null:
 		return
 	var u := unit_at(cell)
+	# AW-33: the previously-hovered unit stops its idle; the new one perks up.
+	if _hover_unit != null and _hover_unit != u and is_instance_valid(_hover_unit):
+		_hover_unit.set_hovered(false)
 	if u != null and u.is_alive():
 		_hover_unit = u
+		u.set_hovered(true)
 		_hover_info.visible = true
 		_hover_info.queue_redraw()
 	else:
