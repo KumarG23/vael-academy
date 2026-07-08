@@ -16,8 +16,10 @@ const MAX_WIDTH := 460.0
 ## menu. SRC_MARGIN is the ornate corner size in the source art; DST_MARGIN is
 ## how big it's drawn (smaller, so the flourish suits a compact menu).
 const PANEL_PATH := "res://assets/art/ui/panel_noble.png"
-const SRC_MARGIN := 52.0
-const DST_MARGIN := 26.0
+const SRC_MARGIN := 58.0   # the crisp 256px frame's ornate corner size
+const DST_MARGIN := 22.0
+## The transparent-interior frame is filled with this behind the gold.
+const PANEL_FILL := Color(0.11, 0.12, 0.17, 0.96)
 static var _panel: Texture2D
 static var _panel_loaded := false
 
@@ -88,6 +90,9 @@ func _draw() -> void:
 	# AW-32: the pixel-art noble frame when its art is present; otherwise the
 	# original flat panel (convention: code never blocks on missing art).
 	if _panel != null:
+		# navy fill behind the transparent-interior gold frame (inset so its
+		# square corners hide under the frame's rounded filigree)
+		draw_rect(rect.grow(-8.0), PANEL_FILL, true)
 		_draw_nine_patch(_panel, rect)
 	else:
 		draw_rect(rect, Color(0.08, 0.09, 0.13, 0.95), true)
