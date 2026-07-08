@@ -91,7 +91,7 @@ visits = Array[ExtResource("6_j2y4f")]([])
 script = ExtResource("7_klmft")
 cell = Vector2i(0, 6)
 to_room = "campus"
-spawn_cell = Vector2i(48, 31)
+spawn_cell = Vector2i(38, 13)
 label = "Back to the Campus"
 
 [sub_resource type="Resource" id="Resource_4pvn6"]
