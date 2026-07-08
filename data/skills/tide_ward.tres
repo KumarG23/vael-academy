@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_tideward"]
+
+[resource]
+script = ExtResource("1_tideward")
+id = "tide_ward"
+display_name = "Tide-Ward"
+description = "Serra's protective tide. Allies within 2 tiles gain +3 defense and +3 resistance."
+unlock_level = 1
+aura_range = 2
+stat_bonuses = {
+"def": 3,
+"res": 3
+}

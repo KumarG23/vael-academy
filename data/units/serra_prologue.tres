@@ -5,6 +5,8 @@
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_srpud"]
 [ext_resource type="Resource" path="res://data/classes/leviathan.tres" id="9_promoserr"]
 [ext_resource type="Resource" path="res://data/weapons/iron_lance.tres" id="4_srpln"]
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="5_skdef"]
+[ext_resource type="Resource" path="res://data/skills/tide_ward.tres" id="6_tw"]
 
 [resource]
 script = ExtResource("3_srpud")
@@ -14,6 +16,7 @@ promotion_class = ExtResource("9_promoserr")
 char_class = ExtResource("1_srpcl")
 house_id = "tidemark"
 weapon = ExtResource("4_srpln")
+personal_skills = Array[ExtResource("5_skdef")]([ExtResource("6_tw")])
 level = 2
 max_hp = 26
 strength = 8

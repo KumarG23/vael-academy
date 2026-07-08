@@ -3,6 +3,8 @@
 [ext_resource type="Resource" path="res://data/classes/beast.tres" id="1_bc"]
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="2_su"]
 [ext_resource type="Resource" path="res://data/weapons/claw.tres" id="3_cw"]
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="4_skdef"]
+[ext_resource type="Resource" path="res://data/skills/pack_hunter.tres" id="5_ph"]
 
 [resource]
 script = ExtResource("2_su")
@@ -11,6 +13,7 @@ display_name = "Sable"
 char_class = ExtResource("1_bc")
 house_id = "thornrook"
 weapon = ExtResource("3_cw")
+personal_skills = Array[ExtResource("4_skdef")]([ExtResource("5_ph")])
 max_hp = 24
 strength = 8
 magic = 0

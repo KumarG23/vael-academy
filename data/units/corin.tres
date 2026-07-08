@@ -5,6 +5,8 @@
 [ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_crnud"]
 [ext_resource type="Resource" path="res://data/classes/spellbow.tres" id="9_promocori"]
 [ext_resource type="Resource" path="res://data/weapons/sig_corin.tres" id="4_crnfr"]
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="5_skdef"]
+[ext_resource type="Resource" path="res://data/skills/pack_hunter.tres" id="6_crnph"]
 
 [resource]
 script = ExtResource("3_crnud")
@@ -14,6 +16,7 @@ promotion_class = ExtResource("9_promocori")
 char_class = ExtResource("1_crncl")
 house_id = "thornrook"
 weapon = ExtResource("4_crnfr")
+personal_skills = Array[ExtResource("5_skdef")]([ExtResource("6_crnph")])
 level = 2
 max_hp = 20
 strength = 2

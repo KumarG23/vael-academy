@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="1_packhunter"]
+
+[resource]
+script = ExtResource("1_packhunter")
+id = "pack_hunter"
+display_name = "Pack Hunter"
+description = "Corin and Sable hunt as one. Allies within 2 tiles gain +2 damage and +15 crit."
+unlock_level = 1
+damage = 2
+crit = 15
+aura_range = 2

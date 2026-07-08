@@ -537,6 +537,7 @@ func _view_support_entry(index: int) -> void:
 # --- unit inspection (WO-4.4) ------------------------------------------------------
 
 func _open_stats_for(unit: Unit) -> void:
+	_recompute_auras()  # AW-27: show aura-buffed stats in the panel
 	_stats_panel.show_unit(unit)
 	if _cursor != null:
 		_cursor.active = false
@@ -652,6 +653,7 @@ func _begin_player_phase() -> void:
 		u.has_acted = false
 		u.queue_redraw()
 	_apply_terrain_heal(0)
+	_recompute_auras()  # AW-27: keep aura stats fresh for overlays/inspection
 	_deselect()
 	if _threat_overlay.is_shown():
 		_refresh_threat_overlay()  # enemies moved last phase
@@ -682,6 +684,7 @@ func _end_player_phase() -> void:
 func _run_enemy_phase() -> void:
 	_busy = true
 	_apply_terrain_heal(1)
+	_recompute_auras()  # AW-27: AI reads aura-buffed stats when predicting combat
 	_turn_banner.announce("Enemy Phase", false)
 	# Deterministic acting order (§5): stable by board position.
 	var enemies := _living_units_on_team(1)
@@ -1057,18 +1060,40 @@ func _setup_supports() -> void:
 
 
 func _combatant_for(unit: Unit, assumed_cell: Vector2i) -> Combatant:
+	# AW-27: refresh aura bonuses from live positions before snapshotting stats
+	# (stat auras fold into stat(), so this MUST precede to_combatant).
+	_recompute_auras()
 	var c := unit.to_combatant(_terrain_def_at(assumed_cell), _terrain_avoid_at(assumed_cell))
 	# Support and House Camaraderie bonuses fold into the same combat inputs.
 	var bonus := _support_bonus_for(unit, assumed_cell)
 	var cam := _camaraderie_bonus_for(unit, assumed_cell)
 	var sk := unit.skill_combat_bonus()  # WO-8.1: same fold as supports
+	var aura := unit.aura_combat_bonus()  # WO-8.1 path, AW-27 source
 	c.apply_support_bonus({
-		"hit": int(bonus["hit"]) + int(cam["hit"]) + int(sk["hit"]),
-		"avoid": int(bonus["avoid"]) + int(cam["avoid"]) + int(sk["avoid"]),
-		"damage": int(bonus["damage"]) + int(cam["damage"]) + int(sk["damage"]),
-		"crit": int(bonus["crit"]) + int(cam["crit"]) + int(sk["crit"]),
+		"hit": int(bonus["hit"]) + int(cam["hit"]) + int(sk["hit"]) + int(aura["hit"]),
+		"avoid": int(bonus["avoid"]) + int(cam["avoid"]) + int(sk["avoid"]) + int(aura["avoid"]),
+		"damage": int(bonus["damage"]) + int(cam["damage"]) + int(sk["damage"]) + int(aura["damage"]),
+		"crit": int(bonus["crit"]) + int(cam["crit"]) + int(sk["crit"]) + int(aura["crit"]),
 	})
 	return c
+
+
+## AW-27: recompute every unit's aura bonuses from current positions. Each living
+## unit projects its aura skills onto allied units within range (Manhattan),
+## never onto itself — so a synergy like Pack Hunter needs the pair to stand
+## close. Cheap (O(units²)); run before any Combatant is built or stats shown.
+func _recompute_auras() -> void:
+	for u in _units:
+		u.clear_auras()
+	for src in _units:
+		if not src.is_alive():
+			continue
+		for sk in src.aura_skills():
+			for u in _units:
+				if u == src or u.team != src.team or not u.is_alive():
+					continue
+				if _manhattan(src.cell, u.cell) <= sk.aura_range:
+					u.add_aura(sk)
 
 
 func _support_bonus_for(unit: Unit, assumed_cell: Vector2i) -> Dictionary:

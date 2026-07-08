@@ -32,6 +32,13 @@ var _move_bonus := 0
 # shared UnitDef resource immutable while stats grow per-instance.
 var _stat_bonus := {"hp": 0, "str": 0, "mag": 0, "skl": 0, "spd": 0, "lck": 0, "def": 0, "res": 0}
 
+# AW-27: transient aura bonuses projected onto this unit by nearby allies' aura
+# skills. Recomputed from live positions by battle_view._recompute_auras before
+# any Combatant is built; never saved. Stat auras fold into stat(); combat auras
+# ride the support-bonus channel via aura_combat_bonus().
+var _aura_stat := {}
+var _aura_combat := {"hit": 0, "avoid": 0, "damage": 0, "crit": 0}
+
 # UnitDef field name for each stat key.
 const _STAT_FIELD := {
 	"hp": "max_hp", "str": "strength", "mag": "magic", "skl": "skill",
@@ -197,8 +204,9 @@ func stat(key: String) -> int:
 	var base: int = unit_def.get(_STAT_FIELD[key]) if unit_def != null else 0
 	var skill_mod := 0
 	for sk in active_skills():
-		skill_mod += int(sk.stat_bonuses.get(key, 0))
-	return base + int(_stat_bonus.get(key, 0)) + skill_mod
+		if not sk.is_aura():  # auras buff allies, not their owner
+			skill_mod += int(sk.stat_bonuses.get(key, 0))
+	return base + int(_stat_bonus.get(key, 0)) + int(_aura_stat.get(key, 0)) + skill_mod
 
 
 func max_hp() -> int:
@@ -315,18 +323,58 @@ func active_skills() -> Array[SkillDef]:
 		for sk in _class_override.skills:
 			if sk != null and sk.unlock_level <= level:
 				out.append(sk)
+	# AW-27: signature skills carried by the character persist across promotion.
+	if unit_def != null:
+		for sk in unit_def.personal_skills:
+			if sk != null and sk.unlock_level <= level:
+				out.append(sk)
 	return out
 
 
 ## Summed combat modifiers from active skills (folded into the Combatant
-## alongside supports/camaraderie — same forecast/resolver path).
+## alongside supports/camaraderie — same forecast/resolver path). Auras are
+## excluded here — they buff nearby allies, not their owner (see set_aura).
 func skill_combat_bonus() -> Dictionary:
 	var total := {"hit": 0, "avoid": 0, "damage": 0, "crit": 0}
 	for sk in active_skills():
+		if sk.is_aura():
+			continue
 		var b := sk.combat_bonus()
 		for key in total:
 			total[key] += int(b[key])
 	return total
+
+
+# --- auras (AW-27) ------------------------------------------------------------
+
+## Active aura skills this unit projects onto nearby allies.
+func aura_skills() -> Array[SkillDef]:
+	var out: Array[SkillDef] = []
+	for sk in active_skills():
+		if sk.is_aura():
+			out.append(sk)
+	return out
+
+
+## Wipe any aura bonuses currently on this unit (called before each recompute).
+func clear_auras() -> void:
+	_aura_stat = {}
+	_aura_combat = {"hit": 0, "avoid": 0, "damage": 0, "crit": 0}
+
+
+## Fold one aura skill's bonuses onto this unit (it stands in an ally's aura).
+func add_aura(sk: SkillDef) -> void:
+	for key in sk.stat_bonuses:
+		_aura_stat[key] = int(_aura_stat.get(key, 0)) + int(sk.stat_bonuses[key])
+	var b := sk.combat_bonus()
+	for key in _aura_combat:
+		_aura_combat[key] += int(b[key])
+
+
+## Combat modifiers this unit currently receives from allies' auras — folded into
+## the Combatant next to supports/camaraderie/skills.
+func aura_combat_bonus() -> Dictionary:
+	return _aura_combat.duplicate()
 
 
 ## WO-8.2: whether this unit may wield `w`. Only Kai is gated — his schools

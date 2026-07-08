@@ -154,7 +154,10 @@ func attack_weapons(unit: Unit, magic: bool) -> Array:
 		if not it.is_weapon():
 			continue
 		var w := it.weapon()
-		if not w.can_attack() or w.is_magical() != magic:
+		# Category is by weapon FAMILY, not damage type: tomes are "Magic", every
+		# other attacking arm (incl. a magic-damage spellbow) is "Attack".
+		var is_spell := w.weapon_type == WeaponDef.WeaponType.TOME
+		if not w.can_attack() or is_spell != magic:
 			continue
 		if not unit.can_use_weapon(w):
 			continue

@@ -22,6 +22,18 @@ extends Resource
 ## Flat stat bonuses keyed like Unit.stat() ("str", "spd", "def", ...).
 @export var stat_bonuses: Dictionary = {}
 
+@export_group("Aura")
+## AW-27: when > 0, this skill is an AURA — its stat AND combat modifiers apply
+## to allied units within this many tiles of the owner (Manhattan), NOT to the
+## owner. 0 = an ordinary personal skill that only affects its owner. Auras are
+## recomputed from live positions each time a Combatant is built (battle_view).
+@export var aura_range: int = 0
+
 
 func combat_bonus() -> Dictionary:
 	return {"hit": hit, "avoid": avoid, "damage": damage, "crit": crit}
+
+
+## True if this skill projects onto nearby allies rather than its owner.
+func is_aura() -> bool:
+	return aura_range > 0

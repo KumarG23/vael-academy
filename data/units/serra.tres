@@ -6,6 +6,8 @@
 [ext_resource type="Resource" path="res://data/classes/leviathan.tres" id="9_promoserr"]
 [ext_resource type="Script" path="res://src/items/item_def.gd" id="4_xqxbx"]
 [ext_resource type="Resource" path="res://data/weapons/sig_serra.tres" id="5_7gca4"]
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="6_skdef"]
+[ext_resource type="Resource" path="res://data/skills/tide_ward.tres" id="7_tw"]
 
 [resource]
 script = ExtResource("3_pxlqk")
@@ -17,6 +19,7 @@ house_id = "tidemark"
 team = 1
 ai_behavior = 2
 weapon = ExtResource("5_7gca4")
+personal_skills = Array[ExtResource("6_skdef")]([ExtResource("7_tw")])
 level = 5
 max_hp = 28
 strength = 9

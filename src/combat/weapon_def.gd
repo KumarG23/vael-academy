@@ -23,9 +23,16 @@ enum WeaponType { SWORD, AXE, LANCE, BOW, TOME, STAFF }
 @export var school: String = ""
 
 
-## Tomes deal magical damage (MAG vs RES); everything else is physical (STR vs DEF).
+## AW-27: a non-tome weapon can be flagged magical too — a SPELLBOW fires arrows
+## (BOW type, in the Attack menu) but resolves as magic (MAG vs RES). Corin's
+## Stagward Longbow sets this.
+@export var magical: bool = false
+
+
+## Tomes deal magical damage (MAG vs RES); everything else is physical (STR vs
+## DEF) unless flagged magical (spellbow).
 func is_magical() -> bool:
-	return weapon_type == WeaponType.TOME
+	return weapon_type == WeaponType.TOME or magical
 
 
 ## Staves never deal combat damage (healer support only, WO-2.1).
