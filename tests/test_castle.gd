@@ -142,6 +142,24 @@ func test_rooms_can_have_their_own_music():
 		"res://assets/audio/music/campus_chill.mp3", "roomless areas play the campus bed")
 
 
+## AW-49: activating a point through the REAL input path marks the input handled
+## BEFORE acting — fn_arena swaps the scene mid-call, and the old order crashed on
+## a null get_viewport() (Neal's arena-entry crash). The weekly-gated branch runs
+## the same reordered path without actually swapping the test's scene.
+func test_accept_keypress_at_a_point_is_input_safe():
+	Campaign.flags["arena_used_this_week"] = true  # gate → toast, no scene change
+	_castle.enter_room("arena_grounds", Vector2i(11, 15))
+	_castle._avatar.position = _castle._grid.cell_center(Vector2i(11, 13))
+	_castle._update_prompt()
+	assert_eq(_castle._nearest_point.id, "fn_arena", "standing at the spire door")
+	var ev := InputEventAction.new()
+	ev.action = "ui_accept"
+	ev.pressed = true
+	_castle._unhandled_input(ev)  # the old order dereferenced a null viewport here
+	assert_true(_castle._toast_label.visible, "the weekly gate answers with a toast")
+	Campaign.flags.erase("arena_used_this_week")
+
+
 ## AW-47: y-sort occlusion — standing on a prop's NORTH side (feet above its
 ## base) and overlapping it puts the actor behind it; standing south is in front.
 func test_actor_occludes_behind_a_tall_prop():

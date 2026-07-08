@@ -394,8 +394,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if busy() or room == null:
 		return
 	if event.is_action_pressed("ui_accept") or event.is_action_pressed("cursor_confirm"):
-		activate_nearest()
+		# AW-49: mark the input handled BEFORE acting — activate_nearest can change
+		# the scene (fn_arena), which pulls this node out of the tree mid-call; a
+		# get_viewport() after that returns null and crashed the arena entry.
 		get_viewport().set_input_as_handled()
+		activate_nearest()
 	elif event.is_action_pressed("ui_cancel"):
 		_open_system_menu()
 
@@ -598,7 +601,9 @@ func _open_function(fn: String) -> void:
 				_toast("The Arena's magic is spent — it reopens next week.")
 			else:
 				Campaign.deploy()
-				get_tree().change_scene_to_file("res://scenes/battle/arena.tscn")
+				# AW-49: deferred — swapping scenes synchronously inside an input
+				# callback de-trees this node mid-call (the arena-entry crash).
+				get_tree().change_scene_to_file.call_deferred("res://scenes/battle/arena.tscn")
 
 
 func _toast(text: String) -> void:

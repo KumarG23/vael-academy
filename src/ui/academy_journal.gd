@@ -106,7 +106,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("cursor_down"):
 		_move_row(1); _handled()
 	elif event.is_action_pressed("cursor_confirm"):
-		_activate(); _handled()
+		# AW-49: handled BEFORE acting — _activate can change the scene (Return to
+		# Title / Load), which de-trees this node and nulls get_viewport().
+		_handled(); _activate()
 
 
 func _is_journal_key(event: InputEvent) -> bool:
@@ -164,7 +166,8 @@ func _activate() -> void:
 		_do_load(int(kind.substr(4)))
 	elif kind == "title":
 		AudioManager.play_sfx("confirm")
-		get_tree().change_scene_to_file("res://scenes/title/title.tscn")
+		# AW-49: deferred — never swap scenes synchronously inside an input callback
+		get_tree().change_scene_to_file.call_deferred("res://scenes/title/title.tscn")
 
 
 func _do_save(slot: int) -> void:
@@ -184,8 +187,8 @@ func _do_load(slot: int) -> void:
 		return
 	if Campaign.load_from_slot(slot, _save):
 		AudioManager.play_sfx("confirm")
-		# reload the castle so the loaded state takes hold
-		get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
+		# reload the castle so the loaded state takes hold (deferred — AW-49)
+		get_tree().change_scene_to_file.call_deferred("res://scenes/castle/castle.tscn")
 
 
 func _show_toast(msg: String) -> void:
