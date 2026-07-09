@@ -29,7 +29,7 @@ MODEL = "gemini-3.1-flash-image"
 PORTRAITS = pathlib.Path("assets/portraits")
 DEFAULT_EMOTIONS = ["happy", "sad", "angry", "blush"]
 PROMPTS = {
-    "happy": "a warm, delighted smile — genuinely happy, eyes bright with joy",
+    "happy": "overflowing joy — a BIG beaming smile with eyes squeezed happily shut, cheeks raised, head tilted brightly; unmistakably the HAPPY portrait at a single glance",
     "sad": "sad and hurt — glistening teary eyes, brows tilted up, mouth small and wavering",
     "angry": "angry — furrowed brows, hard glaring eyes, tight frowning mouth",
     "blush": "deeply flustered and blushing — red cheeks, wide flustered eyes, caught off guard",
@@ -42,10 +42,12 @@ PROMPTS = {
 
 def edit_portrait(key: str, base_png: bytes, emotion: str) -> bytes:
     prompt = (
-        "Edit this character portrait. Keep it EXACTLY the same character, the same "
-        "anime art style, the same framing and pose, the same outfit, hair, colors, "
-        "lighting and background. Change ONLY the facial expression to: "
-        f"{PROMPTS[emotion]}. Output a single edited image."
+        "Redraw this exact character in the same anime art style: same face, same "
+        "hair, same outfit and colors, same background mood — and PRESERVE every "
+        "identifying feature exactly (scars, facial marks, glowing emblems, "
+        "glasses, jewelry, hair ornaments). The pose, gesture and head angle MAY "
+        "change naturally to sell the emotion. New expression: "
+        f"{PROMPTS[emotion]}. Output a single image."
     )
     body = {
         "contents": [{"parts": [
