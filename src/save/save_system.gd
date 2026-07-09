@@ -57,9 +57,12 @@ func list_slots(max_slots: int = 3) -> Array:
 	for i in range(max_slots):
 		if has_slot(i):
 			var data := load_slot(i)
+			var battle: Dictionary = data.get("battle", {}) if data.get("battle") is Dictionary else {}
 			out.append({
 				"slot": i,
 				"version": int(data.get("version", 0)),
+				# AW-75: a live battle in the slot — shown as ⚔ and resumed on load
+				"in_battle": not battle.is_empty() and not bool(battle.get("battle_over", false)),
 				# Battle snapshots write current_chapter_id/casual_mode; campaign
 				# saves (hub/title) write chapter_id/casual — accept both.
 				"chapter_id": data.get("campaign", {}).get("current_chapter_id",

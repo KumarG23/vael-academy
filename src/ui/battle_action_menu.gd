@@ -57,9 +57,10 @@ func unviewed_conversations(unit_id: String) -> Array:
 ## spec: push as far as you dare, then leave with your winnings).
 func open_field_menu() -> void:
 	_v._menu_actions = []
-	var labels := ["End Turn", "Objective", "Cancel"]
+	# AW-75: Save game rides the field menu — about to gamble? Save first (Neal).
+	var labels := ["End Turn", "Objective", "Save game", "Cancel"]
 	if _v.chapter.is_arena:
-		labels = ["End Turn", "Retreat with winnings", "Objective", "Cancel"]
+		labels = ["End Turn", "Retreat with winnings", "Objective", "Save game", "Cancel"]
 	open_menu("field", "Field", labels)
 
 
@@ -75,12 +76,16 @@ func field_choice(index: int) -> void:
 				_v._arena_retreat()
 			2:
 				_v._toast_objective()
+			3:
+				_v._open_save_menu("field")
 		return
 	match index:
 		0:
 			_v._end_player_phase()
 		1:
 			_v._toast_objective()
+		2:
+			_v._open_save_menu("field")
 
 
 func open_menu(context: String, title: String, labels: Array) -> void:

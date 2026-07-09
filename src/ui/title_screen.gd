@@ -117,9 +117,11 @@ func _open_load() -> void:
 func _slot_labels() -> Array:
 	var labels: Array = []
 	for s in _slots:
-		labels.append("Slot %d — %s (%s)" % [
+		var battle_tag := "  ⚔ mid-battle" if bool(s.get("in_battle", false)) else ""
+		labels.append("Slot %d — %s (%s)%s" % [
 			int(s["slot"]), str(s["chapter_id"]),
 			"Casual" if bool(s["casual_mode"]) else "Classic",
+			battle_tag,
 		])
 	if labels.is_empty():
 		labels.append("(no saves found)")
@@ -162,7 +164,14 @@ func _choose_slot(index: int) -> void:
 		if index == _slot_labels().size() - 1:
 			_open_main()
 		return
-	if prepare_load(int(_slots[index]["slot"])):
+	var slot := int(_slots[index]["slot"])
+	# AW-75: a slot holding a live battle resumes INTO the battle, mid-fight.
+	if bool(_slots[index].get("in_battle", false)):
+		var scene := Resume.stage(_save_system.load_slot(slot))
+		if scene != "":
+			get_tree().change_scene_to_file.call_deferred(scene)
+			return
+	if prepare_load(slot):
 		_enter_campaign()
 
 

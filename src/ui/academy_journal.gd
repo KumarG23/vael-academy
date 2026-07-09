@@ -294,6 +294,14 @@ func _do_load(slot: int) -> void:
 		_show_toast("Slot %d is empty" % slot)
 		queue_redraw()
 		return
+	# AW-75: a slot holding a live battle resumes into the battle itself.
+	var payload := _save.load_slot(slot)
+	if Resume.battle_live(payload):
+		var scene := Resume.stage(payload)
+		if scene != "":
+			AudioManager.play_sfx("confirm")
+			get_tree().change_scene_to_file.call_deferred(scene)
+			return
 	if Campaign.load_from_slot(slot, _save):
 		AudioManager.play_sfx("confirm")
 		# reload the castle so the loaded state takes hold (deferred — AW-49)
@@ -587,7 +595,7 @@ func _draw_system(body: Rect2, font: Font) -> void:
 
 
 ## AW-70: everything on one line, always one J-press away.
-const CONTROLS_REF := "CONTROLS — Arrows/WASD walk · Enter interact · Esc menu · J journal · ` room editor (H for its help) · In battle: Enter select/confirm, Esc cancel, Enter on empty ground = field menu"
+const CONTROLS_REF := "CONTROLS — Arrows/WASD walk · Enter interact · Esc menu · J journal · ` room editor · In battle: Enter select/confirm, Esc cancel, Enter on empty ground = field menu (save here!), Enter on a foe = its danger zone, H = all foes' reach"
 
 
 func _slot_label(slot: int) -> String:

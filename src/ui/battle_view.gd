@@ -50,6 +50,9 @@ enum Phase { IDLE, SELECTED, MENU, TARGETING, PREP }  # PREP = AW-74 preparation
 ## AW-74: the mission path (castle war room / dev jump) raises this before the
 ## scene change; _ready consumes it. Same pattern as CastleScene.next_room.
 static var next_prep := false
+## AW-75: a mid-battle save staged for the next battle scene to resume into
+## (set by Resume.stage before the scene change; consumed once in _ready).
+static var next_resume: Dictionary = {}
 
 var _grid: Grid
 var _terrain_db: TerrainDB
@@ -162,6 +165,12 @@ func _ready() -> void:
 		_arena_spawn_wave(1)  # AW-43: the first bout — Kai's already spawned solo
 	_focus_player_start()
 	queue_redraw()
+	if not next_resume.is_empty():
+		var staged := next_resume
+		next_resume = {}
+		_prep_active = false
+		apply_save_payload(staged)  # AW-75: walk back into the saved fight
+		return
 	_begin_battle()
 
 
@@ -1063,17 +1072,26 @@ func load_from_slot(slot: int) -> bool:
 
 
 func make_save_payload() -> Dictionary:
+	# AW-75: mission saves carry the WHOLE campaign (gold, week, flags, roster
+	# progression) so a title-screen resume restores the world, not just the map.
+	# Standalone dev battles keep the thin header. Battle-combat RNG lives in the
+	# battle section — the campaign dict has its own (training) rng_state.
+	var campaign_block: Dictionary
+	if Campaign.active:
+		campaign_block = Campaign.to_dict()
+	else:
+		campaign_block = {"hub_state": {}}
+	campaign_block["current_chapter_id"] = chapter.id
+	campaign_block["casual_mode"] = casual_mode
 	return {
 		"version": SaveSystem.VERSION,
-		"campaign": {
-			"current_chapter_id": chapter.id,
-			"casual_mode": casual_mode,
-			"rng_seed": str(_rng.seed_value()),
-			"rng_state": str(_rng.state_value()),
-			"hub_state": {},
-		},
+		"campaign": campaign_block,
 		"battle": {
 			"chapter_id": chapter.id,
+			"rng_seed": str(_rng.seed_value()),
+			"rng_state": str(_rng.state_value()),
+			"arena_wave": _arena_wave,
+			"arena_pending_wave": _arena_pending_wave,
 			"round_number": _turn.round_number,
 			"active_team": int(_turn.active_team),
 			"battle_over": _battle_over,
@@ -1094,9 +1112,13 @@ func apply_save_payload(payload: Dictionary) -> void:
 	var campaign: Dictionary = payload.get("campaign", {})
 	var battle: Dictionary = payload.get("battle", {})
 	casual_mode = bool(campaign.get("casual_mode", casual_mode))
-	combat_seed = int(str(campaign.get("rng_seed", combat_seed)))
+	# combat RNG lives in the battle section now; older payloads kept it in campaign
+	var rng_src: Dictionary = battle if battle.has("rng_seed") else campaign
+	combat_seed = int(str(rng_src.get("rng_seed", combat_seed)))
 	_rng = CombatRNG.new(combat_seed)
-	_rng.set_state(int(str(campaign.get("rng_state", _rng.state_value()))))
+	_rng.set_state(int(str(rng_src.get("rng_state", _rng.state_value()))))
+	_arena_wave = int(battle.get("arena_wave", 0))
+	_arena_pending_wave = int(battle.get("arena_pending_wave", 0))
 
 	_turn.round_number = int(battle.get("round_number", 1))
 	var saved_team := int(battle.get("active_team", TurnManager.Team.PLAYER))
@@ -1131,6 +1153,10 @@ func _roster_save_state() -> Array:
 func _rebuild_units_from_save(roster: Array) -> void:
 	_clear_units()
 	_spawn_units()
+	# AW-75: arena foes are procedural, not chapter spawns — regenerate the saved
+	# wave (deterministic ids) so the roster states below have bodies to land on.
+	if chapter.is_arena and _arena_wave > 0:
+		_arena_spawn_wave(_arena_wave)
 	var state_by_id := {}
 	for entry in roster:
 		if entry is Dictionary:
