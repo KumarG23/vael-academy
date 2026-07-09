@@ -11,17 +11,18 @@ import urllib.request
 
 SCRATCH = os.path.dirname(os.path.abspath(__file__))
 SRC_ROOT = "/Users/nealsharma/code/Vael Academy/assets/source/pixellab"
-STATE = f"{SCRATCH}/kai_outfits_state.json"
+STATE = f"{SCRATCH}/kai_outfits3_state.json"
 KAI_V2 = "1beea603-131f-41c8-8603-1b3e2a9a6eca"
 
 OUTFITS = {
-    "school": ("school uniform outfit: a neat dark navy academy uniform jacket "
-               "with crimson trim and gold buttons, dark trousers, polished "
-               "shoes, no cape, no sword, tidy student appearance, keep the "
-               "same hair and skin"),
-    "party": ("formal festival outfit: an elegant dark dress coat with crimson "
-              "embroidery and gold clasps, formal sash, polished shoes, no "
-              "cape, no weapons, keep the same hair and skin"),
+    "school": ("school uniform outfit: a vivid crimson red academy uniform "
+               "jacket with gold trim, gold buttons and gold shoulder boards, "
+               "dark trousers, polished shoes, tidy student appearance, keep "
+               "the same hair and skin"),
+    "party": ("flamboyant festival formalwear: an emerald green and gold "
+              "brocade dress coat with swirling gold embroidery, a cream "
+              "sash, polished boots, gaudy noble festival style, no weapons, "
+              "keep the same hair and skin"),
 }
 
 
@@ -88,8 +89,7 @@ def main():
         if f"{name}_cid" in s:
             continue
         text = retry_call("create_character_state", {
-            "character_id": KAI_V2, "edit_description": desc,
-            "use_color_palette_from_reference": True}, name)
+            "character_id": KAI_V2, "edit_description": desc}, name)  # NO palette lock — recolors need freedom
         s[f"{name}_cid"] = re.search(r"id: (\S+)", text).group(1)
         save_state(s)
         print(f"{name} state queued: {s[f'{name}_cid']}", flush=True)
@@ -136,7 +136,7 @@ def main():
     # 4. download
     for name in OUTFITS:
         if not s.get(f"{name}_dl"):
-            s[f"{name}_dl"] = download(f"kai_v2_{name}", s[f"{name}_cid"])
+            s[f"{name}_dl"] = download(f"kai_v4_{name}", s[f"{name}_cid"])
             save_state(s)
     print("OUTFITS COMPLETE", flush=True)
 
