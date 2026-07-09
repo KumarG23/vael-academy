@@ -8,7 +8,7 @@ extends Control
 
 signal closed
 
-const TAB_NAMES := ["Roster", "Calendar", "Items", "System"]
+const TAB_NAMES := ["Roster", "Calendar", "Inventory", "System"]
 const STAT_KEYS := ["hp", "str", "mag", "skl", "spd", "lck", "def", "res"]
 const STAT_LABELS := ["HP", "STR", "MAG", "SKL", "SPD", "LCK", "DEF", "RES"]
 const SLOTS := 3
@@ -31,15 +31,42 @@ var _toast_t := 0.0
 var _panel: Texture2D
 var _save := SaveSystem.new()
 
+## AW-52: the Inventory HUB — live scratch Units (real inventories, campaign
+## state applied) so items can be MOVED between students, not just listed.
+## Trades persist through Campaign.unit_states, the same channel battles use.
+var _inv_units: Array = []   # [{id, name, house, unit(Unit)}]
+var _inv_mode := 0           # 0 = pick a student · 1 = pick an item · 2 = pick who to give it to
+var _inv_i := 0
+var _inv_item_i := 0
+var _inv_give_i := 0
+
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	texture_filter = TEXTURE_FILTER_NEAREST
 	if ResourceLoader.exists(PANEL):
 		_panel = load(PANEL)
+	_build_inv_units()
 	_build_snaps()
 	_refresh_slots()
 	queue_redraw()
+
+
+func _exit_tree() -> void:
+	# the scratch Units are never in the tree — free them by hand
+	for e in _inv_units:
+		if is_instance_valid(e["unit"]):
+			e["unit"].free()
+	_inv_units.clear()
+
+
+func _build_inv_units() -> void:
+	for def in Roster.player_units():
+		var u := Unit.new()
+		u.setup(def.duplicate(), Grid.new(1, 1), Vector2i.ZERO)  # dup: never mutate the cached .tres
+		if Campaign.has_unit_state(def.id):
+			u.apply_progression_state(Campaign.get_unit_state(def.id))
+		_inv_units.append({"id": def.id, "name": def.display_name, "house": def.house_id, "unit": u})
 
 
 func _build_snaps() -> void:
@@ -59,7 +86,7 @@ func _snapshot(def: UnitDef) -> Dictionary:
 	for sk in u.active_skills():
 		skills.append(sk.display_name)
 	var cls := def.char_class.display_name if def.char_class != null else "—"
-	var items := _def_items(def)
+	var items := _live_items(def.id)  # AW-52: from the live inventory, so trades show
 	var snap := {
 		"id": def.id, "name": def.display_name, "class": cls, "house": def.house_id,
 		"level": u.level, "mov": u.move_points(), "stats": stats, "skills": skills, "items": items,
@@ -68,16 +95,12 @@ func _snapshot(def: UnitDef) -> Dictionary:
 	return snap
 
 
-func _def_items(def: UnitDef) -> Array:
+func _live_items(id: String) -> Array:
 	var out: Array = []
-	if def.weapon != null:
-		out.append(def.weapon.display_name)
-	for w in def.extra_weapons:
-		if w != null:
-			out.append(w.display_name)
-	for it in def.starting_items:
-		if it != null:
-			out.append(it.display_name)
+	for e in _inv_units:
+		if e["id"] == id:
+			for item in e["unit"].inventory.items:
+				out.append(item.display_name())
 	return out
 
 
@@ -91,6 +114,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
 		return
 	if event.is_action_pressed("cursor_cancel") or _is_journal_key(event):
+		# AW-52: inside the Inventory hub, cancel backs out one level (give →
+		# item → student) before it closes the book. J always closes.
+		if _tab == 2 and _inv_mode > 0 and not _is_journal_key(event):
+			_inv_mode -= 1
+			AudioManager.play_sfx("cancel")
+			_handled()
+			queue_redraw()
+			return
 		AudioManager.play_sfx("cancel")
 		_close()
 	elif event.is_action_pressed("cursor_left"):
@@ -130,12 +161,83 @@ func _move_row(dir: int) -> void:
 		0:
 			if not _snaps.is_empty():
 				_roster_i = (_roster_i + dir + _snaps.size()) % _snaps.size()
+		2:
+			_inv_move(dir)
 		3:
 			_sys_i = (_sys_i + dir + SYS_ROWS.size()) % SYS_ROWS.size()
 		_:
 			return
 	AudioManager.play_sfx("cursor")
 	queue_redraw()
+
+
+# --- AW-52: the Inventory hub ---------------------------------------------------
+
+func _inv_move(dir: int) -> void:
+	if _inv_units.is_empty():
+		return
+	match _inv_mode:
+		0:
+			_inv_i = (_inv_i + dir + _inv_units.size()) % _inv_units.size()
+		1:
+			var n: int = _inv_unit().inventory.items.size()
+			if n > 0:
+				_inv_item_i = (_inv_item_i + dir + n) % n
+		2:
+			# cycle the give-target through everyone except the giver
+			for _guard in range(_inv_units.size()):
+				_inv_give_i = (_inv_give_i + dir + _inv_units.size()) % _inv_units.size()
+				if _inv_give_i != _inv_i:
+					break
+
+
+func _inv_unit() -> Unit:
+	return _inv_units[_inv_i]["unit"]
+
+
+func _inv_confirm() -> void:
+	if _inv_units.is_empty():
+		return
+	match _inv_mode:
+		0:
+			if _inv_unit().inventory.items.is_empty():
+				_show_toast("%s is carrying nothing." % _inv_units[_inv_i]["name"])
+				return
+			_inv_mode = 1
+			_inv_item_i = 0
+			AudioManager.play_sfx("confirm")
+		1:
+			_inv_mode = 2
+			_inv_give_i = _inv_i
+			_inv_move(1)  # start on the next student over
+			AudioManager.play_sfx("confirm")
+		2:
+			_inv_transfer()
+	queue_redraw()
+
+
+## Hand the selected item to the chosen student and PERSIST both sides through
+## Campaign.unit_states — the same channel deployments read, so the trade is
+## real in the next battle (and in saves).
+func _inv_transfer() -> void:
+	var giver: Dictionary = _inv_units[_inv_i]
+	var taker: Dictionary = _inv_units[_inv_give_i]
+	var items: Array = giver["unit"].inventory.items
+	if _inv_item_i >= items.size():
+		return
+	var item: InventoryItem = items[_inv_item_i]
+	if not giver["unit"].inventory.transfer_to(item, taker["unit"].inventory):
+		AudioManager.play_sfx("cancel")
+		_show_toast("%s's pack is full." % taker["name"])
+		return
+	Campaign.set_unit_state(giver["id"], giver["unit"].save_state())
+	Campaign.set_unit_state(taker["id"], taker["unit"].save_state())
+	AudioManager.play_sfx("confirm")
+	_show_toast("Gave %s to %s." % [item.display_name(), taker["name"]])
+	_build_snaps()  # the Roster tab's "Carries" line follows the trade
+	var left: int = giver["unit"].inventory.items.size()
+	_inv_item_i = clampi(_inv_item_i, 0, maxi(0, left - 1))
+	_inv_mode = 1 if left > 0 else 0
 
 
 func _adjust_volume(dir: int) -> bool:
@@ -157,6 +259,9 @@ func _adjust_volume(dir: int) -> bool:
 
 
 func _activate() -> void:
+	if _tab == 2:
+		_inv_confirm()  # AW-52: the Inventory hub owns Enter on its tab
+		return
 	if _tab != 3:
 		return
 	var kind: String = SYS_ROWS[_sys_i][1]
@@ -327,18 +432,67 @@ func _draw_calendar(body: Rect2, font: Font) -> void:
 			break
 
 
+## AW-52: the Inventory HUB — left: students; right: the selected pack. Enter
+## drills in (student → item → recipient), Esc backs out, moves persist.
 func _draw_items(body: Rect2, font: Font) -> void:
-	var y := body.position.y + 4
-	for s in _snaps:
-		if s["items"].is_empty():
-			continue
-		draw_string(font, Vector2(body.position.x, y), s["name"],
-			HORIZONTAL_ALIGNMENT_LEFT, 180, 16, _house_color(s["house"]).lightened(0.2))
-		draw_string(font, Vector2(body.position.x + 190, y), ", ".join(s["items"]),
-			HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 200, 16, Color(0.85, 0.86, 0.92))
-		y += 28
-		if y > body.position.y + body.size.y - 10:
-			break
+	var lw := 230.0
+	var y := body.position.y + 6
+	for i in range(_inv_units.size()):
+		var e: Dictionary = _inv_units[i]
+		var is_src := i == _inv_i
+		var is_tgt := _inv_mode == 2 and i == _inv_give_i
+		if is_tgt:
+			draw_rect(Rect2(body.position.x - 6, y - 18, lw, 26), Color(0.86, 0.68, 0.25, 0.5), true)
+		elif is_src and _inv_mode == 0:
+			draw_rect(Rect2(body.position.x - 6, y - 18, lw, 26), Color(0.30, 0.45, 0.85, 0.45), true)
+		draw_rect(Rect2(body.position.x - 2, y - 15, 4, 20), _house_color(e["house"]), true)
+		var nm: String = e["name"]
+		if is_src and _inv_mode > 0:
+			nm += "  ◂ giving" if _inv_mode == 2 else "  ◂"
+		var count: int = e["unit"].inventory.items.size()
+		draw_string(font, Vector2(body.position.x + 10, y), nm,
+			HORIZONTAL_ALIGNMENT_LEFT, lw - 60, 17,
+			Color(0.95, 0.94, 0.88) if (is_src or is_tgt) else Color(0.78, 0.8, 0.86))
+		draw_string(font, Vector2(body.position.x + lw - 44, y), "%d/5" % count,
+			HORIZONTAL_ALIGNMENT_RIGHT, 40, 13, Color(0.55, 0.58, 0.68))
+		y += 30
+	# right pane: the selected student's pack
+	if _inv_units.is_empty():
+		return
+	var e0: Dictionary = _inv_units[_inv_i]
+	var rx := body.position.x + lw + 30
+	var ry := body.position.y + 6
+	draw_string(font, Vector2(rx, ry + 12), "%s's pack" % e0["name"],
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 19, _house_color(e0["house"]).lightened(0.25))
+	ry += 44
+	var inv: Inventory = e0["unit"].inventory
+	var eq: InventoryItem = inv.equipped_weapon_item()
+	if inv.items.is_empty():
+		draw_string(font, Vector2(rx, ry), "— carrying nothing —",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.6, 0.63, 0.72))
+	for i in range(inv.items.size()):
+		var item: InventoryItem = inv.items[i]
+		var sel := _inv_mode >= 1 and i == _inv_item_i
+		if sel:
+			draw_rect(Rect2(rx - 8, ry - 18, body.size.x - lw - 50, 26),
+				Color(0.86, 0.68, 0.25, 0.5) if _inv_mode == 2 else Color(0.30, 0.45, 0.85, 0.45), true)
+		var label: String = item.display_name()
+		if item == eq:
+			label += "   (equipped)"
+		draw_string(font, Vector2(rx, ry), label, HORIZONTAL_ALIGNMENT_LEFT,
+			body.size.x - lw - 170, 16, Color(0.95, 0.94, 0.88) if sel else Color(0.85, 0.86, 0.92))
+		var uses := "∞" if item.uses >= 999 else "×%d" % item.uses
+		draw_string(font, Vector2(body.position.x + body.size.x - 70, ry), uses,
+			HORIZONTAL_ALIGNMENT_RIGHT, 60, 14, Color(0.62, 0.66, 0.76))
+		ry += 30
+	# contextual hint under the pack
+	var hint := ""
+	match _inv_mode:
+		0: hint = "Enter — open this student's pack"
+		1: hint = "Enter — give this item to someone   ·   Esc — back"
+		2: hint = "↑/↓ — choose who receives it   ·   Enter — hand it over   ·   Esc — back"
+	draw_string(font, Vector2(rx, body.position.y + body.size.y - 8), hint,
+		HORIZONTAL_ALIGNMENT_LEFT, body.size.x - lw - 40, 14, Color(0.86, 0.78, 0.45, 0.9))
 
 
 func _draw_system(body: Rect2, font: Font) -> void:
@@ -376,9 +530,18 @@ func _slot_label(slot: int) -> String:
 
 # --- helpers -----------------------------------------------------------------
 
+## Portraits must be CACHED in a member (like dialogue_scene does) — a fresh
+## load() used only as a _draw local frees the Resource when _draw returns, and
+## the queued canvas command then renders Godot's white placeholder (the AW-52
+## "portraits not showing" bug: draw commands don't hold texture references).
+var _portrait_cache: Dictionary = {}
+
+
 func _portrait(id: String) -> Texture2D:
-	var path := "res://assets/portraits/portrait_%s.png" % id
-	return load(path) if ResourceLoader.exists(path) else null
+	if not _portrait_cache.has(id):
+		var path := "res://assets/portraits/portrait_%s.png" % id
+		_portrait_cache[id] = load(path) if ResourceLoader.exists(path) else null
+	return _portrait_cache[id]
 
 
 func _house_color(house: String) -> Color:

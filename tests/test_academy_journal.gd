@@ -57,6 +57,64 @@ func test_saving_writes_a_slot_and_the_label_updates():
 	assert_ne(_journal._slot_label(TEST_SLOT), "— empty —", "the System tab shows it as filled")
 
 
+# --- AW-52: the Inventory hub ---------------------------------------------------
+
+func test_inventory_hub_trades_an_item_and_persists():
+	_journal._tab = 2
+	_journal._inv_i = 0
+	var giver: Dictionary = _journal._inv_units[0]
+	var taker: Dictionary = _journal._inv_units[1]
+	var before_g: int = giver["unit"].inventory.items.size()
+	var before_t: int = taker["unit"].inventory.items.size()
+	assert_gt(before_g, 0, "the first student carries something")
+	var moved_name: String = giver["unit"].inventory.items[0].display_name()
+	_journal._inv_confirm()                    # open the pack
+	assert_eq(_journal._inv_mode, 1)
+	_journal._inv_item_i = 0
+	_journal._inv_confirm()                    # choose the item -> pick recipient
+	assert_eq(_journal._inv_mode, 2)
+	_journal._inv_give_i = 1
+	_journal._inv_confirm()                    # hand it over
+	assert_eq(giver["unit"].inventory.items.size(), before_g - 1, "it left the giver")
+	assert_eq(taker["unit"].inventory.items.size(), before_t + 1, "and reached the taker")
+	assert_eq(taker["unit"].inventory.items[-1].display_name(), moved_name)
+	# the trade persists through the campaign channel deployments read
+	assert_true(Campaign.has_unit_state(giver["id"]), "giver state written")
+	assert_true(Campaign.has_unit_state(taker["id"]), "taker state written")
+	var saved: Array = Campaign.get_unit_state(taker["id"])["inventory"]
+	assert_eq(saved.size(), before_t + 1, "the saved inventory carries the trade")
+
+
+func test_inventory_full_pack_bounces_the_trade():
+	_journal._tab = 2
+	var giver: Dictionary = _journal._inv_units[0]
+	var taker: Dictionary = _journal._inv_units[1]
+	var filler: WeaponDef = load("res://data/weapons/iron_sword.tres")
+	while not taker["unit"].inventory.is_full():
+		taker["unit"].inventory.add(InventoryItem.from_weapon(filler))
+	var before_g: int = giver["unit"].inventory.items.size()
+	_journal._inv_i = 0
+	_journal._inv_mode = 2
+	_journal._inv_item_i = 0
+	_journal._inv_give_i = 1
+	_journal._inv_transfer()
+	assert_eq(giver["unit"].inventory.items.size(), before_g, "a full pack refuses the item")
+
+
+func test_inventory_cancel_backs_out_before_closing():
+	_journal._tab = 2
+	_journal._inv_mode = 2
+	var ev := InputEventAction.new()
+	ev.action = "cursor_cancel"
+	ev.pressed = true
+	_journal._unhandled_input(ev)
+	assert_eq(_journal._inv_mode, 1, "cancel steps give -> item")
+	assert_true(_journal.visible, "the book stays open")
+	_journal._unhandled_input(ev)
+	assert_eq(_journal._inv_mode, 0, "cancel steps item -> students")
+	assert_true(_journal.visible, "still open at the student list")
+
+
 func test_volume_adjust_changes_the_audio_setting():
 	_journal._tab = 3
 	# find the Music Volume row
