@@ -481,9 +481,25 @@ func aura_combat_bonus() -> Dictionary:
 func can_use_weapon(w: WeaponDef) -> bool:
 	if w == null or w.school == "":
 		return true
+	# AW-53: innate magic (Crownspark) is its bearer's OWN — no story gate; but
+	# only for the unit whose character sheet actually lists it.
+	if w.innate:
+		return _kit_lists_weapon(w.id)
 	if unit_def == null or unit_def.id != "kai":
 		return true
 	return bool(Campaign.flags.get("school_" + w.school, false))
+
+
+## Whether this unit's authored kit (def weapon + extras) includes weapon `id`.
+func _kit_lists_weapon(id: String) -> bool:
+	if unit_def == null:
+		return false
+	if unit_def.weapon != null and unit_def.weapon.id == id:
+		return true
+	for w in unit_def.extra_weapons:
+		if w != null and w.id == id:
+			return true
+	return false
 
 
 func can_attack() -> bool:
@@ -593,8 +609,29 @@ func apply_progression_state(state: Dictionary) -> void:
 	_move_bonus = int(state.get("move_bonus", _move_bonus))
 	_apply_class_override(str(state.get("class_override", "")))
 	_apply_inventory_state(state.get("inventory", []))
+	_ensure_innate_weapons()  # AW-53: saves that predate an innate weapon gain it
 	current_hp = max_hp()  # full HP for a fresh deployment
 	queue_redraw()
+
+
+## AW-53: a saved inventory REPLACES the character sheet's kit — so a save from
+## before an innate weapon existed (Neal's campaign vs Crownspark) would never
+## receive it. Merge any missing innate def weapon back in; it's part of the
+## character, not their baggage.
+func _ensure_innate_weapons() -> void:
+	if unit_def == null:
+		return
+	var kit: Array = [unit_def.weapon]
+	kit.append_array(unit_def.extra_weapons)
+	for w in kit:
+		if w == null or not (w as WeaponDef).innate or inventory.is_full():
+			continue
+		var have := false
+		for item in inventory.items:
+			if item.is_weapon() and item.weapon() != null and item.weapon().id == w.id:
+				have = true
+		if not have:
+			inventory.add(InventoryItem.from_weapon(w))
 
 
 func _apply_stat_bonus(saved: Dictionary) -> void:

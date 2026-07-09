@@ -226,6 +226,12 @@ func _inv_transfer() -> void:
 	if _inv_item_i >= items.size():
 		return
 	var item: InventoryItem = items[_inv_item_i]
+	# AW-53: innate magic is part of its bearer — it can't be handed away
+	var w: WeaponDef = item.weapon()
+	if w != null and w.innate:
+		AudioManager.play_sfx("cancel")
+		_show_toast("%s is bound to %s — it cannot be given away." % [item.display_name(), giver["name"]])
+		return
 	if not giver["unit"].inventory.transfer_to(item, taker["unit"].inventory):
 		AudioManager.play_sfx("cancel")
 		_show_toast("%s's pack is full." % taker["name"])

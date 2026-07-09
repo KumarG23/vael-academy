@@ -101,6 +101,30 @@ func test_inventory_full_pack_bounces_the_trade():
 	assert_eq(giver["unit"].inventory.items.size(), before_g, "a full pack refuses the item")
 
 
+func test_innate_magic_cannot_be_traded_away():
+	_journal._tab = 2
+	# find Kai and his Crownspark
+	var kai_i := -1
+	for i in range(_journal._inv_units.size()):
+		if _journal._inv_units[i]["id"] == "kai":
+			kai_i = i
+	assert_gt(kai_i, -1, "Kai is in the hub")
+	var kai: Dictionary = _journal._inv_units[kai_i]
+	var spark_i := -1
+	for i in range(kai["unit"].inventory.items.size()):
+		var w: WeaponDef = kai["unit"].inventory.items[i].weapon()
+		if w != null and w.id == "crownspark":
+			spark_i = i
+	assert_gt(spark_i, -1, "Crownspark is in his pack")
+	var before: int = kai["unit"].inventory.items.size()
+	_journal._inv_i = kai_i
+	_journal._inv_mode = 2
+	_journal._inv_item_i = spark_i
+	_journal._inv_give_i = 0 if kai_i != 0 else 1
+	_journal._inv_transfer()
+	assert_eq(kai["unit"].inventory.items.size(), before, "royal magic stays bound to Kai")
+
+
 func test_inventory_cancel_backs_out_before_closing():
 	_journal._tab = 2
 	_journal._inv_mode = 2

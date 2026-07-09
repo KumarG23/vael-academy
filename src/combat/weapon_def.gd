@@ -29,6 +29,13 @@ enum WeaponType { SWORD, AXE, LANCE, BOW, TOME, STAFF }
 @export var magical: bool = false
 
 
+## AW-53: part of its bearer's BEING, not their baggage (Kai's Crownspark — his
+## awakened royal magic). An innate weapon bypasses the story school-gate for
+## the unit whose kit lists it, is merged back into any saved inventory that
+## predates it (stale-save migration), and can never be traded away.
+@export var innate: bool = false
+
+
 ## Tomes deal magical damage (MAG vs RES); everything else is physical (STR vs
 ## DEF) unless flagged magical (spellbow).
 func is_magical() -> bool:

@@ -39,6 +39,42 @@ func test_crownspark_lists_under_the_magic_command():
 	u.free()
 
 
+## AW-53: Kai can cast his OWN awakened magic with no story school-flag — the
+## innate flag bypasses the WO-8.2 gate (this is why the spell was invisible:
+## nothing sets school_crown). Others can't wield it even if they held it.
+func test_innate_spell_needs_no_school_flag():
+	Campaign.reset_new_game(false)
+	var spark: WeaponDef = load("res://data/weapons/crownspark.tres")
+	assert_true(spark.innate, "Crownspark is innate")
+	var kai := Unit.new()
+	kai.setup((load("res://data/units/kai.tres") as UnitDef).duplicate(), Grid.new(3, 3), Vector2i.ZERO)
+	assert_false(bool(Campaign.flags.get("school_crown", false)), "no story flag set")
+	assert_true(kai.can_use_weapon(spark), "his own magic answers him regardless")
+	var perrin := Unit.new()
+	perrin.setup((load("res://data/units/perrin.tres") as UnitDef).duplicate(), Grid.new(3, 3), Vector2i.ZERO)
+	assert_false(perrin.can_use_weapon(spark), "royal magic answers no one else")
+	kai.free()
+	perrin.free()
+
+
+## AW-53: a saved inventory from BEFORE the spell existed (Neal's campaign)
+## replaces the def kit on deploy — the innate merge restores it.
+func test_stale_save_gains_the_innate_spell():
+	var kai := Unit.new()
+	kai.setup((load("res://data/units/kai.tres") as UnitDef).duplicate(), Grid.new(3, 3), Vector2i.ZERO)
+	kai.apply_progression_state({"level": 3, "xp": 40, "inventory": [
+		{"type": "weapon", "path": "res://data/weapons/sig_kai.tres", "id": "sig_kai", "uses": 38},
+		{"type": "item", "path": "res://data/items/vulnerary.tres", "id": "vulnerary", "uses": 2},
+	]})
+	var names: Array = []
+	for item in kai.inventory.items:
+		names.append(item.display_name())
+	assert_has(names, "Crownspark", "the pre-spell save was migrated: " + str(names))
+	assert_has(names, "Verdant Blade", "and the saved gear survived")
+	assert_eq(kai.inventory.items[0].uses, 38, "with its worn uses intact")
+	kai.free()
+
+
 func test_crownspark_has_its_own_fx_style():
 	var rig := CombatRig.new()
 	rig.set_spell_meta("crownspark", "crown")
