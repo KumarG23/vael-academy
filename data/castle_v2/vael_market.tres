@@ -90,28 +90,30 @@ to_room = "vael_square"
 spawn_cell = Vector2i(3, 12)
 label = "◀ Town Square"
 
-[sub_resource type="Resource" id="Resource_bvlkn"]
-script = ExtResource("14_o317k")
-id = "fn_shop_smith"
+[sub_resource type="Resource" id="Resource_su47i"]
+script = ExtResource("13_2q2t0")
+cell = Vector2i(5, 7)
+to_room = "vael_smithy"
+spawn_cell = Vector2i(7, 8)
 label = "The Smithy"
-cell = Vector2i(5, 8)
 
-[sub_resource type="Resource" id="Resource_x06is"]
-script = ExtResource("14_o317k")
-id = "fn_shop_goods"
-label = "Reach & Barrel — Goods"
-cell = Vector2i(13, 8)
+[sub_resource type="Resource" id="Resource_javxb"]
+script = ExtResource("13_2q2t0")
+cell = Vector2i(13, 7)
+to_room = "vael_goods_shop"
+spawn_cell = Vector2i(7, 8)
+label = "Reach & Barrel"
 
-[sub_resource type="Resource" id="Resource_wh2c7"]
-script = ExtResource("14_o317k")
-id = "fn_shop_magic"
+[sub_resource type="Resource" id="Resource_rkdp3"]
+script = ExtResource("13_2q2t0")
+cell = Vector2i(21, 7)
+to_room = "vael_magic_shop"
+spawn_cell = Vector2i(7, 8)
 label = "The Arcane Bookshop"
-cell = Vector2i(21, 8)
 
 [resource]
 script = ExtResource("15_gtugl")
 id = "vael_market"
 display_name = "Vael — The Market"
 chapter = SubResource("Resource_tte22")
-doors = Array[ExtResource("13_2q2t0")]([SubResource("Resource_g2f1e")])
-points = Array[ExtResource("14_o317k")]([SubResource("Resource_bvlkn"), SubResource("Resource_x06is"), SubResource("Resource_wh2c7")])
+doors = Array[ExtResource("13_2q2t0")]([SubResource("Resource_g2f1e"), SubResource("Resource_su47i"), SubResource("Resource_javxb"), SubResource("Resource_rkdp3")])

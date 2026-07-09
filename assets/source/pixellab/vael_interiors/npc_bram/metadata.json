@@ -1,0 +1,36 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "fcfa42c1-68f2-47bc-afba-fc010e4230b7",
+        "name": "vael_bram",
+        "prompt": "a broad burly blacksmith man with a black beard, soot-marked leather apron over bare arms, heavy gloves tucked in belt, full body standing",
+        "size": {
+          "width": 56,
+          "height": 56
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-09T21:10:17.862861+00:00"
+      },
+      "folder": "vael_bram",
+      "frames": {
+        "rotations": {
+          "south": "vael_bram/rotations/south.png",
+          "south-east": "vael_bram/rotations/south-east.png",
+          "east": "vael_bram/rotations/east.png",
+          "north-east": "vael_bram/rotations/north-east.png",
+          "north": "vael_bram/rotations/north.png",
+          "north-west": "vael_bram/rotations/north-west.png",
+          "west": "vael_bram/rotations/west.png",
+          "south-west": "vael_bram/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-09T21:13:51.505447"
+}

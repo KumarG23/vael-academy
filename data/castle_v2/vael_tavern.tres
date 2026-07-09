@@ -1,0 +1,133 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_mg2al"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bar_counter.png" id="2_58n44"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/fireplace.png" id="3_ik2ji"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/long_table.png" id="4_debiu"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bench.png" id="5_d1uoj"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="6_di1qe"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="7_c3o8l"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="8_3caeu"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="9_4tk7t"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="10_xn1r8"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="11_g6012"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="12_x01g7"]
+
+[sub_resource type="Resource" id="Resource_a8f3b"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("2_58n44")
+cell = Vector2i(13, 3)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_dt70t"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("3_ik2ji")
+cell = Vector2i(2, 3)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_piuxe"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("4_debiu")
+cell = Vector2i(5, 6)
+
+[sub_resource type="Resource" id="Resource_n6258"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("4_debiu")
+cell = Vector2i(10, 6)
+
+[sub_resource type="Resource" id="Resource_nayiy"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("4_debiu")
+cell = Vector2i(5, 9)
+
+[sub_resource type="Resource" id="Resource_hgr1p"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("4_debiu")
+cell = Vector2i(10, 9)
+
+[sub_resource type="Resource" id="Resource_qr5cl"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("5_d1uoj")
+cell = Vector2i(4, 5)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_6vy3b"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("5_d1uoj")
+cell = Vector2i(6, 5)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_5qmaf"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("5_d1uoj")
+cell = Vector2i(9, 5)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_4k4lm"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("5_d1uoj")
+cell = Vector2i(11, 5)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_nce2a"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("5_d1uoj")
+cell = Vector2i(4, 8)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_bc04i"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("5_d1uoj")
+cell = Vector2i(6, 8)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_55ord"]
+script = ExtResource("1_mg2al")
+texture = ExtResource("6_di1qe")
+cell = Vector2i(16, 6)
+
+[sub_resource type="Resource" id="Resource_2slyn"]
+script = ExtResource("8_3caeu")
+id = "castle_vael_tavern"
+display_name = "The Gilded Stag"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+is_arena = false
+enemy_spawns = Array[ExtResource("7_c3o8l")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("7_c3o8l")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 18
+height = 12
+terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 12, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 12, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 4, 4)
+base_terrain = 7
+decor = Array[ExtResource("1_mg2al")]([SubResource("Resource_a8f3b"), SubResource("Resource_dt70t"), SubResource("Resource_piuxe"), SubResource("Resource_n6258"), SubResource("Resource_nayiy"), SubResource("Resource_hgr1p"), SubResource("Resource_qr5cl"), SubResource("Resource_6vy3b"), SubResource("Resource_5qmaf"), SubResource("Resource_4k4lm"), SubResource("Resource_nce2a"), SubResource("Resource_bc04i"), SubResource("Resource_55ord")])
+visits = Array[ExtResource("9_4tk7t")]([])
+
+[sub_resource type="Resource" id="Resource_bqyl8"]
+script = ExtResource("10_xn1r8")
+cell = Vector2i(9, 11)
+to_room = "vael_riverside"
+spawn_cell = Vector2i(6, 9)
+label = "◀ The Riverside"
+
+[sub_resource type="Resource" id="Resource_s8obg"]
+script = ExtResource("11_g6012")
+id = "fn_tavern"
+label = "Odo — order a meal for two"
+cell = Vector2i(13, 2)
+dialogue = "res://data/dialogue/vael_odo.json"
+npc_unit = "odo"
+
+[resource]
+script = ExtResource("12_x01g7")
+id = "vael_tavern"
+display_name = "The Gilded Stag"
+chapter = SubResource("Resource_2slyn")
+doors = Array[ExtResource("10_xn1r8")]([SubResource("Resource_bqyl8")])
+points = Array[ExtResource("11_g6012")]([SubResource("Resource_s8obg")])

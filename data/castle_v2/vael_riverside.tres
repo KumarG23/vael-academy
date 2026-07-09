@@ -73,11 +73,12 @@ to_room = "vael_square"
 spawn_cell = Vector2i(17, 21)
 label = "◀ Town Square"
 
-[sub_resource type="Resource" id="Resource_81vwb"]
-script = ExtResource("11_xwern")
-id = "fn_tavern"
-label = "The Gilded Stag — share a meal"
-cell = Vector2i(6, 9)
+[sub_resource type="Resource" id="Resource_eurao"]
+script = ExtResource("10_v8vpm")
+cell = Vector2i(6, 8)
+to_room = "vael_tavern"
+spawn_cell = Vector2i(9, 10)
+label = "The Gilded Stag"
 
 [sub_resource type="Resource" id="Resource_u41ra"]
 script = ExtResource("11_xwern")
@@ -97,5 +98,5 @@ script = ExtResource("12_fb8kn")
 id = "vael_riverside"
 display_name = "Vael — The Riverside"
 chapter = SubResource("Resource_lothl")
-doors = Array[ExtResource("10_v8vpm")]([SubResource("Resource_dpnhc")])
-points = Array[ExtResource("11_xwern")]([SubResource("Resource_81vwb"), SubResource("Resource_u41ra"), SubResource("Resource_rcbgh")])
+doors = Array[ExtResource("10_v8vpm")]([SubResource("Resource_dpnhc"), SubResource("Resource_eurao")])
+points = Array[ExtResource("11_xwern")]([SubResource("Resource_u41ra"), SubResource("Resource_rcbgh")])

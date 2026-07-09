@@ -58,24 +58,16 @@ to_room = "vael_square"
 spawn_cell = Vector2i(30, 12)
 label = "◀ Town Square"
 
-[sub_resource type="Resource" id="Resource_5803k"]
-script = ExtResource("8_jwjna")
-id = "chantry_candles"
-label = "Light a candle"
-cell = Vector2i(10, 9)
-dialogue = "res://data/dialogue/vael_candles.json"
-
-[sub_resource type="Resource" id="Resource_on11h"]
-script = ExtResource("8_jwjna")
-id = "chantry_scripture"
-label = "Read the carved scripture"
-cell = Vector2i(13, 9)
-dialogue = "res://data/dialogue/vael_scripture.json"
+[sub_resource type="Resource" id="Resource_gvqjy"]
+script = ExtResource("7_wysrh")
+cell = Vector2i(11, 9)
+to_room = "vael_chantry"
+spawn_cell = Vector2i(7, 12)
+label = "Enter the Chantry"
 
 [resource]
 script = ExtResource("9_bdl0b")
 id = "vael_cathedral"
 display_name = "Vael — The Grand Chantry"
 chapter = SubResource("Resource_4ye34")
-doors = Array[ExtResource("7_wysrh")]([SubResource("Resource_wedxr")])
-points = Array[ExtResource("8_jwjna")]([SubResource("Resource_5803k"), SubResource("Resource_on11h")])
+doors = Array[ExtResource("7_wysrh")]([SubResource("Resource_wedxr"), SubResource("Resource_gvqjy")])
