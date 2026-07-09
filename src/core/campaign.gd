@@ -32,10 +32,24 @@ var active: bool = false
 ## One training session per hub visit (§4).
 var training_used: bool = false
 
+## AW-54 (GRADING_SYSTEM.md): the report-card state — saved. Samples hold the raw
+## inputs so marks recompute cleanly; report_cards is the locked history.
+var semester: int = 1
+var grade_samples: Dictionary = {
+	"quiz_scores": [], "battle_scores": [], "arena_best_wave": 0, "conduct_points": 0,
+}
+var report_cards: Array = []
+
 var _training_rng := CombatRNG.new(1)
 ## Set by load_from_slot so the first hub visit after loading keeps the saved
 ## training_used instead of treating the load as a fresh visit (WO-4.3).
 var _skip_next_hub_reset := false
+
+
+func _ready() -> void:
+	# AW-54: bonds grown feed the Conduct mark ("did you show up and be part of
+	# the school" — GRADING_SYSTEM.md).
+	EventBus.support_rank_up.connect(func(_pair: String, _rank: String) -> void: add_conduct(4))
 
 
 ## Start a brand-new campaign (called from New Game / WO-4.3).
@@ -51,6 +65,9 @@ func reset_new_game(is_casual: bool, seed_value: int = 1) -> void:
 	last_result = ""
 	active = false
 	training_used = false
+	semester = 1
+	grade_samples = {"quiz_scores": [], "battle_scores": [], "arena_best_wave": 0, "conduct_points": 0}
+	report_cards = []
 	_skip_next_hub_reset = false
 	_training_rng = CombatRNG.new(seed_value)
 
@@ -85,6 +102,68 @@ func current_event() -> CalendarEventDef:
 func advance_week() -> void:
 	week += 1
 	flags.erase("arena_used_this_week")  # AW-43: the Arena reopens each week
+	# AW-54: crossing the year's midpoint locks Semester 1's report card
+	if semester == 1 and week > semester_end_week():
+		close_semester()
+
+
+## The week a semester's report card locks (the calendar's halfway point).
+func semester_end_week() -> int:
+	var total := calendar().size()
+	return maxi(1, ceili(total / 2.0)) if semester == 1 else maxi(1, total)
+
+
+# --- AW-54: the report card (GRADING_SYSTEM.md) --------------------------------
+
+func record_quiz(pct: int) -> void:
+	(grade_samples["quiz_scores"] as Array).append(clampi(pct, 0, 100))
+
+
+func record_battle_score(score: int) -> void:
+	(grade_samples["battle_scores"] as Array).append(clampi(score, 0, 100))
+
+
+func record_arena_run(waves_cleared: int) -> void:
+	grade_samples["arena_best_wave"] = maxi(int(grade_samples["arena_best_wave"]), waves_cleared)
+
+
+func add_conduct(points: int) -> void:
+	grade_samples["conduct_points"] = int(grade_samples["conduct_points"]) + points
+
+
+## The grade you'd get if the semester ended today — {score, rank, rank_name,
+## marks, hints}. Pure math lives in Grading; the Journal draws this.
+func running_grade() -> Dictionary:
+	return Grading.running(grade_samples)
+
+
+## Lock this semester's report card and start the next term fresh.
+func close_semester() -> void:
+	var g := running_grade()
+	report_cards.append({"semester": semester, "rank": g["rank"],
+		"rank_name": g["rank_name"], "score": g["score"]})
+	semester += 1
+	grade_samples = {"quiz_scores": [], "battle_scores": [], "arena_best_wave": 0, "conduct_points": 0}
+
+
+## AW-54: award a weapon into a unit's PERSISTED kit (spellbook rewards — the
+## 100%-exam payoff). Builds the unit's live state (journal pattern), adds the
+## weapon, and writes it back through unit_states so deployments carry it.
+func grant_weapon(id: String, weapon_path: String) -> bool:
+	var def := _roster_def(id)
+	if def == null or not ResourceLoader.exists(weapon_path):
+		return false
+	var u := Unit.new()
+	u.setup(def.duplicate(), Grid.new(1, 1), Vector2i.ZERO)
+	if has_unit_state(id):
+		u.apply_progression_state(get_unit_state(id))
+	if u.inventory.is_full():
+		u.free()
+		return false
+	u.inventory.add(InventoryItem.from_weapon(load(weapon_path)))
+	set_unit_state(id, u.save_state())
+	u.free()
+	return true
 
 
 ## Choose the player's house (WO-5.3a): flips the Roster and everything
@@ -170,6 +249,9 @@ func to_dict() -> Dictionary:
 		"last_result": last_result,
 		"training_used": training_used,
 		"rng_state": str(_training_rng.state_value()),
+		"semester": semester,
+		"grade_samples": grade_samples.duplicate(true),
+		"report_cards": report_cards.duplicate(true),
 	}
 
 
@@ -186,6 +268,10 @@ func from_dict(data: Dictionary) -> void:
 	house_locked = bool(data.get("house_locked", false))
 	last_result = str(data.get("last_result", ""))
 	training_used = bool(data.get("training_used", false))
+	semester = int(data.get("semester", 1))
+	grade_samples = (data.get("grade_samples",
+		{"quiz_scores": [], "battle_scores": [], "arena_best_wave": 0, "conduct_points": 0}) as Dictionary).duplicate(true)
+	report_cards = (data.get("report_cards", []) as Array).duplicate(true)
 	_training_rng = CombatRNG.new(1)
 	if data.has("rng_state"):
 		_training_rng.set_state(int(str(data["rng_state"])))

@@ -162,10 +162,16 @@ cell = Vector2i(9, 3)
 dialogue = "res://data/dialogue/castle_callan.json"
 npc_unit = "callan"
 
+[sub_resource type="Resource" id="Resource_t44s1"]
+script = ExtResource("9_vfmv5")
+id = "fn_class"
+label = "Attend the lesson"
+cell = Vector2i(12, 3)
+
 [resource]
 script = ExtResource("10_frla3")
 id = "classroom"
 display_name = "The Classrooms"
 chapter = SubResource("Resource_nn25g")
 doors = Array[ExtResource("8_l74el")]([SubResource("Resource_0ibl8")])
-points = Array[ExtResource("9_vfmv5")]([SubResource("Resource_8tn8u")])
+points = Array[ExtResource("9_vfmv5")]([SubResource("Resource_8tn8u"), SubResource("Resource_t44s1")])

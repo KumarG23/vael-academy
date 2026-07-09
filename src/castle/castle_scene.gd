@@ -61,6 +61,47 @@ var _support_state: SupportState
 var _hall_entries: Array = []
 var _stats_panel: UnitStatsPanel = null
 var _fishing: FishingGame = null
+var _quiz: QuizScene = null          # AW-54: the classroom lesson overlay
+
+## AW-54: each house learns under its own head (CHARACTER_BIBLE canon).
+const HOUSE_TEACHERS := {
+	"emberwing": {"id": "callan", "name": "Professor Callan"},
+	"tidemark": {"id": "maren", "name": "Warden Maren"},
+	"thornrook": {"id": "alaric", "name": "Keeper Alaric"},
+}
+## Teacher reactions per score tier — DRAFT lines in each teacher's bible voice
+## (Callan grizzled-warm, Maren immaculate-controlled, Alaric dry-patient);
+## Neal tears apart at the co-write. Tiers: 100 / >=75 / >=50 / >0 / 0.
+const TEACHER_REACTIONS := {
+	"callan": [
+		"A perfect slate. Ha! Half the officers I served under couldn't manage that. Here — I keep these for students worth the ink. Don't tell the quartermaster.",
+		"Sharp work, kid. You listen better than you let on. Keep this up and I'll run out of things to teach you — that's the goal, mind.",
+		"Passing. Passing is fine. Passing also gets people killed at the margins, so let's tighten it up, eh?",
+		"You're guessing. I know guessing when I see it — I've BEEN the guesser. Books first, bravado second. Again next week.",
+		"Not one. Not ONE. I've seen you fight, so I know the wits are in there — put them in a chair with a book before I chain the two together.",
+	],
+	"maren": [
+		"Flawless. Precision of thought precedes precision of action — you have just proven the doctrine's first page. Take this; it is not a gift, it is an expectation.",
+		"Very good. Nearly exact. The gap between nearly and exact is where battles are lost — close it.",
+		"Adequate. The academy does not aspire to adequate, and I suspect neither do you.",
+		"This will not do. Discipline of the mind is the first discipline. The library is open every evening; I expect you in it.",
+		"Zero. I have graded four decades of students and a zero still manages to disappoint me freshly. You will study, and we will repeat this.",
+	],
+	"alaric": [
+		"Every answer, exact. Curious — most minds skim; yours retains. That deserves something from the deeper shelves. Handle it better than the last borrower did.",
+		"Well read. Mostly. The margins of your errors are more interesting than your correct answers — come find me if you want to know why.",
+		"Half-remembered is half-true, and half-true is how rumors start wars. Read closer.",
+		"Mm. You've been walking past the shelves, not through them. The library rewards the slow — slow down.",
+		"Remarkable, in its way — a clean zero requires its own consistency. The books are not decorative, boy. Begin with the thin ones.",
+	],
+}
+## The spellbook ladder (SPELLBOOKS.md): a perfect exam earns one, opening a
+## school of magic for Kai. First-come order; each awards once.
+const SPELLBOOK_LADDER := [
+	{"flag": "spellbook_ember", "school": "ember", "weapon": "res://data/weapons/fire.tres", "label": "a scorched spellbook — the EMBER school opens to Kai"},
+	{"flag": "spellbook_gale", "school": "gale", "weapon": "res://data/weapons/gale.tres", "label": "a wind-cut spellbook — the GALE school opens to Kai"},
+	{"flag": "spellbook_tide", "school": "tide", "weapon": "res://data/weapons/tide.tres", "label": "a salt-stained spellbook — the TIDE school opens to Kai"},
+]
 
 
 func _ready() -> void:
@@ -283,7 +324,7 @@ func _point_available(p: CastlePoint) -> bool:
 
 func busy() -> bool:
 	return _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
-		or (_editor != null and _editor.active)
+		or _quiz != null or (_editor != null and _editor.active)
 
 
 func _process(delta: float) -> void:
@@ -418,6 +459,9 @@ func activate_nearest() -> void:
 	if p.id.begins_with("fn_"):
 		_open_function(p.id)
 	elif p.dialogue != "" and FileAccess.file_exists(p.dialogue):
+		# AW-54: reading is studying — lore you've actually read unlocks its quiz
+		# questions (exploration rewarded; see data/quizzes/bank_v1.json req_flag).
+		Campaign.flags["read_" + p.id] = true
 		_play_dialogue(p.dialogue)
 
 
@@ -551,6 +595,7 @@ func _maybe_play_set_piece(e: CalendarEventDef) -> void:
 			and not bool(Campaign.flags.get("festival_seen", false)):
 		Campaign.flags["festival_seen"] = true
 		Campaign.flags["cooking_unlocked"] = true
+		Campaign.add_conduct(3)  # AW-54: attended the festival
 		_play_dialogue("res://data/dialogue/festival_founding.json")
 	elif e == null and Campaign.last_result == "victory" \
 			and not bool(Campaign.flags.get("feast_seen", false)):
@@ -604,6 +649,8 @@ func _open_function(fn: String) -> void:
 				# AW-49: deferred — swapping scenes synchronously inside an input
 				# callback de-trees this node mid-call (the arena-entry crash).
 				get_tree().change_scene_to_file.call_deferred("res://scenes/battle/arena.tscn")
+		"fn_class":
+			_start_class()
 
 
 func _toast(text: String) -> void:
@@ -735,6 +782,67 @@ func _choose_house(index: int) -> void:
 	_toast("Sworn to House %s — for this year and always." % Campaign.house_id.capitalize())
 
 
+# --- AW-54: the classroom lesson (quiz -> teacher reaction -> grade) -------------
+
+func _teacher() -> Dictionary:
+	return HOUSE_TEACHERS.get(Campaign.house_id, HOUSE_TEACHERS["emberwing"])
+
+
+func _start_class() -> void:
+	var key := "class_week_%d" % Campaign.week
+	if bool(Campaign.flags.get(key, false)):
+		_toast("%s has dismissed the class until next week." % _teacher()["name"])
+		return
+	if _quiz != null:
+		return
+	var questions := QuizScene.pick_questions(QuizScene.QUESTIONS_PER_LESSON, Campaign.flags)
+	if questions.is_empty():
+		_toast("The lesson hall is quiet today.")
+		return
+	_quiz = QuizScene.new()
+	_quiz.finished.connect(_on_quiz_done)
+	_ui.add_child(_quiz)
+	_quiz.start(questions)
+
+
+func _on_quiz_done(correct: int, total: int) -> void:
+	Campaign.flags["class_week_%d" % Campaign.week] = true
+	var pct := roundi(100.0 * correct / maxf(1.0, float(total)))
+	Campaign.record_quiz(pct)
+	Campaign.add_conduct(2)  # showing up to class is conduct too
+	_quiz.queue_free()
+	_quiz = null
+	# the teacher reacts — right house, right voice, scaled to the score
+	var t := _teacher()
+	var lines: Array = TEACHER_REACTIONS[t["id"]]
+	var tier := 0 if pct >= 100 else (1 if pct >= 75 else (2 if pct >= 50 else (3 if pct > 0 else 4)))
+	var steps: Array = [{"speaker": t["name"], "side": "right", "portrait": t["id"],
+		"text": "%s  (Score: %d%%)" % [lines[tier], pct]}]
+	# a perfect slate earns a spellbook (SPELLBOOKS.md) — one school at a time
+	if pct >= 100:
+		var award := _next_spellbook()
+		if not award.is_empty():
+			Campaign.flags[award["flag"]] = true
+			Campaign.flags["school_" + str(award["school"])] = true  # WO-8.2: the school opens
+			Campaign.grant_weapon("kai", award["weapon"])
+			steps.append({"speaker": t["name"], "side": "right", "portrait": t["id"],
+				"text": "Kai received %s!" % award["label"]})
+		else:
+			Campaign.flags["gold"] = int(Campaign.flags.get("gold", 0)) + 60
+			steps.append({"speaker": t["name"], "side": "right", "portrait": t["id"],
+				"text": "The faculty's spellbook shelf stands empty — take a 60-gold commendation instead."})
+	_play_dialogue_json(JSON.stringify(steps))
+	_refresh_date()
+
+
+func _next_spellbook() -> Dictionary:
+	for award in SPELLBOOK_LADDER:
+		if not bool(Campaign.flags.get(award["flag"], false)) \
+				and ResourceLoader.exists(award["weapon"]):
+			return award
+	return {}
+
+
 func _start_fishing() -> void:
 	if _fishing != null:
 		return
@@ -746,6 +854,7 @@ func _start_fishing() -> void:
 func _on_fishing_done(result: Dictionary) -> void:
 	if result["caught"]:
 		var fish: String = result["fish"]
+		Campaign.add_conduct(2)  # AW-54: trying the school's life feeds Conduct
 		_toast("Caught a %s! (x%d)" % [fish, int(Campaign.fish_log.get(fish, 1))])
 	else:
 		_toast("...it got away.")
@@ -773,6 +882,7 @@ func _do_cook(index: int) -> void:
 			partners.append(def)
 	var partner: UnitDef = partners[index]
 	Campaign.flags["cooked_week_%d" % Campaign.week] = true
+	Campaign.add_conduct(2)  # AW-54
 	var result := _support_state.add_points("kai", partner.id, 8)
 	Campaign.support_save = _support_state.save_state()
 	_close_menu()
@@ -816,13 +926,22 @@ func _do_system(index: int) -> void:
 
 
 func _play_dialogue(path: String) -> void:
+	_play_script(DialogueScript.from_file(path))
+
+
+## AW-54: play dialogue built at runtime (teacher reactions) — same plumbing.
+func _play_dialogue_json(json_text: String) -> void:
+	_play_script(DialogueScript.from_json(json_text))
+
+
+func _play_script(script: DialogueScript) -> void:
 	_dialogue = DialogueScene.new()
 	_ui.add_child(_dialogue)
 	_dialogue.event_triggered.connect(_on_dialogue_event)
 	_dialogue.finished.connect(func():
 		_dialogue.queue_free()
 		_dialogue = null)
-	_dialogue.play(DialogueScript.from_file(path))
+	_dialogue.play(script)
 
 
 func _on_dialogue_event(event_name: String, params: Dictionary) -> void:

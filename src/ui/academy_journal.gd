@@ -8,7 +8,7 @@ extends Control
 
 signal closed
 
-const TAB_NAMES := ["Roster", "Calendar", "Inventory", "System"]
+const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System"]
 const STAT_KEYS := ["hp", "str", "mag", "skl", "spd", "lck", "def", "res"]
 const STAT_LABELS := ["HP", "STR", "MAG", "SKL", "SPD", "LCK", "DEF", "RES"]
 const SLOTS := 3
@@ -163,7 +163,7 @@ func _move_row(dir: int) -> void:
 				_roster_i = (_roster_i + dir + _snaps.size()) % _snaps.size()
 		2:
 			_inv_move(dir)
-		3:
+		4:
 			_sys_i = (_sys_i + dir + SYS_ROWS.size()) % SYS_ROWS.size()
 		_:
 			return
@@ -247,7 +247,7 @@ func _inv_transfer() -> void:
 
 
 func _adjust_volume(dir: int) -> bool:
-	if _tab != 3:
+	if _tab != 4:  # System (AW-54 slid it right for Grades)
 		return false
 	var kind: String = SYS_ROWS[_sys_i][1]
 	match kind:
@@ -268,7 +268,7 @@ func _activate() -> void:
 	if _tab == 2:
 		_inv_confirm()  # AW-52: the Inventory hub owns Enter on its tab
 		return
-	if _tab != 3:
+	if _tab != 4:  # System (AW-54 slid it right for Grades)
 		return
 	var kind: String = SYS_ROWS[_sys_i][1]
 	if kind.begins_with("save"):
@@ -353,7 +353,8 @@ func _draw() -> void:
 		0: _draw_roster(body, font)
 		1: _draw_calendar(body, font)
 		2: _draw_items(body, font)
-		3: _draw_system(body, font)
+		3: _draw_grades(body, font)
+		4: _draw_system(body, font)
 	# footer
 	var hint := "←/→ tab      ↑/↓ move      Enter select      J / Esc close"
 	draw_string(font, Vector2(book.position.x + 34, book.position.y + book.size.y - 26), hint,
@@ -499,6 +500,65 @@ func _draw_items(body: Rect2, font: Font) -> void:
 		2: hint = "↑/↓ — choose who receives it   ·   Enter — hand it over   ·   Esc — back"
 	draw_string(font, Vector2(rx, body.position.y + body.size.y - 8), hint,
 		HORIZONTAL_ALIGNMENT_LEFT, body.size.x - lw - 40, 14, Color(0.86, 0.78, 0.45, 0.9))
+
+
+## AW-54: the Grades tab (GRADING_SYSTEM.md §3) — the running grade, the four
+## weighted marks as bars, and the "↑ how to raise it" hint per mark.
+func _draw_grades(body: Rect2, font: Font) -> void:
+	var g := Campaign.running_grade()
+	var x := body.position.x
+	var y := body.position.y + 8
+	draw_string(font, Vector2(x, y), "ACADEMY STANDING",
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.86, 0.78, 0.45))
+	draw_string(font, Vector2(x + body.size.x - 260, y), "Semester %d  ·  Week %d" % [Campaign.semester, Campaign.week],
+		HORIZONTAL_ALIGNMENT_RIGHT, 250, 15, Color(0.62, 0.66, 0.76))
+	y += 52
+	# the running grade, big
+	var rank_col := _rank_color(str(g["rank"]))
+	draw_string(font, Vector2(x, y + 10), str(g["rank"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 54, rank_col)
+	draw_string(font, Vector2(x + 56, y + 4), "%d  ·  %s" % [int(g["score"]), str(g["rank_name"])],
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.95, 0.94, 0.88))
+	draw_string(font, Vector2(x + 56, y + 26), "the grade if the semester ended today",
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.55, 0.58, 0.68))
+	y += 66
+	# the four marks
+	var order := ["coursework", "battlefield", "arena", "conduct"]
+	var labels := {"coursework": "Coursework", "battlefield": "Battlefield", "arena": "The Arena", "conduct": "Conduct"}
+	var marks: Dictionary = g["marks"]
+	var hints: Dictionary = g["hints"]
+	for k in order:
+		var v: float = marks[k]
+		var has_data := v >= 0.0
+		var shown := v if has_data else Grading.NEUTRAL
+		draw_string(font, Vector2(x, y), labels[k], HORIZONTAL_ALIGNMENT_LEFT, 130, 16, Color(0.9, 0.9, 0.95))
+		draw_string(font, Vector2(x + 130, y), "%d%%" % roundi(Grading.WEIGHTS[k] * 100),
+			HORIZONTAL_ALIGNMENT_LEFT, 50, 13, Color(0.55, 0.58, 0.68))
+		var bar := Rect2(x + 180, y - 13, 190, 14)
+		draw_rect(bar, Color(0.2, 0.22, 0.3), true)
+		draw_rect(Rect2(bar.position, Vector2(bar.size.x * shown / 100.0, bar.size.y)),
+			rank_col.darkened(0.1) if has_data else Color(0.45, 0.48, 0.58), true)
+		draw_string(font, Vector2(x + 380, y), ("%d" % roundi(shown)) + ("" if has_data else " (no marks yet)"),
+			HORIZONTAL_ALIGNMENT_LEFT, 150, 15, Color(0.96, 0.93, 0.82))
+		draw_string(font, Vector2(x + 380 + 130, y), "↑ " + str(hints[k]),
+			HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 520, 14, Color(0.7, 0.9, 0.75))
+		y += 40
+	y += 8
+	draw_string(font, Vector2(x, y), "→ Next report card: end of Semester %d (Week %d)" % [Campaign.semester, Campaign.semester_end_week()],
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.62, 0.66, 0.76))
+	# locked history
+	for rc in Campaign.report_cards:
+		y += 28
+		draw_string(font, Vector2(x, y), "Semester %d — %s (%s, %d)" % [int(rc["semester"]), str(rc["rank"]), str(rc["rank_name"]), int(rc["score"])],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 15, _rank_color(str(rc["rank"])))
+
+
+func _rank_color(rank: String) -> Color:
+	match rank:
+		"S": return Color(0.98, 0.85, 0.35)
+		"A": return Color(0.55, 0.9, 0.6)
+		"B": return Color(0.5, 0.75, 1.0)
+		"C": return Color(0.85, 0.8, 0.6)
+	return Color(0.9, 0.5, 0.4)
 
 
 func _draw_system(body: Rect2, font: Font) -> void:

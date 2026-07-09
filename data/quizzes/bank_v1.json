@@ -1,0 +1,61 @@
+[
+ {"q": "In the weapon triangle, which arm has the edge over the axe?",
+  "choices": ["The sword", "The lance", "The bow"], "correct": 0, "topic": "arms"},
+
+ {"q": "A lance carries the advantage against which weapon?",
+  "choices": ["The axe", "The sword", "The tome"], "correct": 1, "topic": "arms"},
+
+ {"q": "The anima cycle: Ember flame overcomes which school?",
+  "choices": ["Gale", "Tide", "Reason"], "correct": 0, "topic": "anima"},
+
+ {"q": "Which school of magic quenches Ember?",
+  "choices": ["Gale", "Reason", "Tide"], "correct": 2, "topic": "anima"},
+
+ {"q": "Fighting from forest cover grants a soldier what?",
+  "choices": ["Better avoid and defense", "Faster movement", "Stronger attacks"], "correct": 0, "topic": "terrain"},
+
+ {"q": "Standing in burning embers at the turn's start will…",
+  "choices": ["Restore your strength", "Chip away your HP", "Hide you from archers"], "correct": 1, "topic": "terrain"},
+
+ {"q": "The mire drags at your boots — costing movement and lowering…",
+  "choices": ["Defense and avoid", "Strength and skill", "Luck alone"], "correct": 0, "topic": "terrain"},
+
+ {"q": "A soldier who starts the turn on a healing spring will…",
+  "choices": ["Lose their footing", "Mend a share of their HP", "Gain a crit bonus"], "correct": 1, "topic": "terrain"},
+
+ {"q": "Holding a fort tile grants defense and…",
+  "choices": ["Slow healing each turn", "Extra movement", "Double attack"], "correct": 0, "topic": "terrain"},
+
+ {"q": "Which house flies the Firebird?",
+  "choices": ["Tidemark", "Emberwing", "Thornrook"], "correct": 1, "topic": "houses"},
+
+ {"q": "House Tidemark's banner beast is…",
+  "choices": ["The Leviathan", "The Stag", "The Firebird"], "correct": 0, "topic": "houses"},
+
+ {"q": "The Stag banner belongs to which house?",
+  "choices": ["Emberwing", "Tidemark", "Thornrook"], "correct": 2, "topic": "houses"},
+
+ {"q": "'A Primer on the Standing Wards' teaches that the wardstones do not MAKE magic — they…",
+  "choices": ["Devour it", "Bank it, like a trust", "Forbid it"], "correct": 1,
+  "req_flag": "read_shelf_wardstones", "topic": "lore"},
+
+ {"q": "'The Three Lines of Vael': Emberwing fought, Tidemark held, and Thornrook…",
+  "choices": ["Watched", "Fled", "Ruled"], "correct": 0,
+  "req_flag": "read_shelf_houses", "topic": "lore"},
+
+ {"q": "The margin note in 'The Three Lines of Vael' asks about which forgotten line?",
+  "choices": ["A fourth line", "The first line", "A broken line"], "correct": 0,
+  "req_flag": "read_shelf_houses", "topic": "lore"},
+
+ {"q": "'On First-Flame and Other Awakenings' warns that magic answers WHAT before training?",
+  "choices": ["Bloodline", "Temperament", "Wealth"], "correct": 1,
+  "req_flag": "read_shelf_magic", "topic": "lore"},
+
+ {"q": "'On the Founding Wards': the stones hold so long as…",
+  "choices": ["The houses hold each other", "The king pays their keep", "The sea stays calm"], "correct": 0,
+  "req_flag": "read_lore_shelf", "topic": "lore"},
+
+ {"q": "What stands at the sacred heart of the Sealed Grove?",
+  "choices": ["A ruined chapel", "The First Crown stone", "An empty throne"], "correct": 1,
+  "req_flag": "read_first_crown_stone", "topic": "lore"}
+]

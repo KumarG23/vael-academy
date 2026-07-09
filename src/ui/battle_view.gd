@@ -845,6 +845,7 @@ func _arena_finish() -> void:
 	var r := ArenaController.reward(cleared)
 	Campaign.flags["arena_used_this_week"] = true
 	Campaign.flags["arena_best_wave"] = maxi(prev_best, cleared)
+	Campaign.record_arena_run(cleared)  # AW-54: feeds the Arena mark (best of term)
 	Campaign.flags["gold"] = int(Campaign.flags.get("gold", 0)) + int(r["gold"])
 	Campaign.flags["arena_credit"] = int(Campaign.flags.get("arena_credit", 0)) + int(r["credit"])
 	_battle_over = true
@@ -874,6 +875,14 @@ func _end_battle(victory: bool) -> void:
 	if Campaign.active:
 		Campaign.capture(_captured_roster_progression(), _support_state.save_state(),
 			"victory" if victory else "defeat")
+		# AW-54: graded battles feed the Battlefield mark (the arena grades itself)
+		if not chapter.is_arena:
+			var fielded := 0
+			for u in _units:
+				if u.team == 0:
+					fielded += 1
+			var lost := fielded - _living_units_on_team(0).size()
+			Campaign.record_battle_score(Grading.battle_score(victory, lost, _turn.round_number))
 	if victory:
 		EventBus.battle_won.emit()
 		# Boss yield + chapter outro (WO-4.1) play before the result screen.

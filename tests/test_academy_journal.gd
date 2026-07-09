@@ -36,9 +36,9 @@ func test_tabs_cycle():
 	assert_eq(_journal._tab, 1, "roster → calendar")
 	_journal._switch_tab(-1)
 	assert_eq(_journal._tab, 0, "wraps back")
-	for i in range(4):
+	for i in range(_journal.TAB_NAMES.size()):
 		_journal._switch_tab(1)
-	assert_eq(_journal._tab, 0, "four tabs wrap to the start")
+	assert_eq(_journal._tab, 0, "a full cycle of tabs wraps to the start")
 
 
 func test_roster_selection_moves_and_wraps():
@@ -49,7 +49,7 @@ func test_roster_selection_moves_and_wraps():
 
 
 func test_saving_writes_a_slot_and_the_label_updates():
-	_journal._tab = 3
+	_journal._tab = 4  # System (AW-54 slid it right for Grades)
 	_journal._do_save(TEST_SLOT)
 	var save := SaveSystem.new()
 	assert_true(save.has_slot(TEST_SLOT), "the slot now exists on disk")
@@ -140,7 +140,7 @@ func test_inventory_cancel_backs_out_before_closing():
 
 
 func test_volume_adjust_changes_the_audio_setting():
-	_journal._tab = 3
+	_journal._tab = 4  # System (AW-54 slid it right for Grades)
 	# find the Music Volume row
 	for i in range(_journal.SYS_ROWS.size()):
 		if _journal.SYS_ROWS[i][1] == "music":

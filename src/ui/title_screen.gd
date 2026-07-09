@@ -39,6 +39,7 @@ func _menu_pos() -> Vector2:
 ## the game for checking without playing through — F6 is a Mac system key.
 const DEV_JUMPS := [
 	["▶ Campus (walk the school)", "castle"],
+	["▶ The Classroom (lesson & quiz)", "classroom"],
 	["▶ The Arena (Kai vs waves)", "arena"],
 	["▶ Mock Battle (3 houses)", "mock"],
 	["▶ House-Choice screen", "housechoice"],
@@ -67,6 +68,17 @@ func _dev_jump(kind: String) -> void:
 			Campaign.reset_new_game(false)
 			Campaign.set_house("emberwing")
 			Campaign.house_locked = true  # mid-year, so it enters the castle hub
+			get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
+		"classroom":
+			# AW-54: straight to the lesson hall — walk to "Attend the lesson".
+			# A couple of lore flags are pre-set so gated questions show in the mix.
+			Campaign.reset_new_game(false)
+			Campaign.set_house("emberwing")
+			Campaign.house_locked = true
+			Campaign.flags["read_shelf_houses"] = true
+			Campaign.flags["read_first_crown_stone"] = true
+			CastleScene.next_room = "classroom"
+			CastleScene.next_spawn = Vector2i(12, 5)
 			get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
 		"arena":
 			Campaign.reset_new_game(false)
