@@ -415,21 +415,52 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+var _threat_union_on := false   # H-key mode: every enemy's reach at once
+var _danger_unit: Unit = null   # AW-73: the one enemy whose reach is being studied
+
+
 func _toggle_threat_overlay() -> void:
-	var show_it := not _threat_overlay.is_shown()
-	if show_it:
+	_threat_union_on = not _threat_union_on
+	_danger_unit = null
+	if _threat_union_on:
 		_refresh_threat_overlay()
-	_threat_overlay.set_shown(show_it)
+	_threat_overlay.set_shown(_threat_union_on)
 
 
-## Recompute the union of every living enemy's threat range (boss-aware).
+## AW-73: show one enemy's threat range (Enter on a foe = "how far can THEY go?").
+func _show_danger_for(u: Unit) -> void:
+	_danger_unit = u
+	AudioManager.play_sfx("select")
+	_refresh_threat_overlay()
+	_threat_overlay.set_shown(true)
+
+
+## Back to whatever the H-mode was before a single foe was inspected.
+func _clear_danger() -> void:
+	if _danger_unit == null:
+		return
+	_danger_unit = null
+	if _threat_union_on:
+		_refresh_threat_overlay()
+	_threat_overlay.set_shown(_threat_union_on)
+
+
+## Recompute the shown threat: the inspected enemy's reach, or the union of
+## every living enemy's (boss-aware).
 func _refresh_threat_overlay() -> void:
+	if _danger_unit != null and (not is_instance_valid(_danger_unit) or not _danger_unit.is_alive()):
+		_danger_unit = null  # the studied foe fell — fall back to the H-mode view
+		_threat_overlay.set_shown(_threat_union_on)
 	var tiles := {}
-	for u in _units:
-		if u.team == 0 or not u.is_alive():
-			continue
-		for t in AIBrain.threat_tiles(u, _units, chapter, _terrain_db, u.ai_behavior()):
+	if _danger_unit != null:
+		for t in AIBrain.threat_tiles(_danger_unit, _units, chapter, _terrain_db, _danger_unit.ai_behavior()):
 			tiles[t] = true
+	else:
+		for u in _units:
+			if u.team == 0 or not u.is_alive():
+				continue
+			for t in AIBrain.threat_tiles(u, _units, chapter, _terrain_db, u.ai_behavior()):
+				tiles[t] = true
 	_threat_overlay.set_tiles(tiles.keys())
 
 
@@ -448,6 +479,9 @@ func _on_cursor_confirmed(cell: Vector2i) -> void:
 func _on_cursor_cancelled(_cell: Vector2i) -> void:
 	if _busy:
 		return
+	if _phase == Phase.IDLE:
+		_clear_danger()  # AW-73: Esc puts a studied foe's range away
+		return
 	if _phase == Phase.TARGETING:
 		# Cancel targeting: back to the command menu, nothing spent (WO-4.4).
 		_forecast_panel.hide_panel()
@@ -463,9 +497,18 @@ func _try_select(cell: Vector2i) -> void:
 		return
 	if not u.is_alive():
 		return
-	if u.team != 0 or u.has_acted:
+	if u.team != 0:
+		# AW-73: FE danger zone — first press shows THIS enemy's reach; a second
+		# press on the same foe opens the full stats sheet (the range stays up).
+		if _danger_unit == u:
+			_open_stats_for(u)
+		else:
+			_show_danger_for(u)
+		return
+	if u.has_acted:
 		_open_stats_for(u)  # anyone who can't act can still be inspected (WO-4.4)
 		return
+	_clear_danger()  # AW-73: commanding your own unit puts the map back
 	_selected = u
 	AudioManager.play_sfx("select")  # AW-70: picking a unit clicks (AW-36 follow-on)
 	_move_origin = u.cell
