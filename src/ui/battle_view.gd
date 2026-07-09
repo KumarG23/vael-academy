@@ -60,6 +60,7 @@ var _rng: CombatRNG
 
 var _turn := TurnManager.new()
 var _turn_banner: TurnBanner
+var _intro_card: BattleIntroCard  # AW-71: the chapter-opening objective card
 var _result_screen: ResultScreen
 var _level_up_screen: LevelUpScreen
 var _units: Array[Unit] = []
@@ -171,6 +172,11 @@ func _focus_player_start() -> void:
 func _begin_battle() -> void:
 	if chapter.intro_dialogue != "":
 		await _play_dialogue(chapter.intro_dialogue)
+	# AW-71: the opening card — what this battle is, and what winning means. The
+	# arena keeps its wave banner; the card fades on its own (non-blocking).
+	if not chapter.is_arena:
+		var title := chapter.display_name if chapter.display_name != "" else "Battle"
+		_intro_card.show_card(title, [_objective_text(), "Foes: %d" % _living_foes_of(0).size()])
 	_begin_player_phase()
 
 
@@ -700,6 +706,8 @@ func _begin_player_phase() -> void:
 	# "Round N" every phase made turns look like arena rounds (Neal's report).
 	if chapter.is_arena:
 		_turn_banner.announce("The Trial — Wave %d" % _arena_wave, true)
+	elif _intro_card != null and _intro_card.is_showing() and _turn.round_number == 1:
+		pass  # AW-71: the intro card owns the center for the opening beat
 	else:
 		_turn_banner.announce("Player Phase — Round %d" % _turn.round_number, true)
 
@@ -1458,6 +1466,10 @@ func _setup_ui() -> void:
 	_turn_banner.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_turn_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ui_layer.add_child(_turn_banner)
+	_intro_card = BattleIntroCard.new()
+	_intro_card.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_intro_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ui_layer.add_child(_intro_card)
 	_result_screen = ResultScreen.new()
 	_result_screen.visible = false
 	_result_screen.set_anchors_preset(Control.PRESET_FULL_RECT)

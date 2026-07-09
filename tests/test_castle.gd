@@ -284,3 +284,10 @@ func test_partner_labels_carry_bond_ranks():
 	var tag := _castle._rank_tag("liora")
 	assert_string_contains(tag, "[C]")
 
+
+## AW-71: entering an area names it.
+func test_area_title_card_shows_the_room_name():
+	_castle.enter_room("grove", Vector2i(3, 3))
+	assert_true(_castle._title_card.is_showing(), "the card is up")
+	assert_string_contains(_castle._title_card._text, "The Sealed Grove")
+

@@ -41,6 +41,7 @@ var _ui: CanvasLayer
 var _prompt: Label
 var _date_label: Label
 var _toast_label: Label
+var _title_card: AreaTitleCard
 var _toast_left := 0.0
 var _dialogue: DialogueScene = null
 var _journal: AcademyJournal = null  # AW-39: the J-key book UI
@@ -155,6 +156,9 @@ func _ready() -> void:
 	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toast_label.visible = false
 	_ui.add_child(_toast_label)
+	_title_card = AreaTitleCard.new()  # AW-71: "— The Sealed Grove —" on arrival
+	_title_card.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_ui.add_child(_title_card)
 	_menu = ChoiceMenu.new()
 	var house: HouseDef = load("res://data/houses/%s.tres" % Campaign.house_id)
 	if house != null:
@@ -254,6 +258,8 @@ func enter_room(room_id: String, spawn := Vector2i(-1, -1)) -> void:
 	_spawn_npcs()
 	_setup_camera()
 	queue_redraw()
+	if _title_card != null:
+		_title_card.show_title(room.display_name)  # AW-71: name the place
 	room_changed.emit(room_id)
 
 

@@ -217,3 +217,13 @@ func test_boss_quote_plays_once_on_first_engagement():
 	assert_false(_view._boss_quote_played)
 	await _view._execute_attack(kael, serra)
 	assert_true(_view._boss_quote_played, "first boss engagement marks the quote played")
+
+
+## AW-71: the chapter opens on its card — name, objective, the odds.
+func test_intro_card_states_the_battle_and_objective():
+	assert_true(_view._intro_card.is_showing(), "the opening card is up")
+	assert_string_contains(_view._intro_card._text, "Mock Battle")
+	var joined := ". ".join(_view._intro_card._lines.map(func(l): return str(l)))
+	assert_string_contains(joined, "Objective:")
+	assert_string_contains(joined, "Foes:")
+
