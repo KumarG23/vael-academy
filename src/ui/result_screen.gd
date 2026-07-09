@@ -8,6 +8,7 @@ signal dismissed
 var _text := ""
 var _accent := Color.WHITE
 var _shown := false
+var _lines: Array = []  # AW-50: optional report lines under the title (the arena)
 
 
 func show_victory() -> void:
@@ -16,6 +17,13 @@ func show_victory() -> void:
 
 func show_defeat() -> void:
 	_show("Defeat", Color(0.85, 0.28, 0.28))
+
+
+## AW-50: a titled report card — the arena's "you made it this far" screen.
+## `lines` render centred under the title.
+func show_report(title: String, accent: Color, lines: Array) -> void:
+	_lines = lines
+	_show(title, accent)
 
 
 func is_shown() -> bool:
@@ -54,7 +62,7 @@ func _draw() -> void:
 		return
 	var vp := get_viewport_rect().size
 	draw_rect(Rect2(Vector2.ZERO, vp), Color(0.03, 0.04, 0.06, 0.78), true)
-	var band_h := 140.0
+	var band_h := 140.0 + _lines.size() * 34.0
 	var y := vp.y * 0.5 - band_h * 0.5
 	draw_rect(Rect2(0, y, vp.x, band_h), Color(0.06, 0.07, 0.10, 0.95), true)
 	draw_rect(Rect2(0, y, vp.x, 4), _accent, true)
@@ -62,8 +70,21 @@ func _draw() -> void:
 	var font := ThemeDB.fallback_font
 	var size := 64
 	var ts := font.get_string_size(_text, HORIZONTAL_ALIGNMENT_CENTER, -1, size)
-	draw_string(font, Vector2(vp.x * 0.5 - ts.x * 0.5, y + band_h * 0.5 + ts.y * 0.3),
+	var title_y := y + 96.0 if not _lines.is_empty() else y + band_h * 0.5 + ts.y * 0.3
+	draw_string(font, Vector2(vp.x * 0.5 - ts.x * 0.5, title_y),
 		_text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, _accent)
+	# the report lines (arena trial card): first line brightest, the rest calmer
+	var ly := title_y + 52.0
+	for i in range(_lines.size()):
+		var line := str(_lines[i])
+		var lsize := 26 if i == 0 else 22
+		var lcol := Color(0.95, 0.93, 0.82) if i == 0 else Color(0.78, 0.80, 0.86)
+		if line.begins_with("★"):
+			lcol = _accent  # the NEW BEST line burns in the accent colour
+		var ls := font.get_string_size(line, HORIZONTAL_ALIGNMENT_CENTER, -1, lsize)
+		draw_string(font, Vector2(vp.x * 0.5 - ls.x * 0.5, ly),
+			line, HORIZONTAL_ALIGNMENT_LEFT, -1, lsize, lcol)
+		ly += 34.0
 	var hint := "Press any key"
 	var hs := font.get_string_size(hint, HORIZONTAL_ALIGNMENT_CENTER, -1, 22)
 	draw_string(font, Vector2(vp.x * 0.5 - hs.x * 0.5, y + band_h + 40),

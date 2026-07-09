@@ -682,6 +682,11 @@ func _all_player_units_acted() -> bool:
 
 func _begin_player_phase() -> void:
 	_camera_follow = null  # back to cursor-follow
+	# AW-50: a cleared arena floor summons its next wave at YOUR phase start — a
+	# clean round boundary (new challengers file in, your move), not mid-melee.
+	if chapter.is_arena and _arena_pending_wave > 0 and not _battle_over:
+		_arena_spawn_wave(_arena_pending_wave)
+		_arena_pending_wave = 0
 	for u in _living_units_on_team(0):
 		u.has_acted = false
 		u.queue_redraw()
@@ -691,7 +696,12 @@ func _begin_player_phase() -> void:
 	_deselect()
 	if _threat_overlay.is_shown():
 		_refresh_threat_overlay()  # enemies moved last phase
-	_turn_banner.announce("Player Phase — Round %d" % _turn.round_number, true)
+	# AW-50: in the arena the banner counts WAVES — the turn counter reading
+	# "Round N" every phase made turns look like arena rounds (Neal's report).
+	if chapter.is_arena:
+		_turn_banner.announce("The Trial — Wave %d" % _arena_wave, true)
+	else:
+		_turn_banner.announce("Player Phase — Round %d" % _turn.round_number, true)
 
 
 ## §3 terrain healing (Fort: 10% max HP at the owner's phase start).
@@ -780,6 +790,9 @@ func _check_objective() -> void:
 
 # --- AW-43: the Arena — Kai solo vs escalating waves --------------------------
 var _arena_wave := 0
+## AW-50: set when a floor is cleared; the next wave files in at the start of the
+## NEXT player phase (a legible round boundary), not the instant the last foe drops.
+var _arena_pending_wave := 0
 
 
 ## A ring of walkable, empty edge cells the waves spawn onto.
@@ -803,38 +816,49 @@ func _arena_spawn_wave(wave: int) -> void:
 		return
 	for s in ArenaController.wave_spawns(wave, cells):
 		add_unit(s["def"], s["cell"])
-	_turn_banner.announce("Wave %d" % wave, false)
 	_recompute_auras()
 
 
 ## Kai down = the bout ends (he yields; the arena's magic means nobody dies). A
-## cleared floor summons the next, tougher wave and mends Kai a little.
+## cleared floor mends Kai a little and QUEUES the next, tougher wave — it files
+## in at the next player-phase start (AW-50), so a round has a real boundary.
 func _check_arena() -> void:
 	if not _lord_alive:
 		_arena_finish()
 		return
-	if _living_foes_of(0).is_empty():
+	if _arena_pending_wave == 0 and _living_foes_of(0).is_empty():
 		if _lord_unit != null and is_instance_valid(_lord_unit):
 			var mended := _lord_unit.heal(int(_lord_unit.max_hp() * 0.30))
 			if mended > 0:
 				_pop_text(_lord_unit.position, "Restored +%d" % mended, Color(0.5, 1.0, 0.7))
-		_arena_spawn_wave(_arena_wave + 1)
+		_arena_pending_wave = _arena_wave + 1
+		_turn_banner.announce("Wave %d Cleared!" % _arena_wave, false)
 
 
 func _arena_finish() -> void:
 	if _battle_over:
 		return
-	var cleared := maxi(0, _arena_wave - 1)  # the wave you fell on doesn't count
+	# the wave you fell on doesn't count — unless you'd already cleared the floor
+	# and its successor hadn't filed in yet.
+	var cleared := _arena_wave if _arena_pending_wave > 0 else maxi(0, _arena_wave - 1)
+	var prev_best := int(Campaign.flags.get("arena_best_wave", 0))
 	var r := ArenaController.reward(cleared)
 	Campaign.flags["arena_used_this_week"] = true
-	Campaign.flags["arena_best_wave"] = maxi(int(Campaign.flags.get("arena_best_wave", 0)), cleared)
+	Campaign.flags["arena_best_wave"] = maxi(prev_best, cleared)
 	Campaign.flags["gold"] = int(Campaign.flags.get("gold", 0)) + int(r["gold"])
 	Campaign.flags["arena_credit"] = int(Campaign.flags.get("arena_credit", 0)) + int(r["credit"])
 	_battle_over = true
 	_battle_victory = true  # you always leave the arena with your winnings — no game over
 	_deselect()
 	_range_overlay.clear()
-	_result_screen.show_victory()
+	# AW-50: not "Victory" — the trial report: how far, the prize, and the record.
+	var lines: Array = [str(r["remark"]), "Waves cleared: %d" % cleared]
+	if cleared > prev_best and cleared > 0:
+		lines.append("★ NEW PERSONAL BEST! ★")
+	else:
+		lines.append("Personal best: %d" % maxi(prev_best, cleared))
+	lines.append("Winnings: %d gold  ·  +%d extra credit" % [int(r["gold"]), int(r["credit"])])
+	_result_screen.show_report("The Trial Ends", Color(0.55, 0.92, 0.65), lines)
 
 
 func _end_battle(victory: bool) -> void:
@@ -1471,19 +1495,24 @@ func _on_result_dismissed() -> void:
 	# Campaign flow (WO-4.3): victory returns to the hub with the roster changed;
 	# defeat is a game over — back to the title to load or start again. A battle
 	# scene run standalone (tests/dev) just reloads for another attempt.
+	# AW-49 gotcha #10: this runs inside ResultScreen's input chain — defer all swaps.
 	if Campaign.active:
 		if _battle_victory:
 			# AW-38: winning the prologue raid opens the house-choice oath; every
 			# later victory returns to the castle to carry on the year.
 			if chapter.id == "prologue" and not Campaign.house_locked:
 				Campaign.flags["prologue_done"] = true
-				get_tree().change_scene_to_file("res://scenes/flow/house_choice.tscn")
+				get_tree().change_scene_to_file.call_deferred("res://scenes/flow/house_choice.tscn")
 			else:
-				get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
+				if chapter.is_arena:
+					# AW-50: the trial spits you back out at the spire, not the campus gate
+					CastleScene.next_room = "arena_grounds"
+					CastleScene.next_spawn = Vector2i(11, 14)
+				get_tree().change_scene_to_file.call_deferred("res://scenes/castle/castle.tscn")
 		else:
-			get_tree().change_scene_to_file("res://scenes/title/title.tscn")
+			get_tree().change_scene_to_file.call_deferred("res://scenes/title/title.tscn")
 	else:
-		get_tree().reload_current_scene()
+		get_tree().reload_current_scene.call_deferred()
 
 
 ## WO-4.5: spawning lives in BattleUnitSpawner; the delegate keeps the

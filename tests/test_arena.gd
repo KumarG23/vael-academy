@@ -95,15 +95,29 @@ func test_arena_camera_fits_the_whole_pit():
 			"wave foe at %s is on screen" % str(u.cell))
 
 
-func test_clearing_a_wave_summons_the_next():
+## AW-50: a cleared floor QUEUES the next wave; it files in at the next player-
+## phase start — a legible round boundary, not an instant mid-melee respawn.
+func test_clearing_a_wave_queues_the_next_for_phase_start():
 	var v := _arena()
 	await wait_physics_frames(2)
 	for foe in v._living_foes_of(0).duplicate():
 		v._kill(foe)
 	v._check_objective()
-	assert_eq(v._arena_wave, 2, "a cleared floor calls the next wave")
-	assert_gt(v._living_foes_of(0).size(), 0, "and it's populated")
+	assert_eq(v._arena_pending_wave, 2, "a cleared floor queues the next wave")
+	assert_eq(v._arena_wave, 1, "but it hasn't filed in yet")
+	assert_eq(v._living_foes_of(0).size(), 0, "the sand is empty between rounds")
 	assert_false(v._battle_over, "the arena keeps going")
+	v._begin_player_phase()
+	assert_eq(v._arena_wave, 2, "the new wave files in at your phase start")
+	assert_eq(v._arena_pending_wave, 0)
+	assert_gt(v._living_foes_of(0).size(), 0, "and it's populated")
+
+
+func _clear_wave(v) -> void:
+	for foe in v._living_foes_of(0).duplicate():
+		v._kill(foe)
+	v._check_objective()
+	v._begin_player_phase()
 
 
 func test_kai_falling_ends_the_bout_with_winnings():
@@ -111,9 +125,7 @@ func test_kai_falling_ends_the_bout_with_winnings():
 	await wait_physics_frames(2)
 	# push to wave 3 so there's something cleared to be paid for
 	for _i in range(2):
-		for foe in v._living_foes_of(0).duplicate():
-			v._kill(foe)
-		v._check_objective()
+		_clear_wave(v)
 	assert_eq(v._arena_wave, 3)
 	v._kill(v._lord_unit)   # Kai yields
 	v._check_objective()
@@ -121,3 +133,35 @@ func test_kai_falling_ends_the_bout_with_winnings():
 	assert_true(v._battle_victory, "you always leave with your winnings — no game over")
 	assert_eq(int(Campaign.flags.get("arena_best_wave", 0)), 2, "cleared 2 waves before falling on 3")
 	assert_true(bool(Campaign.flags.get("arena_used_this_week", false)), "weekly cooldown set")
+	# AW-50: the end screen is the trial REPORT, not a generic Victory banner
+	assert_eq(v._result_screen._text, "The Trial Ends", "the trial report card shows")
+	var joined := ". ".join(v._result_screen._lines.map(func(l): return str(l)))
+	assert_string_contains(joined, "Waves cleared: 2")
+	assert_string_contains(joined, "NEW PERSONAL BEST")
+	assert_string_contains(joined, "gold")
+
+
+## AW-50: falling AFTER clearing a floor (its successor still pending) counts the
+## cleared floor — you earned it.
+func test_falling_between_waves_still_counts_the_cleared_floor():
+	var v := _arena()
+	await wait_physics_frames(2)
+	for foe in v._living_foes_of(0).duplicate():
+		v._kill(foe)
+	v._check_objective()             # wave 1 cleared, wave 2 pending
+	v._kill(v._lord_unit)
+	v._check_objective()
+	assert_true(v._battle_over)
+	assert_eq(int(Campaign.flags.get("arena_best_wave", 0)), 1, "the cleared floor counts")
+
+
+## AW-50: a repeat run that doesn't beat the record reports the standing best.
+func test_personal_best_survives_a_worse_run():
+	Campaign.flags["arena_best_wave"] = 5
+	var v := _arena()
+	await wait_physics_frames(2)
+	v._kill(v._lord_unit)   # downed in the opening bout
+	v._check_objective()
+	assert_eq(int(Campaign.flags.get("arena_best_wave", 0)), 5, "the record stands")
+	var joined := ". ".join(v._result_screen._lines.map(func(l): return str(l)))
+	assert_string_contains(joined, "Personal best: 5")
