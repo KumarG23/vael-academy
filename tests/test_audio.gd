@@ -53,3 +53,10 @@ func test_music_tracks_the_requested_path():
 func test_missing_music_is_silent():
 	AudioManager.play_music("res://assets/audio/music/nope.wav")
 	assert_false(AudioManager._music.playing, "no track, no crash")
+
+
+## AW-72: the quiz answers with its own voice — a chime and a buzz.
+func test_quiz_answer_sfx_exist():
+	assert_true(ResourceLoader.exists("res://assets/audio/sfx/correct.wav"), "the chime is real")
+	assert_true(ResourceLoader.exists("res://assets/audio/sfx/wrong.wav"), "so is the buzz")
+

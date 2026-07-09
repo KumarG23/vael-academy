@@ -81,9 +81,9 @@ func _answer() -> void:
 	var right := _picked == int(_questions[_q_i]["correct"])
 	if right:
 		_correct += 1
-		AudioManager.play_sfx("heal")
+		AudioManager.play_sfx("correct")  # AW-72: a proper chime, not a borrowed heal
 	else:
-		AudioManager.play_sfx("miss")
+		AudioManager.play_sfx("wrong")
 	_revealing = true
 	_reveal_left = REVEAL_TIME
 	queue_redraw()
