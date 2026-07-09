@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cmykp2etbju6m"
-valid=false
+uid="uid://bya157h233i8v"
+path="res://.godot/imported/portrait_serra_happy.png-0d527884922053fd3eac7f63df26bd4f.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/portraits/portrait_serra_happy.png"
+dest_files=["res://.godot/imported/portrait_serra_happy.png-0d527884922053fd3eac7f63df26bd4f.ctex"]
 
 [params]
 

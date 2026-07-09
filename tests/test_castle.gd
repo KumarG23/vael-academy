@@ -133,6 +133,23 @@ func test_the_grove_is_grass_and_lush():
 	assert_gte(tree_types, 4, "several kinds of tree fill the wood: " + str(kinds.keys()))
 
 
+## AW-60: campus dress code — school uniform in term time, party wear on
+## festival weeks; anyone without variant art falls back to the battle set.
+func test_campus_variant_follows_the_calendar():
+	Campaign.week = 1
+	var normal := _castle._campus_variant()
+	assert_eq(normal, "school", "term time = the school uniform")
+	for e in Campaign.calendar():
+		if e.kind == CalendarEventDef.Kind.HOLIDAY:
+			Campaign.week = e.week
+			assert_eq(_castle._campus_variant(), "party", "festival week = party wear")
+			break
+	Campaign.week = 1
+	# no variant art installed for the warden -> resolve falls back to the root set
+	assert_eq(Unit.resolve_sprite_dir("brenna", "school"),
+		"res://assets/sprites/units/brenna", "missing variant art falls back safely")
+
+
 ## AW-47: per-area music — a room with its own track plays it; others fall back
 ## to the shared campus bed.
 func test_rooms_can_have_their_own_music():

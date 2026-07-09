@@ -206,10 +206,20 @@ func _load_rooms() -> void:
 				_rooms[r.id] = r
 
 
+## AW-60: what everyone wears on campus — party formalwear on festival weeks,
+## the school uniform otherwise. resolve_sprite_dir falls back to the battle
+## set for anyone whose variant art doesn't exist yet, so this is safe cast-wide.
+func _campus_variant() -> String:
+	var e := Campaign.current_event()
+	if e != null and e.kind == CalendarEventDef.Kind.HOLIDAY:
+		return "party"
+	return "school"
+
+
 ## 4-direction avatar (WO-9.2): walk_f* = east (flip for west), walk_s_f*/
 ## walk_n_f* per the WO-4.7 sprite convention. Missing sets fall back east.
 func _build_avatar_frames(unit_id: String) -> SpriteFrames:
-	var dir := "res://assets/sprites/units/%s" % unit_id
+	var dir := Unit.resolve_sprite_dir(unit_id, _campus_variant())
 	var sets := Unit.scan_walk_frames(dir)
 	var frames := SpriteFrames.new()
 	for anim in ["walk", "walk_n", "walk_s"]:

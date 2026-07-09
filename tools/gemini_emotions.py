@@ -15,12 +15,15 @@ Usage:
   python3 tools/gemini_emotions.py --missing       # every base portrait lacking a set
 """
 import base64
+import io
 import json
 import os
 import pathlib
 import sys
 import time
 import urllib.request
+
+from PIL import Image
 
 MODEL = "gemini-3.1-flash-image"
 PORTRAITS = pathlib.Path("assets/portraits")
@@ -62,7 +65,14 @@ def edit_portrait(key: str, base_png: bytes, emotion: str) -> bytes:
     for cand in out.get("candidates", []):
         for part in cand.get("content", {}).get("parts", []):
             if "inlineData" in part:
-                return base64.b64decode(part["inlineData"]["data"])
+                raw = base64.b64decode(part["inlineData"]["data"])
+                # Gemini may return JPEG bytes regardless of the ask — always
+                # re-encode to real PNG so Godot's by-extension loader is happy
+                # (the mislabeled-JPEG batch corrupted 88 imports once).
+                im = Image.open(io.BytesIO(raw)).convert("RGB")
+                buf = io.BytesIO()
+                im.save(buf, "PNG")
+                return buf.getvalue()
     raise RuntimeError(f"no image in response: {json.dumps(out)[:300]}")
 
 
