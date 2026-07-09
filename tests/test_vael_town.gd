@@ -41,6 +41,15 @@ func test_smithy_sells_into_kais_kit():
 	assert_true(has, "the sword lands in Kai's persisted kit")
 
 
+## AW-70: a purchase reopens the stall — stocking up is one visit, not five.
+func test_shop_reopens_after_a_purchase():
+	Campaign.flags["gold"] = 500
+	_castle._open_shop("fn_shop_smith")
+	_castle._do_shop(0)
+	assert_eq(_castle._menu_context, "shop", "still browsing after buying")
+	assert_true(_castle._menu.visible, "the wares menu came back up")
+
+
 func test_broke_students_buy_nothing():
 	Campaign.flags["gold"] = 10
 	_castle._open_shop("fn_shop_smith")

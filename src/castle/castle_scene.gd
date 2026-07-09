@@ -718,7 +718,7 @@ func _do_mission(index: int) -> void:
 			_toast("That chapter isn't authored yet.")
 			return
 		Campaign.deploy()
-		get_tree().change_scene_to_file(scene)
+		get_tree().change_scene_to_file.call_deferred(scene)
 
 
 ## AW-64: the report-card chest, scaled to rank (GRADING_SYSTEM.md §4).
@@ -871,6 +871,7 @@ const SPELLBOOK_PRICE := 900  # SPELLBOOKS.md: "really expensive" — the gold c
 const TAVERN_MEAL_COST := 20
 
 var _shop_wares: Array = []
+var _shop_fn := ""  # AW-70: remembered so a purchase can reopen the stall
 
 
 func gold() -> int:
@@ -879,6 +880,7 @@ func gold() -> int:
 
 func _open_shop(fn: String) -> void:
 	_menu_context = "shop"
+	_shop_fn = fn
 	if fn == "fn_shop_magic":
 		# the arcane bookshop stocks one spellbook per school Kai hasn't learned
 		_shop_wares = []
@@ -924,6 +926,7 @@ func _do_shop(index: int) -> void:
 	Campaign.flags["gold"] = gold() - cost
 	AudioManager.play_sfx("confirm")
 	_toast("Bought %s. (%dg left)" % [w["label"], gold()])
+	_open_shop(_shop_fn)  # AW-70: browsing continues — buy more without re-entering
 
 
 ## The Gilded Stag: share a meal with a housemate — bond over stew (FE3H-style).
@@ -939,8 +942,14 @@ func _open_tavern() -> void:
 	var labels: Array = []
 	for def in _roster_defs:
 		if def.id != "kai":
-			labels.append(def.display_name)
+			labels.append(def.display_name + _rank_tag(def.id))
 	_menu.open("The Gilded Stag — share a meal? (%dg)" % TAVERN_MEAL_COST, labels, _menu_pos())
+
+
+## AW-70: show where each bond stands right in the partner list.
+func _rank_tag(partner_id: String) -> String:
+	var r := _support_state.rank_for_units("kai", partner_id)
+	return "   [%s]" % r if r != "" else ""
 
 
 func _do_tavern(index: int) -> void:
@@ -1053,7 +1062,7 @@ func _open_cooking() -> void:
 	var labels: Array = []
 	for def in _roster_defs:
 		if def.id != "kai":
-			labels.append(def.display_name)
+			labels.append(def.display_name + _rank_tag(def.id))
 	_menu.open("Fire-pit Cooking — with whom?", labels, _menu_pos())
 
 
@@ -1108,7 +1117,7 @@ func _do_system(index: int) -> void:
 			Campaign.save_to_slot(0)
 			_toast("Game saved.")
 		1:
-			get_tree().change_scene_to_file("res://scenes/title/title.tscn")
+			get_tree().change_scene_to_file.call_deferred("res://scenes/title/title.tscn")
 
 
 func _play_dialogue(path: String) -> void:

@@ -330,6 +330,10 @@ func _draw() -> void:
 	# heading + tabs
 	draw_string(font, book.position + Vector2(34, 46), "Academy Journal",
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(0.86, 0.78, 0.45))
+	# AW-70: the purse, always visible — gold finally has sinks, show the total
+	var purse := "Purse: %dg" % int(Campaign.flags.get("gold", 0))
+	draw_string(font, book.position + Vector2(book.size.x - 220, 46), purse,
+		HORIZONTAL_ALIGNMENT_RIGHT, 190, 18, Color(0.95, 0.85, 0.5))
 	var tx := book.position.x + 34.0
 	var ty := book.position.y + 78.0
 	for i in range(TAB_NAMES.size()):
@@ -577,6 +581,13 @@ func _draw_system(body: Rect2, font: Font) -> void:
 			draw_string(font, Vector2(rx + 172, y), "%d%%" % roundi(v * 100),
 				HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.82, 0.9))
 		y += 30
+	# AW-70: the controls reference at the System tab's foot
+	draw_string(font, Vector2(body.position.x, body.position.y + body.size.y + 24), CONTROLS_REF,
+		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 13, Color(0.55, 0.6, 0.7))
+
+
+## AW-70: everything on one line, always one J-press away.
+const CONTROLS_REF := "CONTROLS — Arrows/WASD walk · Enter interact · Esc menu · J journal · ` room editor (H for its help) · In battle: Enter select/confirm, Esc cancel, Enter on empty ground = field menu"
 
 
 func _slot_label(slot: int) -> String:

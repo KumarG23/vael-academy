@@ -461,6 +461,7 @@ func _try_select(cell: Vector2i) -> void:
 		_open_stats_for(u)  # anyone who can't act can still be inspected (WO-4.4)
 		return
 	_selected = u
+	AudioManager.play_sfx("select")  # AW-70: picking a unit clicks (AW-36 follow-on)
 	_move_origin = u.cell
 	_phase = Phase.SELECTED
 	_standable = MovementRange.standable_tiles(u.cell, _mov(u), _make_context(u))
@@ -838,10 +839,10 @@ func _check_arena() -> void:
 ## wave you're mid-fight in doesn't count; a cleared floor awaiting its
 ## successor does), but on YOUR terms.
 func _arena_retreat() -> void:
-	_arena_finish()
+	_arena_finish(true)
 
 
-func _arena_finish() -> void:
+func _arena_finish(retreated := false) -> void:
 	if _battle_over:
 		return
 	# the wave you fell on doesn't count — unless you'd already cleared the floor
@@ -859,7 +860,11 @@ func _arena_finish() -> void:
 	_deselect()
 	_range_overlay.clear()
 	# AW-50: not "Victory" — the trial report: how far, the prize, and the record.
-	var lines: Array = [str(r["remark"]), "Waves cleared: %d" % cleared]
+	var remark := str(r["remark"])
+	if retreated:  # AW-70: walking away shouldn't read as being "downed"
+		remark = "You retire from the sand with your winnings — the crowd approves." \
+			if cleared > 0 else "An early exit. The sand will wait."
+	var lines: Array = [remark, "Waves cleared: %d" % cleared]
 	if cleared > prev_best and cleared > 0:
 		lines.append("★ NEW PERSONAL BEST! ★")
 	else:

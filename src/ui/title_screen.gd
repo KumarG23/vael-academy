@@ -68,7 +68,7 @@ func _dev_jump(kind: String) -> void:
 			Campaign.reset_new_game(false)
 			Campaign.set_house("emberwing")
 			Campaign.house_locked = true  # mid-year, so it enters the castle hub
-			get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
+			get_tree().change_scene_to_file.call_deferred("res://scenes/castle/castle.tscn")
 		"classroom":
 			# AW-54: straight to the lesson hall — walk to "Attend the lesson".
 			# A couple of lore flags are pre-set so gated questions show in the mix.
@@ -79,25 +79,25 @@ func _dev_jump(kind: String) -> void:
 			Campaign.flags["read_first_crown_stone"] = true
 			CastleScene.next_room = "classroom"
 			CastleScene.next_spawn = Vector2i(12, 5)
-			get_tree().change_scene_to_file("res://scenes/castle/castle.tscn")
+			get_tree().change_scene_to_file.call_deferred("res://scenes/castle/castle.tscn")
 		"arena":
 			Campaign.reset_new_game(false)
 			Campaign.set_house("emberwing")
 			Campaign.deploy()
-			get_tree().change_scene_to_file("res://scenes/battle/arena.tscn")
+			get_tree().change_scene_to_file.call_deferred("res://scenes/battle/arena.tscn")
 		"mock":
 			Campaign.reset_new_game(false)
 			Campaign.set_house("emberwing")
 			Campaign.deploy()
-			get_tree().change_scene_to_file("res://scenes/battle/mock_battle.tscn")
+			get_tree().change_scene_to_file.call_deferred("res://scenes/battle/mock_battle.tscn")
 		"housechoice":
 			Campaign.reset_new_game(false)
 			Campaign.active = true
-			get_tree().change_scene_to_file("res://scenes/flow/house_choice.tscn")
+			get_tree().change_scene_to_file.call_deferred("res://scenes/flow/house_choice.tscn")
 		"prologue":
 			Campaign.reset_new_game(false)
 			Campaign.active = true
-			get_tree().change_scene_to_file("res://scenes/battle/prologue.tscn")
+			get_tree().change_scene_to_file.call_deferred("res://scenes/battle/prologue.tscn")
 		_:
 			_open_main()
 
@@ -183,7 +183,7 @@ func prepare_load(slot: int, save_system: SaveSystem = null) -> bool:
 ## oath, then the castle year — routed by how far the save has come. A locked
 ## house means the year's underway (the usual Load-into-castle case).
 func _enter_campaign() -> void:
-	get_tree().change_scene_to_file(next_campaign_scene())
+	get_tree().change_scene_to_file.call_deferred(next_campaign_scene())
 
 
 func next_campaign_scene() -> String:

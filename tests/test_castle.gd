@@ -275,3 +275,12 @@ func test_spawning_on_a_door_cannot_bounce_back():
 	_castle.enter_room("emberwing_hall", Vector2i(7, 9))  # ON the exit door
 	_castle._check_door()
 	assert_eq(_castle.room.id, "emberwing_hall", "no instant bounce")
+
+
+## AW-70: partner lists show where each bond stands.
+func test_partner_labels_carry_bond_ranks():
+	assert_eq(_castle._rank_tag("nobody_matches"), "", "no bond, no tag")
+	_castle._support_state.add_points("kai", "liora", 25)  # past the C threshold (20)
+	var tag := _castle._rank_tag("liora")
+	assert_string_contains(tag, "[C]")
+

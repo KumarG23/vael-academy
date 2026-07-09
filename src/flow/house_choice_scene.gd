@@ -84,7 +84,7 @@ func commit(house_id: String) -> void:
 	Campaign.house_locked = true
 	Campaign.flags["prologue_done"] = true
 	if is_inside_tree():
-		get_tree().change_scene_to_file(CASTLE)
+		get_tree().change_scene_to_file.call_deferred(CASTLE)
 
 
 func _draw() -> void:

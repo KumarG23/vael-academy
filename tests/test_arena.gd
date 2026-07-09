@@ -155,6 +155,27 @@ func test_retreat_between_waves_banks_the_winnings():
 	assert_gt(int(Campaign.flags.get("gold", 0)), 0, "and the gold came too")
 
 
+## AW-70: retreating reads as retiring, never as being "downed".
+func test_retreat_remark_never_says_downed():
+	var v := _arena()
+	await wait_physics_frames(2)
+	v._arena_retreat()  # walk out before clearing anything
+	var joined := ". ".join(v._result_screen._lines.map(func(l): return str(l)))
+	assert_string_contains(joined, "early exit")
+	assert_false(joined.contains("Downed"), "a retreat is not a defeat")
+
+
+func test_retreat_after_a_clear_praises_the_exit():
+	var v := _arena()
+	await wait_physics_frames(2)
+	for foe in v._living_foes_of(0).duplicate():
+		v._kill(foe)
+	v._check_objective()
+	v._arena_retreat()
+	var joined := ". ".join(v._result_screen._lines.map(func(l): return str(l)))
+	assert_string_contains(joined, "retire from the sand")
+
+
 ## AW-50: falling AFTER clearing a floor (its successor still pending) counts the
 ## cleared floor — you earned it.
 func test_falling_between_waves_still_counts_the_cleared_floor():
