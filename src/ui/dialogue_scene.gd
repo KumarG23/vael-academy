@@ -211,19 +211,17 @@ func _draw() -> void:
 	_draw_portrait(Vector2(vp.x * 0.08, vp.y * 0.14), LEFT_COLOR, active_left, "left")
 	_draw_portrait(Vector2(vp.x * 0.72, vp.y * 0.14), RIGHT_COLOR, not active_left, "right")
 
-	# Text box.
+	# Text box — the shared noble pixel frame (AW-56).
 	var box := Rect2(vp.x * 0.10, vp.y * 0.66, vp.x * 0.80, vp.y * 0.26)
-	draw_rect(box, Color(0.06, 0.07, 0.10, 0.96), true)
-	draw_rect(box, Color(0.85, 0.78, 0.45, 0.9), false, 2.0)
+	UITheme.draw_panel(self, box)
 
-	var font := ThemeDB.fallback_font
+	var font := UITheme.font()
 	# Name plate.
 	if _current.speaker != "":
-		var plate := Rect2(box.position + Vector2(24, -34), Vector2(220, 34))
-		draw_rect(plate, Color(0.10, 0.11, 0.15, 0.98), true)
-		draw_rect(plate, Color(0.85, 0.78, 0.45, 0.9), false, 2.0)
-		draw_string(font, plate.position + Vector2(14, 24), _current.speaker,
-			HORIZONTAL_ALIGNMENT_LEFT, plate.size.x - 20, 20, Color(0.95, 0.82, 0.35))
+		var plate := Rect2(box.position + Vector2(24, -38), Vector2(220, 38))
+		UITheme.draw_panel(self, plate, Color(0.10, 0.11, 0.15, 0.98))
+		draw_string(font, plate.position + Vector2(18, 26), _current.speaker,
+			HORIZONTAL_ALIGNMENT_LEFT, plate.size.x - 30, 20, Color(0.95, 0.82, 0.35))
 
 	var shown := _current.text.substr(0, int(_revealed))
 	draw_multiline_string(font, box.position + Vector2(28, 44), shown,
@@ -239,14 +237,13 @@ func _draw() -> void:
 ## The WO-4.6 option panel: prompt title + option rows, highlighted row marked.
 ## Drawn above the text box on the right, FE dialogue-choice style.
 func _draw_choice_panel(vp: Vector2) -> void:
-	var font := ThemeDB.fallback_font
+	var font := UITheme.font()
 	var row_h := 40.0
 	var title_h := 44.0 if _choice.text != "" else 8.0
 	var panel := Rect2(
 		Vector2(vp.x * 0.50, vp.y * 0.66 - title_h - row_h * _choice.options.size() - 24),
 		Vector2(vp.x * 0.36, title_h + row_h * _choice.options.size() + 12))
-	draw_rect(panel, Color(0.06, 0.07, 0.10, 0.97), true)
-	draw_rect(panel, Color(0.85, 0.78, 0.45, 0.9), false, 2.0)
+	UITheme.draw_panel(self, panel)  # AW-56: the shared noble frame
 	if _choice.text != "":
 		draw_string(font, panel.position + Vector2(20, 30), _choice.text,
 			HORIZONTAL_ALIGNMENT_LEFT, panel.size.x - 40, 20, Color(0.95, 0.82, 0.35))

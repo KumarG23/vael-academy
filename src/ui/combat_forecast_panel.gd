@@ -41,8 +41,7 @@ func hide_panel() -> void:
 
 func _draw() -> void:
 	var rect := Rect2(Vector2.ZERO, PANEL_SIZE)
-	draw_rect(rect, PANEL_BG, true)
-	draw_rect(rect, PANEL_EDGE, false, 2.0)
+	UITheme.draw_panel(self, rect, PANEL_BG)  # AW-56: the shared noble frame
 
 	var col_a := 18.0
 	var col_b := PANEL_SIZE.x * 0.5 + 8.0
@@ -57,7 +56,7 @@ func _draw() -> void:
 func _draw_side(
 	x: float, unit_name: String, hp: String, stats: Dictionary, doubles: bool, active: bool
 ) -> void:
-	var font := ThemeDB.fallback_font
+	var font := UITheme.font()
 	var white := Color.WHITE
 	var dim := Color(0.7, 0.72, 0.78)
 	var y := 30.0

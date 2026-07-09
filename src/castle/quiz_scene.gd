@@ -112,23 +112,23 @@ func _draw() -> void:
 	var w := minf(760.0, vp.x * 0.8)
 	var q: Dictionary = _questions[_q_i]
 	var choices: Array = q["choices"]
-	var h := 190.0 + choices.size() * 46.0
+	var h := 208.0 + choices.size() * 46.0
 	var r := Rect2((vp.x - w) * 0.5, (vp.y - h) * 0.5, w, h)
-	draw_rect(r, Color(0.10, 0.11, 0.16, 0.98), true)
-	draw_rect(r, Color(0.86, 0.78, 0.45, 0.9), false, 2.0)
-	var font := ThemeDB.fallback_font
-	draw_string(font, r.position + Vector2(28, 40), "Lesson — Question %d of %d" % [_q_i + 1, _questions.size()],
+	UITheme.draw_panel(self, r)  # AW-56: the shared noble frame
+	var font := UITheme.font()
+	# content sits inside the frame's ornate corners (AW-56 inset)
+	draw_string(font, r.position + Vector2(36, 50), "Lesson — Question %d of %d" % [_q_i + 1, _questions.size()],
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Color(0.86, 0.78, 0.45))
-	draw_string(font, r.position + Vector2(w - 170, 40), "Correct: %d" % _correct,
+	draw_string(font, r.position + Vector2(w - 196, 50), "Correct: %d" % _correct,
 		HORIZONTAL_ALIGNMENT_RIGHT, 140, 15, Color(0.62, 0.66, 0.76))
-	draw_line(r.position + Vector2(24, 54), r.position + Vector2(w - 24, 54), Color(0.3, 0.33, 0.44), 1.0)
+	draw_line(r.position + Vector2(32, 64), r.position + Vector2(w - 32, 64), Color(0.3, 0.33, 0.44), 1.0)
 	# the question, wrapped
-	draw_multiline_string(font, r.position + Vector2(28, 88), str(q["q"]),
-		HORIZONTAL_ALIGNMENT_LEFT, w - 56, 20, 3, Color(0.95, 0.94, 0.88))
+	draw_multiline_string(font, r.position + Vector2(36, 98), str(q["q"]),
+		HORIZONTAL_ALIGNMENT_LEFT, w - 72, 20, 3, Color(0.95, 0.94, 0.88))
 	# the choices
-	var cy := r.position.y + 168.0
+	var cy := r.position.y + 180.0
 	for i in range(choices.size()):
-		var row := Rect2(r.position.x + 24, cy - 22, w - 48, 34)
+		var row := Rect2(r.position.x + 30, cy - 22, w - 60, 34)
 		if _revealing:
 			if i == int(q["correct"]):
 				draw_rect(row, Color(0.25, 0.65, 0.35, 0.55), true)   # the truth, green
@@ -141,5 +141,5 @@ func _draw() -> void:
 			Color(0.96, 0.94, 0.86) if (i == _choice and not _revealing) else Color(0.82, 0.84, 0.9))
 		cy += 46.0
 	var hint := "…" if _revealing else "↑/↓ choose   ·   Enter answer"
-	draw_string(font, Vector2(r.position.x + 28, r.position.y + h - 20), hint,
+	draw_string(font, Vector2(r.position.x + 36, r.position.y + h - 30), hint,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))

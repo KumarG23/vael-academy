@@ -64,10 +64,11 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, vp), Color(0.03, 0.04, 0.06, 0.78), true)
 	var band_h := 140.0 + _lines.size() * 34.0
 	var y := vp.y * 0.5 - band_h * 0.5
-	draw_rect(Rect2(0, y, vp.x, band_h), Color(0.06, 0.07, 0.10, 0.95), true)
-	draw_rect(Rect2(0, y, vp.x, 4), _accent, true)
-	draw_rect(Rect2(0, y + band_h - 4, vp.x, 4), _accent, true)
-	var font := ThemeDB.fallback_font
+	# AW-56: the band rides the noble frame, with the accent stripes kept
+	UITheme.draw_panel(self, Rect2(vp.x * 0.08, y, vp.x * 0.84, band_h))
+	draw_rect(Rect2(vp.x * 0.08 + 10, y + 6, vp.x * 0.84 - 20, 4), _accent, true)
+	draw_rect(Rect2(vp.x * 0.08 + 10, y + band_h - 10, vp.x * 0.84 - 20, 4), _accent, true)
+	var font := UITheme.font()
 	var size := 64
 	var ts := font.get_string_size(_text, HORIZONTAL_ALIGNMENT_CENTER, -1, size)
 	var title_y := y + 96.0 if not _lines.is_empty() else y + band_h * 0.5 + ts.y * 0.3

@@ -370,12 +370,11 @@ func _draw_hover_info() -> void:
 	if _hover_unit == null:
 		return
 	var u := _hover_unit
-	var font := ThemeDB.fallback_font
+	var font := UITheme.font()
 	var rect := Rect2(Vector2.ZERO, _hover_info.size)
 	var team_col := Color(0.16, 0.25, 0.55, 0.92) if u.team == 0 else Color(0.5, 0.14, 0.14, 0.92)
-	_hover_info.draw_rect(rect, Color(0.08, 0.09, 0.13, 0.92), true)
-	_hover_info.draw_rect(Rect2(0, 0, rect.size.x, 30), team_col, true)
-	_hover_info.draw_rect(rect, Color(0.86, 0.78, 0.55, 0.9), false, 2.0)
+	UITheme.draw_panel(_hover_info, rect, Color(0.08, 0.09, 0.13, 0.92))  # AW-56
+	_hover_info.draw_rect(Rect2(8, 6, rect.size.x - 16, 26), team_col, true)
 	var cls := u.unit_def.char_class.display_name if u.unit_def != null and u.unit_def.char_class != null else ""
 	_hover_info.draw_string(font, Vector2(12, 22), u.unit_def.display_name,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.98, 0.96, 0.9))

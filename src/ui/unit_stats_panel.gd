@@ -113,9 +113,8 @@ func _draw() -> void:
 	if not _shown:
 		return
 	var rect := Rect2(Vector2.ZERO, PANEL_SIZE)
-	draw_rect(rect, PANEL_BG, true)
-	draw_rect(rect, PANEL_EDGE, false, 2.0)
-	var font := ThemeDB.fallback_font
+	UITheme.draw_panel(self, rect, PANEL_BG)  # AW-56: the shared noble frame
+	var font := UITheme.font()
 	var y := 34.0
 	draw_string(font, Vector2(18, y), _title, HORIZONTAL_ALIGNMENT_LEFT, PANEL_SIZE.x - 36, 24, Color.WHITE)
 	var hp_size := font.get_string_size(_hp_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 18)

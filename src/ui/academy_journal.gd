@@ -19,7 +19,6 @@ const SYS_ROWS := [
 	["Music Volume", "music"], ["SFX Volume", "sfx"], ["Master Volume", "master"],
 	["Return to Title", "title"],
 ]
-const PANEL := "res://assets/art/ui/panel_noble.png"
 
 var _tab := 0
 var _roster_i := 0
@@ -28,7 +27,6 @@ var _snaps: Array = []       # per-unit data snapshots
 var _slot_info: Array = []   # save-slot summaries
 var _toast := ""
 var _toast_t := 0.0
-var _panel: Texture2D
 var _save := SaveSystem.new()
 
 ## AW-52: the Inventory HUB — live scratch Units (real inventories, campaign
@@ -44,8 +42,6 @@ var _inv_give_i := 0
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	texture_filter = TEXTURE_FILTER_NEAREST
-	if ResourceLoader.exists(PANEL):
-		_panel = load(PANEL)
 	_build_inv_units()
 	_build_snaps()
 	_refresh_slots()
@@ -329,12 +325,8 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, vp), Color(0.05, 0.06, 0.09, 0.72))  # dim the castle
 	var m := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
 	var book := Rect2(m, vp - m * 2.0)
-	draw_rect(book.grow(-6), Color(0.11, 0.12, 0.17, 0.98), true)
-	if _panel != null:
-		_nine(_panel, book, 58.0, 22.0)
-	else:
-		draw_rect(book, Color(0.85, 0.78, 0.45), false, 2.0)
-	var font := ThemeDB.fallback_font
+	UITheme.draw_panel(self, book, Color(0.11, 0.12, 0.17, 0.98))  # AW-56 shared frame
+	var font := UITheme.font()
 	# heading + tabs
 	draw_string(font, book.position + Vector2(34, 46), "Academy Journal",
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(0.86, 0.78, 0.45))
@@ -633,14 +625,3 @@ func _kind_color(kind: int) -> Color:
 	return Color(0.6, 0.66, 0.78)
 
 
-func _nine(t: Texture2D, dest: Rect2, sm: float, dm: float) -> void:
-	var tw := float(t.get_width())
-	var th := float(t.get_height())
-	var sx := [0.0, sm, tw - sm, tw]
-	var sy := [0.0, sm, th - sm, th]
-	var dx := [dest.position.x, dest.position.x + dm, dest.position.x + dest.size.x - dm, dest.position.x + dest.size.x]
-	var dy := [dest.position.y, dest.position.y + dm, dest.position.y + dest.size.y - dm, dest.position.y + dest.size.y]
-	for r in range(3):
-		for c in range(3):
-			draw_texture_rect_region(t, Rect2(dx[c], dy[r], dx[c + 1] - dx[c], dy[r + 1] - dy[r]),
-				Rect2(sx[c], sy[r], sx[c + 1] - sx[c], sy[r + 1] - sy[r]))
