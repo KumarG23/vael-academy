@@ -89,6 +89,7 @@ func _dev_jump(kind: String) -> void:
 			Campaign.reset_new_game(false)
 			Campaign.set_house("emberwing")
 			Campaign.deploy()
+			BattleView.next_prep = true  # AW-74: see the preparations screen too
 			get_tree().change_scene_to_file.call_deferred("res://scenes/battle/mock_battle.tscn")
 		"housechoice":
 			Campaign.reset_new_game(false)

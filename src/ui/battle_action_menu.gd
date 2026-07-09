@@ -93,9 +93,14 @@ func open_menu(context: String, title: String, labels: Array) -> void:
 func choose(index: int) -> void:
 	if _v._busy:
 		return
+	if _v._menu_context.begins_with("prep_"):
+		_v._prep.choose(_v._menu_context, index)
+		return
 	match _v._menu_context:
 		"field":
 			field_choice(index)
+		"save_slot":
+			_v._do_save_slot(index)
 		"action":
 			await do_action(_v._menu_actions[index])
 		"attack_weapon", "magic_spell":
@@ -115,7 +120,18 @@ func choose(index: int) -> void:
 func cancel() -> void:
 	if _v._busy:
 		return
+	if _v._menu_context.begins_with("prep_"):
+		_v._prep.cancel_menu(_v._menu_context)
+		return
 	match _v._menu_context:
+		"save_slot":
+			_v._menu.close()
+			_v._cursor.active = true
+			if _v._save_menu_origin == "prep":
+				_v._prep.open_prep_menu()
+				_v._save_menu_origin = ""
+			else:
+				_v._close_save_menu()
 		"action":
 			_v._undo_move_and_deselect()  # cancel the command menu = take the move back
 		"field":

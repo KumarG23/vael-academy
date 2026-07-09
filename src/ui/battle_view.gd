@@ -1,3 +1,4 @@
+class_name BattleView
 extends Node2D
 ## Battle scene root. Renders a chapter map and drives the player action loop:
 ##   select unit -> move range (blue) + attack range (red) -> pick a tile to move ->
@@ -44,7 +45,11 @@ const TERRAIN_TINTS := {
 	Terrain.Type.MIRE: Color(0.30, 0.28, 0.20, 0.55),    # debuff — murky bog
 }
 
-enum Phase { IDLE, SELECTED, MENU, TARGETING }
+enum Phase { IDLE, SELECTED, MENU, TARGETING, PREP }  # PREP = AW-74 preparations
+
+## AW-74: the mission path (castle war room / dev jump) raises this before the
+## scene change; _ready consumes it. Same pattern as CastleScene.next_room.
+static var next_prep := false
 
 var _grid: Grid
 var _terrain_db: TerrainDB
@@ -133,6 +138,9 @@ func _ready() -> void:
 	_rng = CombatRNG.new(combat_seed if combat_seed >= 0 else int(Time.get_ticks_usec()))
 	_combat_exec = BattleCombatExecutor.new(self)
 	_menu_ctrl = BattleActionMenuController.new(self)
+	_prep = BattlePrepController.new(self)
+	_prep_active = next_prep and not chapter.is_arena
+	next_prep = false
 	_spawner = BattleUnitSpawner.new(self)
 	_battle_popup = BattlePopup.new()
 	_battle_popup.stage_base = chapter.base_terrain
@@ -177,6 +185,9 @@ func _begin_battle() -> void:
 	if not chapter.is_arena:
 		var title := chapter.display_name if chapter.display_name != "" else "Battle"
 		_intro_card.show_card(title, [_objective_text(), "Foes: %d" % _living_foes_of(0).size()])
+	if _prep_active:
+		_prep.begin()  # AW-74: plan first — Begin battle hands over to the phase
+		return
 	_begin_player_phase()
 
 
@@ -474,6 +485,8 @@ func _on_cursor_confirmed(cell: Vector2i) -> void:
 			await _handle_selected_confirm(cell)
 		Phase.TARGETING:
 			await _handle_targeting_confirm(cell)
+		Phase.PREP:
+			_prep.confirm(cell)
 
 
 func _on_cursor_cancelled(_cell: Vector2i) -> void:
@@ -481,6 +494,9 @@ func _on_cursor_cancelled(_cell: Vector2i) -> void:
 		return
 	if _phase == Phase.IDLE:
 		_clear_danger()  # AW-73: Esc puts a studied foe's range away
+		return
+	if _phase == Phase.PREP:
+		_prep.cancel()
 		return
 	if _phase == Phase.TARGETING:
 		# Cancel targeting: back to the command menu, nothing spent (WO-4.4).
@@ -546,6 +562,8 @@ func _arrive(unit: Unit) -> void:
 # stays here — tests inspect it — and the view keeps signal-facing delegates) --
 
 var _menu_ctrl: BattleActionMenuController
+var _prep: BattlePrepController   # AW-74
+var _prep_active := false
 
 
 func _open_action_menu() -> void:
@@ -1000,6 +1018,38 @@ func _deselect() -> void:
 
 # --- save / load ---------------------------------------------------------------
 
+## AW-74/75: pick a slot and save, from preparations or the field menu. Returns
+## to prep (origin "prep") or the map afterwards.
+var _save_menu_origin := ""
+
+
+func _open_save_menu(origin: String) -> void:
+	_save_menu_origin = origin
+	var labels: Array = []
+	for entry in _save_system.list_slots(3):
+		labels.append("Slot %d — %s" % [int(entry["slot"]) + 1, str(entry["chapter_id"])])
+	while labels.size() < 3:
+		labels.append("Slot %d — empty" % (labels.size() + 1))
+	_menu_ctrl.open_menu("save_slot", "Save game", labels)
+
+
+func _do_save_slot(index: int) -> void:
+	var ok := save_to_slot(index)
+	_menu.close()
+	_cursor.active = true
+	_turn_banner.announce("Saved to slot %d." % (index + 1) if ok else "Couldn't save.", true)
+	AudioManager.play_sfx("confirm" if ok else "cancel")
+	_close_save_menu()
+
+
+func _close_save_menu() -> void:
+	if _save_menu_origin == "prep":
+		_phase = Phase.PREP
+	else:
+		_phase = Phase.IDLE
+	_save_menu_origin = ""
+
+
 func save_to_slot(slot: int) -> bool:
 	return _save_system.save_slot(slot, make_save_payload())
 
@@ -1062,8 +1112,11 @@ func apply_save_payload(payload: Dictionary) -> void:
 	_permadead_unit_ids = _string_array(battle.get("permadead_unit_ids", []))
 
 	_setup_supports()
-	_support_state.apply_save_state(payload.get("supports", {}))
 	_rebuild_units_from_save(payload.get("roster", []))
+	# AW-74 fix: the payload's supports must land AFTER the rebuild — respawning
+	# runs apply_campaign_state, which overwrites the state with the CAMPAIGN's
+	# pre-battle copy and would erase every point earned since deployment.
+	_support_state.apply_save_state(payload.get("supports", {}))
 	_restore_post_load_ui()
 
 

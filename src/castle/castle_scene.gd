@@ -724,6 +724,7 @@ func _do_mission(index: int) -> void:
 			_toast("That chapter isn't authored yet.")
 			return
 		Campaign.deploy()
+		BattleView.next_prep = true  # AW-74: missions open on preparations
 		get_tree().change_scene_to_file.call_deferred(scene)
 
 
@@ -790,6 +791,13 @@ func _play_report_card() -> void:
 		{"speaker": t["name"], "side": "right", "portrait": t["id"], "expression": expr, "text": line},
 		{"speaker": t["name"], "side": "right", "portrait": t["id"], "text": reward_text},
 	]
+	# AW-74: word of a graded cadet travels — a traveling merchant starts
+	# following the missions from the first term's close. (Co-write may move
+	# this unlock onto a story beat later.)
+	if not bool(Campaign.flags.get("merchant_unlocked", false)):
+		Campaign.flags["merchant_unlocked"] = true
+		steps.append({"speaker": t["name"], "side": "right", "portrait": t["id"],
+			"text": "One more thing — a merchant has been asking after the cadet corps. Expect his cart at your next deployment."})
 	_play_dialogue_json(JSON.stringify(steps))
 
 
