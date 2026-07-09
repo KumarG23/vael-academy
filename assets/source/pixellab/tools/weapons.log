@@ -1,0 +1,16 @@
+PERMANENT sword Error calling tool 'create_map_object': 1 validation error for call[create_map_object]
+height
+  Input should be greater than or equal to 32 
+PERMANENT lance Error calling tool 'create_map_object': 1 validation error for call[create_map_object]
+height
+  Input should be greater than or equal to 32 
+PERMANENT axe Error calling tool 'create_map_object': 1 validation error for call[create_map_object]
+height
+  Input should be greater than or equal to 32 
+queued bow
+queued tome
+queued staff
+got bow (48, 40)
+got tome (40, 32)
+got staff (32, 64)
+WEAPON LIBRARY COMPLETE

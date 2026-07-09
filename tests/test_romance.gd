@@ -57,14 +57,14 @@ func test_non_romance_pairs_cap_at_A():
 
 
 func test_romance_is_exclusive():
-	var s := _state_with([_chain("kai", "liora", true), _chain("kai", "corin", true)])
+	var s := _state_with([_chain("kai", "liora", true), _chain("kai", "rina", true)])
 	s.add_points("kai", "liora", 200)
-	s.add_points("kai", "corin", 200)
+	s.add_points("kai", "rina", 200)
 	s.consent_romance("kai", "liora")
 	assert_eq(s.romance_partner("kai"), "liora")
-	var second := s.consent_romance("kai", "corin")
+	var second := s.consent_romance("kai", "rina")
 	assert_true(second.is_empty(), "Kai is spoken for — a second ♥ is refused")
-	assert_eq(s.rank_for_units("kai", "corin"), "A", "the other bond stays a friendship")
+	assert_eq(s.rank_for_units("kai", "rina"), "A", "the other bond stays a friendship")
 
 
 func test_romances_and_consents_survive_save_state():

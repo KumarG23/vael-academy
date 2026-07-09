@@ -64,16 +64,10 @@ script = ExtResource("1_86bf7")
 texture = ExtResource("2_1w0am")
 cell = Vector2i(19, 7)
 
-[sub_resource type="Resource" id="Resource_cym72"]
-script = ExtResource("1_86bf7")
-texture = ExtResource("3_35n0j")
-cell = Vector2i(12, 4)
-offset = Vector2(16, 0)
-
 [sub_resource type="Resource" id="Resource_5gdr1"]
 script = ExtResource("1_86bf7")
 texture = ExtResource("4_mobup")
-cell = Vector2i(2, 4)
+cell = Vector2i(5, 7)
 
 [sub_resource type="Resource" id="Resource_srpw3"]
 script = ExtResource("1_86bf7")
@@ -83,7 +77,7 @@ cell = Vector2i(21, 4)
 [sub_resource type="Resource" id="Resource_udaqm"]
 script = ExtResource("1_86bf7")
 texture = ExtResource("6_aqprb")
-cell = Vector2i(11, 1)
+cell = Vector2i(9, 1)
 offset = Vector2(16, 0)
 
 [sub_resource type="Resource" id="Resource_yyt13"]
@@ -99,31 +93,18 @@ cell = Vector2i(16, 1)
 [sub_resource type="Resource" id="Resource_qmiht"]
 script = ExtResource("1_86bf7")
 texture = ExtResource("3_35n0j")
-cell = Vector2i(11, 5)
+cell = Vector2i(9, 4)
 offset = Vector2(16, 0)
 
 [sub_resource type="Resource" id="Resource_wokpd"]
 script = ExtResource("3_1w0am")
 id = "castle_dorm_hall"
 display_name = "Dormitory Hall"
-objective = 0
-seize_cell = Vector2i(-1, -1)
-boss_unit_id = ""
-non_lethal = false
-is_arena = false
-enemy_spawns = Array[ExtResource("2_oe2qo")]([])
-deploy_cells = Dictionary[String, Vector2i]({})
-player_spawns = Array[ExtResource("2_oe2qo")]([])
-intro_dialogue = ""
-outro_dialogue = ""
-boss_quote_dialogue = ""
-boss_yield_dialogue = ""
 width = 24
 height = 9
 terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 12, 7, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 7, 7, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
 base_terrain = 7
-decor = Array[ExtResource("1_86bf7")]([SubResource("Resource_kabiy"), SubResource("Resource_5jqbf"), SubResource("Resource_mobup"), SubResource("Resource_q0k4f"), SubResource("Resource_abwnv"), SubResource("Resource_i4kux"), SubResource("Resource_s040r"), SubResource("Resource_cqfa2"), SubResource("Resource_3oxii"), SubResource("Resource_yiu17"), SubResource("Resource_cym72"), SubResource("Resource_5gdr1"), SubResource("Resource_srpw3"), SubResource("Resource_udaqm"), SubResource("Resource_yyt13"), SubResource("Resource_i1sf7"), SubResource("Resource_qmiht")])
-visits = Array[ExtResource("4_35n0j")]([])
+decor = Array[ExtResource("1_86bf7")]([SubResource("Resource_kabiy"), SubResource("Resource_5jqbf"), SubResource("Resource_mobup"), SubResource("Resource_q0k4f"), SubResource("Resource_abwnv"), SubResource("Resource_i4kux"), SubResource("Resource_s040r"), SubResource("Resource_cqfa2"), SubResource("Resource_3oxii"), SubResource("Resource_yiu17"), SubResource("Resource_5gdr1"), SubResource("Resource_srpw3"), SubResource("Resource_udaqm"), SubResource("Resource_yyt13"), SubResource("Resource_i1sf7"), SubResource("Resource_qmiht")])
 
 [sub_resource type="Resource" id="Resource_aqprb"]
 script = ExtResource("5_kabiy")

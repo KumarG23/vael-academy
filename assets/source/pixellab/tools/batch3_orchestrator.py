@@ -1,4 +1,4 @@
-"""Batch 3: fixes (corin walk, staff walks), hair-color states, Kai new hair
+"""Batch 3: fixes (rina walk, staff walks), hair-color states, Kai new hair
 + evolution, 17 promotions, weapon-swap retry, mounted Perrin experiment."""
 from pixellab import call, _token
 import json
@@ -26,7 +26,7 @@ PROMOTIONS = [
     ("brenna_general", "brenna", "promoted to general: heavier ornate crimson-gold plate armor, larger tower shield, plumed helm carried under arm"),
     ("wren_bishop", "wren", "promoted to bishop: ornate white and crimson vestments with gold embroidery, taller radiant staff"),
     ("serra_general", "serra", "promoted to general: full ornate navy and silver plate armor, larger lance, commander's half-cape"),
-    ("corin_sniper", "corin", "promoted to sniper: elegant longbow, hooded green and bronze ranger cloak, quiver of fine arrows"),
+    ("rina_sniper", "rina", "promoted to sniper: elegant longbow, hooded green and bronze ranger cloak, quiver of fine arrows"),
     ("perrin_paladin", "perrin", "promoted to paladin: gleaming gold-trimmed armor over the uniform, longer crimson cape, ornate lance"),
     ("dain_warrior", "dain", "promoted to warrior: heavier pauldron on one shoulder, twin battle axes, war paint"),
     ("liora_sage", "liora", "promoted to sage: flowing mage robes with gold sigils over the uniform, floating fire tome"),
@@ -108,12 +108,12 @@ def main():
     ids = json.load(open(f"{SCRATCH}/cast_ids.json"))
     new = {}
 
-    # 1) fix walks: corin (missing), vesper + alaric (staff over face)
+    # 1) fix walks: rina (missing), vesper + alaric (staff over face)
     for n in ("vesper", "alaric"):
         call("delete_animation", {"character_id": ids[n],
                                   "animation_type": "walking", "confirm": True})
         queue_walk(ids[n], n, STAFF_WALK)
-    queue_walk(ids["corin"], "corin")
+    queue_walk(ids["rina"], "rina")
 
     # 2) hair states
     for name, src, edit in HAIR_STATES:
@@ -165,7 +165,7 @@ def main():
     queue_walk(new["kai_evolved"], "kai_evolved")
 
     # 8) wait for all pending jobs everywhere (walk fixes + evolved walk)
-    watch = {**{n: ids[n] for n in ("corin", "vesper", "alaric")},
+    watch = {**{n: ids[n] for n in ("rina", "vesper", "alaric")},
              "kai_evolved": new["kai_evolved"]}
     while True:
         busy = [n for n, c in watch.items() if "pending jobs" in get(c)]
@@ -177,7 +177,7 @@ def main():
     # 9) downloads: re-download fixed characters + all new states
     ids.update(new)
     json.dump(ids, open(f"{SCRATCH}/cast_ids.json", "w"), indent=1)
-    for n in ("corin", "vesper", "alaric"):
+    for n in ("rina", "vesper", "alaric"):
         download(n, ids[n])
     for name, cid in new.items():
         download(name, cid)

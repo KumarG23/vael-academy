@@ -1,0 +1,21 @@
+school state queued: 52d936e4-e2ff-4f3a-b6ad-bd14152a493f
+party state queued: 32f06750-159c-4fb9-bfb8-8be46883f193
+school: completed
+party: completed
+queued school_walk_east
+queued school_walk_north
+queued school_walk_south
+queued party_walk_east
+queued party_walk_north
+queued party_walk_south
+school anims cooking (have_all=False)
+school anims cooking (have_all=False)
+school anims cooking (have_all=False)
+school animations done
+party anims cooking (have_all=False)
+party anims cooking (have_all=False)
+party anims cooking (have_all=False)
+party animations done
+downloaded kai_v3_school
+downloaded kai_v3_party
+OUTFITS COMPLETE

@@ -1,0 +1,18 @@
+{
+ "weapons": {
+  "dagger": "282bfb21-7b2e-4a85-9d47-eac4aee56484",
+  "greatsword": "300e74ec-64b7-4a5d-a74c-fdeaf04348e2",
+  "warhammer": "531878bf-f0fa-4e9b-95bc-bf869d9795ca",
+  "javelin": "677850a0-49ce-4a86-b8e1-93642d83aeec",
+  "crossbow": "18978ebd-904f-455e-b3ab-29734a59225a",
+  "fire_tome": "",
+  "wind_tome": "",
+  "thunder_tome": ""
+ },
+ "bandits": {
+  "bandit_raider": "",
+  "bandit_cutthroat": "",
+  "bandit_shaman": "",
+  "bandit_chief": ""
+ }
+}

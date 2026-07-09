@@ -1,0 +1,16 @@
+{
+ "school_cid": "f5ee7c44-1c8f-4930-b015-21221ea1e804",
+ "party_cid": "cf653ae5-b403-4c01-a87c-c5e378d46cff",
+ "school_done": true,
+ "party_done": true,
+ "school_walk_east": true,
+ "school_walk_north": true,
+ "school_walk_south": true,
+ "party_walk_east": true,
+ "party_walk_north": true,
+ "party_walk_south": true,
+ "school_anims_done": true,
+ "party_anims_done": true,
+ "school_dl": true,
+ "party_dl": true
+}

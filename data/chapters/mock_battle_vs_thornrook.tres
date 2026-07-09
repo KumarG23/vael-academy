@@ -19,7 +19,7 @@
 [ext_resource type="Resource" path="res://data/units/thessaly.tres" id="17_kqn2i"]
 [ext_resource type="Resource" path="res://data/units/corvin.tres" id="18_gff7c"]
 [ext_resource type="Resource" path="res://data/units/vesper.tres" id="19_rpkos"]
-[ext_resource type="Resource" path="res://data/units/corin.tres" id="20_o60td"]
+[ext_resource type="Resource" path="res://data/units/rina.tres" id="20_o60td"]
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="21_g7phq"]
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="22_0cw4l"]
 
@@ -160,13 +160,13 @@ script = ExtResource("21_g7phq")
 id = "mock_battle_vs_thornrook"
 display_name = "Chapter 1 — The Mock Battle"
 objective = 2
-boss_unit_id = "corin"
+boss_unit_id = "rina"
 non_lethal = true
 enemy_spawns = Array[ExtResource("14_0nyig")]([SubResource("Resource_nb6xj"), SubResource("Resource_y48kd"), SubResource("Resource_xd6de"), SubResource("Resource_6sgmm"), SubResource("Resource_d03hv"), SubResource("Resource_03hmd")])
 deploy_cells = Dictionary[String, Vector2i]({
 "bertram": Vector2i(3, 10),
 "brenna": Vector2i(2, 13),
-"corin": Vector2i(4, 12),
+"rina": Vector2i(4, 12),
 "corvin": Vector2i(6, 13),
 "dain": Vector2i(1, 13),
 "elowen": Vector2i(0, 13),
@@ -186,7 +186,7 @@ deploy_cells = Dictionary[String, Vector2i]({
 })
 intro_dialogue = "res://data/dialogue/mock_battle_intro.json"
 outro_dialogue = "res://data/dialogue/mock_battle_outro.json"
-boss_quote_dialogue = "res://data/dialogue/corin_battle_quote.json"
-boss_yield_dialogue = "res://data/dialogue/corin_yield.json"
+boss_quote_dialogue = "res://data/dialogue/rina_battle_quote.json"
+boss_yield_dialogue = "res://data/dialogue/rina_yield.json"
 terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 4, 0, 0, 0, 0, 0, 11, 0, 0, 11, 11, 0, 0, 0, 0, 0, 0, 2, 2, 2, 4, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 4, 0, 3, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 6, 6, 6, 6, 6, 0, 1, 1, 0, 0, 0, 0, 10, 0, 0, 1, 1, 1, 0, 0, 6, 0, 0, 0, 4, 0, 1, 4, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 5, 5, 0, 10, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 decor = Array[ExtResource("1_1fgv0")]([SubResource("Resource_bqu2u"), SubResource("Resource_47q62"), SubResource("Resource_ylj0m"), SubResource("Resource_dgqlp"), SubResource("Resource_84x8n"), SubResource("Resource_nro8c"), SubResource("Resource_gtciu"), SubResource("Resource_j5ptp"), SubResource("Resource_jkh7e"), SubResource("Resource_qrnt5"), SubResource("Resource_s7xlr"), SubResource("Resource_4mqom"), SubResource("Resource_gv7vf"), SubResource("Resource_uicsv"), SubResource("Resource_f4xd2"), SubResource("Resource_0ooea"), SubResource("Resource_5y5to"), SubResource("Resource_scllx")])

@@ -14,7 +14,7 @@ const CAST := [
 	["liora", WeaponDef.WeaponType.TOME, "Liora"],
 	["wren", WeaponDef.WeaponType.STAFF, "Wren"],
 	["fenn", WeaponDef.WeaponType.BOW, "Fenn"],
-	["corin", WeaponDef.WeaponType.BOW, "Corin"],
+	["rina", WeaponDef.WeaponType.BOW, "Rina"],
 	["rurik", WeaponDef.WeaponType.AXE, "Rurik"],
 ]
 

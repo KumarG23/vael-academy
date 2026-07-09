@@ -269,7 +269,7 @@ const SIGNATURE_COLORS := {
 	"brenna": Color(0.72, 0.80, 1.0),   # bastion blue
 	"wren": Color(1.0, 0.80, 0.42),     # amber light
 	"serra": Color(0.40, 0.70, 1.0),    # tide
-	"corin": Color(0.55, 1.0, 0.55),    # stag green
+	"rina": Color(0.55, 1.0, 0.55),    # stag green
 	"sable": Color(0.70, 1.0, 0.60),    # beast green
 }
 func signature_color() -> Color:

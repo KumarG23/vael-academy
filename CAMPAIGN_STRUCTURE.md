@@ -20,7 +20,7 @@ The prologue now opens **before** Vael, with Kai's awakening, and only *then* mo
 **Kai's first battle, and the player's tutorial.** Four travelers, strangers to each other, are on the same road to the Academy when bandits hit a town near Vael on the road in. The four:
 
 - **Kai** — just collected by the Academy rep (`ACADEMY_BIBLE.md` §5), on the road for the first time in his life.
-- **Perrin, Serra, Corin** — the three Great House heirs, each traveling in to start the year. None of them announces who they are; to Kai (and the player) they're just three capable young nobles caught in the same mess.
+- **Perrin, Serra, Rina** — the three Great House heirs, each traveling in to start the year. None of them announces who they are; to Kai (and the player) they're just three capable young nobles caught in the same mess.
 
 **Why it works:**
 - The player meets all three house leaders as *people* before ever choosing a house — which is exactly what an informed house choice needs. No one's a menu option; they're someone you fought beside once.
@@ -28,7 +28,7 @@ The prologue now opens **before** Vael, with Kai's awakening, and only *then* mo
 - Kai's mark and his strange, involuntary magic flicker under the stress of real danger — the heirs notice, nobody understands it, the mystery is planted in minute one.
 - Mechanically it's a clean tutorial: small map, a few enemies, one or two allies, teaches movement/attack/terrain before the roster grows.
 
-**Conversation hooks:** Kai can talk to each heir mid- or post-battle. Short, personality-forward exchanges — the player's first read on Perrin (bold, warm, thrilled by a scrappy stranger), Serra (disciplined, sizing everyone up), Corin (watchful, already curious about that mark). None of them know he's the commoner the whole Academy is about to be gossiping about; he doesn't know they're the three most famous students at Vael. The dramatic irony pays off the moment they all arrive.
+**Conversation hooks:** Kai can talk to each heir mid- or post-battle. Short, personality-forward exchanges — the player's first read on Perrin (bold, warm, thrilled by a scrappy stranger), Serra (disciplined, sizing everyone up), Rina (watchful, already curious about that mark). None of them know he's the commoner the whole Academy is about to be gossiping about; he doesn't know they're the three most famous students at Vael. The dramatic irony pays off the moment they all arrive.
 
 *Open: who exactly the bandits are hurting, and whether the raid is random or an early, deniable symptom of the kingdom's unrest. **Leaning "looks random, isn't":** the raid can be the dead prince's agents — the first, deniable ripple of his search for the source (and now for the boy it answered). Keep that a subtle seed, not an exposition dump (`WORLD_BIBLE.md` §3b, `VILLAIN_BIBLE.md`).*
 

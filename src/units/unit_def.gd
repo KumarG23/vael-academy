@@ -28,7 +28,7 @@ extends Resource
 ## Starting consumables (Vulnerary, Promotion item).
 @export var starting_items: Array[ItemDef] = []
 ## AW-27: signature skills carried by the CHARACTER, not their (often shared)
-## class — the home for heir identity (Serra's protective aura, Corin & Sable's
+## class — the home for heir identity (Serra's protective aura, Rina & Sable's
 ## Pack Hunter) without polluting generic Knight/Mage. Folded into
 ## Unit.active_skills() alongside class skills; they persist across promotion.
 @export var personal_skills: Array[SkillDef] = []

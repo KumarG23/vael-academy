@@ -1,6 +1,6 @@
 extends GutTest
 ## AW-27: aura skills project stat + combat bonuses onto nearby allies (never
-## the owner), Serra's Tide-Ward and Corin/Sable's Pack Hunter carry them as
+## the owner), Serra's Tide-Ward and Rina/Sable's Pack Hunter carry them as
 ## per-character personal skills, and a spellbow resolves as magic damage.
 
 const SCENE := "res://scenes/battle/mock_battle.tscn"
@@ -62,17 +62,17 @@ func test_an_aura_does_not_buff_its_own_owner():
 
 
 func test_pack_hunter_folds_a_combat_bonus():
-	var corin := _unit("corin")
-	corin.add_aura(load("res://data/skills/pack_hunter.tres"))
-	var cb := corin.aura_combat_bonus()
+	var rina := _unit("rina")
+	rina.add_aura(load("res://data/skills/pack_hunter.tres"))
+	var cb := rina.aura_combat_bonus()
 	assert_eq(cb["damage"], 2, "Pack Hunter grants +2 damage")
 	assert_eq(cb["crit"], 15, "Pack Hunter grants +15 crit")
-	corin.clear_auras()
-	assert_eq(corin.aura_combat_bonus()["damage"], 0, "cleared")
+	rina.clear_auras()
+	assert_eq(rina.aura_combat_bonus()["damage"], 0, "cleared")
 
 
 func test_heirs_and_sable_carry_their_signature_skills():
-	assert_true(_has_skill(_unit("corin"), "pack_hunter"), "Corin knows Pack Hunter")
+	assert_true(_has_skill(_unit("rina"), "pack_hunter"), "Rina knows Pack Hunter")
 	assert_true(_has_skill(_unit("sable"), "pack_hunter"), "Sable knows Pack Hunter")
 	assert_true(_has_skill(_unit("serra"), "tide_ward"), "Serra knows Tide-Ward")
 
@@ -120,7 +120,7 @@ func test_aura_does_not_cross_teams():
 # --- spellbow: a bow that resolves as magic ------------------------------------
 
 func test_spellbow_is_magical_but_stays_a_bow():
-	var bow: WeaponDef = load("res://data/weapons/sig_corin.tres")
+	var bow: WeaponDef = load("res://data/weapons/sig_rina.tres")
 	assert_eq(bow.weapon_type, WeaponDef.WeaponType.BOW, "still a bow (Attack menu, range)")
 	assert_true(bow.is_magical(), "but resolves MAG vs RES")
 	var lance: WeaponDef = load("res://data/weapons/iron_lance.tres")

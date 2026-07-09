@@ -1,0 +1,27 @@
+status: completed
+id: cdd44b41-2c33-4133-93aa-5a9b47bfd0be
+name: empty hands, not hol
+directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
+size: 64x64px
+view: low top-down
+style: -, -, -
+group: 82cfe06f-8aef-4e1f-86be-3eb379f69035 (2 states)
+
+rotations:
+  south: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/cdd44b41-2c33-4133-93aa-5a9b47bfd0be/rotations/south.png?t=1783616277
+  east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/cdd44b41-2c33-4133-93aa-5a9b47bfd0be/rotations/east.png?t=1783616277
+  north: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/cdd44b41-2c33-4133-93aa-5a9b47bfd0be/rotations/north.png?t=1783616277
+  west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/cdd44b41-2c33-4133-93aa-5a9b47bfd0be/rotations/west.png?t=1783616277
+  south-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/cdd44b41-2c33-4133-93aa-5a9b47bfd0be/rotations/south-east.png?t=1783616277
+  north-east: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/cdd44b41-2c33-4133-93aa-5a9b47bfd0be/rotations/north-east.png?t=1783616277
+  north-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/cdd44b41-2c33-4133-93aa-5a9b47bfd0be/rotations/north-west.png?t=1783616277
+  south-west: https://backblaze.pixellab.ai/file/pixellab-characters/6211b258-7712-47e8-992f-c0dee2101711/cdd44b41-2c33-4133-93aa-5a9b47bfd0be/rotations/south-west.png?t=1783616277
+
+animations: none
+
+download: https://api.pixellab.ai/mcp/characters/cdd44b41-2c33-4133-93aa-5a9b47bfd0be/download
+
+available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up +37 more
+
+actions: animate_character(character_id="cdd44b41-2c33-4133-93aa-5a9b47bfd0be", ...) | create_character_state(character_id="cdd44b41-2c33-4133-93aa-5a9b47bfd0be", ...) | delete_character(character_id="cdd44b41-2c33-4133-93aa-5a9b47bfd0be")
+hint: animate_character(character_id="cdd44b41-2c33-4133-93aa-5a9b47bfd0be", template_animation_id="backflip")

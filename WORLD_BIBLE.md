@@ -24,7 +24,7 @@ The three houses' leanings are inherited specialties from the three founding War
 - **Tidemark's** line held — the literal ward-keepers, defense and faith.
 - **Thornrook's** line watched — archivists and theorists.
 
-Everyone at Vael is on a first-name basis — students, not courtiers — except one name per house that's already famous across the kingdom before they ever arrive: each Great House's actual heir (Perrin, Serra, and Corin, for Emberwing, Tidemark, and Thornrook respectively).
+Everyone at Vael is on a first-name basis — students, not courtiers — except one name per house that's already famous across the kingdom before they ever arrive: each Great House's actual heir (Perrin, Serra, and Rina, for Emberwing, Tidemark, and Thornrook respectively).
 
 ## 3. The First Crown — the Ancient Royal Magic *(NEW CANON, story spine v2 — 2026-07)*
 
@@ -67,4 +67,4 @@ Full beat-by-beat is in `CHARACTER_BIBLE_KAI.md`. Short version: wandering furth
 - Kingdom name (Aldreth is a placeholder); the dead prince's name/title (placeholder — see `VILLAIN_BIBLE.md`)
 - How Kai's First Crown line survived to Oakstead (hidden heir / cadet branch / smuggled infant — pick when the reveal chapters exist)
 - Neighboring kingdoms / outside politics (deliberately unbuilt — add only if the story needs them)
-- Exactly how "famous heir" status plays out day-to-day for Perrin/Serra/Corin
+- Exactly how "famous heir" status plays out day-to-day for Perrin/Serra/Rina

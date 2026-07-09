@@ -42,7 +42,7 @@ func test_full_parity_for_every_house():
 
 func test_rival_bosses_are_the_heirs():
 	var v := _load_battle("tidemark")
-	assert_eq(v._boss_unit.unit_id(), "corin", "Tidemark route: Corin holds the fort")
+	assert_eq(v._boss_unit.unit_id(), "rina", "Tidemark route: Rina holds the fort")
 	Campaign.active = false
 	var v2 := _load_battle("thornrook")
 	assert_eq(v2._boss_unit.unit_id(), "perrin", "Thornrook route: Perrin holds the fort")

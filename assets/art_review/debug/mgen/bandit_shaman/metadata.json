@@ -1,0 +1,260 @@
+{
+  "group_id": "871594b4-9e3d-4149-925c-3814e149a46c",
+  "states": [
+    {
+      "character": {
+        "id": "90890f09-c1de-4d9d-81c0-bdc04966814f",
+        "name": "bandit",
+        "prompt": "rough bandit brigand, scarred shirtless ruffian with a leather harness and fur-trimmed boots, wild dark hair and stubble, wielding a heavy iron axe, dull browns and muted reds, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-05T07:49:25.842252+00:00"
+      },
+      "folder": "bandit",
+      "frames": {
+        "rotations": {
+          "south": "bandit/rotations/south.png",
+          "south-east": "bandit/rotations/south-east.png",
+          "east": "bandit/rotations/east.png",
+          "north-east": "bandit/rotations/north-east.png",
+          "north": "bandit/rotations/north.png",
+          "north-west": "bandit/rotations/north-west.png",
+          "west": "bandit/rotations/west.png",
+          "south-west": "bandit/rotations/south-west.png"
+        },
+        "animations": {
+          "berserk_leaping_overhead_axe_slam_that_follows_thr": {
+            "east": [
+              "bandit/animations/berserk_leaping_overhead_axe_slam_that_follows_thr/east/frame_000.png",
+              "bandit/animations/berserk_leaping_overhead_axe_slam_that_follows_thr/east/frame_001.png",
+              "bandit/animations/berserk_leaping_overhead_axe_slam_that_follows_thr/east/frame_002.png",
+              "bandit/animations/berserk_leaping_overhead_axe_slam_that_follows_thr/east/frame_003.png",
+              "bandit/animations/berserk_leaping_overhead_axe_slam_that_follows_thr/east/frame_004.png",
+              "bandit/animations/berserk_leaping_overhead_axe_slam_that_follows_thr/east/frame_005.png",
+              "bandit/animations/berserk_leaping_overhead_axe_slam_that_follows_thr/east/frame_006.png",
+              "bandit/animations/berserk_leaping_overhead_axe_slam_that_follows_thr/east/frame_007.png",
+              "bandit/animations/berserk_leaping_overhead_axe_slam_that_follows_thr/east/frame_008.png"
+            ]
+          },
+          "walking": {
+            "east": [
+              "bandit/animations/walking/east/frame_000.png",
+              "bandit/animations/walking/east/frame_001.png",
+              "bandit/animations/walking/east/frame_002.png",
+              "bandit/animations/walking/east/frame_003.png",
+              "bandit/animations/walking/east/frame_004.png",
+              "bandit/animations/walking/east/frame_005.png",
+              "bandit/animations/walking/east/frame_006.png",
+              "bandit/animations/walking/east/frame_007.png",
+              "bandit/animations/walking/east/frame_008.png"
+            ]
+          },
+          "standing_at_the_ready_breathing_gently_subtle_sway": {
+            "east": [
+              "bandit/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_000.png",
+              "bandit/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_001.png",
+              "bandit/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_002.png",
+              "bandit/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_003.png",
+              "bandit/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_004.png",
+              "bandit/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_005.png",
+              "bandit/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_006.png",
+              "bandit/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_007.png",
+              "bandit/animations/standing_at_the_ready_breathing_gently_subtle_sway/east/frame_008.png"
+            ]
+          },
+          "collapsing_to_the_ground_defeated_falling_down": {
+            "east": [
+              "bandit/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_000.png",
+              "bandit/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_001.png",
+              "bandit/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_002.png",
+              "bandit/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_003.png",
+              "bandit/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_004.png",
+              "bandit/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_005.png",
+              "bandit/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_006.png",
+              "bandit/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_007.png",
+              "bandit/animations/collapsing_to_the_ground_defeated_falling_down/east/frame_008.png"
+            ]
+          },
+          "swinging_the_heavy_axe_down_in_a_brutal_overhead_c": {
+            "east": [
+              "bandit/animations/swinging_the_heavy_axe_down_in_a_brutal_overhead_c/east/frame_000.png",
+              "bandit/animations/swinging_the_heavy_axe_down_in_a_brutal_overhead_c/east/frame_001.png",
+              "bandit/animations/swinging_the_heavy_axe_down_in_a_brutal_overhead_c/east/frame_002.png",
+              "bandit/animations/swinging_the_heavy_axe_down_in_a_brutal_overhead_c/east/frame_003.png",
+              "bandit/animations/swinging_the_heavy_axe_down_in_a_brutal_overhead_c/east/frame_004.png",
+              "bandit/animations/swinging_the_heavy_axe_down_in_a_brutal_overhead_c/east/frame_005.png",
+              "bandit/animations/swinging_the_heavy_axe_down_in_a_brutal_overhead_c/east/frame_006.png",
+              "bandit/animations/swinging_the_heavy_axe_down_in_a_brutal_overhead_c/east/frame_007.png",
+              "bandit/animations/swinging_the_heavy_axe_down_in_a_brutal_overhead_c/east/frame_008.png"
+            ]
+          },
+          "flinching_backward_from_taking_a_hit_staggered": {
+            "east": [
+              "bandit/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_000.png",
+              "bandit/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_001.png",
+              "bandit/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_002.png",
+              "bandit/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_003.png",
+              "bandit/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_004.png",
+              "bandit/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_005.png",
+              "bandit/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_006.png",
+              "bandit/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_007.png",
+              "bandit/animations/flinching_backward_from_taking_a_hit_staggered/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "f874751d-81f5-45f3-93a6-c226e123ec42",
+        "name": "empty hands, not hol",
+        "prompt": "rough bandit brigand, scarred shirtless ruffian with a leather harness and fur-trimmed boots, wild dark hair and stubble, wielding a heavy iron axe, dull browns and muted reds, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-07T19:07:13.653407+00:00"
+      },
+      "folder": "empty_hands_not_hol",
+      "frames": {
+        "rotations": {
+          "south": "empty_hands_not_hol/rotations/south.png",
+          "south-east": "empty_hands_not_hol/rotations/south-east.png",
+          "east": "empty_hands_not_hol/rotations/east.png",
+          "north-east": "empty_hands_not_hol/rotations/north-east.png",
+          "north": "empty_hands_not_hol/rotations/north.png",
+          "north-west": "empty_hands_not_hol/rotations/north-west.png",
+          "west": "empty_hands_not_hol/rotations/west.png",
+          "south-west": "empty_hands_not_hol/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "fc100e40-3206-42c4-8022-1dce1b98a390",
+        "name": "a lean hooded road r",
+        "prompt": "rough bandit brigand, scarred shirtless ruffian with a leather harness and fur-trimmed boots, wild dark hair and stubble, wielding a heavy iron axe, dull browns and muted reds, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-07T19:49:32.041747+00:00"
+      },
+      "folder": "a_lean_hooded_road_r",
+      "frames": {
+        "rotations": {
+          "south": "a_lean_hooded_road_r/rotations/south.png",
+          "south-east": "a_lean_hooded_road_r/rotations/south-east.png",
+          "east": "a_lean_hooded_road_r/rotations/east.png",
+          "north-east": "a_lean_hooded_road_r/rotations/north-east.png",
+          "north": "a_lean_hooded_road_r/rotations/north.png",
+          "north-west": "a_lean_hooded_road_r/rotations/north-west.png",
+          "west": "a_lean_hooded_road_r/rotations/west.png",
+          "south-west": "a_lean_hooded_road_r/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "d74de53d-3668-4bbc-b5fb-7ce3c41f2afa",
+        "name": "a wiry masked cutthr",
+        "prompt": "rough bandit brigand, scarred shirtless ruffian with a leather harness and fur-trimmed boots, wild dark hair and stubble, wielding a heavy iron axe, dull browns and muted reds, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-07T19:49:33.377043+00:00"
+      },
+      "folder": "a_wiry_masked_cutthr",
+      "frames": {
+        "rotations": {
+          "south": "a_wiry_masked_cutthr/rotations/south.png",
+          "south-east": "a_wiry_masked_cutthr/rotations/south-east.png",
+          "east": "a_wiry_masked_cutthr/rotations/east.png",
+          "north-east": "a_wiry_masked_cutthr/rotations/north-east.png",
+          "north": "a_wiry_masked_cutthr/rotations/north.png",
+          "north-west": "a_wiry_masked_cutthr/rotations/north-west.png",
+          "west": "a_wiry_masked_cutthr/rotations/west.png",
+          "south-west": "a_wiry_masked_cutthr/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "e7062e8b-a094-44b4-99e8-17ed21fc57b6",
+        "name": "a ragged hedge-shama",
+        "prompt": "rough bandit brigand, scarred shirtless ruffian with a leather harness and fur-trimmed boots, wild dark hair and stubble, wielding a heavy iron axe, dull browns and muted reds, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-07T19:49:34.720977+00:00"
+      },
+      "folder": "a_ragged_hedge-shama",
+      "frames": {
+        "rotations": {
+          "south": "a_ragged_hedge-shama/rotations/south.png",
+          "south-east": "a_ragged_hedge-shama/rotations/south-east.png",
+          "east": "a_ragged_hedge-shama/rotations/east.png",
+          "north-east": "a_ragged_hedge-shama/rotations/north-east.png",
+          "north": "a_ragged_hedge-shama/rotations/north.png",
+          "north-west": "a_ragged_hedge-shama/rotations/north-west.png",
+          "west": "a_ragged_hedge-shama/rotations/west.png",
+          "south-west": "a_ragged_hedge-shama/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "0b74e7c0-a502-4ded-a9ac-cdfe5b9514f6",
+        "name": "a hulking scarred ba",
+        "prompt": "rough bandit brigand, scarred shirtless ruffian with a leather harness and fur-trimmed boots, wild dark hair and stubble, wielding a heavy iron axe, dull browns and muted reds, GBA Fire Emblem style, strong readable silhouette",
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-07T19:49:37.200396+00:00"
+      },
+      "folder": "a_hulking_scarred_ba",
+      "frames": {
+        "rotations": {
+          "south": "a_hulking_scarred_ba/rotations/south.png",
+          "south-east": "a_hulking_scarred_ba/rotations/south-east.png",
+          "east": "a_hulking_scarred_ba/rotations/east.png",
+          "north-east": "a_hulking_scarred_ba/rotations/north-east.png",
+          "north": "a_hulking_scarred_ba/rotations/north.png",
+          "north-west": "a_hulking_scarred_ba/rotations/north-west.png",
+          "west": "a_hulking_scarred_ba/rotations/west.png",
+          "south-west": "a_hulking_scarred_ba/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-07T19:53:40.967530"
+}

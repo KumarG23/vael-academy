@@ -26,7 +26,7 @@ FOLDER = {
     "brenna_general": "promoted_to_general",
     "wren_bishop": "promoted_to_bishop",
     "serra_general": "promoted_to_general",
-    "corin_sniper": "promoted_to_sniper_e",
+    "rina_sniper": "promoted_to_sniper_e",
     "perrin_paladin": "promoted_to_paladin",
     "dain_warrior": "promoted_to_warrior",
     "liora_sage": "promoted_to_sage_flo",

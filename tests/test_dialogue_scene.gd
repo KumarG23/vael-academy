@@ -32,7 +32,7 @@ func test_plays_the_sample_start_to_finish():
 		_scene.advance()
 		guard += 1
 	assert_true(_finished, "reached the end of the script")
-	assert_eq(_lines.size(), 4, "four spoken lines shown (Kai, Serra, Corin, Kai)")
+	assert_eq(_lines.size(), 4, "four spoken lines shown (Kai, Serra, Rina, Kai)")
 	assert_eq(_lines[0], "Kai: Emberwing, form up! The Mock Battle is ours to win.")
 	# give_item then start_battle fired.
 	assert_eq(_events.size(), 2)

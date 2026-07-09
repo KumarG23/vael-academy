@@ -3,7 +3,7 @@
 *Forest green & bronze · Stag · the western wilds · bows / reason magic · technique growths (SKL/RES)*
 *Culture: cunning, scholarly, pragmatic. Understand it before you touch it.*
 
-Companion to the other bibles. All-new roster (Thornrook had only Corin in the build). Corin (heir) is in `CHARACTER_BIBLE_HEADS.md`. Roster coverage: archer (Thessaly), mage (Corvin), scout/mobility (Marlow), research-healer (Vesper), and a martial outlier (Rurik) so the house isn't all soft-spoken intellect — full spread within the bow/reason/technique idiom.
+Companion to the other bibles. All-new roster (Thornrook had only Rina in the build). Rina (heir) is in `CHARACTER_BIBLE_HEADS.md`. Roster coverage: archer (Thessaly), mage (Corvin), scout/mobility (Marlow), research-healer (Vesper), and a martial outlier (Rurik) so the house isn't all soft-spoken intellect — full spread within the bow/reason/technique idiom.
 
 ---
 
@@ -53,7 +53,7 @@ Companion to the other bibles. All-new roster (Thornrook had only Corin in the b
 *head of house · knows more about the wardstones than anyone alive*
 
 - **Personality:** dry, patient, watchful — the archetypal old scholar, and the single most important adult NPC to the overarching mystery. As keeper of Thornrook's western archives, Alaric has read the fragments no one else connects (`WORLD_BIBLE.md` §3–4), and *strongly suspects* what Kai's arrival means. Doesn't tell him. Not out of malice — out of the scholar's caution that a half-understood truth handed to a frightened teenager does more harm than good.
-- **The stake:** he is the campaign's slow-drip information source — the one who knows, or nearly knows, and doles it out on the story's schedule. His restraint is a real ethical question the story can interrogate: is protecting Kai from the truth the same as controlling him? Corin, his own heir, is on the path to the same knowledge, which makes their dynamic quietly loaded.
+- **The stake:** he is the campaign's slow-drip information source — the one who knows, or nearly knows, and doles it out on the story's schedule. His restraint is a real ethical question the story can interrogate: is protecting Kai from the truth the same as controlling him? Rina, his own heir, is on the path to the same knowledge, which makes their dynamic quietly loaded.
 - **With Kai:** the mentor who holds the answer Kai most wants. Every conversation is a little bit of a chess game — Kai sensing there's more, Alaric deciding how much is safe. Their trust, if it forms, is the key that unlocks the mystery's middle act.
 
 ## Open / Placeholder List

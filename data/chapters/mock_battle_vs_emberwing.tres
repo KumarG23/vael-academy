@@ -166,7 +166,7 @@ enemy_spawns = Array[ExtResource("14_p8v0b")]([SubResource("Resource_ws2v5"), Su
 deploy_cells = Dictionary[String, Vector2i]({
 "bertram": Vector2i(3, 10),
 "brenna": Vector2i(2, 13),
-"corin": Vector2i(4, 12),
+"rina": Vector2i(4, 12),
 "corvin": Vector2i(6, 13),
 "dain": Vector2i(1, 13),
 "elowen": Vector2i(0, 13),

@@ -322,7 +322,7 @@ func _shoot(aim_global: Vector2) -> void:
 	await w.finished
 	await get_tree().create_timer(0.14).timeout
 	_pivot.rotation = _rest_rot
-	if _unit_id == "corin":
+	if _unit_id == "rina":
 		_beam(dest)  # spellbow: a green energy beam, not a plain arrow
 		await get_tree().create_timer(0.07).timeout
 		impact.emit()

@@ -4,7 +4,7 @@
     {
       "character": {
         "id": "5c583261-55cd-400c-9396-72832caad015",
-        "name": "corin",
+        "name": "rina",
         "prompt": "young female tactics-RPG archer heir, warm confident smile, auburn chestnut hair in two long braided twin tails with gold clasps, amber eyes, fair skin with freckles, forest green academy uniform jacket with bronze-gold trim and gold tie, brown leather quiver strap, elegant recurve bow in hand, GBA Fire Emblem style, strong readable silhouette",
         "size": {
           "width": 60,
@@ -15,17 +15,17 @@
         "view": "low top-down",
         "created_at": "2026-07-04T22:46:38.421139+00:00"
       },
-      "folder": "corin",
+      "folder": "rina",
       "frames": {
         "rotations": {
-          "south": "corin/rotations/south.png",
-          "south-east": "corin/rotations/south-east.png",
-          "east": "corin/rotations/east.png",
-          "north-east": "corin/rotations/north-east.png",
-          "north": "corin/rotations/north.png",
-          "north-west": "corin/rotations/north-west.png",
-          "west": "corin/rotations/west.png",
-          "south-west": "corin/rotations/south-west.png"
+          "south": "rina/rotations/south.png",
+          "south-east": "rina/rotations/south-east.png",
+          "east": "rina/rotations/east.png",
+          "north-east": "rina/rotations/north-east.png",
+          "north": "rina/rotations/north.png",
+          "north-west": "rina/rotations/north-west.png",
+          "west": "rina/rotations/west.png",
+          "south-west": "rina/rotations/south-west.png"
         },
         "animations": {}
       }

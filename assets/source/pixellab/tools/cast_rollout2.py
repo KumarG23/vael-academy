@@ -80,7 +80,7 @@ CAST = {
   "cw": "crouches and draws the spear far back, shield raised, coiling with veteran control",
   "cs": "steps in with a vaulting two-step thrust driving the spear through the strike point, then plants it and squares the shield"},
  # --- Thornrook ---
- "corin": {
+ "rina": {
   "desc": "poised young Thornrook leader girl, auburn hair in a long side braid, brown eyes, freckles, a white shirt with a forest-green vest and a bronze-gold cravat, an open reason tome glowing green" + STYLE,
   "idle": "holds the glowing green tome with quiet composure, pages stirring, a faint green light",
   "aw": "opens the tome as a swirling orb of green wind-magic gathers above her hand",

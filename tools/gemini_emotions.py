@@ -110,6 +110,18 @@ def main() -> None:
     args = sys.argv[1:]
     if not args:
         sys.exit(__doc__)
+    if args[0] == "--wave2":
+        wave2 = ["surprised", "smug", "worried", "determined"]
+        for base in sorted(PORTRAITS.glob("portrait_*.png")):
+            stem = base.stem.replace("portrait_", "")
+            if "_" in stem:
+                continue
+            missing = [e for e in wave2
+                       if not (PORTRAITS / f"portrait_{stem}_{e}.png").exists()]
+            if missing:
+                print(f"{stem}: {missing}")
+                run_unit(key, stem, missing)
+        return
     if args[0] == "--missing":
         for base in sorted(PORTRAITS.glob("portrait_*.png")):
             stem = base.stem.replace("portrait_", "")

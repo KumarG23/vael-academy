@@ -6,7 +6,7 @@ extends GutTest
 const LADDER := {
 	"kai": "warder_lord", "kael": "swordmaster", "brenna": "bastion",
 	"wren": "saint", "dain": "warrior", "liora": "pyromancer",
-	"perrin": "paladin", "serra_prologue": "leviathan", "corin": "spellbow",
+	"perrin": "paladin", "serra_prologue": "leviathan", "rina": "spellbow",
 }
 
 

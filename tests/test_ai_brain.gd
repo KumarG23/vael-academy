@@ -1,5 +1,5 @@
 extends GutTest
-## WO-1.3: Aggressor AI. Scoring (evaluate) is table-tested pure; decide() is
+## WO-1.3: Aggressor AI. Srinag (evaluate) is table-tested pure; decide() is
 ## tested on a small fixture board with real Unit nodes + the test map's terrain.
 
 
@@ -14,7 +14,7 @@ func _exchange(atk_hit, atk_dmg, def_can_counter, def_hit, def_dmg, atk_dbl := f
 	}
 
 
-# --- evaluate (pure scoring) --------------------------------------------------
+# --- evaluate (pure srinag) --------------------------------------------------
 
 func test_evaluate_expected_damage_and_score():
 	var ev := AIBrain.evaluate(_exchange(100, 10, true, 50, 6), 30)

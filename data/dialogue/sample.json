@@ -3,7 +3,7 @@
    "text": "Emberwing, form up! The Mock Battle is ours to win."},
   {"speaker": "Serra", "side": "right", "portrait": "serra", "expression": "neutral",
    "text": "Bold words. Tidemark holds the fort, and the fort holds the day."},
-  {"speaker": "Corin", "side": "right", "portrait": "corin", "expression": "neutral",
+  {"speaker": "Rina", "side": "right", "portrait": "rina", "expression": "neutral",
    "text": "Thornrook will simply watch you two exhaust each other. How efficient."},
   {"event": "give_item", "to": "Kael", "item": "vulnerary"},
   {"speaker": "Kai", "side": "left", "portrait": "kai", "expression": "neutral",

@@ -39,7 +39,7 @@ func test_player_spawns_replace_the_roster():
 		if u.team == 0:
 			players.append(u.unit_id())
 	players.sort()
-	assert_eq(players, ["corin", "kai", "perrin", "serra"],
+	assert_eq(players, ["kai", "perrin", "rina", "serra"],
 		"Kai + the three heir guests, not the Emberwing roster")
 	assert_null(_unit("kael"), "roster units don't ride along")
 
@@ -53,9 +53,9 @@ func test_heir_guests_match_their_bible_identities():
 	assert_eq(_unit("perrin").unit_def.house_id, "emberwing")
 	assert_eq(_unit("serra").unit_def.char_class.id, "knight")
 	assert_true(_unit("serra").unit_def.weapon.display_name.contains("Lance"))
-	assert_eq(_unit("corin").unit_def.char_class.id, "mage")
-	assert_gt(_unit("corin").stat("mag"), _unit("corin").stat("str"),
-		"Corin fights with reason magic")
+	assert_eq(_unit("rina").unit_def.char_class.id, "mage")
+	assert_gt(_unit("rina").stat("mag"), _unit("rina").stat("str"),
+		"Rina fights with reason magic")
 
 
 func test_bandit_force_spawned():

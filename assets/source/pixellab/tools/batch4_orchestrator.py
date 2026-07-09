@@ -10,7 +10,7 @@ import urllib.request
 SCRATCH = os.path.dirname(os.path.abspath(__file__))
 SRC_ROOT = "/Users/nealsharma/code/Vael Academy/assets/source/pixellab"
 
-EVOLVED = ["brenna_general", "wren_bishop", "serra_general", "corin_sniper",
+EVOLVED = ["brenna_general", "wren_bishop", "serra_general", "rina_sniper",
            "perrin_paladin", "dain_warrior", "liora_sage", "osric_general",
            "elowen_bishop", "isolde_sage", "fenn_sentinel", "bertram_sentinel",
            "thessaly_sniper", "corvin_sage", "marlow_assassin", "vesper_bishop",

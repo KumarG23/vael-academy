@@ -1,0 +1,11 @@
+{
+ "cid": "1beea603-131f-41c8-8603-1b3e2a9a6eca",
+ "cid_done": true,
+ "walk_east_queued": true,
+ "walk_north_queued": true,
+ "walk_south_queued": true,
+ "state_cid": "cdd44b41-2c33-4133-93aa-5a9b47bfd0be",
+ "anims_done": true,
+ "state_done": true,
+ "downloaded": true
+}

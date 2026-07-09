@@ -24,7 +24,7 @@ enum WeaponType { SWORD, AXE, LANCE, BOW, TOME, STAFF }
 
 
 ## AW-27: a non-tome weapon can be flagged magical too — a SPELLBOW fires arrows
-## (BOW type, in the Attack menu) but resolves as magic (MAG vs RES). Corin's
+## (BOW type, in the Attack menu) but resolves as magic (MAG vs RES). Rina's
 ## Stagward Longbow sets this.
 @export var magical: bool = false
 

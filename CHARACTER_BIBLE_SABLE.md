@@ -1,6 +1,6 @@
 # CHARACTER_BIBLE_SABLE.md — Sable, the Goofball Tiger *(draft — 2026-07)*
 
-Companion to the other bibles. Sable is **Corin's bonded beast** (`CHARACTER_BIBLE_HEADS.md` — Corin, Thornrook heir), a full unit that deploys and fights alongside her, not a summon. Forest-green tiger, black stripes, bronze eyes; a quadruped combat unit (sprite done; portrait done). *The tiger's name is Sable — the wry joke being she's named for the black of her stripes, not the green of her coat.*
+Companion to the other bibles. Sable is **Rina's bonded beast** (`CHARACTER_BIBLE_HEADS.md` — Rina, Thornrook heir), a full unit that deploys and fights alongside her, not a summon. Forest-green tiger, black stripes, bronze eyes; a quadruped combat unit (sprite done; portrait done). *The tiger's name is Sable — the wry joke being she's named for the black of her stripes, not the green of her coat.*
 
 ## Who she is
 
@@ -15,23 +15,23 @@ Companion to the other bibles. Sable is **Corin's bonded beast** (`CHARACTER_BIB
 - *(sitting on an objective)* "I'm not stuck. This is a *strategic loaf.*"
 - *(disbelief)* "You have GOT to be **kitten** me."
 - *(landing a crit / a kill)* "**Cat**-astrophic!"
-- *(Corin over-explaining)* "…I stopped listening at 'furthermore.'"
+- *(Rina over-explaining)* "…I stopped listening at 'furthermore.'"
 - *(pre-battle)* "Five more minutes. The enemy's not going anywhere. …Probably."
-- *(genuinely fierce, rare)* "Corin. Behind me. **Now.**" — no pun, and everyone notices.
+- *(genuinely fierce, rare)* "Rina. Behind me. **Now.**" — no pun, and everyone notices.
 
-## With Corin
+## With Rina
 
-Corin is dry, cerebral, three-moves-ahead; Sable is pure id and snack-logic — the odd-couple engine of the pair. Corin treats her simultaneously as a fascinating research subject *and* her closest friend; Sable treats Corin as her slightly-too-wordy human who is, regrettably, in charge of the snacks. Corin's clipped "Three moves ahead" landing right as Sable chases a butterfly is the recurring gag. Underneath: total trust. Sable's one no-pun line is always "behind me," and Corin always steps back.
+Rina is dry, cerebral, three-moves-ahead; Sable is pure id and snack-logic — the odd-couple engine of the pair. Rina treats her simultaneously as a fascinating research subject *and* her closest friend; Sable treats Rina as her slightly-too-wordy human who is, regrettably, in charge of the snacks. Rina's clipped "Three moves ahead" landing right as Sable chases a butterfly is the recurring gag. Underneath: total trust. Sable's one no-pun line is always "behind me," and Rina always steps back.
 
 ## Combat
 
-- A **bonded companion unit**: deploys *free* alongside Corin (proposed: doesn't cost a deploy slot), a fast melee flanker guarding the ranged heir. Proposed rule: retreats/downs if Corin falls.
-- Signature synergy — **Pack Hunter:** bonus when she attacks the same target Corin threatens (pairs with Corin's *Three Moves Ahead*, which crits foes Sable menaces).
+- A **bonded companion unit**: deploys *free* alongside Rina (proposed: doesn't cost a deploy slot), a fast melee flanker guarding the ranged heir. Proposed rule: retreats/downs if Rina falls.
+- Signature synergy — **Pack Hunter:** bonus when she attacks the same target Rina threatens (pairs with Rina's *Three Moves Ahead*, which crits foes Sable menaces).
 - Vulnerable to the same **Hunter's Instinct** (Rurik) "+damage vs beasts" idea — a nice wrinkle if she's ever charmed/turned, and it means beast-slayers matter.
 
 ## Open / to decide
 
 - Portrait: keep the little green jacket (leans into the talking-goof read) or a clean all-beast version.
-- Does she *speak aloud* to everyone, or is it "Corin (and the player) understand her"? Leaning: everyone hears her, and reactions to a talking tiger are half the comedy.
+- Does she *speak aloud* to everyone, or is it "Rina (and the player) understand her"? Leaning: everyone hears her, and reactions to a talking tiger are half the comedy.
 - Support conversations (Sable ↔ other students) — huge comedic upside.
 - Exact deploy/loss rules for a bonded unit (needs the engine work).

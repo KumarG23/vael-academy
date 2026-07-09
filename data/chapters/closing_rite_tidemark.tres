@@ -19,7 +19,7 @@
 [ext_resource type="Resource" path="res://data/units/thessaly.tres" id="17_iqjfm"]
 [ext_resource type="Resource" path="res://data/units/corvin.tres" id="18_yp0kq"]
 [ext_resource type="Resource" path="res://data/units/vesper.tres" id="19_pvlgy"]
-[ext_resource type="Resource" path="res://data/units/corin.tres" id="20_p1e7g"]
+[ext_resource type="Resource" path="res://data/units/rina.tres" id="20_p1e7g"]
 [ext_resource type="Resource" path="res://data/units/kael.tres" id="21_5end8"]
 [ext_resource type="Resource" path="res://data/units/dain.tres" id="22_hx57n"]
 [ext_resource type="Resource" path="res://data/units/liora.tres" id="23_3uv0p"]
@@ -212,7 +212,7 @@ enemy_spawns = Array[ExtResource("14_s31bl")]([SubResource("Resource_uivl3"), Su
 deploy_cells = Dictionary[String, Vector2i]({
 "bertram": Vector2i(3, 10),
 "brenna": Vector2i(2, 13),
-"corin": Vector2i(4, 12),
+"rina": Vector2i(4, 12),
 "corvin": Vector2i(6, 13),
 "dain": Vector2i(1, 13),
 "elowen": Vector2i(0, 13),

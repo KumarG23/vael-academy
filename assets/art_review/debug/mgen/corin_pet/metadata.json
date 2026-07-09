@@ -1,0 +1,32 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "a48a15e5-aea5-4815-9c5c-fca5d33076f0",
+        "name": "a large muscular tiger with deep forest-green fur and bold black stripes, bronze eyes, fierce hunting beast",
+        "prompt": "a large muscular tiger with deep forest-green fur and bold black stripes, bronze eyes, fierce hunting beast",
+        "size": {
+          "width": 68,
+          "height": 68
+        },
+        "template_id": "cat",
+        "directions": 4,
+        "view": "low top-down",
+        "created_at": "2026-07-07T19:49:38.464023+00:00"
+      },
+      "folder": "a_large_muscular_tiger_with_deep_forest-green_fur",
+      "frames": {
+        "rotations": {
+          "south": "a_large_muscular_tiger_with_deep_forest-green_fur/rotations/south.png",
+          "west": "a_large_muscular_tiger_with_deep_forest-green_fur/rotations/west.png",
+          "east": "a_large_muscular_tiger_with_deep_forest-green_fur/rotations/east.png",
+          "north": "a_large_muscular_tiger_with_deep_forest-green_fur/rotations/north.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-07T19:50:42.177100"
+}

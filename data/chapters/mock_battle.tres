@@ -22,7 +22,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/stump.png" id="12_myhfq"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/signpost.png" id="13_1gi5r"]
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="23_t5ycu"]
-[ext_resource type="Resource" path="res://data/units/corin.tres" id="30_thc"]
+[ext_resource type="Resource" path="res://data/units/rina.tres" id="30_thc"]
 [ext_resource type="Resource" path="res://data/units/thessaly.tres" id="31_tht"]
 [ext_resource type="Resource" path="res://data/units/corvin.tres" id="32_thv"]
 [ext_resource type="Resource" path="res://data/units/marlow.tres" id="33_thm"]
@@ -226,7 +226,7 @@ deploy_cells = Dictionary[String, Vector2i]({
 "kai": Vector2i(2, 12),
 "liora": Vector2i(2, 11),
 "serra": Vector2i(3, 11),
-"corin": Vector2i(4, 12),
+"rina": Vector2i(4, 12),
 "osric": Vector2i(0, 12),
 "elowen": Vector2i(0, 13),
 "isolde": Vector2i(1, 11),

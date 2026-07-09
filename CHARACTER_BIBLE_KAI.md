@@ -55,7 +55,7 @@ Worth being deliberate about: Kael should be his easiest, earliest connection be
 
 Mechanically, this is the existing support system (`MASTER_PLAN.md` §4) — proximity-based points, C/B/A ranks, combat bonuses that scale with rank, built to support any pair, not one fixed duo. The fictional layer should match that: whoever the player actually has Kai talk to and fight near becomes his closest bond, not whoever the script assumes.
 
-On romance: **every student is romanceable** — any of Kai's bonds can turn romantic past the top support rank if the player pursues it, and none are forced. Among the three heirs (the marquee arcs), two are female (Serra, Corin) and one male (Perrin). Given the cast is 15–18, keep any romantic beats at the level the genre already lives at — crushes, a blush, a confession — nothing more mature.
+On romance: **every student is romanceable** — any of Kai's bonds can turn romantic past the top support rank if the player pursues it, and none are forced. Among the three heirs (the marquee arcs), two are female (Serra, Rina) and one male (Perrin). Given the cast is 15–18, keep any romantic beats at the level the genre already lives at — crushes, a blush, a confession — nothing more mature.
 
 - **Kael** — easiest, earliest bond, for the reason above.
 - **Brenna** — a noble oddball in a swords-and-cavalry house; likely relates to Kai's own not-fitting-the-mold, from the opposite direction.

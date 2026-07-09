@@ -4,7 +4,7 @@ Companion to `WORLD_BIBLE.md`, `ACADEMY_BIBLE.md`, `CAMPAIGN_STRUCTURE.md`. The 
 
 **Structural note:** whichever house the player picks, that heir is a *housemate and ally*; the other two lead the rival forces at the inter-house battles. All three must read as sympathetic rivals, never villains — they're future lords of the same kingdom.
 
-**Romance:** all students are romanceable regardless of gender — heirs included, a pool of 18 (3 heirs + 15 house students); the per-character notes (here and in the house bibles) describe the *tone* of each romance, not whether it's available. The three heirs are the marquee arcs, set at **two female (Serra, Corin) and one male (Perrin)**. Keep everything at genre level — crushes, confessions — cast is 15–18.
+**Romance:** all students are romanceable regardless of gender — heirs included, a pool of 18 (3 heirs + 15 house students); the per-character notes (here and in the house bibles) describe the *tone* of each romance, not whether it's available. The three heirs are the marquee arcs, set at **two female (Serra, Rina) and one male (Perrin)**. Keep everything at genre level — crushes, confessions — cast is 15–18.
 
 ---
 
@@ -30,7 +30,7 @@ Companion to `WORLD_BIBLE.md`, `ACADEMY_BIBLE.md`, `CAMPAIGN_STRUCTURE.md`. The 
 - **With Kai:** the slowest, most-earned bond. She starts by treating him as a variable to be managed; the arc is her coming to see the person, and being quietly changed by someone who does the right thing on instinct without any rulebook at all. Romance candidate — the thaw is the whole appeal; her walls come down a brick at a time.
 - **As a rival (if unpicked):** the boss the game already has — holds the fort, never chases, punishes overextension. Yields with grave respect, not rancor.
 
-## Corin — Heir of Thornrook
+## Rina — Heir of Thornrook
 *Forest green & bronze · Stag · the western wilds · bows / reason magic / technique (SKL/RES)*
 
 - **Role:** reason mage (or mage-archer flex) — ranged, precise, cerebral. Thornrook's mind on the field.
@@ -43,6 +43,6 @@ Companion to `WORLD_BIBLE.md`, `ACADEMY_BIBLE.md`, `CAMPAIGN_STRUCTURE.md`. The 
 ---
 
 ## Open / Placeholder List
-- Whether Perrin/Serra/Corin are recruitable into Kai's house in a *later* campaign (cross-house recruiting is parked in `MASTER_PLAN.md` §11) — for now, the unpicked two stay rivals.
+- Whether Perrin/Serra/Rina are recruitable into Kai's house in a *later* campaign (cross-house recruiting is parked in `MASTER_PLAN.md` §11) — for now, the unpicked two stay rivals.
 - Family names / regional titles for each house (tied to the kingdom-name placeholder)
 - Which one (if any) is the "canonical" romance for marketing/art priority — or none, all equal.

@@ -29,7 +29,7 @@
 >   hair-thin, silver or electric blue — never scar-like cheek strokes.
 >   Best-of-batch: seed 2127 (kai_v2e, blue crack, correct placement).
 >   Exact micro-placement remains AW-4 inpainting work as always planned.
-> - Corin/Serra Animagine versions exist (seeds 2125/2126) matching their
+> - Rina/Serra Animagine versions exist (seeds 2125/2126) matching their
 >   approved Pole A identities (704/902) — the leads match the cast now.
 > - Portrait seeds are FIXED per character (v2 batch: 2101–2128,
 >   `tools/comfy_portraits_v2.py`); reruns change the prompt, keep the seed
@@ -160,7 +160,7 @@
 > and battle animations under its painted busts**. The bible therefore governs
 > three tiers:
 > 1. **Painted tier (this document, AW-1):** dialogue busts, splashes, map
->    backdrops, rooms, vistas — approved register stands (Corin-704, vivid
+>    backdrops, rooms, vistas — approved register stands (Rina-704, vivid
 >    environments).
 > 2. **Sprite tier (spec finalized by AW-7 pilot):** battle units + campus
 >    avatars/NPCs — chunky stylized sprites ~48–64px, idle/walk×4-dir/attack/hit/KO
@@ -186,7 +186,7 @@
 > rig is the free upgrade path if jointed walk cycles are ever wanted. No paid
 > software anywhere in the pipeline.
 
-> **v3 (2026-07-04):** Neal picked Pole A with Corin seed 704 as the reference ("95%
+> **v3 (2026-07-04):** Neal picked Pole A with Rina seed 704 as the reference ("95%
 > perfect"), asked for the cast to be **normalized to her register** plus a **+5%
 > charm dial** on the heroines, and confirmed the **vivid environment pole** via the
 > feast hall. v3 delivers the normalized template (seeds 901/902/904/905 — which
@@ -263,7 +263,7 @@ umbers `#1a1417`–`#2b2026`). Environments: saturated storybook greens/earths.
 > game art[, charming and graceful — heroines only, the +5% dial]
 >
 > extra negative: `painterly, heavy shading, muted colors` (+ `armor, pauldrons`
-> for non-armored characters; + `antlers, horns, forest, trees` for Corin/Thornrook)
+> for non-armored characters; + `antlers, horns, forest, trees` for Rina/Thornrook)
 
 **CHARACTER PORTRAIT — POLE B "full anime" (Animagine; exemplars 801/802)**
 > masterpiece, best quality, very aesthetic, [1girl/1boy], waist-up portrait,
@@ -326,12 +326,12 @@ umbers `#1a1417`–`#2b2026`). Environments: saturated storybook greens/earths.
 4. **"Map" pulls toward VTT clip-art** (seed 302). Describe a landscape from above.
 5. **Ages skew up** on DreamShaper ("young soldier" reads 25+; say "16 year old
    academy student") and **down** on Animagine (everyone reads younger).
-6. **Ornament nouns get literal**: "antler ornament" grew antlers from Corin's head
+6. **Ornament nouns get literal**: "antler ornament" grew antlers from Rina's head
    (seeds 701/702/704-adjacent) — use "small golden stag brooch on her collar" and
    negative `antlers, horns`.
 7. **Animagine is weak at full-body standees** (seed 803: faceless) — use Pole A for
    standees regardless of the portrait pole.
-7b. **Green palettes pull forest backgrounds** (Corin 901, archer standee 905) even
+7b. **Green palettes pull forest backgrounds** (Rina 901, archer standee 905) even
    with `forest, trees` in the negative — production portraits/standees must be
    QC'd for background drift and regenerated until the flat background holds.
 7c. **Small identity details don't render from text** (Kai's silver temple mark,
@@ -347,8 +347,8 @@ umbers `#1a1417`–`#2b2026`). Environments: saturated storybook greens/earths.
 **v2 (current direction):**
 | Template | Exemplars |
 |---|---|
-| Portrait, Pole A (rec) | kai 703 · corin 704 · serra 706 |
-| Portrait, Pole B | corin 801 · kai 802 |
+| Portrait, Pole A (rec) | kai 703 · rina 704 · serra 706 |
+| Portrait, Pole B | rina 801 · kai 802 |
 | Standee (Pole A) | soldier 705 |
 | Splash (Pole A) | sword 707 |
 | Backdrop, vivid | field 708 |
@@ -374,9 +374,9 @@ exist — programmer art was built first precisely so these are art-only swaps:
 
 ## 8. Sign-off state
 
-- ~~Character pole~~ **DECIDED: Pole A, Corin-704 register, +5% charm.**
-  v3 normalized the cast (902 Serra and 904 Kai approved; 901 Corin REJECTED —
-  "riding the edge of anime-ish and realistic"). **Corin 704 is the canonical
+- ~~Character pole~~ **DECIDED: Pole A, Rina-704 register, +5% charm.**
+  v3 normalized the cast (902 Serra and 904 Kai approved; 901 Rina REJECTED —
+  "riding the edge of anime-ish and realistic"). **Rina 704 is the canonical
   face reference.** QC rule: every face must read *fully drawn*; anything sliding
   semi-real is rerolled, no exceptions (901 is the kept out-of-range example).
 - ~~Environment pole~~ **DECIDED (v2 review): vivid stylized** (feast hall 709

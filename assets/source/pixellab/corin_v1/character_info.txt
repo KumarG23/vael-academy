@@ -1,6 +1,6 @@
 status: completed
 id: 5c583261-55cd-400c-9396-72832caad015
-name: corin
+name: rina
 directions: 8 (south, east, north, west, south-east, north-east, north-west, south-west)
 size: 60x60px
 view: low top-down

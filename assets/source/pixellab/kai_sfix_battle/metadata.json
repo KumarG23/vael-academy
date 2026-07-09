@@ -1,0 +1,243 @@
+{
+  "group_id": "82cfe06f-8aef-4e1f-86be-3eb379f69035",
+  "states": [
+    {
+      "character": {
+        "id": "1beea603-131f-41c8-8603-1b3e2a9a6eca",
+        "name": "kai_v2_crown",
+        "prompt": "full body young male academy lord standing, wearing a dark navy military dress uniform coat with gold epaulettes and gold trim, dark trousers and boots, a small red cravat at the white collar, black hair with vivid green highlight streaks, warm brown skin, heroic adventurer proportions, complete figure head to feet",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-09T16:50:27.776928+00:00"
+      },
+      "folder": "kai_v2_crown",
+      "frames": {
+        "rotations": {
+          "south": "kai_v2_crown/rotations/south.png",
+          "south-east": "kai_v2_crown/rotations/south-east.png",
+          "east": "kai_v2_crown/rotations/east.png",
+          "north-east": "kai_v2_crown/rotations/north-east.png",
+          "north": "kai_v2_crown/rotations/north.png",
+          "north-west": "kai_v2_crown/rotations/north-west.png",
+          "west": "kai_v2_crown/rotations/west.png",
+          "south-west": "kai_v2_crown/rotations/south-west.png"
+        },
+        "animations": {
+          "walk_north": {
+            "north": [
+              "kai_v2_crown/animations/walk_north/north/frame_000.png",
+              "kai_v2_crown/animations/walk_north/north/frame_001.png",
+              "kai_v2_crown/animations/walk_north/north/frame_002.png",
+              "kai_v2_crown/animations/walk_north/north/frame_003.png",
+              "kai_v2_crown/animations/walk_north/north/frame_004.png",
+              "kai_v2_crown/animations/walk_north/north/frame_005.png",
+              "kai_v2_crown/animations/walk_north/north/frame_006.png",
+              "kai_v2_crown/animations/walk_north/north/frame_007.png",
+              "kai_v2_crown/animations/walk_north/north/frame_008.png"
+            ]
+          },
+          "walk_east": {
+            "east": [
+              "kai_v2_crown/animations/walk_east/east/frame_000.png",
+              "kai_v2_crown/animations/walk_east/east/frame_001.png",
+              "kai_v2_crown/animations/walk_east/east/frame_002.png",
+              "kai_v2_crown/animations/walk_east/east/frame_003.png",
+              "kai_v2_crown/animations/walk_east/east/frame_004.png",
+              "kai_v2_crown/animations/walk_east/east/frame_005.png",
+              "kai_v2_crown/animations/walk_east/east/frame_006.png",
+              "kai_v2_crown/animations/walk_east/east/frame_007.png",
+              "kai_v2_crown/animations/walk_east/east/frame_008.png"
+            ]
+          },
+          "walk_south_v2": {
+            "south": [
+              "kai_v2_crown/animations/walk_south_v2/south/frame_000.png",
+              "kai_v2_crown/animations/walk_south_v2/south/frame_001.png",
+              "kai_v2_crown/animations/walk_south_v2/south/frame_002.png",
+              "kai_v2_crown/animations/walk_south_v2/south/frame_003.png",
+              "kai_v2_crown/animations/walk_south_v2/south/frame_004.png",
+              "kai_v2_crown/animations/walk_south_v2/south/frame_005.png",
+              "kai_v2_crown/animations/walk_south_v2/south/frame_006.png",
+              "kai_v2_crown/animations/walk_south_v2/south/frame_007.png",
+              "kai_v2_crown/animations/walk_south_v2/south/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "cdd44b41-2c33-4133-93aa-5a9b47bfd0be",
+        "name": "empty hands, not hol",
+        "prompt": "full body young male academy lord standing, wearing a dark navy military dress uniform coat with gold epaulettes and gold trim, dark trousers and boots, a small red cravat at the white collar, black hair with vivid green highlight streaks, warm brown skin, heroic adventurer proportions, complete figure head to feet",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-09T16:54:45.000708+00:00"
+      },
+      "folder": "empty_hands_not_hol",
+      "frames": {
+        "rotations": {
+          "south": "empty_hands_not_hol/rotations/south.png",
+          "south-east": "empty_hands_not_hol/rotations/south-east.png",
+          "east": "empty_hands_not_hol/rotations/east.png",
+          "north-east": "empty_hands_not_hol/rotations/north-east.png",
+          "north": "empty_hands_not_hol/rotations/north.png",
+          "north-west": "empty_hands_not_hol/rotations/north-west.png",
+          "west": "empty_hands_not_hol/rotations/west.png",
+          "south-west": "empty_hands_not_hol/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "4f31ac7c-0b30-45bc-8db4-af80cf00101a",
+        "name": "school uniform outfi",
+        "prompt": "full body young male academy lord standing, wearing a dark navy military dress uniform coat with gold epaulettes and gold trim, dark trousers and boots, a small red cravat at the white collar, black hair with vivid green highlight streaks, warm brown skin, heroic adventurer proportions, complete figure head to feet",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-09T17:51:09.27065+00:00"
+      },
+      "folder": "school_uniform_outfi",
+      "frames": {
+        "rotations": {
+          "south": "school_uniform_outfi/rotations/south.png",
+          "south-east": "school_uniform_outfi/rotations/south-east.png",
+          "east": "school_uniform_outfi/rotations/east.png",
+          "north-east": "school_uniform_outfi/rotations/north-east.png",
+          "north": "school_uniform_outfi/rotations/north.png",
+          "north-west": "school_uniform_outfi/rotations/north-west.png",
+          "west": "school_uniform_outfi/rotations/west.png",
+          "south-west": "school_uniform_outfi/rotations/south-west.png"
+        },
+        "animations": {
+          "walk_east": {
+            "east": [
+              "school_uniform_outfi/animations/walk_east/east/frame_000.png",
+              "school_uniform_outfi/animations/walk_east/east/frame_001.png",
+              "school_uniform_outfi/animations/walk_east/east/frame_002.png",
+              "school_uniform_outfi/animations/walk_east/east/frame_003.png",
+              "school_uniform_outfi/animations/walk_east/east/frame_004.png",
+              "school_uniform_outfi/animations/walk_east/east/frame_005.png",
+              "school_uniform_outfi/animations/walk_east/east/frame_006.png",
+              "school_uniform_outfi/animations/walk_east/east/frame_007.png",
+              "school_uniform_outfi/animations/walk_east/east/frame_008.png"
+            ]
+          },
+          "walk_north": {
+            "north": [
+              "school_uniform_outfi/animations/walk_north/north/frame_000.png",
+              "school_uniform_outfi/animations/walk_north/north/frame_001.png",
+              "school_uniform_outfi/animations/walk_north/north/frame_002.png",
+              "school_uniform_outfi/animations/walk_north/north/frame_003.png",
+              "school_uniform_outfi/animations/walk_north/north/frame_004.png",
+              "school_uniform_outfi/animations/walk_north/north/frame_005.png",
+              "school_uniform_outfi/animations/walk_north/north/frame_006.png",
+              "school_uniform_outfi/animations/walk_north/north/frame_007.png",
+              "school_uniform_outfi/animations/walk_north/north/frame_008.png"
+            ]
+          },
+          "walk_south_v2": {
+            "south": [
+              "school_uniform_outfi/animations/walk_south_v2/south/frame_000.png",
+              "school_uniform_outfi/animations/walk_south_v2/south/frame_001.png",
+              "school_uniform_outfi/animations/walk_south_v2/south/frame_002.png",
+              "school_uniform_outfi/animations/walk_south_v2/south/frame_003.png",
+              "school_uniform_outfi/animations/walk_south_v2/south/frame_004.png",
+              "school_uniform_outfi/animations/walk_south_v2/south/frame_005.png",
+              "school_uniform_outfi/animations/walk_south_v2/south/frame_006.png",
+              "school_uniform_outfi/animations/walk_south_v2/south/frame_007.png",
+              "school_uniform_outfi/animations/walk_south_v2/south/frame_008.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "5c1a99ac-d698-46e8-9b88-3d22ebdf0e6a",
+        "name": "flamboyant festival",
+        "prompt": "full body young male academy lord standing, wearing a dark navy military dress uniform coat with gold epaulettes and gold trim, dark trousers and boots, a small red cravat at the white collar, black hair with vivid green highlight streaks, warm brown skin, heroic adventurer proportions, complete figure head to feet",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-07-09T17:51:15.475109+00:00"
+      },
+      "folder": "flamboyant_festival",
+      "frames": {
+        "rotations": {
+          "south": "flamboyant_festival/rotations/south.png",
+          "south-east": "flamboyant_festival/rotations/south-east.png",
+          "east": "flamboyant_festival/rotations/east.png",
+          "north-east": "flamboyant_festival/rotations/north-east.png",
+          "north": "flamboyant_festival/rotations/north.png",
+          "north-west": "flamboyant_festival/rotations/north-west.png",
+          "west": "flamboyant_festival/rotations/west.png",
+          "south-west": "flamboyant_festival/rotations/south-west.png"
+        },
+        "animations": {
+          "walk_south_v2": {
+            "south": [
+              "flamboyant_festival/animations/walk_south_v2/south/frame_000.png",
+              "flamboyant_festival/animations/walk_south_v2/south/frame_001.png",
+              "flamboyant_festival/animations/walk_south_v2/south/frame_002.png",
+              "flamboyant_festival/animations/walk_south_v2/south/frame_003.png",
+              "flamboyant_festival/animations/walk_south_v2/south/frame_004.png",
+              "flamboyant_festival/animations/walk_south_v2/south/frame_005.png",
+              "flamboyant_festival/animations/walk_south_v2/south/frame_006.png",
+              "flamboyant_festival/animations/walk_south_v2/south/frame_007.png",
+              "flamboyant_festival/animations/walk_south_v2/south/frame_008.png"
+            ]
+          },
+          "walk_north": {
+            "north": [
+              "flamboyant_festival/animations/walk_north/north/frame_000.png",
+              "flamboyant_festival/animations/walk_north/north/frame_001.png",
+              "flamboyant_festival/animations/walk_north/north/frame_002.png",
+              "flamboyant_festival/animations/walk_north/north/frame_003.png",
+              "flamboyant_festival/animations/walk_north/north/frame_004.png",
+              "flamboyant_festival/animations/walk_north/north/frame_005.png",
+              "flamboyant_festival/animations/walk_north/north/frame_006.png",
+              "flamboyant_festival/animations/walk_north/north/frame_007.png",
+              "flamboyant_festival/animations/walk_north/north/frame_008.png"
+            ]
+          },
+          "walk_east": {
+            "east": [
+              "flamboyant_festival/animations/walk_east/east/frame_000.png",
+              "flamboyant_festival/animations/walk_east/east/frame_001.png",
+              "flamboyant_festival/animations/walk_east/east/frame_002.png",
+              "flamboyant_festival/animations/walk_east/east/frame_003.png",
+              "flamboyant_festival/animations/walk_east/east/frame_004.png",
+              "flamboyant_festival/animations/walk_east/east/frame_005.png",
+              "flamboyant_festival/animations/walk_east/east/frame_006.png",
+              "flamboyant_festival/animations/walk_east/east/frame_007.png",
+              "flamboyant_festival/animations/walk_east/east/frame_008.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-07-09T19:14:46.440493"
+}

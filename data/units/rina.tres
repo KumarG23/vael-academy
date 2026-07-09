@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="UnitDef" format=3]
+
+[ext_resource type="Resource" path="res://data/classes/mage.tres" id="1_crncl"]
+[ext_resource type="Script" path="res://src/combat/weapon_def.gd" id="2_crnwp"]
+[ext_resource type="Script" path="res://src/units/unit_def.gd" id="3_crnud"]
+[ext_resource type="Resource" path="res://data/classes/spellbow.tres" id="9_promocori"]
+[ext_resource type="Resource" path="res://data/weapons/sig_rina.tres" id="4_crnfr"]
+[ext_resource type="Script" path="res://src/progression/skill_def.gd" id="5_skdef"]
+[ext_resource type="Resource" path="res://data/skills/pack_hunter.tres" id="6_crnph"]
+
+[resource]
+script = ExtResource("3_crnud")
+id = "rina"
+display_name = "Rina"
+promotion_class = ExtResource("9_promocori")
+char_class = ExtResource("1_crncl")
+house_id = "thornrook"
+weapon = ExtResource("4_crnfr")
+personal_skills = Array[ExtResource("5_skdef")]([ExtResource("6_crnph")])
+level = 2
+max_hp = 20
+strength = 2
+magic = 8
+skill = 10
+speed = 7
+luck = 5
+defense = 3
+resistance = 7
+movement = 5
+growth_hp = 55
+growth_str = 5
+growth_mag = 50
+growth_skl = 55
+growth_spd = 40
+growth_lck = 35
+growth_def = 20
+growth_res = 45
