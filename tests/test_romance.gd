@@ -196,7 +196,7 @@ func test_portrait_resolves_emotion_variants_with_base_fallback():
 	assert_eq(DialogueScene.portrait_path("liora", "happy"),
 		"res://assets/portraits/portrait_liora_happy.png",
 		"the happy variant serves her happy lines")
-	assert_eq(DialogueScene.portrait_path("liora", "smug"),
+	assert_eq(DialogueScene.portrait_path("liora", "sleepy"),
 		"res://assets/portraits/portrait_liora.png",
 		"an expression with no art falls back to the base")
 	assert_eq(DialogueScene.portrait_path("liora", "neutral"),

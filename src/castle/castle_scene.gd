@@ -717,14 +717,70 @@ func _do_mission(index: int) -> void:
 		get_tree().change_scene_to_file(scene)
 
 
+## AW-64: the report-card chest, scaled to rank (GRADING_SYSTEM.md §4).
+const RANK_REWARD_GOLD := {"S": 400, "A": 250, "B": 150, "C": 80, "D": 40}
+## DRAFT ceremony lines per teacher per rank — in bible voice; co-write polishes.
+const CEREMONY_LINES := {
+	"callan": {
+		"S": "Top of the year. TOP of the year! I've commanded soldiers twice your age with half your marks — don't you dare get comfortable about it.",
+		"A": "Distinguished. That's the academy's word — mine is 'proud', and I don't spend it often.",
+		"B": "Accomplished. Solid, dependable, room to climb. The climb's the fun part, kid.",
+		"C": "Passing. You and I both know the margins got lucky. Next term we make luck unnecessary.",
+		"D": "Faltering. I've been where you're standing, so hear me: this is a floor, not a verdict. Up we go.",
+	},
+	"maren": {
+		"S": "Ascendant. The doctrine asks for excellence and you have answered it precisely. The academy notes it. So do I.",
+		"A": "Distinguished. Nearly exact. You know my feelings on 'nearly' — but today, accept the commendation.",
+		"B": "Accomplished. Adequate plus effort. The next rank requires discipline you have not yet shown me.",
+		"C": "Passing. The academy passes you; I reserve judgment. Structure your weeks better.",
+		"D": "Faltering. This will be corrected. Report to the library each evening — consider it doctrine.",
+	},
+	"alaric": {
+		"S": "Every column, exact. Curious minds usually scatter; yours gathers. The deep shelves will be expecting you.",
+		"A": "Distinguished. The errors you did make were interesting ones — that matters more than you know.",
+		"B": "Accomplished. A sturdy shelf, if not yet a full one. Keep filling it.",
+		"C": "Passing. Read slower. Half-understood pages start wars — and worse, bad essays.",
+		"D": "Faltering. The books are patient, boy — more patient than the faculty. Begin again with the thin ones.",
+	},
+}
+
+
 func _rest_week() -> void:
+	var sem_before := Campaign.semester
 	Campaign.advance_week()
 	_refresh_date()
+	if Campaign.semester != sem_before:
+		_play_report_card()  # AW-64: the term closed — the ceremony, not a toast
+		return
 	var e := Campaign.current_event()
 	if e != null and e.kind == CalendarEventDef.Kind.HOLIDAY:
 		_toast("It's %s! The whole castle is celebrating." % e.label)
 	else:
 		_toast("A week passes at Vael...")
+
+
+## AW-64: the end-of-semester Report Card — your house's teacher delivers the
+## rank in their own voice, and the reward chest lands (gold; a rare seal at S).
+func _play_report_card() -> void:
+	if Campaign.report_cards.is_empty():
+		return
+	var rc: Dictionary = Campaign.report_cards[-1]
+	var rank := str(rc["rank"])
+	var t := _teacher()
+	var line: String = CEREMONY_LINES[t["id"]].get(rank, "The term is done.")
+	var expr := "happy" if rank in ["S", "A"] else ("neutral" if rank == "B" else ("worried" if rank == "C" else "angry"))
+	var gold: int = RANK_REWARD_GOLD.get(rank, 50)
+	Campaign.flags["gold"] = int(Campaign.flags.get("gold", 0)) + gold
+	var reward_text := "Kai received %d gold for the term." % gold
+	if rank == "S" and Campaign.grant_item("kai", "res://data/items/promotion_seal.tres"):
+		reward_text += "  And for an Ascendant year — a Promotion Seal."
+	var steps: Array = [
+		{"speaker": t["name"], "side": "right", "portrait": t["id"], "expression": expr,
+			"text": "Semester %d closes. Your standing: %s — %s (%d)." % [int(rc["semester"]), rank, str(rc["rank_name"]), int(rc["score"])]},
+		{"speaker": t["name"], "side": "right", "portrait": t["id"], "expression": expr, "text": line},
+		{"speaker": t["name"], "side": "right", "portrait": t["id"], "text": reward_text},
+	]
+	_play_dialogue_json(JSON.stringify(steps))
 
 
 func _open_hall_archive() -> void:
@@ -826,8 +882,10 @@ func _on_quiz_done(correct: int, total: int) -> void:
 	var t := _teacher()
 	var lines: Array = TEACHER_REACTIONS[t["id"]]
 	var tier := 0 if pct >= 100 else (1 if pct >= 75 else (2 if pct >= 50 else (3 if pct > 0 else 4)))
+	# AW-63: the teacher WEARS the reaction — emotion portraits per score tier
+	var expr: String = ["happy", "happy", "neutral", "worried", "angry"][tier]
 	var steps: Array = [{"speaker": t["name"], "side": "right", "portrait": t["id"],
-		"text": "%s  (Score: %d%%)" % [lines[tier], pct]}]
+		"expression": expr, "text": "%s  (Score: %d%%)" % [lines[tier], pct]}]
 	# a perfect slate earns a spellbook (SPELLBOOKS.md) — one school at a time
 	if pct >= 100:
 		var award := _next_spellbook()

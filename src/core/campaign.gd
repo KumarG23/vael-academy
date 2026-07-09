@@ -146,6 +146,25 @@ func close_semester() -> void:
 	grade_samples = {"quiz_scores": [], "battle_scores": [], "arena_best_wave": 0, "conduct_points": 0}
 
 
+## AW-64: award a consumable/item into a unit's persisted kit (report-card
+## chest at rank S). Same channel as grant_weapon.
+func grant_item(id: String, item_path: String) -> bool:
+	var def := _roster_def(id)
+	if def == null or not ResourceLoader.exists(item_path):
+		return false
+	var u := Unit.new()
+	u.setup(def.duplicate(), Grid.new(1, 1), Vector2i.ZERO)
+	if has_unit_state(id):
+		u.apply_progression_state(get_unit_state(id))
+	if u.inventory.is_full():
+		u.free()
+		return false
+	u.inventory.add(InventoryItem.from_item(load(item_path)))
+	set_unit_state(id, u.save_state())
+	u.free()
+	return true
+
+
 ## AW-54: award a weapon into a unit's PERSISTED kit (spellbook rewards — the
 ## 100%-exam payoff). Builds the unit's live state (journal pattern), adds the
 ## weapon, and writes it back through unit_states so deployments carry it.

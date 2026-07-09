@@ -183,6 +183,30 @@ func test_hub_refuses_to_trade_tomes():
 	assert_eq(inv.items.size(), before, "no tome changes hands — spellbooks can't leak")
 
 
+## AW-64: crossing the semester's end plays the report-card CEREMONY — teacher
+## line, rank, and the reward chest (gold; a Promotion Seal at rank S).
+func test_semester_end_plays_the_ceremony_with_rewards():
+	_open_castle()
+	# stack the term so the rank is S
+	Campaign.record_quiz(100)
+	Campaign.record_battle_score(100)
+	Campaign.record_arena_run(10)
+	Campaign.add_conduct(40)
+	var gold_before := int(Campaign.flags.get("gold", 0))
+	Campaign.week = Campaign.semester_end_week()
+	_castle._rest_week()
+	assert_eq(Campaign.semester, 2, "the term closed")
+	assert_not_null(_castle._dialogue, "the ceremony plays")
+	assert_gt(int(Campaign.flags.get("gold", 0)), gold_before, "the chest paid out")
+	# rank S also grants the rare seal into Kai's persisted kit
+	var saved: Array = Campaign.get_unit_state("kai")["inventory"]
+	var has_seal := false
+	for e in saved:
+		if "promotion_seal" in str(e.get("path", "")):
+			has_seal = true
+	assert_true(has_seal, "an Ascendant term earns the Promotion Seal")
+
+
 func test_perfect_score_awards_a_spellbook_once():
 	_open_castle()
 	_castle._start_class()

@@ -141,6 +141,20 @@ func test_kai_falling_ends_the_bout_with_winnings():
 	assert_string_contains(joined, "gold")
 
 
+## AW-63: voluntary retreat between bouts banks everything earned, on your terms.
+func test_retreat_between_waves_banks_the_winnings():
+	var v := _arena()
+	await wait_physics_frames(2)
+	for foe in v._living_foes_of(0).duplicate():
+		v._kill(foe)
+	v._check_objective()          # wave 1 cleared, wave 2 pending
+	v._arena_retreat()
+	assert_true(v._battle_over, "you walked away")
+	assert_true(v._battle_victory, "with your winnings")
+	assert_eq(int(Campaign.flags.get("arena_best_wave", 0)), 1, "the cleared floor counts")
+	assert_gt(int(Campaign.flags.get("gold", 0)), 0, "and the gold came too")
+
+
 ## AW-50: falling AFTER clearing a floor (its successor still pending) counts the
 ## cleared floor — you earned it.
 func test_falling_between_waves_still_counts_the_cleared_floor():

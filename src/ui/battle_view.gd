@@ -834,6 +834,13 @@ func _check_arena() -> void:
 		_turn_banner.announce("Wave %d Cleared!" % _arena_wave, false)
 
 
+## AW-63: voluntary retreat from the field menu — same banking as falling (the
+## wave you're mid-fight in doesn't count; a cleared floor awaiting its
+## successor does), but on YOUR terms.
+func _arena_retreat() -> void:
+	_arena_finish()
+
+
 func _arena_finish() -> void:
 	if _battle_over:
 		return

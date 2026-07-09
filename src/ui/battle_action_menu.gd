@@ -52,16 +52,30 @@ func unviewed_conversations(unit_id: String) -> Array:
 
 
 ## Field menu (playtest 3): confirm on an empty tile to end the turn without
-## walking every unit first, or check the objective.
+## walking every unit first, or check the objective. AW-63: the arena adds
+## RETREAT — walk away between bouts with everything you've earned (Neal's
+## spec: push as far as you dare, then leave with your winnings).
 func open_field_menu() -> void:
 	_v._menu_actions = []
-	open_menu("field", "Field", ["End Turn", "Objective", "Cancel"])
+	var labels := ["End Turn", "Objective", "Cancel"]
+	if _v.chapter.is_arena:
+		labels = ["End Turn", "Retreat with winnings", "Objective", "Cancel"]
+	open_menu("field", "Field", labels)
 
 
 func field_choice(index: int) -> void:
 	_v._menu.close()
 	_v._cursor.active = true
 	_v._phase = _v.Phase.IDLE
+	if _v.chapter.is_arena:
+		match index:
+			0:
+				_v._end_player_phase()
+			1:
+				_v._arena_retreat()
+			2:
+				_v._toast_objective()
+		return
 	match index:
 		0:
 			_v._end_player_phase()
