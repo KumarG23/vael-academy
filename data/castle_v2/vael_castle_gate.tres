@@ -1,0 +1,94 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_idjdq"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/kings_castle.png" id="2_fvpnr"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner_pair.png" id="3_in21t"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/street_lamp.png" id="4_wvbhc"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="5_30aj5"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="6_moya7"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="7_2qimx"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="8_tl5cy"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="9_l8qwd"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="10_4ew11"]
+
+[sub_resource type="Resource" id="Resource_cylyu"]
+script = ExtResource("1_idjdq")
+texture = ExtResource("2_fvpnr")
+cell = Vector2i(13, 8)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_ekg7a"]
+script = ExtResource("1_idjdq")
+texture = ExtResource("3_in21t")
+cell = Vector2i(9, 10)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_38gf0"]
+script = ExtResource("1_idjdq")
+texture = ExtResource("3_in21t")
+cell = Vector2i(17, 10)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_es8f7"]
+script = ExtResource("1_idjdq")
+texture = ExtResource("4_wvbhc")
+cell = Vector2i(10, 13)
+
+[sub_resource type="Resource" id="Resource_i5ajx"]
+script = ExtResource("1_idjdq")
+texture = ExtResource("4_wvbhc")
+cell = Vector2i(16, 13)
+
+[sub_resource type="Resource" id="Resource_4add7"]
+script = ExtResource("6_moya7")
+id = "castle_vael_castle_gate"
+display_name = "Vael — The King's Castle"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+is_arena = false
+enemy_spawns = Array[ExtResource("5_30aj5")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("5_30aj5")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 26
+height = 20
+terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+base_terrain = 0
+decor = Array[ExtResource("1_idjdq")]([SubResource("Resource_cylyu"), SubResource("Resource_ekg7a"), SubResource("Resource_38gf0"), SubResource("Resource_es8f7"), SubResource("Resource_i5ajx")])
+visits = Array[ExtResource("7_2qimx")]([])
+
+[sub_resource type="Resource" id="Resource_ny16p"]
+script = ExtResource("8_tl5cy")
+cell = Vector2i(13, 19)
+to_room = "vael_square"
+spawn_cell = Vector2i(26, 2)
+label = "◀ Town Square"
+
+[sub_resource type="Resource" id="Resource_5slsk"]
+script = ExtResource("9_l8qwd")
+id = "castle_guard_west"
+label = "Speak with the royal guard"
+cell = Vector2i(11, 9)
+dialogue = "res://data/dialogue/vael_castle_guard.json"
+npc_unit = "tm_armor"
+
+[sub_resource type="Resource" id="Resource_b3dwx"]
+script = ExtResource("9_l8qwd")
+id = "castle_guard_east"
+label = "Speak with the royal guard"
+cell = Vector2i(15, 9)
+dialogue = "res://data/dialogue/vael_castle_guard.json"
+npc_unit = "tm_armor"
+
+[resource]
+script = ExtResource("10_4ew11")
+id = "vael_castle_gate"
+display_name = "Vael — The King's Castle"
+chapter = SubResource("Resource_4add7")
+doors = Array[ExtResource("8_tl5cy")]([SubResource("Resource_ny16p")])
+points = Array[ExtResource("9_l8qwd")]([SubResource("Resource_5slsk"), SubResource("Resource_b3dwx")])

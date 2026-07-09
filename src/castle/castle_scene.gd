@@ -661,6 +661,10 @@ func _open_function(fn: String) -> void:
 				get_tree().change_scene_to_file.call_deferred("res://scenes/battle/arena.tscn")
 		"fn_class":
 			_start_class()
+		"fn_shop_smith", "fn_shop_goods", "fn_shop_magic":
+			_open_shop(fn)
+		"fn_tavern":
+			_open_tavern()
 
 
 func _toast(text: String) -> void:
@@ -848,6 +852,116 @@ func _choose_house(index: int) -> void:
 	_toast("Sworn to House %s — for this year and always." % Campaign.house_id.capitalize())
 
 
+# --- AW-66: the Vael shops + the Gilded Stag tavern -------------------------------
+
+## Shop stock (TOWN_OF_VAEL.md §2). Purchases land in Kai's persisted kit.
+const SHOP_STOCK := {
+	"fn_shop_smith": {"title": "The Smithy", "wares": [
+		{"label": "Iron Sword", "cost": 80, "kind": "weapon", "path": "res://data/weapons/iron_sword.tres"},
+		{"label": "Iron Lance", "cost": 80, "kind": "weapon", "path": "res://data/weapons/iron_lance.tres"},
+		{"label": "Iron Axe", "cost": 80, "kind": "weapon", "path": "res://data/weapons/iron_axe.tres"},
+		{"label": "Iron Bow", "cost": 90, "kind": "weapon", "path": "res://data/weapons/iron_bow.tres"},
+	]},
+	"fn_shop_goods": {"title": "Reach & Barrel — Goods", "wares": [
+		{"label": "Vulnerary", "cost": 60, "kind": "item", "path": "res://data/items/vulnerary.tres"},
+		{"label": "Promotion Seal", "cost": 600, "kind": "item", "path": "res://data/items/promotion_seal.tres"},
+	]},
+}
+const SPELLBOOK_PRICE := 900  # SPELLBOOKS.md: "really expensive" — the gold chase
+const TAVERN_MEAL_COST := 20
+
+var _shop_wares: Array = []
+
+
+func gold() -> int:
+	return int(Campaign.flags.get("gold", 0))
+
+
+func _open_shop(fn: String) -> void:
+	_menu_context = "shop"
+	if fn == "fn_shop_magic":
+		# the arcane bookshop stocks one spellbook per school Kai hasn't learned
+		_shop_wares = []
+		for award in SPELLBOOK_LADDER:
+			if not bool(Campaign.flags.get(award["flag"], false)):
+				_shop_wares.append({"label": "Spellbook of %s" % str(award["school"]).capitalize(),
+					"cost": SPELLBOOK_PRICE, "kind": "spellbook", "award": award})
+		if _shop_wares.is_empty():
+			_toast("The shelves are bare — Kai has learned every school they sell.")
+			_menu_context = ""
+			return
+	else:
+		_shop_wares = (SHOP_STOCK[fn]["wares"] as Array).duplicate()
+	var title: String = SHOP_STOCK.get(fn, {}).get("title", "The Arcane Bookshop")
+	var labels: Array = []
+	for w in _shop_wares:
+		labels.append("%s — %dg" % [w["label"], w["cost"]])
+	_menu.open("%s   (purse: %dg)" % [title, gold()], labels, _menu_pos())
+
+
+func _do_shop(index: int) -> void:
+	var w: Dictionary = _shop_wares[index]
+	_close_menu()
+	var cost := int(w["cost"])
+	if gold() < cost:
+		_toast("Not enough gold — the shopkeep smiles politely.")
+		return
+	var ok := false
+	match str(w["kind"]):
+		"weapon":
+			ok = Campaign.grant_weapon("kai", str(w["path"]))
+		"item":
+			ok = Campaign.grant_item("kai", str(w["path"]))
+		"spellbook":
+			var award: Dictionary = w["award"]
+			ok = Campaign.grant_weapon("kai", str(award["weapon"]))
+			if ok:
+				Campaign.flags[award["flag"]] = true
+				Campaign.flags["school_" + str(award["school"])] = true
+	if not ok:
+		_toast("Kai's pack is full — clear a slot first.")
+		return
+	Campaign.flags["gold"] = gold() - cost
+	AudioManager.play_sfx("confirm")
+	_toast("Bought %s. (%dg left)" % [w["label"], gold()])
+
+
+## The Gilded Stag: share a meal with a housemate — bond over stew (FE3H-style).
+func _open_tavern() -> void:
+	var key := "tavern_week_%d" % Campaign.week
+	if bool(Campaign.flags.get(key, false)):
+		_toast("The Stag's kitchen is closed to students until next week.")
+		return
+	if gold() < TAVERN_MEAL_COST:
+		_toast("A meal for two runs %dg — the purse says no." % TAVERN_MEAL_COST)
+		return
+	_menu_context = "tavern"
+	var labels: Array = []
+	for def in _roster_defs:
+		if def.id != "kai":
+			labels.append(def.display_name)
+	_menu.open("The Gilded Stag — share a meal? (%dg)" % TAVERN_MEAL_COST, labels, _menu_pos())
+
+
+func _do_tavern(index: int) -> void:
+	var partners: Array = []
+	for def in _roster_defs:
+		if def.id != "kai":
+			partners.append(def)
+	var partner: UnitDef = partners[index]
+	_close_menu()
+	Campaign.flags["tavern_week_%d" % Campaign.week] = true
+	Campaign.flags["gold"] = gold() - TAVERN_MEAL_COST
+	Campaign.add_conduct(2)
+	var result := _support_state.add_points("kai", partner.id, 8)
+	Campaign.support_save = _support_state.save_state()
+	if result.get("ranked_up", false):
+		EventBus.support_rank_up.emit(str(result["pair_id"]), str(result["new_rank"]))
+		_toast("Stew, stories, and something more — bond with %s deepens to %s!" % [partner.display_name, result["new_rank"]])
+	else:
+		_toast("A warm meal with %s — the Stag does its quiet work." % partner.display_name)
+
+
 # --- AW-54: the classroom lesson (quiz -> teacher reaction -> grade) -------------
 
 func _teacher() -> Dictionary:
@@ -974,6 +1088,10 @@ func _on_menu_chosen(index: int) -> void:
 			_choose_house(index)
 		"cooking":
 			_do_cook(index)
+		"shop":
+			_do_shop(index)
+		"tavern":
+			_do_tavern(index)
 		"system":
 			_do_system(index)
 
@@ -1034,6 +1152,9 @@ func _on_dialogue_event(event_name: String, params: Dictionary) -> void:
 			Campaign.flags["school_" + str(params.get("school", ""))] = true
 		"set_flag":
 			Campaign.flags[str(params.get("flag", ""))] = true
+		"conduct":
+			# AW-66: quiet-good-deed beats (chantry candles) feed the Conduct mark
+			Campaign.add_conduct(int(params.get("points", 1)))
 		"bond":
 			# AW-57 (Neal): saying the right thing deepens the bond — campus chats
 			# carry {"event":"bond","params":{"with":"liora","points":8}} steps.

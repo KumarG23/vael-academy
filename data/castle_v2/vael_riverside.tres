@@ -1,0 +1,101 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_eurao"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/tavern.png" id="2_y2jxn"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/playhouse.png" id="3_ndla3"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/rowboat.png" id="4_rf8lq"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="5_csge2"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/street_lamp.png" id="6_kp035"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="7_265dd"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="8_fqfm7"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="9_v2ihr"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="10_v8vpm"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="11_xwern"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="12_fb8kn"]
+
+[sub_resource type="Resource" id="Resource_wbsfs"]
+script = ExtResource("1_eurao")
+texture = ExtResource("2_y2jxn")
+cell = Vector2i(6, 7)
+
+[sub_resource type="Resource" id="Resource_g4dtd"]
+script = ExtResource("1_eurao")
+texture = ExtResource("3_ndla3")
+cell = Vector2i(23, 7)
+
+[sub_resource type="Resource" id="Resource_vhvu6"]
+script = ExtResource("1_eurao")
+texture = ExtResource("4_rf8lq")
+cell = Vector2i(20, 15)
+
+[sub_resource type="Resource" id="Resource_f3a0w"]
+script = ExtResource("1_eurao")
+texture = ExtResource("4_rf8lq")
+cell = Vector2i(9, 15)
+
+[sub_resource type="Resource" id="Resource_jrh74"]
+script = ExtResource("1_eurao")
+texture = ExtResource("5_csge2")
+cell = Vector2i(11, 9)
+
+[sub_resource type="Resource" id="Resource_uued6"]
+script = ExtResource("1_eurao")
+texture = ExtResource("6_kp035")
+cell = Vector2i(15, 8)
+
+[sub_resource type="Resource" id="Resource_lothl"]
+script = ExtResource("8_fqfm7")
+id = "castle_vael_riverside"
+display_name = "Vael — The Riverside"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+is_arena = false
+enemy_spawns = Array[ExtResource("7_265dd")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("7_265dd")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 30
+height = 18
+terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 6, 12, 12, 12, 12, 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12, 12, 12, 12, 12, 12, 12, 6, 0, 0, 0, 0, 6, 12, 12, 12, 12, 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12, 12, 12, 12, 12, 12, 12, 6, 0, 0, 0, 0, 6, 12, 12, 12, 12, 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12, 12, 12, 12, 12, 12, 12, 6, 0, 0, 0, 0, 6, 12, 12, 12, 12, 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12, 12, 12, 12, 12, 12, 12, 6, 0, 0, 0, 0, 6, 12, 12, 12, 12, 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12, 12, 12, 12, 12, 12, 12, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
+base_terrain = 0
+decor = Array[ExtResource("1_eurao")]([SubResource("Resource_wbsfs"), SubResource("Resource_g4dtd"), SubResource("Resource_vhvu6"), SubResource("Resource_f3a0w"), SubResource("Resource_jrh74"), SubResource("Resource_uued6")])
+visits = Array[ExtResource("9_v2ihr")]([])
+
+[sub_resource type="Resource" id="Resource_dpnhc"]
+script = ExtResource("10_v8vpm")
+cell = Vector2i(15, 1)
+to_room = "vael_square"
+spawn_cell = Vector2i(17, 21)
+label = "◀ Town Square"
+
+[sub_resource type="Resource" id="Resource_81vwb"]
+script = ExtResource("11_xwern")
+id = "fn_tavern"
+label = "The Gilded Stag — share a meal"
+cell = Vector2i(6, 9)
+
+[sub_resource type="Resource" id="Resource_u41ra"]
+script = ExtResource("11_xwern")
+id = "playhouse_sign"
+label = "The playhouse bill"
+cell = Vector2i(23, 9)
+dialogue = "res://data/dialogue/vael_playhouse.json"
+
+[sub_resource type="Resource" id="Resource_rcbgh"]
+script = ExtResource("11_xwern")
+id = "fn_fish"
+label = "Fish off the pier"
+cell = Vector2i(14, 13)
+
+[resource]
+script = ExtResource("12_fb8kn")
+id = "vael_riverside"
+display_name = "Vael — The Riverside"
+chapter = SubResource("Resource_lothl")
+doors = Array[ExtResource("10_v8vpm")]([SubResource("Resource_dpnhc")])
+points = Array[ExtResource("11_xwern")]([SubResource("Resource_81vwb"), SubResource("Resource_u41ra"), SubResource("Resource_rcbgh")])

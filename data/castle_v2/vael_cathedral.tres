@@ -1,0 +1,81 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_gvqjy"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/cathedral.png" id="2_5lgo8"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/statue_founder.png" id="3_8g5bq"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="4_q8dbf"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="5_2du27"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="6_5nm5o"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="7_wysrh"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="8_jwjna"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="9_bdl0b"]
+
+[sub_resource type="Resource" id="Resource_dgiv1"]
+script = ExtResource("1_gvqjy")
+texture = ExtResource("2_5lgo8")
+cell = Vector2i(11, 8)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_sqqr4"]
+script = ExtResource("1_gvqjy")
+texture = ExtResource("3_8g5bq")
+cell = Vector2i(6, 12)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_p2shf"]
+script = ExtResource("1_gvqjy")
+texture = ExtResource("3_8g5bq")
+cell = Vector2i(17, 12)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_4ye34"]
+script = ExtResource("5_2du27")
+id = "castle_vael_cathedral"
+display_name = "Vael — The Grand Chantry"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+is_arena = false
+enemy_spawns = Array[ExtResource("4_q8dbf")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("4_q8dbf")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 24
+height = 20
+terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 6, 6, 6, 6, 6, 6, 6, 6, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+base_terrain = 0
+decor = Array[ExtResource("1_gvqjy")]([SubResource("Resource_dgiv1"), SubResource("Resource_sqqr4"), SubResource("Resource_p2shf")])
+visits = Array[ExtResource("6_5nm5o")]([])
+
+[sub_resource type="Resource" id="Resource_wedxr"]
+script = ExtResource("7_wysrh")
+cell = Vector2i(1, 10)
+to_room = "vael_square"
+spawn_cell = Vector2i(30, 12)
+label = "◀ Town Square"
+
+[sub_resource type="Resource" id="Resource_5803k"]
+script = ExtResource("8_jwjna")
+id = "chantry_candles"
+label = "Light a candle"
+cell = Vector2i(10, 9)
+dialogue = "res://data/dialogue/vael_candles.json"
+
+[sub_resource type="Resource" id="Resource_on11h"]
+script = ExtResource("8_jwjna")
+id = "chantry_scripture"
+label = "Read the carved scripture"
+cell = Vector2i(13, 9)
+dialogue = "res://data/dialogue/vael_scripture.json"
+
+[resource]
+script = ExtResource("9_bdl0b")
+id = "vael_cathedral"
+display_name = "Vael — The Grand Chantry"
+chapter = SubResource("Resource_4ye34")
+doors = Array[ExtResource("7_wysrh")]([SubResource("Resource_wedxr")])
+points = Array[ExtResource("8_jwjna")]([SubResource("Resource_5803k"), SubResource("Resource_on11h")])

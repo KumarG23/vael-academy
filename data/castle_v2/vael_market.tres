@@ -1,0 +1,117 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_su47i"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/smithy.png" id="2_javxb"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/shop_goods.png" id="3_rkdp3"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/shop_magic.png" id="4_f2rck"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/market_stall_a.png" id="5_ly18i"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/buildings/vael/market_stall_b.png" id="6_j6d7c"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="7_i6tf6"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="8_1gr2g"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/cart.png" id="9_unqdy"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="10_x4yub"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="11_vr25j"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="12_8tp15"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="13_2q2t0"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="14_o317k"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="15_gtugl"]
+
+[sub_resource type="Resource" id="Resource_demqg"]
+script = ExtResource("1_su47i")
+texture = ExtResource("2_javxb")
+cell = Vector2i(5, 6)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_u70gy"]
+script = ExtResource("1_su47i")
+texture = ExtResource("3_rkdp3")
+cell = Vector2i(13, 6)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_738jj"]
+script = ExtResource("1_su47i")
+texture = ExtResource("4_f2rck")
+cell = Vector2i(21, 6)
+
+[sub_resource type="Resource" id="Resource_7ceuw"]
+script = ExtResource("1_su47i")
+texture = ExtResource("5_ly18i")
+cell = Vector2i(8, 11)
+
+[sub_resource type="Resource" id="Resource_my8v1"]
+script = ExtResource("1_su47i")
+texture = ExtResource("6_j6d7c")
+cell = Vector2i(16, 11)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_tc0i8"]
+script = ExtResource("1_su47i")
+texture = ExtResource("7_i6tf6")
+cell = Vector2i(3, 12)
+
+[sub_resource type="Resource" id="Resource_bjptp"]
+script = ExtResource("1_su47i")
+texture = ExtResource("8_1gr2g")
+cell = Vector2i(22, 12)
+
+[sub_resource type="Resource" id="Resource_2bood"]
+script = ExtResource("1_su47i")
+texture = ExtResource("9_unqdy")
+cell = Vector2i(12, 14)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_tte22"]
+script = ExtResource("11_vr25j")
+id = "castle_vael_market"
+display_name = "Vael — The Market"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+is_arena = false
+enemy_spawns = Array[ExtResource("10_x4yub")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("10_x4yub")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 26
+height = 18
+terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 0, 0, 0, 12, 12, 12, 12, 12, 0, 0, 0, 12, 12, 12, 12, 12, 0, 0, 0, 0, 6, 12, 12, 12, 12, 12, 6, 6, 6, 12, 12, 12, 12, 12, 6, 6, 6, 12, 12, 12, 12, 12, 0, 0, 0, 0, 6, 12, 12, 12, 12, 12, 6, 6, 6, 12, 12, 12, 12, 12, 6, 6, 6, 12, 12, 12, 12, 12, 0, 0, 0, 0, 6, 12, 12, 12, 12, 12, 6, 6, 6, 12, 12, 12, 12, 12, 6, 6, 6, 12, 12, 12, 12, 12, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 0, 6, 6, 6, 6, 6, 12, 12, 6, 6, 6, 6, 6, 6, 12, 12, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 12, 12, 6, 6, 6, 6, 6, 6, 12, 12, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+base_terrain = 0
+decor = Array[ExtResource("1_su47i")]([SubResource("Resource_demqg"), SubResource("Resource_u70gy"), SubResource("Resource_738jj"), SubResource("Resource_7ceuw"), SubResource("Resource_my8v1"), SubResource("Resource_tc0i8"), SubResource("Resource_bjptp"), SubResource("Resource_2bood")])
+visits = Array[ExtResource("12_8tp15")]([])
+
+[sub_resource type="Resource" id="Resource_g2f1e"]
+script = ExtResource("13_2q2t0")
+cell = Vector2i(25, 9)
+to_room = "vael_square"
+spawn_cell = Vector2i(3, 12)
+label = "◀ Town Square"
+
+[sub_resource type="Resource" id="Resource_bvlkn"]
+script = ExtResource("14_o317k")
+id = "fn_shop_smith"
+label = "The Smithy"
+cell = Vector2i(5, 8)
+
+[sub_resource type="Resource" id="Resource_x06is"]
+script = ExtResource("14_o317k")
+id = "fn_shop_goods"
+label = "Reach & Barrel — Goods"
+cell = Vector2i(13, 8)
+
+[sub_resource type="Resource" id="Resource_wh2c7"]
+script = ExtResource("14_o317k")
+id = "fn_shop_magic"
+label = "The Arcane Bookshop"
+cell = Vector2i(21, 8)
+
+[resource]
+script = ExtResource("15_gtugl")
+id = "vael_market"
+display_name = "Vael — The Market"
+chapter = SubResource("Resource_tte22")
+doors = Array[ExtResource("13_2q2t0")]([SubResource("Resource_g2f1e")])
+points = Array[ExtResource("14_o317k")]([SubResource("Resource_bvlkn"), SubResource("Resource_x06is"), SubResource("Resource_wh2c7")])

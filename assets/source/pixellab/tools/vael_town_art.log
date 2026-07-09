@@ -1,0 +1,45 @@
+queued kings_castle
+queued cathedral
+queued tavern
+queued smithy
+queued shop_goods
+queued shop_magic
+queued playhouse
+townhouse_a busy: error: rate limit exceeded
+
+hint: wait ~15-30s for current j
+townhouse_a busy: error: rate limit exceeded
+
+hint: wait ~15-30s for current j
+townhouse_a busy: error: rate limit exceeded
+
+hint: wait ~15-30s for current j
+queued townhouse_a
+queued townhouse_b
+queued townhouse_c
+queued market_stall_a
+market_stall_b busy: error: rate limit exceeded
+
+hint: wait ~15-30s for current j
+queued market_stall_b
+queued fountain_grand
+queued statue_king
+queued rowboat
+queued city_gate
+downloaded kings_castle
+downloaded cathedral
+downloaded tavern
+downloaded smithy
+downloaded shop_goods
+downloaded shop_magic
+downloaded playhouse
+downloaded townhouse_a
+downloaded townhouse_b
+downloaded townhouse_c
+downloaded market_stall_a
+downloaded fountain_grand
+downloaded market_stall_b
+downloaded statue_king
+downloaded rowboat
+downloaded city_gate
+TOWN ART COMPLETE

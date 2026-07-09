@@ -1,0 +1,16 @@
+[
+ {
+  "speaker": "",
+  "text": "Rows of candles breathe in the dark. You light one for Oakstead, and one \u2014 without quite deciding to \u2014 for whoever built the stone under the school."
+ },
+ {
+  "event": "conduct",
+  "params": {
+   "points": 2
+  }
+ },
+ {
+  "speaker": "",
+  "text": "(The quiet does you good.)"
+ }
+]
