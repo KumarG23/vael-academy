@@ -226,11 +226,13 @@ func _inv_transfer() -> void:
 	if _inv_item_i >= items.size():
 		return
 	var item: InventoryItem = items[_inv_item_i]
-	# AW-53: innate magic is part of its bearer — it can't be handed away
+	# AW-53: innate magic is part of its bearer — it can't be handed away.
+	# AW-55 (Neal): spells aren't tradeable AT ALL — magic answers its learner,
+	# so no tome changes hands (Kai's spellbook fire was leaking to Perrin).
 	var w: WeaponDef = item.weapon()
-	if w != null and w.innate:
+	if w != null and (w.innate or w.weapon_type == WeaponDef.WeaponType.TOME):
 		AudioManager.play_sfx("cancel")
-		_show_toast("%s is bound to %s — it cannot be given away." % [item.display_name(), giver["name"]])
+		_show_toast("%s is bound to %s — magic can't change hands." % [item.display_name(), giver["name"]])
 		return
 	if not giver["unit"].inventory.transfer_to(item, taker["unit"].inventory):
 		AudioManager.play_sfx("cancel")

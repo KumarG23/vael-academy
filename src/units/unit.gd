@@ -486,8 +486,23 @@ func can_use_weapon(w: WeaponDef) -> bool:
 	if w.innate:
 		return _kit_lists_weapon(w.id)
 	if unit_def == null or unit_def.id != "kai":
-		return true
+		# AW-55: "born to their lane" enforced — a schooled tome answers only a
+		# unit whose own kit includes a tome (mages). Perrin holding Kai's
+		# spellbook fire can't cast it (Neal's trade-leak report).
+		return _kit_has_tome()
 	return bool(Campaign.flags.get("school_" + w.school, false))
+
+
+## Whether this unit's authored kit includes ANY tome (the mage lane).
+func _kit_has_tome() -> bool:
+	if unit_def == null:
+		return false
+	var kit: Array = [unit_def.weapon]
+	kit.append_array(unit_def.extra_weapons)
+	for w in kit:
+		if w != null and (w as WeaponDef).weapon_type == WeaponDef.WeaponType.TOME:
+			return true
+	return false
 
 
 ## Whether this unit's authored kit (def weapon + extras) includes weapon `id`.

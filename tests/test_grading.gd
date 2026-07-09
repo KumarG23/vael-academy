@@ -139,6 +139,50 @@ func test_lesson_runs_once_a_week_and_grades():
 	assert_null(_castle._quiz, "class is done for the week")
 
 
+## AW-55 (Neal): the spellbook's magic answers KAI alone — no lane, no cast, and
+## the Inventory hub refuses to trade any tome at all.
+func test_spellbook_magic_is_kai_bound():
+	Campaign.flags["school_ember"] = true
+	var fire: WeaponDef = load("res://data/weapons/fire.tres")
+	var kai := Unit.new()
+	kai.setup((load("res://data/units/kai.tres") as UnitDef).duplicate(), Grid.new(3, 3), Vector2i.ZERO)
+	assert_true(kai.can_use_weapon(fire), "Kai casts his learned school")
+	var perrin := Unit.new()
+	perrin.setup((load("res://data/units/perrin.tres") as UnitDef).duplicate(), Grid.new(3, 3), Vector2i.ZERO)
+	assert_false(perrin.can_use_weapon(fire), "Perrin has no tome lane — the fire won't answer")
+	var liora := Unit.new()
+	liora.setup((load("res://data/units/liora.tres") as UnitDef).duplicate(), Grid.new(3, 3), Vector2i.ZERO)
+	assert_true(liora.can_use_weapon(fire), "born mages still cast schooled tomes")
+	kai.free(); perrin.free(); liora.free()
+
+
+func test_hub_refuses_to_trade_tomes():
+	var j = load("res://src/ui/academy_journal.gd").new()
+	add_child_autofree(j)
+	await wait_frames(1)
+	# find a unit carrying a tome (Kai always carries Crownspark; also grant fire)
+	Campaign.flags["school_ember"] = true
+	var kai_i := -1
+	for i in range(j._inv_units.size()):
+		if j._inv_units[i]["id"] == "kai":
+			kai_i = i
+	j._inv_units[kai_i]["unit"].inventory.add(InventoryItem.from_weapon(load("res://data/weapons/fire.tres")))
+	var inv: Inventory = j._inv_units[kai_i]["unit"].inventory
+	var fire_i := -1
+	for i in range(inv.items.size()):
+		var w: WeaponDef = inv.items[i].weapon()
+		if w != null and w.id == "fire":
+			fire_i = i
+	var before: int = inv.items.size()
+	j._tab = 2
+	j._inv_i = kai_i
+	j._inv_mode = 2
+	j._inv_item_i = fire_i
+	j._inv_give_i = 0 if kai_i != 0 else 1
+	j._inv_transfer()
+	assert_eq(inv.items.size(), before, "no tome changes hands — spellbooks can't leak")
+
+
 func test_perfect_score_awards_a_spellbook_once():
 	_open_castle()
 	_castle._start_class()
