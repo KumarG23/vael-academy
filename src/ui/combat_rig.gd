@@ -407,6 +407,7 @@ func _magic_style() -> String:
 		"gale": return "swirl"
 		"tide": return "crystal"
 		"reason": return "rays"
+		"crown": return "crown"  # AW-51: First Crown royal magic — Kai's Crownspark
 	match _unit_id:
 		"isolde": return "crystal"
 		"corvin": return "swirl"
@@ -417,6 +418,7 @@ func _magic_color() -> Color:
 		"gale": return Color(0.55, 1.0, 0.55)    # wind/nature
 		"tide": return Color(0.35, 0.70, 1.0)    # water
 		"reason": return Color(0.82, 0.55, 1.0)  # arcane
+		"crown": return Color(0.45, 1.0, 0.60)   # verdant royal — matches his blade
 	match _unit_id:
 		"isolde": return Color(0.40, 0.72, 1.0)
 		"corvin": return Color(0.42, 1.0, 0.55)
@@ -501,6 +503,22 @@ func _draw_fx() -> void:
 							_fx.draw_circle(cur + Vector2(cos(a2), sin(a2)) * 6.0, maxf(1.0, 3.0 * (1.0 - t)), Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.8))
 						_fx.draw_circle(cur, 5.0, Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.9))
 						_fx.draw_circle(cur, 2.5, Color(0.9, 1.0, 0.85, 1.0))
+					elif it["style"] == "crown":
+						# AW-51 Kai's Crownspark: a spinning emerald circlet with five
+						# gold points, shedding verdant sparks as it flies
+						var spin: float = float(it["age"]) * 9.0
+						_fx.draw_arc(cur, 6.5, 0.0, TAU, 14, Color(mc.r, mc.g, mc.b, (1.0 - t) * 0.9), 2.2)
+						for kp in range(5):
+							var ap := TAU * float(kp) / 5.0 + spin
+							var spoke := Vector2(cos(ap), sin(ap))
+							var tipp := cur + spoke * 11.0
+							_fx.draw_line(cur + spoke * 6.0, tipp, Color(1.0, 0.88, 0.45, 1.0 - t), 2.0)
+							_fx.draw_circle(tipp, 1.6, Color(1.0, 0.95, 0.7, 1.0 - t))
+						var bk2: Vector2 = (p1 - p0).normalized() if (p1 - p0).length() > 0.1 else Vector2.RIGHT
+						for ks in range(3):
+							_fx.draw_circle(cur - bk2 * (9.0 + ks * 7.0), maxf(1.0, 2.6 - ks * 0.7),
+								Color(mc.r, mc.g, mc.b, (1.0 - t) * (0.6 - ks * 0.15)))
+						_fx.draw_circle(cur, 3.0, Color(0.92, 1.0, 0.9, 1.0))
 					else:
 						var fl: float = float(it["age"]) * 40.0
 						var bk: Vector2 = (p1 - p0).normalized() if (p1 - p0).length() > 0.1 else Vector2.RIGHT
@@ -552,6 +570,19 @@ func _draw_fx() -> void:
 						var nd := Vector2(cos(TAU * float(kb) / 8.0), sin(TAU * float(kb) / 8.0))
 						_fx.draw_line((it["pos"] as Vector2) + nd * 4.0, (it["pos"] as Vector2) + nd * (8.0 + t * 30.0), Color(bc.r, bc.g, bc.b, a * 0.85), 3.0 * a + 1.0)
 					_fx.draw_circle(it["pos"], 4.0 + t * 6.0, Color(0.9, 0.98, 1.0, a * 0.9))
+				elif bs == "crown":
+					# AW-51 the coronation: an emerald ring slams down on the target
+					# and five gold points rise from it — struck by royalty
+					var ring := 6.0 + t * 24.0
+					_fx.draw_arc(it["pos"], ring, 0.0, TAU, 24, Color(bc.r, bc.g, bc.b, a * 0.9), 3.0)
+					_fx.draw_arc(it["pos"], ring * 0.6, 0.0, TAU, 18, Color(bc.r, bc.g, bc.b, a * 0.5), 2.0)
+					for kb in range(5):
+						var ac := TAU * float(kb) / 5.0 - PI / 2.0
+						var pbase := (it["pos"] as Vector2) + Vector2(cos(ac), sin(ac)) * ring
+						var ptip := pbase + Vector2(0, -5.0 - t * 16.0)
+						_fx.draw_line(pbase, ptip, Color(1.0, 0.88, 0.45, a), 2.4)
+						_fx.draw_circle(ptip, 2.0, Color(1.0, 0.95, 0.7, a))
+					_fx.draw_circle(it["pos"], 4.0 + t * 9.0, Color(0.9, 1.0, 0.9, a * 0.8))
 				elif bs == "swirl":
 					for kb in range(6):
 						var av := TAU * float(kb) / 6.0 + float(it["age"]) * 2.0
