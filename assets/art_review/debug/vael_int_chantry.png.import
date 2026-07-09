@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8tablmki50fj"
-path="res://.godot/imported/portrait_sable.png-589955fb2e2c665b16a20532353ce6e7.ctex"
+uid="uid://cjlk4fjg8flcc"
+path="res://.godot/imported/vael_int_chantry.png-0dac639bda671732cb05350e8feac060.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/portraits/portrait_sable.png"
-dest_files=["res://.godot/imported/portrait_sable.png-589955fb2e2c665b16a20532353ce6e7.ctex"]
+source_file="res://assets/art_review/debug/vael_int_chantry.png"
+dest_files=["res://.godot/imported/vael_int_chantry.png-0dac639bda671732cb05350e8feac060.ctex"]
 
 [params]
 

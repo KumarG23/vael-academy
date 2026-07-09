@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxbr0ihjb5u2t"
-path="res://.godot/imported/portrait_sable_determined.png-a17d9e3ba24d04e5241d82ab12ff63f8.ctex"
+uid="uid://c3shjmgh1iscq"
+path="res://.godot/imported/walk_f1.png-d7006362900b7c86f3400be598f80849.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/portraits/portrait_sable_determined.png"
-dest_files=["res://.godot/imported/portrait_sable_determined.png-a17d9e3ba24d04e5241d82ab12ff63f8.ctex"]
+source_file="res://assets/sprites/units/nilu/walk_f1.png"
+dest_files=["res://.godot/imported/walk_f1.png-d7006362900b7c86f3400be598f80849.ctex"]
 
 [params]
 

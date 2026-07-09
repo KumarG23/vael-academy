@@ -1,5 +1,8 @@
 # CHARACTER_BIBLE_HEADS.md — The Three Heirs
 
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
 Companion to `WORLD_BIBLE.md`, `ACADEMY_BIBLE.md`, `CAMPAIGN_STRUCTURE.md`. The three Great House heirs — the famous names every student knows before arriving (`WORLD_BIBLE.md` §2). Each embodies their house's founding Warder line (fight / hold / study) and their region, and each meets Kai as a stranger in the prologue raid before anyone knows who anyone is.
 
 **Structural note:** whichever house the player picks, that heir is a *housemate and ally*; the other two lead the rival forces at the inter-house battles. All three must read as sympathetic rivals, never villains — they're future lords of the same kingdom.

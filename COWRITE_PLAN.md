@@ -7,7 +7,10 @@ decisions unblock later ones.*
 
 ---
 
-## A. Lock the theme sentence (15 min)
+## A. Theme sentence — ✅ LOCKED EARLY (Neal, 2026-07-09)
+
+**"Belonging isn't given by blood — it's built by what you protect."**
+(Candidate 3 kept as the mystery's hidden GM-only logic.) For the record, the candidates were:
 
 One sentence, pinned everywhere, every scene tested against it. Candidates:
 

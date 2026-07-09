@@ -1,6 +1,6 @@
 extends GutTest
 ## AW-27: aura skills project stat + combat bonuses onto nearby allies (never
-## the owner), Serra's Tide-Ward and Rina/Sable's Pack Hunter carry them as
+## the owner), Serra's Tide-Ward and Rina/Nilu's Pack Hunter carry them as
 ## per-character personal skills, and a spellbow resolves as magic damage.
 
 const SCENE := "res://scenes/battle/mock_battle.tscn"
@@ -73,7 +73,7 @@ func test_pack_hunter_folds_a_combat_bonus():
 
 func test_heirs_and_sable_carry_their_signature_skills():
 	assert_true(_has_skill(_unit("rina"), "pack_hunter"), "Rina knows Pack Hunter")
-	assert_true(_has_skill(_unit("sable"), "pack_hunter"), "Sable knows Pack Hunter")
+	assert_true(_has_skill(_unit("nilu"), "pack_hunter"), "Nilu knows Pack Hunter")
 	assert_true(_has_skill(_unit("serra"), "tide_ward"), "Serra knows Tide-Ward")
 
 

@@ -1,5 +1,8 @@
 # CHARACTER_BIBLE_THORNROOK.md — House Thornrook
 
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
 *Forest green & bronze · Stag · the western wilds · bows / reason magic · technique growths (SKL/RES)*
 *Culture: cunning, scholarly, pragmatic. Understand it before you touch it.*
 

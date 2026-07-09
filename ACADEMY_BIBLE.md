@@ -1,5 +1,8 @@
 # ACADEMY_BIBLE.md — Vael Academy
 
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
 Companion to `MASTER_PLAN.md` and `WORLD_BIBLE.md`.
 
 ## 1. What It Is

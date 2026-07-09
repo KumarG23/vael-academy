@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cs1jberpmwn2k"
-path="res://.godot/imported/portrait_sable_smug.png-381deb872c528f0903945d38d083aae6.ctex"
+uid="uid://b8skjblkbhhal"
+path="res://.godot/imported/body_map.png-a38cfd61af772331c49adaa4a632f83d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/portraits/portrait_sable_smug.png"
-dest_files=["res://.godot/imported/portrait_sable_smug.png-381deb872c528f0903945d38d083aae6.ctex"]
+source_file="res://assets/art/cutout/nilu/body_map.png"
+dest_files=["res://.godot/imported/body_map.png-a38cfd61af772331c49adaa4a632f83d.ctex"]
 
 [params]
 

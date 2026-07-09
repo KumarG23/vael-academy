@@ -1,5 +1,8 @@
 # WORLD_BIBLE.md — The Kingdom (working title: Aldreth)
 
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
 Companion to `MASTER_PLAN.md`. Covers the kingdom, the magic system, and the mystery the campaign is building toward. **Section 4 is GM-only** — the true shape of the threat, kept separate from what any character currently knows, so future dialogue doesn't accidentally spoil itself.
 
 ---

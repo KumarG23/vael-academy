@@ -15,7 +15,7 @@ const ARCHETYPES := {
 	"soldier": {"cls": "soldier", "wpn": "iron_lance", "sprite": "tm_soldier_a", "name": "Arena Soldier", "hp": 30, "str": 7, "skl": 6, "spd": 6, "def": 6, "res": 2, "mov": 5},
 	"brute":   {"cls": "fighter", "wpn": "iron_axe", "sprite": "bandit_c", "name": "Arena Brute", "hp": 40, "str": 9, "skl": 4, "spd": 3, "def": 8, "res": 1, "mov": 5},
 	"marksman":{"cls": "archer", "wpn": "iron_bow", "sprite": "tm_scout", "name": "Arena Marksman", "hp": 24, "str": 6, "skl": 8, "spd": 7, "def": 4, "res": 3, "mov": 5},
-	"beast":   {"cls": "beast", "wpn": "claw", "sprite": "sable", "name": "Arena Direbeast", "hp": 30, "str": 8, "skl": 7, "spd": 9, "def": 4, "res": 2, "mov": 7},
+	"beast":   {"cls": "beast", "wpn": "claw", "sprite": "nilu", "name": "Arena Direbeast", "hp": 30, "str": 8, "skl": 7, "spd": 9, "def": 4, "res": 2, "mov": 7},
 	"wraith":  {"cls": "mage", "wpn": "fire", "sprite": "tm_adept", "name": "Arena Wraith", "hp": 22, "mag": 9, "skl": 6, "spd": 6, "def": 3, "res": 6, "mov": 5},
 }
 # what shows up, wave by wave — new, nastier archetypes unlock as you climb.

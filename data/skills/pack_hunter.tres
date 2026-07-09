@@ -6,7 +6,7 @@
 script = ExtResource("1_packhunter")
 id = "pack_hunter"
 display_name = "Pack Hunter"
-description = "Rina and Sable hunt as one. Allies within 2 tiles gain +2 damage and +15 crit."
+description = "Rina and Nilu hunt as one. Allies within 2 tiles gain +2 damage and +15 crit."
 unlock_level = 1
 damage = 2
 crit = 15

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://loe0syuhaqrm"
-path="res://.godot/imported/portrait_sable_angry.png-7336534fd1f7b4f8bbf28093b75dd8d1.ctex"
+uid="uid://daktxsecsu0uy"
+path="res://.godot/imported/vael_int_tavern.png-bf367b8794fb0fc2bdcdacf0b1881c9f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/portraits/portrait_sable_angry.png"
-dest_files=["res://.godot/imported/portrait_sable_angry.png-7336534fd1f7b4f8bbf28093b75dd8d1.ctex"]
+source_file="res://assets/art_review/debug/vael_int_tavern.png"
+dest_files=["res://.godot/imported/vael_int_tavern.png-bf367b8794fb0fc2bdcdacf0b1881c9f.ctex"]
 
 [params]
 

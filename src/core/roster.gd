@@ -23,7 +23,7 @@ const PROTAGONIST_ID := "kai"
 const HOUSE_ROSTERS := {
 	"emberwing": ["perrin", "kael", "brenna", "wren", "dain", "liora"],
 	"tidemark": ["serra_prologue", "osric", "elowen", "isolde", "fenn", "bertram"],
-	"thornrook": ["rina", "thessaly", "corvin", "marlow", "vesper", "rurik", "sable"],
+	"thornrook": ["rina", "thessaly", "corvin", "marlow", "vesper", "rurik", "nilu"],
 }
 static var active_house := "emberwing"
 
@@ -71,5 +71,5 @@ static func deploy_cells() -> Dictionary:
 		"isolde": Vector2i(4, 6), "fenn": Vector2i(2, 5), "bertram": Vector2i(3, 5),
 		"thessaly": Vector2i(2, 6), "corvin": Vector2i(3, 6),
 		"marlow": Vector2i(4, 6), "vesper": Vector2i(2, 5), "rurik": Vector2i(3, 5),
-		"sable": Vector2i(4, 5),
+		"nilu": Vector2i(4, 5),
 	}

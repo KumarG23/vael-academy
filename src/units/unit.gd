@@ -270,7 +270,7 @@ const SIGNATURE_COLORS := {
 	"wren": Color(1.0, 0.80, 0.42),     # amber light
 	"serra": Color(0.40, 0.70, 1.0),    # tide
 	"rina": Color(0.55, 1.0, 0.55),    # stag green
-	"sable": Color(0.70, 1.0, 0.60),    # beast green
+	"nilu": Color(0.70, 1.0, 0.60),    # beast green
 }
 func signature_color() -> Color:
 	var id := unit_def.id if unit_def != null else ""

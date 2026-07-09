@@ -8,8 +8,8 @@
 
 [resource]
 script = ExtResource("2_su")
-id = "sable"
-display_name = "Sable"
+id = "nilu"
+display_name = "Nilu"
 char_class = ExtResource("1_bc")
 house_id = "thornrook"
 weapon = ExtResource("3_cw")

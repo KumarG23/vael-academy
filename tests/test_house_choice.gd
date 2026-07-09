@@ -24,7 +24,7 @@ func test_default_house_is_emberwing():
 
 func test_choosing_thornrook_flips_the_roster():
 	Campaign.set_house("thornrook")
-	assert_eq(_fielded_ids(), ["rina", "thessaly", "corvin", "marlow", "vesper", "rurik", "sable", "kai"],
+	assert_eq(_fielded_ids(), ["rina", "thessaly", "corvin", "marlow", "vesper", "rurik", "nilu", "kai"],
 		"full Thornrook house + protagonist (WO-5.5)")
 
 

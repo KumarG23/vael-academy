@@ -1,6 +1,9 @@
-# CHARACTER_BIBLE_SABLE.md — Sable, the Goofball Tiger *(draft — 2026-07)*
+# CHARACTER_BIBLE_SABLE.md — Nilu, the Goofball Tiger *(draft — 2026-07)*
 
-Companion to the other bibles. Sable is **Rina's bonded beast** (`CHARACTER_BIBLE_HEADS.md` — Rina, Thornrook heir), a full unit that deploys and fights alongside her, not a summon. Forest-green tiger, black stripes, bronze eyes; a quadruped combat unit (sprite done; portrait done). *The tiger's name is Sable — the wry joke being she's named for the black of her stripes, not the green of her coat.*
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
+Companion to the other bibles. Nilu is **Rina's bonded beast** (`CHARACTER_BIBLE_HEADS.md` — Rina, Thornrook heir), a full unit that deploys and fights alongside her, not a summon. Forest-green tiger, black stripes, bronze eyes; a quadruped combat unit (sprite done; portrait done). *The tiger's name is Nilu — the wry joke being she's named for the black of her stripes, not the green of her coat.*
 
 ## Who she is
 
@@ -21,17 +24,17 @@ Companion to the other bibles. Sable is **Rina's bonded beast** (`CHARACTER_BIBL
 
 ## With Rina
 
-Rina is dry, cerebral, three-moves-ahead; Sable is pure id and snack-logic — the odd-couple engine of the pair. Rina treats her simultaneously as a fascinating research subject *and* her closest friend; Sable treats Rina as her slightly-too-wordy human who is, regrettably, in charge of the snacks. Rina's clipped "Three moves ahead" landing right as Sable chases a butterfly is the recurring gag. Underneath: total trust. Sable's one no-pun line is always "behind me," and Rina always steps back.
+Rina is dry, cerebral, three-moves-ahead; Nilu is pure id and snack-logic — the odd-couple engine of the pair. Rina treats her simultaneously as a fascinating research subject *and* her closest friend; Nilu treats Rina as her slightly-too-wordy human who is, regrettably, in charge of the snacks. Rina's clipped "Three moves ahead" landing right as Nilu chases a butterfly is the recurring gag. Underneath: total trust. Nilu's one no-pun line is always "behind me," and Rina always steps back.
 
 ## Combat
 
 - A **bonded companion unit**: deploys *free* alongside Rina (proposed: doesn't cost a deploy slot), a fast melee flanker guarding the ranged heir. Proposed rule: retreats/downs if Rina falls.
-- Signature synergy — **Pack Hunter:** bonus when she attacks the same target Rina threatens (pairs with Rina's *Three Moves Ahead*, which crits foes Sable menaces).
+- Signature synergy — **Pack Hunter:** bonus when she attacks the same target Rina threatens (pairs with Rina's *Three Moves Ahead*, which crits foes Nilu menaces).
 - Vulnerable to the same **Hunter's Instinct** (Rurik) "+damage vs beasts" idea — a nice wrinkle if she's ever charmed/turned, and it means beast-slayers matter.
 
 ## Open / to decide
 
 - Portrait: keep the little green jacket (leans into the talking-goof read) or a clean all-beast version.
 - Does she *speak aloud* to everyone, or is it "Rina (and the player) understand her"? Leaning: everyone hears her, and reactions to a talking tiger are half the comedy.
-- Support conversations (Sable ↔ other students) — huge comedic upside.
+- Support conversations (Nilu ↔ other students) — huge comedic upside.
 - Exact deploy/loss rules for a bonded unit (needs the engine work).

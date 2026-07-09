@@ -1,5 +1,8 @@
 # CHARACTER_BIBLE_TIDEMARK.md — House Tidemark
 
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
 *Deep blue & silver · Leviathan · the coast · lances / armor / faith · defense growths (DEF/HP)*
 *Culture: disciplined, chivalric, duty-bound. Hold the line so others don't fall.*
 

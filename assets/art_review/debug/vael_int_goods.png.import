@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0vnxa5yuk8eh"
-path="res://.godot/imported/walk_n_f1.png-1a8ded35d884993140911eabd782d304.ctex"
+uid="uid://hmjeyw6obxe4"
+path="res://.godot/imported/vael_int_goods.png-794087fb55516a1040c7458269776ace.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/units/sable/walk_n_f1.png"
-dest_files=["res://.godot/imported/walk_n_f1.png-1a8ded35d884993140911eabd782d304.ctex"]
+source_file="res://assets/art_review/debug/vael_int_goods.png"
+dest_files=["res://.godot/imported/vael_int_goods.png-794087fb55516a1040c7458269776ace.ctex"]
 
 [params]
 

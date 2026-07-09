@@ -1,5 +1,8 @@
 # CHARACTER_BIBLE_KAI.md — Kai Kumar
 
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
 Companion to `MASTER_PLAN.md` and `WORLD_BIBLE.md`. Kai occupies Emberwing's lord slot — same mechanical role Ash had (sword, balanced growths, must-survive), same housemates in Brenna, Kael, and Wren. Chapter 1's kit and tests are untouched by anything below; the magic side of this bible is about where he's headed after the slice, not what he plays like right now.
 
 ## Overview

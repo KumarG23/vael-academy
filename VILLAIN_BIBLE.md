@@ -1,5 +1,8 @@
 # VILLAIN_BIBLE.md — The Prince Who Died *(draft, spine v2 — 2026-07)*
 
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
 Companion to `WORLD_BIBLE.md` (§3, §3b, §4), `ACADEMY_BIBLE.md`, `CHARACTER_BIBLE_KAI.md`. The campaign's faced antagonist. **Draft for Neal to tear apart** — names and specifics are placeholders; the shape is the point.
 
 > **Seeding rule:** he is a *pressure and a shadow* for a long time — agents, rumors, ripples — not a man who monologues in the prologue. Keep him mostly off-screen (a name, a hand behind events, at most a silhouette/epilogue seed) until the campaign has earned him.

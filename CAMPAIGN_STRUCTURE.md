@@ -1,5 +1,8 @@
 # CAMPAIGN_STRUCTURE.md — The Spine
 
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
 Companion to `MASTER_PLAN.md`, `WORLD_BIBLE.md`, `ACADEMY_BIBLE.md`. This is a **draft skeleton to react to**, not locked canon — the shape of the campaign so the bibles have something to hang on. Names and beats past the prologue are all open. What's already *built and tested* is noted inline so nothing here implies throwing away working code.
 
 ---

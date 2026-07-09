@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://v4one8k1dg0j"
-path="res://.godot/imported/portrait_sable_surprised.png-fdb482341a81cb81b7d93d17cfe5ec4a.ctex"
+uid="uid://dtw8mjc5mpti2"
+path="res://.godot/imported/vael_int_magic.png-5aa4a3fdc95ea76f1593aecb74ccce16.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/portraits/portrait_sable_surprised.png"
-dest_files=["res://.godot/imported/portrait_sable_surprised.png-fdb482341a81cb81b7d93d17cfe5ec4a.ctex"]
+source_file="res://assets/art_review/debug/vael_int_magic.png"
+dest_files=["res://.godot/imported/vael_int_magic.png-5aa4a3fdc95ea76f1593aecb74ccce16.ctex"]
 
 [params]
 

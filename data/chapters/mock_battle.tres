@@ -28,7 +28,7 @@
 [ext_resource type="Resource" path="res://data/units/marlow.tres" id="33_thm"]
 [ext_resource type="Resource" path="res://data/units/vesper.tres" id="34_thp"]
 [ext_resource type="Resource" path="res://data/units/rurik.tres" id="35_thr"]
-[ext_resource type="Resource" path="res://data/units/sable.tres" id="36_ths"]
+[ext_resource type="Resource" path="res://data/units/nilu.tres" id="36_ths"]
 
 [sub_resource type="Resource" id="Resource_wadgp"]
 script = ExtResource("1_euytt")
@@ -237,7 +237,7 @@ deploy_cells = Dictionary[String, Vector2i]({
 "marlow": Vector2i(7, 12),
 "vesper": Vector2i(7, 13),
 "rurik": Vector2i(4, 10),
-"sable": Vector2i(4, 11),
+"nilu": Vector2i(4, 11),
 "perrin": Vector2i(1, 12),
 "wren": Vector2i(3, 13)
 })

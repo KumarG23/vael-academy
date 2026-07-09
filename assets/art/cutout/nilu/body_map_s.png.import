@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c3shjmgh1iscq"
-path="res://.godot/imported/walk_f1.png-9c2c02172e81960674ab434de9fa0e2d.ctex"
+uid="uid://dpu7m78fl8t7v"
+path="res://.godot/imported/body_map_s.png-d1d9c9c1d5b239600fe0e5c388c7fc0f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/units/sable/walk_f1.png"
-dest_files=["res://.godot/imported/walk_f1.png-9c2c02172e81960674ab434de9fa0e2d.ctex"]
+source_file="res://assets/art/cutout/nilu/body_map_s.png"
+dest_files=["res://.godot/imported/body_map_s.png-d1d9c9c1d5b239600fe0e5c388c7fc0f.ctex"]
 
 [params]
 

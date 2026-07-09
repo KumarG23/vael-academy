@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cu8fk3ar5xl3o"
-path="res://.godot/imported/portrait_sable_worried.png-0c161ee1724186930ef158cb4ac2f3c0.ctex"
+uid="uid://bjkat4uwrmb7g"
+path="res://.godot/imported/portrait_nilu_happy.png-3168aef8b649d2914a9f035045cd3549.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/portraits/portrait_sable_worried.png"
-dest_files=["res://.godot/imported/portrait_sable_worried.png-0c161ee1724186930ef158cb4ac2f3c0.ctex"]
+source_file="res://assets/portraits/portrait_nilu_happy.png"
+dest_files=["res://.godot/imported/portrait_nilu_happy.png-3168aef8b649d2914a9f035045cd3549.ctex"]
 
 [params]
 

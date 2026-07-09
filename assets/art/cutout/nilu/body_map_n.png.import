@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8skjblkbhhal"
-path="res://.godot/imported/body_map.png-0c5c0f16835377c7c1fe66f843563185.ctex"
+uid="uid://cusxqgv5d7tol"
+path="res://.godot/imported/body_map_n.png-5ad72f1f5ad1d57897f1be70514d7f36.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/cutout/sable/body_map.png"
-dest_files=["res://.godot/imported/body_map.png-0c5c0f16835377c7c1fe66f843563185.ctex"]
+source_file="res://assets/art/cutout/nilu/body_map_n.png"
+dest_files=["res://.godot/imported/body_map_n.png-5ad72f1f5ad1d57897f1be70514d7f36.ctex"]
 
 [params]
 

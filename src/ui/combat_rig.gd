@@ -186,7 +186,7 @@ func set_weapon(weapon_type: int) -> void:
 	_rest_rot = rest
 	_pivot.rotation = _rest_rot
 	# a beast has no weapon sprite — its lunge + slash arc read as a claw swipe
-	_weapon.visible = _unit_id != "sable"
+	_weapon.visible = _unit_id != "nilu"
 
 
 func _process(delta: float) -> void:
@@ -431,7 +431,7 @@ func _melee_color() -> Color:
 		"sig_kael": return Color(0.70, 0.90, 1.0)  # keen steel
 		"sig_perrin": return Color(1.0, 0.92, 0.55) # Oathlight — gold
 		"sig_marlow": return Color(0.80, 0.55, 1.0) # violet edge
-		"claw": return Color(0.75, 1.0, 0.70)      # Sable's claws — green
+		"claw": return Color(0.75, 1.0, 0.70)      # Nilu's claws — green
 		_: return Color(0.85, 1.0, 0.9)            # default steel gleam
 func _heal_color() -> Color:
 	match _unit_id:

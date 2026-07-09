@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7cv8qlqjdpjt"
-path="res://.godot/imported/portrait_sable_sad.png-41235820316cd9bcbdd53c65edd4ff0a.ctex"
+uid="uid://cpt7o2hqkn65j"
+path="res://.godot/imported/vael_int_smithy.png-35b5ee6f5b95d00a1a0e592086cdadf9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/portraits/portrait_sable_sad.png"
-dest_files=["res://.godot/imported/portrait_sable_sad.png-41235820316cd9bcbdd53c65edd4ff0a.ctex"]
+source_file="res://assets/art_review/debug/vael_int_smithy.png"
+dest_files=["res://.godot/imported/vael_int_smithy.png-35b5ee6f5b95d00a1a0e592086cdadf9.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://v6nom4lx8kgs"
-path="res://.godot/imported/portrait_sable_blush.png-49ef51defc5e78c4a26b591706779406.ctex"
+uid="uid://dheucvlijjf0p"
+path="res://.godot/imported/portrait_nilu_sad.png-85b06e27a8df6890ad18f3bb9a7b5a9c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/portraits/portrait_sable_blush.png"
-dest_files=["res://.godot/imported/portrait_sable_blush.png-49ef51defc5e78c4a26b591706779406.ctex"]
+source_file="res://assets/portraits/portrait_nilu_sad.png"
+dest_files=["res://.godot/imported/portrait_nilu_sad.png-85b06e27a8df6890ad18f3bb9a7b5a9c.ctex"]
 
 [params]
 

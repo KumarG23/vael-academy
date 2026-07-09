@@ -1,5 +1,8 @@
 # CHARACTER_BIBLE_EMBERWING.md — House Emberwing
 
+> **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
+
+
 *Crimson & gold · Firebird · the southern reach · swords / cavalry / offense growths (STR/SPD)*
 *Culture: bold, warm, heart-on-sleeve. Trust loudly, charge first, mean it.*
 

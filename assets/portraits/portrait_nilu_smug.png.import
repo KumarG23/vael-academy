@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cusxqgv5d7tol"
-path="res://.godot/imported/body_map_n.png-dd80cc03b777eecf4db1d71c5f2ac7b2.ctex"
+uid="uid://dgwup3ba3dg4r"
+path="res://.godot/imported/portrait_nilu_smug.png-2760d4e5fe27007985a1a8e461ab1bb0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/cutout/sable/body_map_n.png"
-dest_files=["res://.godot/imported/body_map_n.png-dd80cc03b777eecf4db1d71c5f2ac7b2.ctex"]
+source_file="res://assets/portraits/portrait_nilu_smug.png"
+dest_files=["res://.godot/imported/portrait_nilu_smug.png-2760d4e5fe27007985a1a8e461ab1bb0.ctex"]
 
 [params]
 
