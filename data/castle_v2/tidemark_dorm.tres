@@ -142,6 +142,13 @@ to_room = "campus"
 spawn_cell = Vector2i(2, 16)
 label = "◀ To the Campus"
 
+[sub_resource type="Resource" id="Resource_fpdc4"]
+script = ExtResource("12_g4jyn")
+cell = Vector2i(14, 7)
+to_room = "tidemark_hall"
+spawn_cell = Vector2i(7, 8)
+label = "Enter the Dormitory"
+
 [sub_resource type="Resource" id="Resource_3tm62"]
 script = ExtResource("13_jych7")
 id = "tidemark_dorm_rest"
@@ -169,5 +176,5 @@ script = ExtResource("14_hv5k3")
 id = "tidemark_dorm"
 display_name = "Tidemark Quarter"
 chapter = SubResource("Resource_cysbp")
-doors = Array[ExtResource("12_g4jyn")]([SubResource("Resource_m5rm1")])
+doors = Array[ExtResource("12_g4jyn")]([SubResource("Resource_m5rm1"), SubResource("Resource_fpdc4")])
 points = Array[ExtResource("13_jych7")]([SubResource("Resource_3tm62"), SubResource("Resource_bsdrw"), SubResource("Resource_vcrc5")])

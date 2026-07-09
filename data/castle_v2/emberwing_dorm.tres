@@ -146,8 +146,8 @@ label = "◀ To the Campus"
 [sub_resource type="Resource" id="Resource_rpxa2"]
 script = ExtResource("12_pf03r")
 cell = Vector2i(14, 7)
-to_room = "dorm_hall"
-spawn_cell = Vector2i(0, 4)
+to_room = "emberwing_hall"
+spawn_cell = Vector2i(7, 8)
 label = "Enter the Dormitory"
 
 [sub_resource type="Resource" id="Resource_t300l"]

@@ -142,6 +142,13 @@ to_room = "campus"
 spawn_cell = Vector2i(21, 24)
 label = "◀ To the Campus"
 
+[sub_resource type="Resource" id="Resource_8euxm"]
+script = ExtResource("11_j083q")
+cell = Vector2i(14, 7)
+to_room = "thornrook_hall"
+spawn_cell = Vector2i(7, 8)
+label = "Enter the Dormitory"
+
 [sub_resource type="Resource" id="Resource_xwoan"]
 script = ExtResource("12_54r45")
 id = "thornrook_dorm_rest"
@@ -169,5 +176,5 @@ script = ExtResource("13_dlhbx")
 id = "thornrook_dorm"
 display_name = "Thornrook Quarter"
 chapter = SubResource("Resource_wfeat")
-doors = Array[ExtResource("11_j083q")]([SubResource("Resource_kmt64")])
+doors = Array[ExtResource("11_j083q")]([SubResource("Resource_kmt64"), SubResource("Resource_8euxm")])
 points = Array[ExtResource("12_54r45")]([SubResource("Resource_xwoan"), SubResource("Resource_yj0a5"), SubResource("Resource_4tnon")])

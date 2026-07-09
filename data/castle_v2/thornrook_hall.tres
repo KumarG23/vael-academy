@@ -1,0 +1,107 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_aehk8"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bed_thorn.png" id="2_w4ugl"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/bookshelf.png" id="3_pmw86"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner_pair.png" id="4_oibev"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="5_qkcu2"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/notice_board.png" id="6_suaj3"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="7_7g22q"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="8_dewkc"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="9_emayu"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="10_oyptt"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="11_rbrc1"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="12_wtdfy"]
+
+[sub_resource type="Resource" id="Resource_00gln"]
+script = ExtResource("1_aehk8")
+texture = ExtResource("2_w4ugl")
+cell = Vector2i(2, 2)
+
+[sub_resource type="Resource" id="Resource_1g67y"]
+script = ExtResource("1_aehk8")
+texture = ExtResource("2_w4ugl")
+cell = Vector2i(5, 2)
+
+[sub_resource type="Resource" id="Resource_k3t6f"]
+script = ExtResource("1_aehk8")
+texture = ExtResource("2_w4ugl")
+cell = Vector2i(8, 2)
+
+[sub_resource type="Resource" id="Resource_xig7g"]
+script = ExtResource("1_aehk8")
+texture = ExtResource("2_w4ugl")
+cell = Vector2i(11, 2)
+
+[sub_resource type="Resource" id="Resource_pmgwa"]
+script = ExtResource("1_aehk8")
+texture = ExtResource("3_pmw86")
+cell = Vector2i(14, 3)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_7ask8"]
+script = ExtResource("1_aehk8")
+texture = ExtResource("4_oibev")
+cell = Vector2i(6, 1)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_pu322"]
+script = ExtResource("1_aehk8")
+texture = ExtResource("3_pmw86")
+cell = Vector2i(14, 6)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_6bwcj"]
+script = ExtResource("1_aehk8")
+texture = ExtResource("5_qkcu2")
+cell = Vector2i(1, 8)
+
+[sub_resource type="Resource" id="Resource_u71r6"]
+script = ExtResource("1_aehk8")
+texture = ExtResource("6_suaj3")
+cell = Vector2i(15, 8)
+offset = Vector2(16, 0)
+
+[sub_resource type="Resource" id="Resource_3172g"]
+script = ExtResource("8_dewkc")
+id = "castle_thornrook_hall"
+display_name = "Thornrook Hall"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+is_arena = false
+enemy_spawns = Array[ExtResource("7_7g22q")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("7_7g22q")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 16
+height = 10
+terrain = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 12, 0, 0, 12, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+base_terrain = 7
+decor = Array[ExtResource("1_aehk8")]([SubResource("Resource_00gln"), SubResource("Resource_1g67y"), SubResource("Resource_k3t6f"), SubResource("Resource_xig7g"), SubResource("Resource_pmgwa"), SubResource("Resource_7ask8"), SubResource("Resource_pu322"), SubResource("Resource_6bwcj"), SubResource("Resource_u71r6")])
+visits = Array[ExtResource("9_emayu")]([])
+
+[sub_resource type="Resource" id="Resource_wwmu0"]
+script = ExtResource("10_oyptt")
+cell = Vector2i(7, 9)
+to_room = "thornrook_dorm"
+spawn_cell = Vector2i(14, 8)
+label = "◀ To the Quarter"
+
+[sub_resource type="Resource" id="Resource_ow1jc"]
+script = ExtResource("11_rbrc1")
+id = "fn_rest"
+label = "Rest until next week"
+cell = Vector2i(7, 6)
+
+[resource]
+script = ExtResource("12_wtdfy")
+id = "thornrook_hall"
+display_name = "Thornrook Hall"
+chapter = SubResource("Resource_3172g")
+doors = Array[ExtResource("10_oyptt")]([SubResource("Resource_wwmu0")])
+points = Array[ExtResource("11_rbrc1")]([SubResource("Resource_ow1jc")])

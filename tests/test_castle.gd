@@ -92,7 +92,7 @@ func test_npcs_stand_in_their_rooms():
 func test_function_points_live_in_their_rooms():
 	var expect := {"training": "fn_train", "war_room": "fn_deploy",
 		"common_hall": "fn_supports", "quartermaster": "fn_roster",
-		"dorm_hall": "fn_rest", "waterside": "fn_fish", "entrance": "fn_house"}
+		"emberwing_hall": "fn_rest", "waterside": "fn_fish", "entrance": "fn_house"}
 	for rid in expect:
 		var found := false
 		for p in _castle._rooms[rid].points:
@@ -272,6 +272,6 @@ func test_support_scene_launches_from_the_castle():
 
 func test_spawning_on_a_door_cannot_bounce_back():
 	# the dorm-loop bug: doors stay disarmed until you step off them
-	_castle.enter_room("dorm_hall", Vector2i(0, 4))  # ON the exit door
+	_castle.enter_room("emberwing_hall", Vector2i(7, 9))  # ON the exit door
 	_castle._check_door()
-	assert_eq(_castle.room.id, "dorm_hall", "no instant bounce")
+	assert_eq(_castle.room.id, "emberwing_hall", "no instant bounce")
