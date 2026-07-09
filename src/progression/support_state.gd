@@ -26,6 +26,10 @@ var viewed: Dictionary = {}
 ## WO-5.7: unit id -> partner id, set when a pair reaches the romance rank.
 ## Romance is exclusive — a unit with a recorded partner can't S another chain.
 var romances: Dictionary = {}
+## AW-57 (Neal's rule): romance is OPT-IN. The ♥ dialogue choice records consent
+## here; without it a pair caps at A no matter how many points accrue — the
+## heart is chosen, never automatic.
+var consents: Dictionary = {}   # pair_id -> true once the ♥ choice was taken
 
 
 func mark_viewed(pair_id: String, rank: String) -> void:
@@ -56,8 +60,10 @@ func add_points(a_id: String, b_id: String, amount: int) -> Dictionary:
 	points[pair] = int(points.get(pair, 0)) + amount
 	var after_rank := chain.rank_for_points(int(points[pair]))
 	# WO-5.7: the romance rank is exclusive — if either unit is already
-	# spoken for (another chain), this pair stops at A.
-	if after_rank == SupportChainDef.ROMANCE_RANK and _romance_blocked(chain):
+	# spoken for (another chain), this pair stops at A. AW-57: it is also
+	# CONSENSUAL — no ♥ choice taken, no S, however deep the points run.
+	if after_rank == SupportChainDef.ROMANCE_RANK \
+			and (_romance_blocked(chain) or not bool(consents.get(pair, false))):
 		after_rank = "A"
 	if chain.rank_index(after_rank) > chain.rank_index(before_rank):
 		ranks[pair] = after_rank
@@ -77,6 +83,27 @@ func add_points(a_id: String, b_id: String, amount: int) -> Dictionary:
 		"rank": before_rank,
 		"points": points[pair],
 	}
+
+
+## AW-57: the ♥ choice — record the pair's consent; if their bond is already
+## deep enough the romance rank blossoms on the spot. Returns the add_points
+## result shape ({} when the pair can't romance: ineligible / already spoken
+## for), so callers can toast a rank-up.
+func consent_romance(a_id: String, b_id: String) -> Dictionary:
+	var chain := chain_for_units(a_id, b_id)
+	if chain == null or not chain.romance_eligible or _romance_blocked(chain):
+		return {}
+	var pair := chain.pair_id()
+	consents[pair] = true
+	var before: String = ranks.get(pair, "")
+	var after := chain.rank_for_points(int(points.get(pair, 0)))
+	if after == SupportChainDef.ROMANCE_RANK and chain.rank_index(after) > chain.rank_index(before):
+		ranks[pair] = after
+		romances[chain.unit_a_id] = chain.unit_b_id
+		romances[chain.unit_b_id] = chain.unit_a_id
+		return {"ranked_up": true, "pair_id": pair, "new_rank": after,
+			"chain": chain, "points": int(points.get(pair, 0))}
+	return {"ranked_up": false, "pair_id": pair, "rank": before, "points": int(points.get(pair, 0))}
 
 
 ## Either partner already romanced into a DIFFERENT pair?
@@ -162,6 +189,7 @@ func save_state() -> Dictionary:
 		"ranks": ranks.duplicate(true),
 		"viewed": viewed.duplicate(true),
 		"romances": romances.duplicate(true),
+		"consents": consents.duplicate(true),  # AW-57
 	}
 
 
@@ -182,6 +210,10 @@ func apply_save_state(state: Dictionary) -> void:
 	var saved_rom: Dictionary = state.get("romances", {})
 	for key in saved_rom:
 		romances[str(key)] = str(saved_rom[key])
+	consents.clear()
+	var saved_con: Dictionary = state.get("consents", {})
+	for key in saved_con:
+		consents[str(key)] = bool(saved_con[key])
 	for chain in chains:
 		var pair := chain.pair_id()
 		if not points.has(pair):

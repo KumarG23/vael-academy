@@ -107,6 +107,9 @@ static func _parse_choice(entry: Dictionary, index: int, script: DialogueScript)
 			"text": str(o["text"]),
 			"goto": str(o.get("goto", "")),
 			"flag": str(o.get("flag", "")),
+			# AW-57: a ♥ option — names who it's for; shown only when the scene's
+			# heart_gate allows (rank A + unspoken-for), styled with the heart.
+			"heart": str(o.get("heart", "")),
 		})
 	return DialogueStep.make_choice(str(entry["choice"]), options)
 

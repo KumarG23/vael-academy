@@ -938,10 +938,26 @@ func _play_script(script: DialogueScript) -> void:
 	_dialogue = DialogueScene.new()
 	_ui.add_child(_dialogue)
 	_dialogue.event_triggered.connect(_on_dialogue_event)
+	_dialogue.heart_gate = _heart_available  # AW-57: ♥ options gate on the bond
 	_dialogue.finished.connect(func():
 		_dialogue.queue_free()
 		_dialogue = null)
 	_dialogue.play(script)
+
+
+## AW-57: may a ♥ option for `uid` be offered to Kai right now? Needs an A-rank
+## bond on a romance-eligible chain, and a heart that's still free (one love —
+## Neal's rule; a taken heart or an already-given consent hides the option).
+func _heart_available(uid: String) -> bool:
+	if _support_state.is_romanced("kai"):
+		return false
+	var chain := _support_state.chain_for_units("kai", uid)
+	if chain == null or not chain.romance_eligible:
+		return false
+	if bool(_support_state.consents.get(chain.pair_id(), false)):
+		return false
+	var rank := _support_state.rank_for_units("kai", uid)
+	return chain.rank_index(rank) >= chain.rank_index("A")
 
 
 func _on_dialogue_event(event_name: String, params: Dictionary) -> void:
@@ -950,3 +966,23 @@ func _on_dialogue_event(event_name: String, params: Dictionary) -> void:
 			Campaign.flags["school_" + str(params.get("school", ""))] = true
 		"set_flag":
 			Campaign.flags[str(params.get("flag", ""))] = true
+		"bond":
+			# AW-57 (Neal): saying the right thing deepens the bond — campus chats
+			# carry {"event":"bond","params":{"with":"liora","points":8}} steps.
+			var who := str(params.get("with", ""))
+			var result := _support_state.add_points("kai", who, int(params.get("points", 5)))
+			Campaign.support_save = _support_state.save_state()
+			if result.get("ranked_up", false):
+				EventBus.support_rank_up.emit(str(result["pair_id"]), str(result["new_rank"]))
+				_toast("Your bond with %s deepens — rank %s!" % [who.capitalize(), result["new_rank"]])
+		"romance":
+			# AW-57: the ♥ choice was taken — consent locks; if the bond's already
+			# deep enough, the romance rank blossoms right here.
+			var beloved := str(params.get("with", ""))
+			var res := _support_state.consent_romance("kai", beloved)
+			Campaign.support_save = _support_state.save_state()
+			if res.get("ranked_up", false):
+				EventBus.support_rank_up.emit(str(res["pair_id"]), SupportChainDef.ROMANCE_RANK)
+				_toast("Your heart is set — %s, always. ♥" % beloved.capitalize())
+			elif not res.is_empty():
+				_toast("Something unspoken settles between you two. ♥")

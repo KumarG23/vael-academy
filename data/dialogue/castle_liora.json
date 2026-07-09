@@ -1,5 +1,32 @@
 [
  {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "Shh — watch. If I feed the flame JUST enough, it dances on the water and never touches it."},
- {"speaker": "Kai", "portrait": "kai", "text": "You're going to set the lake on fire one day."},
- {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "One time. ONE time, and the fish were fine."}
+ {"choice": "Say something.",
+  "options": [
+   {"text": "It's beautiful. Like it's breathing.", "goto": "likes"},
+   {"text": "You're going to set the lake on fire one day.", "goto": "tease"},
+   {"text": "Isn't this against about six academy rules?", "goto": "rules"},
+   {"text": "Liora... it's you I keep coming back here for.", "heart": "liora", "goto": "heart"}
+  ]},
+
+ {"label": "likes"},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "expression": "happy", "text": "...Breathing. YES. That's exactly — nobody ever says it right. It's not a weapon out here, it's a creature. You actually see it."},
+ {"event": "bond", "params": {"with": "liora", "points": 8}},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "Come by again. I'll teach it your name."},
+ {"goto": "end"},
+
+ {"label": "tease"},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "text": "One time. ONE time, and the fish were fine."},
+ {"event": "bond", "params": {"with": "liora", "points": 3}},
+ {"goto": "end"},
+
+ {"label": "rules"},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "expression": "annoyed", "text": "Seven, actually. You sound like Maren. The flame doesn't read the handbook and neither do I — off you go, rule-keeper."},
+ {"goto": "end"},
+
+ {"label": "heart"},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "expression": "blush", "text": "The flame just flared and I did NOT do that. ...Say it again. Slower. I want to remember how the lake looked when you did."},
+ {"speaker": "Kai", "portrait": "kai", "text": "It's you, Liora. It's been you for a while."},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "expression": "happy", "text": "Then keep coming back. Every evening. That's the price, and I don't haggle."},
+
+ {"label": "end"}
 ]

@@ -39,6 +39,10 @@ var _revealed := 0.0
 ## falling back to the placeholder card when no art exists. Presentation only.
 var _left_portrait := ""
 var _right_portrait := ""
+## AW-57: per-line emotion — `portrait_<id>_<expression>.png` wins when the art
+## exists (e.g. portrait_liora_happy.png), falling back to the base portrait.
+var _left_expr := "neutral"
+var _right_expr := "neutral"
 var _portrait_cache: Dictionary = {}
 
 
@@ -89,10 +93,40 @@ func choose(index: int) -> void:
 	if option["flag"] != "":
 		flags[option["flag"]] = true
 		flag_set.emit(option["flag"])
+	# AW-57: taking a ♥ option is the romance consent — the scene's owner (the
+	# castle) locks the pair through the same event channel step events use.
+	if str(option.get("heart", "")) != "":
+		event_triggered.emit("romance", {"with": str(option["heart"])})
 	choice_made.emit(step, index)
 	if option["goto"] != "":
 		_index = _script.labels[option["goto"]]  # loop pre-increments past the label
 	_advance_logical()
+
+
+# --- AW-57: gated ♥ options -----------------------------------------------------
+
+## Set by the scene's owner: Callable(unit_id) -> bool, deciding whether a ♥
+## option for that unit may be offered. Unset = hearts stay hidden (battle and
+## test dialogues never flash a heart by accident).
+var heart_gate: Callable = Callable()
+
+## Indices (into _choice.options) of the options actually offered.
+var _shown: Array = []
+
+
+func _refresh_shown_options() -> void:
+	_shown = []
+	for i in range(_choice.options.size()):
+		var heart := str(_choice.options[i].get("heart", ""))
+		if heart == "" or (heart_gate.is_valid() and bool(heart_gate.call(heart))):
+			_shown.append(i)
+	if _shown.is_empty():  # authoring safety: never strand a choice with no options
+		for i in range(_choice.options.size()):
+			_shown.append(i)
+
+
+func shown_option_indices() -> Array:
+	return _shown.duplicate()
 
 
 func is_revealing() -> bool:
@@ -132,6 +166,7 @@ func _advance_logical() -> void:
 		if step.is_choice():
 			_choice = step
 			_choice_index = 0
+			_refresh_shown_options()
 			queue_redraw()
 			choice_shown.emit(step)
 			return
@@ -144,8 +179,10 @@ func _advance_logical() -> void:
 		_current = step
 		if step.side == "right":
 			_right_portrait = step.portrait
+			_right_expr = step.expression  # AW-57: per-line emotion variant
 		else:
 			_left_portrait = step.portrait
+			_left_expr = step.expression
 		_revealed = 0.0 if typewriter_speed > 0.0 else float(step.text.length())
 		queue_redraw()
 		line_shown.emit(step)
@@ -171,7 +208,7 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		accept_event()
 		if _choice != null:
-			choose(_choice_index)  # click confirms the highlighted option
+			choose(_shown[_choice_index])  # click confirms the highlighted option
 		else:
 			advance()
 
@@ -184,13 +221,13 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if _choice != null:
 		match event.keycode:
 			KEY_UP, KEY_W:
-				_choice_index = wrapi(_choice_index - 1, 0, _choice.options.size())
+				_choice_index = wrapi(_choice_index - 1, 0, _shown.size())
 				queue_redraw()
 			KEY_DOWN, KEY_S:
-				_choice_index = wrapi(_choice_index + 1, 0, _choice.options.size())
+				_choice_index = wrapi(_choice_index + 1, 0, _shown.size())
 				queue_redraw()
 			KEY_SPACE, KEY_ENTER, KEY_KP_ENTER:
-				choose(_choice_index)
+				choose(_shown[_choice_index])
 			_:
 				return
 		get_viewport().set_input_as_handled()
@@ -241,30 +278,39 @@ func _draw_choice_panel(vp: Vector2) -> void:
 	var row_h := 40.0
 	var title_h := 44.0 if _choice.text != "" else 8.0
 	var panel := Rect2(
-		Vector2(vp.x * 0.50, vp.y * 0.66 - title_h - row_h * _choice.options.size() - 24),
-		Vector2(vp.x * 0.36, title_h + row_h * _choice.options.size() + 12))
+		Vector2(vp.x * 0.50, vp.y * 0.66 - title_h - row_h * _shown.size() - 24),
+		Vector2(vp.x * 0.36, title_h + row_h * _shown.size() + 12))
 	UITheme.draw_panel(self, panel)  # AW-56: the shared noble frame
 	if _choice.text != "":
 		draw_string(font, panel.position + Vector2(20, 30), _choice.text,
 			HORIZONTAL_ALIGNMENT_LEFT, panel.size.x - 40, 20, Color(0.95, 0.82, 0.35))
-	for i in range(_choice.options.size()):
+	for i in range(_shown.size()):
+		var option: Dictionary = _choice.options[_shown[i]]
+		var is_heart := str(option.get("heart", "")) != ""
 		var row := Rect2(panel.position + Vector2(10, title_h + row_h * i),
 			Vector2(panel.size.x - 20, row_h - 6))
 		if i == _choice_index:
-			draw_rect(row, Color(0.30, 0.26, 0.14, 0.95), true)
-			draw_rect(row, Color(0.95, 0.82, 0.35, 0.9), false, 1.5)
+			# AW-57: the ♥ row glows rose instead of gold
+			var hi := Color(0.42, 0.16, 0.24, 0.95) if is_heart else Color(0.30, 0.26, 0.14, 0.95)
+			var edge := Color(1.0, 0.5, 0.65, 0.9) if is_heart else Color(0.95, 0.82, 0.35, 0.9)
+			draw_rect(row, hi, true)
+			draw_rect(row, edge, false, 1.5)
 			draw_string(font, row.position + Vector2(10, 24), "▶",
-				HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.95, 0.82, 0.35))
-		draw_string(font, row.position + Vector2(34, 24), str(_choice.options[i]["text"]),
-			HORIZONTAL_ALIGNMENT_LEFT, row.size.x - 44, 20,
-			Color.WHITE if i == _choice_index else Color(0.75, 0.76, 0.80))
+				HORIZONTAL_ALIGNMENT_LEFT, -1, 18, edge)
+		var label := ("♥ " if is_heart else "") + str(option["text"])
+		var col := Color(1.0, 0.62, 0.74) if is_heart else Color(0.75, 0.76, 0.80)
+		if i == _choice_index:
+			col = Color(1.0, 0.78, 0.86) if is_heart else Color.WHITE
+		draw_string(font, row.position + Vector2(34, 24), label,
+			HORIZONTAL_ALIGNMENT_LEFT, row.size.x - 44, 20, col)
 
 
 func _draw_portrait(pos: Vector2, color: Color, active: bool, side: String) -> void:
 	var vp := get_viewport_rect().size
 	var size := Vector2(vp.x * 0.20, vp.y * 0.48)
 	# Painted portrait when the art exists (AW-6); placeholder card otherwise.
-	var tex := _portrait_texture(_left_portrait if side == "left" else _right_portrait)
+	var tex := _portrait_texture(_left_portrait if side == "left" else _right_portrait,
+		_left_expr if side == "left" else _right_expr)
 	if tex != null:
 		var h := size.y * 1.15  # portraits may overhang the slot a touch, VN-style
 		var w := tex.get_width() * (h / tex.get_height())
@@ -284,10 +330,21 @@ func _draw_portrait(pos: Vector2, color: Color, active: bool, side: String) -> v
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 96, Color(1, 1, 1, 0.9))
 
 
-func _portrait_texture(id: String) -> Texture2D:
+func _portrait_texture(id: String, expression := "neutral") -> Texture2D:
 	if id == "":
 		return null
-	if not _portrait_cache.has(id):
-		var path := "res://assets/portraits/portrait_%s.png" % id
-		_portrait_cache[id] = load(path) if ResourceLoader.exists(path) else null
-	return _portrait_cache[id]
+	var path := portrait_path(id, expression)
+	if not _portrait_cache.has(path):
+		_portrait_cache[path] = load(path) if ResourceLoader.exists(path) else null
+	return _portrait_cache[path]
+
+
+## AW-57: resolve a portrait's file for an expression — the emotion variant
+## (`portrait_<id>_<expression>.png`) when its art exists, else the base. Pure,
+## so the convention is testable; ComfyUI/Gemini emotion sets just drop in.
+static func portrait_path(id: String, expression := "neutral") -> String:
+	if expression != "" and expression != "neutral":
+		var variant := "res://assets/portraits/portrait_%s_%s.png" % [id, expression]
+		if ResourceLoader.exists(variant):
+			return variant
+	return "res://assets/portraits/portrait_%s.png" % id
