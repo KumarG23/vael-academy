@@ -191,9 +191,19 @@ func test_lioras_campus_chat_carries_the_scaffold():
 
 # --- emotion portraits (AW-57 convention) -------------------------------------------
 
-func test_portrait_path_falls_back_to_the_base():
+func test_portrait_resolves_emotion_variants_with_base_fallback():
+	# AW-58: Liora's Gemini emotion set is installed — variants win when they exist
 	assert_eq(DialogueScene.portrait_path("liora", "happy"),
+		"res://assets/portraits/portrait_liora_happy.png",
+		"the happy variant serves her happy lines")
+	assert_eq(DialogueScene.portrait_path("liora", "smug"),
 		"res://assets/portraits/portrait_liora.png",
-		"no happy variant on disk yet -> the base portrait serves")
+		"an expression with no art falls back to the base")
 	assert_eq(DialogueScene.portrait_path("liora", "neutral"),
 		"res://assets/portraits/portrait_liora.png")
+
+
+func test_liora_ships_the_full_emotion_set():
+	for e in ["happy", "sad", "angry", "blush"]:
+		assert_true(ResourceLoader.exists("res://assets/portraits/portrait_liora_%s.png" % e),
+			"portrait_liora_%s.png installed" % e)

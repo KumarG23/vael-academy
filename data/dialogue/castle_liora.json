@@ -20,7 +20,7 @@
  {"goto": "end"},
 
  {"label": "rules"},
- {"speaker": "Liora", "side": "right", "portrait": "liora", "expression": "annoyed", "text": "Seven, actually. You sound like Maren. The flame doesn't read the handbook and neither do I — off you go, rule-keeper."},
+ {"speaker": "Liora", "side": "right", "portrait": "liora", "expression": "angry", "text": "Seven, actually. You sound like Maren. The flame doesn't read the handbook and neither do I — off you go, rule-keeper."},
  {"goto": "end"},
 
  {"label": "heart"},
