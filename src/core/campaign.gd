@@ -102,8 +102,9 @@ func current_event() -> CalendarEventDef:
 func advance_week() -> void:
 	week += 1
 	flags.erase("arena_used_this_week")  # AW-43: the Arena reopens each week
-	# AW-54: crossing the year's midpoint locks Semester 1's report card
-	if semester == 1 and week > semester_end_week():
+	# AW-54: crossing a semester's end locks its report card. AW-76 (Codex
+	# finding #6): semester 2 closes too — the YEAR-END ceremony was never firing.
+	if semester <= 2 and week > semester_end_week():
 		close_semester()
 
 
@@ -248,7 +249,10 @@ func capture(states: Dictionary, support: Dictionary, result: String) -> void:
 		unit_states[id] = states[id]
 	support_save = support.duplicate(true)
 	last_result = result
-	if result == "victory":
+	# AW-76 (Codex finding #1): only a YEAR battle moves the calendar. The
+	# prologue is won before the house oath (house_locked false) — advancing
+	# there burned Week 1 before Kai ever reached Vael.
+	if result == "victory" and house_locked:
 		advance_week()  # the week's battle is won — the year moves on (WO-7.1)
 
 

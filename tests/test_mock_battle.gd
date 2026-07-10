@@ -227,3 +227,24 @@ func test_intro_card_states_the_battle_and_objective():
 	assert_string_contains(joined, "Objective:")
 	assert_string_contains(joined, "Foes:")
 
+
+## AW-76 (Codex finding #5): the fallen COUNT — the dead leave _units, so the
+## end-of-battle headcount saw zero losses and graded every victory clean.
+func test_battle_grade_counts_the_fallen():
+	Campaign.reset_new_game(false)
+	Campaign.set_house("emberwing")
+	Campaign.deploy()
+	var fielded: int = _view._fielded_at_start
+	assert_gt(fielded, 1, "deployment headcount recorded")
+	var casualty: Unit = null
+	for u in _view._living_units_on_team(0):
+		if u != _view._lord_unit:
+			casualty = u
+			break
+	_view._kill(casualty)
+	_view._end_battle(true)
+	assert_eq(_view._fielded_at_start, fielded, "the headcount remembers the fallen")
+	var scores: Array = Campaign.grade_samples["battle_scores"]
+	assert_eq(int(scores[-1]), Grading.battle_score(true, 1, _view._turn.round_number),
+		"the recorded grade paid for the loss")
+

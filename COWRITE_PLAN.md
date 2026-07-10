@@ -110,6 +110,15 @@ new for the notice board.
 
 ## H. Names & bookkeeping (10 min)
 
+- **Two canon conflicts to rule on (Codex audit, 2026-07-09):** ① the sword's
+  provenance — Kai carries it into the cave, yet his parents later unwrap and
+  gift the same sword (CHARACTER_BIBLE_KAI.md holds both versions); ② the plan
+  says sword-only Kai with *involuntary* magic in the opening slice, but he
+  starts play with usable Crownspark. Pick one truth each; I'll sweep the docs.
+- **Theme guard:** "belonging is built" vs. Kai secretly carrying the royal
+  bloodline — the story must confront it head-on or it accidentally argues he
+  belonged because he was MORE royal. Proposed rule (fits §A candidate 3):
+  blood only opens the door; what he protects decides whether the power answers.
 - Kingdom name: keep **Aldreth**? (my vote: yes — it's grown roots)
 - The prince (see C1) · pixel font pick (drop `assets/fonts/pixel.ttf`) ·
   the playhouse's play title (*The Fourth Fire* is already seeded on its bill —

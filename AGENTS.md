@@ -12,6 +12,28 @@ Work contract (same as CLAUDE.md, which Claude-family agents use):
 
 Note: Claude sessions use Godot MCP Pro for editor automation; it is optional. Everything needed is achievable via the CLI commands in `HANDOFF.md`.
 
+## Working alongside other agents (Claude ↔ Codex ↔ others)
+
+Two agents, two modes — pick one per session:
+
+1. **Implementer / Reviewer (preferred).** One agent implements WOs; the other
+   audits a NAMED GREEN COMMIT and files findings in `AUDITS.md` (format is in
+   that file). The implementer triages findings into WOs. Roles can swap
+   between sessions (e.g., when one model's usage resets).
+2. **Parallel work.** Only in separate `git worktree`s on separate branches,
+   synced through the Forgejo remote. Never two agents editing one checkout —
+   a mid-WO tree doesn't even parse, and an audit of it reports phantoms.
+
+Hard rules either way:
+- **One writer per MCP.** Aseprite MCP (see below), and equally the Godot
+  editor MCP bridge — one agent connected at a time.
+- **Base off the last green commit** (suite passing, §10/HANDOFF updated).
+  Commit-per-WO is the handoff unit; don't hand over a red tree.
+- `MASTER_PLAN.md` §10 + `HANDOFF.md` are the shared brain; `AUDITS.md` is the
+  cross-agent inbox. All three are updated in the same commit as the work.
+- Story/design calls are Neal's. An audit may PROPOSE (in AUDITS.md); it never
+  rewrites bibles or canon.
+
 ## Aseprite MCP / Sprite Art
 
 For Vael Academy sprite work, use the project skill `.claude/skills/vael-academy-aseprite-pixel-art.md`. Aseprite MCP Pro is configured as `aseprite-mcp-pro` at `http://127.0.0.1:8003/mcp`; Godot MCP Pro remains configured for in-engine validation. Read `HANDOFF.md`, `STYLE_BIBLE.md`, and `MASTER_PLAN.md` §8/§10 before art work. Current sprite pipeline is generator-first (`assets/sprites/sources/generators/`) with `.aseprite` files as exports/cleanup artifacts unless Neal explicitly promotes one to source-of-truth.

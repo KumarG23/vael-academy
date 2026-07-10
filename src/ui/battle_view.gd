@@ -126,6 +126,8 @@ var _houses: Dictionary = {}        # house_id -> HouseDef
 @export var player_house_id: String = "emberwing"
 @export var enemy_house_id: String = "tidemark"
 var _save_system := SaveSystem.new()
+var _fielded_at_start := 0  # AW-76: team-0 headcount at deployment — the dead
+# leave _units, so counting at the end saw zero losses (Codex finding #5)
 var _defeated_unit_ids: Array[String] = []
 var _permadead_unit_ids: Array[String] = []
 
@@ -161,6 +163,7 @@ func _ready() -> void:
 	_setup_ui()
 	_setup_juice()
 	_spawn_units()
+	_fielded_at_start = _living_units_on_team(0).size()
 	if chapter.is_arena:
 		_arena_spawn_wave(1)  # AW-43: the first bout — Kai's already spawned solo
 	_focus_player_start()
@@ -966,10 +969,7 @@ func _end_battle(victory: bool) -> void:
 			"victory" if victory else "defeat")
 		# AW-54: graded battles feed the Battlefield mark (the arena grades itself)
 		if not chapter.is_arena:
-			var fielded := 0
-			for u in _units:
-				if u.team == 0:
-					fielded += 1
+			var fielded := maxi(_fielded_at_start, _living_units_on_team(0).size())
 			var lost := fielded - _living_units_on_team(0).size()
 			Campaign.record_battle_score(Grading.battle_score(victory, lost, _turn.round_number))
 	if victory:
@@ -1092,6 +1092,7 @@ func make_save_payload() -> Dictionary:
 			"rng_state": str(_rng.state_value()),
 			"arena_wave": _arena_wave,
 			"arena_pending_wave": _arena_pending_wave,
+			"fielded": _fielded_at_start,
 			"round_number": _turn.round_number,
 			"active_team": int(_turn.active_team),
 			"battle_over": _battle_over,
@@ -1139,6 +1140,7 @@ func apply_save_payload(payload: Dictionary) -> void:
 	# runs apply_campaign_state, which overwrites the state with the CAMPAIGN's
 	# pre-battle copy and would erase every point earned since deployment.
 	_support_state.apply_save_state(payload.get("supports", {}))
+	_fielded_at_start = int(battle.get("fielded", _living_units_on_team(0).size()))
 	_restore_post_load_ui()
 
 

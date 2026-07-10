@@ -24,6 +24,7 @@ func test_current_event_follows_the_week():
 
 func test_victory_advances_the_year():
 	Campaign.reset_new_game(false)
+	Campaign.house_locked = true  # AW-76: only YEAR battles (post-oath) advance
 	Campaign.capture({}, {}, "victory")
 	assert_eq(Campaign.week, 2)
 	Campaign.capture({}, {}, "defeat")
@@ -57,3 +58,29 @@ func test_war_room_respects_free_weeks():
 	castle._open_mission()
 	assert_eq(castle._menu_context, "mission")
 	castle._close_menu()
+
+
+## AW-76 (Codex finding #1): the prologue victory happens BEFORE the house oath —
+## it must not burn Week 1. Year battles (house locked) advance as ever.
+func test_prologue_victory_does_not_advance_the_week():
+	Campaign.reset_new_game(false)
+	Campaign.active = true
+	Campaign.house_locked = false
+	Campaign.capture({}, {}, "victory")
+	assert_eq(Campaign.week, 1, "the year has not started yet")
+	Campaign.house_locked = true
+	Campaign.capture({}, {}, "victory")
+	assert_eq(Campaign.week, 2, "a year battle moves the calendar")
+
+
+## AW-76 (Codex finding #6): BOTH semesters close — the year-end report card
+## was never firing because only semester 1 had a close trigger.
+func test_second_semester_closes_at_year_end():
+	Campaign.reset_new_game(false)
+	Campaign.house_locked = true
+	var total: int = Campaign.calendar().size()
+	while Campaign.week <= total:
+		Campaign.advance_week()
+	assert_eq(Campaign.report_cards.size(), 2, "two semesters, two report cards")
+	assert_eq(int(Campaign.report_cards[1]["semester"]), 2)
+

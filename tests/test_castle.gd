@@ -291,3 +291,18 @@ func test_area_title_card_shows_the_room_name():
 	assert_true(_castle._title_card.is_showing(), "the card is up")
 	assert_string_contains(_castle._title_card._text, "The Sealed Grove")
 
+
+## AW-76 (Codex finding #2): required battles can't be slept through — resting
+## on a battle week refuses until the mission is answered.
+func test_resting_through_a_battle_week_is_refused():
+	Campaign.house_locked = true
+	for e in Campaign.calendar():
+		if e.kind == CalendarEventDef.Kind.BATTLE:
+			Campaign.week = e.week
+			break
+	var before: int = Campaign.week
+	_castle._rest_week()
+	assert_eq(Campaign.week, before, "the week held")
+	assert_true(_castle._toast_label.visible, "and the castle says why")
+	Campaign.week = 1
+

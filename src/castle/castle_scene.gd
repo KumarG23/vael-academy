@@ -757,6 +757,12 @@ const CEREMONY_LINES := {
 
 
 func _rest_week() -> void:
+	# AW-76 (Codex finding #2): a battle week doesn't pass by sleeping through
+	# it — winning the mission is what advances the calendar (Campaign.capture).
+	var now := Campaign.current_event()
+	if now != null and now.kind == CalendarEventDef.Kind.BATTLE:
+		_toast("%s awaits — the year holds its breath until you answer it." % now.label)
+		return
 	var sem_before := Campaign.semester
 	Campaign.advance_week()
 	_refresh_date()

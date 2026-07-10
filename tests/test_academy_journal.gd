@@ -11,14 +11,13 @@ var _journal
 func before_each() -> void:
 	Campaign.reset_new_game(false)
 	_journal = load("res://src/ui/academy_journal.gd").new()
+	# AW-76 (Codex finding #4): never touch the player's real user://saves
+	_journal._save = SaveSystem.new("user://test_journal_saves_%d" % Time.get_ticks_usec())
 	add_child_autofree(_journal)
 	await wait_frames(1)
 
 
 func after_each() -> void:
-	var save := SaveSystem.new()
-	if save.has_slot(TEST_SLOT):
-		DirAccess.remove_absolute(ProjectSettings.globalize_path(save.slot_path(TEST_SLOT)))
 	Campaign.reset_new_game(false)
 
 
@@ -51,10 +50,21 @@ func test_roster_selection_moves_and_wraps():
 func test_saving_writes_a_slot_and_the_label_updates():
 	_journal._tab = 4  # System (AW-54 slid it right for Grades)
 	_journal._do_save(TEST_SLOT)
-	var save := SaveSystem.new()
-	assert_true(save.has_slot(TEST_SLOT), "the slot now exists on disk")
+	assert_true(_journal._save.has_slot(TEST_SLOT), "the slot now exists on disk")
 	_journal._refresh_slots()
 	assert_ne(_journal._slot_label(TEST_SLOT), "— empty —", "the System tab shows it as filled")
+
+
+## AW-76 (Codex finding #3): a journal save must be LOADABLE — the raw
+## to_dict() payload looked occupied but Campaign.load_from_slot refused it.
+func test_journal_saves_round_trip_through_campaign_load():
+	Campaign.flags["gold"] = 321
+	Campaign.week = 2
+	_journal._do_save(TEST_SLOT)
+	Campaign.reset_new_game(false)
+	assert_true(Campaign.load_from_slot(TEST_SLOT, _journal._save), "the slot loads back")
+	assert_eq(int(Campaign.flags.get("gold", 0)), 321, "with the campaign inside")
+	assert_eq(Campaign.week, 2)
 
 
 # --- AW-52: the Inventory hub ---------------------------------------------------

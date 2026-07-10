@@ -280,7 +280,10 @@ func _activate() -> void:
 
 
 func _do_save(slot: int) -> void:
-	if _save.save_slot(slot, Campaign.to_dict()):
+	# AW-76 (Codex finding #3): save through Campaign so the payload gets the
+	# {"campaign": ...} envelope load_from_slot expects — raw to_dict() wrote
+	# slots that LOOKED occupied but could never load.
+	if Campaign.save_to_slot(slot, _save):
 		AudioManager.play_sfx("confirm")
 		_show_toast("Saved to slot %d" % slot)
 		_refresh_slots()
