@@ -1,5 +1,10 @@
 # COWRITE_PLAN.md — Friday night session (2026-07-10)
 
+> **THE SESSION HAPPENED.** Decisions and drafts live in
+> `COWRITE_SESSION_2026-07-10.md`; ratified canon is swept into the bibles
+> (⚖ CANON UPDATE blocks). Sections B/C/D are resolved or superseded there;
+> §E (house pitches) and §F (support matrix) carried to the NEXT session.
+
 *The room convenes. Rules of engagement: STORY_CRAFT.md §3 (macro before prose,
 no clue without an answer, scene-purpose test). Everything below is DRAFT FOR
 TEARING — react, don't defer. Estimated 3 hours; agenda is ordered so early

@@ -1,4 +1,4 @@
-# VILLAIN_BIBLE.md — The Prince Who Died *(draft, spine v2 — 2026-07)*
+# VILLAIN_BIBLE.md — Morvane, the Prince Who Died *(spine v3 — co-write 2026-07-10)*
 
 > **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
 
@@ -45,3 +45,27 @@ Companion to `WORLD_BIBLE.md` (§3, §3b, §4), `ACADEMY_BIBLE.md`, `CHARACTER_B
 - Whether he has a face inside the Academy/court
 - His endgame: does he want to *become* the First Crown, *unseal* something, or *unmake* the current crown — pick when the late campaign exists
 - Whether he's the only faced threat or the first of several
+
+
+## ⚖ CANON UPDATE — co-write session 2026-07-10 (record: COWRITE_SESSION_2026-07-10.md)
+
+- **Name locked: MORVANE.** Year-one dialogue never says "prince"; his agents
+  say only **"the Patron"**. The royal reveal is the epilogue's last line.
+- **His power: the CLAIM** (violet) — see WORLD_BIBLE canon update. He takes
+  people's belonging; his army is the missing. His wound: born second, and when
+  he vanished the kingdom mourned one season and moved on — his own brother
+  signed the death decree. The man terrified of being no one built a power
+  where nobody can ever leave him. He hates Kai because the source gave a
+  forager's son, free, the true belonging he could only counterfeit.
+- **Knows-when (locked):** his agent confirms Kai is of the line at the W5
+  beat — Kai exposes Crown-light protecting someone. He knows before Kai does,
+  and the prince learns it EITHER branch (the signal was already sent).
+- **Endgame (locked lean):** he wants the OTHER HALF — rejoining the split
+  gift by force. The palace's failing ward-light is his clock.
+- **Inside faces:** Director Hesta KNOWS he lives and has told no one (mutual:
+  he knows she knows; he once demonstrated the Claim near her — no words,
+  ever). She is a withholding hedger, NEVER his agent. The deniable
+  too-specific-question staffer stays unassigned until year 2.
+- **As a student:** Morvane studied at Vael decades ago; the W2 library
+  margin note is his hand ("Silent is not ended. Ask what the fourth kept.").
+

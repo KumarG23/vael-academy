@@ -66,3 +66,31 @@ The whole point of un-parking house choice (`MASTER_PLAN.md` §11 → now a real
 - Whether the prologue is one battle or a short prologue chapter with travel scenes around it
 - Number of "school year" missions between the two inter-house battles
 - How the mystery's escalation is paced against the calendar (a beat per term? per holiday?)
+
+
+## ⚖ CANON UPDATE — co-write session 2026-07-10 (record: COWRITE_SESSION_2026-07-10.md)
+
+- **Pacing (locked):** story beats decouple from week numbers; the calendar
+  grows without doc rewrites. Semester 1 = the slow FE3H build (school life,
+  friendships, clues piling: the locket, the margin note, missing-persons
+  gossip, one small mission) plus **the Tremor** (a 5-second mark-flare at the
+  sealed stacks — a shiver, early). **The VISION is the semester-1 finale**
+  (and grants usable Crownspark). **The Agent** lands mid-semester 2; **the
+  Closing Rite** ends the year; the epilogue carries Alaric's half-truth and
+  the only spoken "prince".
+- **W5 The Agent (locked shape):** a mid-battle forced choice — chase the
+  fleeing agent or save the endangered; the Patron learns of Kai either way
+  (signal already sent); the branch decides cost + which clue you take. The
+  agent is later recognized as one of the missing.
+- **W6 Closing Rite (locked shape):** opens house-vs-house (2–3 rounds), the
+  rite is sabotaged, and **bonded rivals join the player's command** while
+  unbonded ones become protect-targets — the year's friendships literally
+  become the army. The employer glimpse moves to the epilogue.
+- **The Returned:** freed claimed choose — join the army (roster growth
+  across the campaign) or go home (visitable town NPCs, families, lit
+  windows as the war's progress bar).
+- **Prologue scenes 1–5 are authored** (co-write): data/dialogue/prologue_
+  {forest_intro, cave_awakening, oakstead_wake, parent_reveal, director_arrives}.json,
+  played by scenes/flow/prologue_vn.tscn (scenes 1–2 fully wired: backdrops +
+  the hearth narrator's voice).
+

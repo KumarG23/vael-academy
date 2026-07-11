@@ -22,7 +22,7 @@ The arc, in two threads: learning that Emberwing's wear-your-heart-on-your-sleev
 
 ## Appearance
 
-Warm brown skin, dark hair kept short and practical — cut at home, not styled. Dresses for function even in a house uniform. The mark: a scatter of hair-fine, branching silver-white lines — like frost cracked across glass, not a bolt — starting at his left temple and brow. Faint most of the time; brighter when his magic is active or he's under real stress. Unmistakable in a crowd, and unlike anything anyone at the Academy has ever seen on a person.
+Warm brown skin, dark hair kept short and practical — cut at home, not styled. Dresses for function even in a house uniform. The mark: a fine crown of glowing green lines across his brow — hair-thin, drawn like a jeweler's work (re-canoned with the 2026-07 portrait; the old frost-crack read is retired). Faint most of the time; brighter when his magic is active or he's under real stress. Unmistakable in a crowd, and unlike anything anyone at the Academy has ever seen on a person.
 
 ## Origin — The Open Question
 
@@ -36,7 +36,7 @@ The reveal should hurt because they **hid the truth**, not because their parenth
 
 Kai has always wandered further into the forest than anyone else from Oakstead — not just foraging, genuine restlessness, the kind of curiosity that doesn't know how to stop at "far enough." The forest is *his place*, and this is where the prologue starts: him at ease and exploring, not on a quest marker. This time he goes further, into **a cave that's always been there** — a plain, ordinary cave the whole town knows, that he's simply never bothered to explore. He goes in. That's who he is; he doesn't hesitate long enough to talk himself out of things.
 
-Deep in, the relic at his hip **warms and hums**, runes surfacing along the old blade — and a wall that isn't a wall, a **sealed door**, opens. Not a puzzle he solves: it opens *because he's there*, because the old magic recognizes his blood (and the blade). It should feel like being **recognized**, not clever. Beyond it: a First Crown sanctum, and a stone hanging in the air, unsupported, ringed with runes, glowing with a light that doesn't behave like firelight or daylight. He doesn't think about it. He touches it — out of pure curiosity, which matters.
+Deep in: a wall that isn't a wall — a **sealed door**, waking rune by rune as he stands before it — opens. Not a puzzle he solves: it opens *because he's there*, because the old magic recognizes his blood. **He carries nothing but a forage basket** (co-write 2026-07-10: the sword stays wrapped at home until the parent reveal — the sanctum answers HIM, not an object). It should feel like being **recognized**, not clever. Beyond it: a First Crown sanctum, and a stone hanging in the air, unsupported, ringed with runes, glowing with a light that doesn't behave like firelight or daylight. He doesn't think about it. He touches it — out of pure curiosity, which matters.
 
 What comes through him afterward isn't taught, chosen, or gentle — light enough to be seen from the village, ground scorched in a ring, and Kai unconscious for most of a day. His parents, frantic when he doesn't come home, find him at the treeline, and it's in the hours after that they finally tell him where they found him once before — and give him the sword.
 
@@ -76,3 +76,19 @@ On romance: **every student is romanceable** — any of Kai's bonds can turn rom
 - Whether commoner surnames like "Kumar" vs. noble given-names-only is a deliberate world rule worth a line in `WORLD_BIBLE.md` (leaning yes — cheap, free texture)
 - Named siblings/parents — expand on request
 - Which support pairs are romance-flagged — decide as we write full bios
+
+
+## ⚖ CANON UPDATE — co-write session 2026-07-10 (record: COWRITE_SESSION_2026-07-10.md)
+
+- **Parents named: Tam** (father) **and Essa** (mother). Commoners in Aldreth
+  carry no surname — the academy styles him **"Kai of Oakstead"** (some nobles
+  use it as a soft insult; the roll-call marks his class every time).
+- **Sword provenance (locked):** found beside the infant; Tam secretly oiled it
+  sixteen winters; given at the reveal, before the road. It never enters the cave.
+- **Crownspark timing (locked):** involuntary flares only until the Vision beat
+  (semester-1 finale) — the player-usable spell unlocks THERE (answer + new verb
+  in one beat). Wire: move the crownspark grant from the starting kit to the
+  Vision story flag when that beat is built.
+- **His half of the inheritance:** the WARD (keeps/shields/is answered; green).
+  See WORLD_BIBLE. His prologue scripts are authored: data/dialogue/prologue_*.json.
+

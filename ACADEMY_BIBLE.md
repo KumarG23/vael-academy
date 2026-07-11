@@ -84,3 +84,20 @@ The tension isn't over whether he's *allowed* in — the law settles that — it
 - The name and character of the Academy rep who collects Kai (a small but memorable early NPC — good candidate to recur)
 - How much of the castle is walkable at slice/early stage vs. later (build order, not fiction — see §3 build note)
 - Which mini-games ship first once the castle shell exists (fishing is the obvious flagship; decide the rest by taste)
+
+
+## ⚖ CANON UPDATE — co-write session 2026-07-10 (record: COWRITE_SESSION_2026-07-10.md)
+
+**Director Hesta** (the "director" of §5, now canon): a woman in her sixties,
+iron-gray, former battlemage — **the only commoner ever to hold the office.**
+Smart, political, cold; power is her wall against a powerless childhood, and
+she has never once backed a losing side. House-neutral by oath: gray robes
+with all three house trims and a single **gold thread** (the office's oldest
+device — she knows exactly why; the office descends from the sanctum's Keeper,
+and the collection law is the Keeper's law). She collects Kai PERSONALLY —
+directors do not usually collect village boys; that it happened is itself a
+clue. She recognizes what the mark might be at the door and says nothing
+("Bring the sword"). She knows Morvane lives — a mutual, wordless standoff
+(see VILLAIN_BIBLE) — and hedges until the Rite's sabotage happens under her
+roof. Never villainous. Her arrival scene: data/dialogue/prologue_director_arrives.json.
+

@@ -71,3 +71,38 @@ Full beat-by-beat is in `CHARACTER_BIBLE_KAI.md`. Short version: wandering furth
 - How Kai's First Crown line survived to Oakstead (hidden heir / cadet branch / smuggled infant — pick when the reveal chapters exist)
 - Neighboring kingdoms / outside politics (deliberately unbuilt — add only if the story needs them)
 - Exactly how "famous heir" status plays out day-to-day for Perrin/Serra/Rina
+
+
+## ⚖ CANON UPDATE — co-write session 2026-07-10 (record: COWRITE_SESSION_2026-07-10.md)
+
+**GM rule (locked):** *"The line split its gift: one half opens, one half keeps.
+Only what you protect can hold both."*
+
+- **The split inheritance.** The First Crown's undivided power was SANCTUARY —
+  open + keep = the power to make a home (its light: ember-gold, "hearthlight";
+  the title Emberline is the hearth-line). The royal line split it: the branch
+  that kept the throne carries **the CLAIM** (opens, commands, compels — burns
+  violet); the branch smuggled away as an infant carries **the WARD** (keeps,
+  shields, is answered — burns green). Color tracks HOW power is used, not who:
+  Kai's own light can flicker violet in a coercive moment.
+- **The Claim takes people, not things.** Morvane claims a person's BELONGING —
+  every attachment they have pours onto him; being claimed feels like finally
+  coming home. The claimed walk out of their lives (the kingdom's quiet
+  missing-persons problem IS his army). Bonds resist the claim — a heart truly
+  home somewhere cannot be taken; the claimed can be brought back by keepsake,
+  name, or someone who loved them (talk-to-recruit = breaking claims). Freed
+  claimed choose where to belong: some join Kai, some go home — **the
+  Returned** repopulate the towns as visible healing.
+- **The prince is named: MORVANE** (younger brother of the now-king; his
+  brother signed the decree of death — grief, filed as paperwork). Agents call
+  him only "the Patron" in year one. Wardstone-centric power expression is
+  DEMOTED; stones remain background infrastructure.
+- **Geography.** Aldreth is the realm. Three great house-countries (heirs are
+  each next-in-line): **Embermarch** (Emberwing), **Tidehold** (Tidemark),
+  **Thornwald** (Thornrook) — name stubs, refine freely. The crown keeps the
+  old heartland, **the King's Land**: the capital, Vael Academy, and Oakstead
+  all sit in it. Kai is crown-land common — no house-country claim on him, so
+  the choice is his; commoners carry no surname ("Kai of Oakstead").
+- Clue-ledger answers (token/locket, fourth-line note, palace lamps, missing
+  persons) and the knowledge matrix live in the session record.
+
