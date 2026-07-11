@@ -3,3 +3,11 @@ queued school
 queued party
 battle: rpc HTTP Error 503: Service Unavailable, retry
 battle: rpc IncompleteRead(0 bytes read), retry
+party: rpc Remote end closed connection without response, retry
+school: rpc [Errno 54] Connection reset by peer, retry
+battle: rpc <urlopen error [Errno 60] Operation timed out>, retry
+battle: rpc HTTP Error 503: Service Unavailable, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc [Errno 54] Connection reset by peer, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc [Errno 60] Operation timed out, retry

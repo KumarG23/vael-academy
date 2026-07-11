@@ -90,6 +90,8 @@ static func _parse_step(entry: Dictionary, index: int, script: DialogueScript) -
 		str(entry.get("side", "left")),
 		str(entry.get("portrait", "")),
 		str(entry.get("expression", "neutral")),
+		str(entry.get("voice", "")),      # AW-78: narrator clip for this line
+		str(entry.get("backdrop", "")),   # AW-78: backdrop change on this line
 	)
 
 

@@ -44,6 +44,10 @@ var _right_portrait := ""
 var _left_expr := "neutral"
 var _right_expr := "neutral"
 var _portrait_cache: Dictionary = {}
+# AW-78: the VN backdrop — a texture (cover-fit) or a flat special ("black"/"white").
+# Held in members so the textures survive redraws (gotcha #11).
+var _backdrop_tex: Texture2D = null
+var _backdrop_flat := Color(0, 0, 0, 0)  # a=0 means "no flat backdrop"
 
 
 func _ready() -> void:
@@ -177,6 +181,11 @@ func _advance_logical() -> void:
 				return
 			continue  # non-terminal event: keep going to the next step
 		_current = step
+		if step.backdrop != "":  # AW-78: this line changes the stage
+			_set_backdrop(step.backdrop)
+		AudioManager.stop_voice()
+		if step.voice != "":     # AW-78: the storyteller reads this one aloud
+			AudioManager.play_voice(step.voice)
 		if step.side == "right":
 			_right_portrait = step.portrait
 			_right_expr = step.expression  # AW-57: per-line emotion variant
@@ -189,7 +198,21 @@ func _advance_logical() -> void:
 		return
 
 
+func _set_backdrop(spec: String) -> void:
+	match spec:
+		"black":
+			_backdrop_tex = null
+			_backdrop_flat = Color(0.02, 0.02, 0.03, 1.0)
+		"white":
+			_backdrop_tex = null
+			_backdrop_flat = Color(0.98, 0.97, 0.92, 1.0)
+		_:
+			_backdrop_tex = load(spec) if ResourceLoader.exists(spec) else null
+			_backdrop_flat = Color(0.02, 0.02, 0.03, 1.0) if _backdrop_tex == null else Color(0, 0, 0, 0)
+
+
 func _finish() -> void:
+	AudioManager.stop_voice()  # AW-78: the narrator doesn't outlive the scene
 	_finished = true
 	_current = null
 	queue_redraw()
@@ -239,10 +262,21 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 func _draw() -> void:
 	var vp := get_viewport_rect().size
+	# AW-78: the stage first — backdrop image (cover-fit) or flat, then the scrim.
+	if _backdrop_tex != null:
+		var ts := _backdrop_tex.get_size()
+		var s := maxf(vp.x / ts.x, vp.y / ts.y)
+		var sz := ts * s
+		draw_texture_rect(_backdrop_tex, Rect2((Vector2(vp) - sz) * 0.5, sz), false)
+	elif _backdrop_flat.a > 0.0:
+		draw_rect(Rect2(Vector2.ZERO, vp), _backdrop_flat, true)
 	draw_rect(Rect2(Vector2.ZERO, vp), Color(0.02, 0.02, 0.04, 0.35), true)
 	if _current == null:
 		if _choice != null:
 			_draw_choice_panel(vp)  # a leading choice has no line under it
+		return
+	if _current.is_narration():
+		_draw_narration(vp)  # AW-78: the storyteller owns the whole frame
 		return
 	var active_left := _current.side == "left"
 	_draw_portrait(Vector2(vp.x * 0.08, vp.y * 0.14), LEFT_COLOR, active_left, "left")
@@ -269,6 +303,24 @@ func _draw() -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(0.8, 0.82, 0.88))
 	if _choice != null:
 		_draw_choice_panel(vp)  # last: the panel sits above portraits and box
+
+
+## AW-78: narration rendering — the hearth storyteller. No box, no plate, no
+## portraits: letterboxed text between two thin gold rules, centered low.
+func _draw_narration(vp: Vector2) -> void:
+	var font := UITheme.font()
+	var shown := _current.text.substr(0, int(_revealed))
+	var band_w := minf(vp.x * 0.72, 900.0)
+	var x := (vp.x - band_w) * 0.5
+	var y := vp.y * 0.68
+	var rule := Color(0.86, 0.72, 0.42, 0.55)
+	draw_rect(Rect2(x, y - 34, band_w, 1.5), rule, true)
+	draw_rect(Rect2(x, y + 86, band_w, 1.5), rule, true)
+	draw_multiline_string(font, Vector2(x + 10, y), shown,
+		HORIZONTAL_ALIGNMENT_CENTER, band_w - 20, 22, 3, Color(0.93, 0.89, 0.78))
+	if not is_revealing() and _choice == null:
+		draw_string(font, Vector2(vp.x * 0.5 - 8, y + 118), "▼",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.8, 0.82, 0.88, 0.7))
 
 
 ## The WO-4.6 option panel: prompt title + option rows, highlighted row marked.
@@ -306,6 +358,11 @@ func _draw_choice_panel(vp: Vector2) -> void:
 
 
 func _draw_portrait(pos: Vector2, color: Color, active: bool, side: String) -> void:
+	# AW-78: an unused side draws NOTHING — the empty placeholder card only ever
+	# looked intentional when both sides had speakers (VN scenes exposed it).
+	if (_left_portrait if side == "left" else _right_portrait) == "":
+		if not (active and _current != null and _current.speaker != ""):
+			return
 	var vp := get_viewport_rect().size
 	var size := Vector2(vp.x * 0.20, vp.y * 0.48)
 	# Painted portrait when the art exists (AW-6); placeholder card otherwise.

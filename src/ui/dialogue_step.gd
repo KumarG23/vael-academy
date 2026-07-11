@@ -15,6 +15,10 @@ var text: String = ""
 var side: String = "left"          # "left" or "right"
 var portrait: String = ""          # portrait id (art swaps in at AW-6)
 var expression: String = "neutral"
+# AW-78 (VN prologue): optional per-line narration voice clip and backdrop.
+# `backdrop` is a res:// image path, or the specials "black" / "white".
+var voice: String = ""
+var backdrop: String = ""
 
 # EVENT fields.
 var event_name: String = ""
@@ -28,7 +32,7 @@ var options: Array = []
 var target: String = ""
 
 
-static func make_line(speaker: String, text: String, side := "left", portrait := "", expression := "neutral") -> DialogueStep:
+static func make_line(speaker: String, text: String, side := "left", portrait := "", expression := "neutral", voice := "", backdrop := "") -> DialogueStep:
 	var s := DialogueStep.new()
 	s.kind = Kind.LINE
 	s.speaker = speaker
@@ -36,7 +40,15 @@ static func make_line(speaker: String, text: String, side := "left", portrait :=
 	s.side = side
 	s.portrait = portrait
 	s.expression = expression
+	s.voice = voice
+	s.backdrop = backdrop
 	return s
+
+
+## AW-78: a line with no speaker and no portrait is the STORYTELLER — rendered
+## as letterboxed narration (no box, no plate, no portraits), optionally voiced.
+func is_narration() -> bool:
+	return kind == Kind.LINE and speaker == "" and portrait == ""
 
 
 static func make_event(event_name: String, params: Dictionary = {}) -> DialogueStep:

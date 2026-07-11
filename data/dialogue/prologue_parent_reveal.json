@@ -1,13 +1,113 @@
 [
- {"speaker": "", "text": "Last night in the only home he's ever had. His mother won't sit down. His father is holding something wrapped in cloth, and won't quite meet his eyes."},
- {"speaker": "Mother", "side": "right", "text": "Kai. Before you go, there's a thing we should have told you a long time ago. A thing we were always going to tell you tomorrow."},
- {"speaker": "Kai", "portrait": "kai", "text": "That's a lot of tomorrows, Mum."},
- {"speaker": "Father", "side": "right", "text": "We found you. In the forest — that same stretch, sixteen years back. A baby, alone, no one for miles. And a sword laid down beside you, near as long as you were."},
- {"speaker": "Kai", "portrait": "kai", "text": "...found me."},
- {"speaker": "Mother", "side": "right", "text": "You are our son. That has never once been a question, not for a single day. We didn't tell you because — because we were afraid. That you'd feel less ours. That you'd go looking for where you came from and not come back."},
- {"speaker": "", "text": "His father unwraps the cloth. The old sword. The one that went warm in the dark."},
- {"speaker": "Father", "side": "right", "text": "It was yours before it was anything of ours. It's time you had it. Whatever it means. Whatever you are."},
- {"speaker": "Kai", "portrait": "kai", "text": "I don't— I don't know what to do with any of this."},
- {"speaker": "Kai", "portrait": "kai", "text": "You could have told me. Any of the tomorrows, you could have just told me."},
- {"speaker": "Mother", "side": "right", "text": "I know, love. I know. We're sorry. And we love you. Both of those are true, and neither one cancels the other."}
+ {
+  "speaker": "Essa",
+  "side": "right",
+  "text": "Sixteen years ago. The hard winter — the one they still talk about."
+ },
+ {
+  "speaker": "Essa",
+  "side": "right",
+  "text": "Your father was checking snares at the forest edge. And he heard—"
+ },
+ {
+  "speaker": "Tam",
+  "side": "right",
+  "text": "Crying. Out of the cold, at the old beech. A baby, wrapped up warm as bread from the oven. Alone."
+ },
+ {
+  "speaker": "Essa",
+  "side": "right",
+  "text": "No note. No name. No tracks in the snow — none, Kai. And laid beside the basket, like it was standing guard…"
+ },
+ {
+  "speaker": "",
+  "text": "She cannot finish. She looks at his father. His father does not move."
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai",
+  "text": "…What. Laid beside the basket — what?"
+ },
+ {
+  "speaker": "",
+  "text": "The silence stretches."
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai",
+  "expression": "angry",
+  "text": "Sixteen years. You let me think— every time I asked why I don't have Ma's eyes, you laughed and changed the—"
+ },
+ {
+  "speaker": "Essa",
+  "side": "right",
+  "text": "Because we were afraid! Not of you — never of you. Afraid you'd feel less ours. Afraid whoever left you would come back. Afraid of exactly this day — and look, here it is, come anyway."
+ },
+ {
+  "speaker": "Essa",
+  "side": "right",
+  "text": "We kept telling ourselves: next year. When he's older. Sixteen next-years, Kai. That's my fault to carry, not yours."
+ },
+ {
+  "speaker": "",
+  "text": "His father leaves the room. No word. Something in Kai's face breaks a little more."
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai",
+  "expression": "sad",
+  "text": "…He can't even sit through it."
+ },
+ {
+  "speaker": "",
+  "text": "His father comes back. In his arms: a long bundle, oilcloth, tied with cord gone soft from years of knotting and unknotting. He sets it on the table like it weighs more than it does — and unwraps a sword. Plain scabbard. Old fittings. Not a spot of rust anywhere."
+ },
+ {
+  "speaker": "Tam",
+  "side": "right",
+  "text": "Every winter. Oiled it, checked the edge, wrapped it back up. Sixteen winters."
+ },
+ {
+  "speaker": "Tam",
+  "side": "right",
+  "text": "Never let your mother watch. Felt like… if nobody saw it, it wasn't quite real yet. And you were still just ours."
+ },
+ {
+  "speaker": "",
+  "text": "Kai reaches out. The moment his fingers touch the grip — a flicker of faint green runs the length of the blade. Like a door waking. His parents go very still: sixteen winters, and it never once did THAT."
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai",
+  "expression": "surprised",
+  "text": "It's… warm."
+ },
+ {
+  "speaker": "Tam",
+  "side": "right",
+  "text": "It was yours before you were ours. We kept it safe. Same as we kept you."
+ },
+ {
+  "speaker": "Essa",
+  "side": "right",
+  "text": "You were never less ours, Kai. Not for one single day. Whatever that light is. Whoever's coming down that road."
+ },
+ {
+  "speaker": "",
+  "text": "Kai looks at the sword. The green light dies down, patient. Then he sets it down — and takes their hands instead, both of them, hard."
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai",
+  "expression": "determined",
+  "text": "I'm still angry. I think I'm going to be angry for a while. …Don't let go anyway."
+ },
+ {
+  "speaker": "",
+  "text": "The sword waited. It was good at that. It had already waited sixteen years — and it was, after all, the least important thing his parents gave him that night."
+ },
+ {
+  "speaker": "",
+  "text": "A fist on the door. Three knocks. Unhurried. The kind of knock that has never once been refused."
+ }
 ]

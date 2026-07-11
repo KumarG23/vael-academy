@@ -1,13 +1,94 @@
 [
- {"speaker": "", "text": "Cool air, dripping stone, the ordinary dark of an ordinary cave. Until the old sword at Kai's hip goes warm against his leg."},
- {"speaker": "Kai", "portrait": "kai", "text": "That's — that's new. Swords aren't supposed to do that. This one's never done that."},
- {"speaker": "", "text": "Faint lines of light surface along the blade, like writing waking up. Ahead, the cave wall — not a wall. A seam. It splits, slow and soundless, and opens. Not because he pushed it. Because he's here."},
- {"speaker": "Kai", "portrait": "kai", "text": "...okay. I've read enough stories to know this is the part where a smart person leaves."},
- {"speaker": "Kai", "portrait": "kai", "text": "Never claimed to be a smart person."},
- {"speaker": "", "text": "Beyond the door: a chamber that no forager built. And at its heart a stone hangs in the air, unsupported, ringed in slow runic light that is not firelight and not daylight and not anything he has a word for."},
- {"speaker": "Kai", "portrait": "kai", "text": "It's just... waiting. Like it's been waiting a very long time."},
- {"speaker": "Kai", "portrait": "kai", "text": "For what?"},
- {"speaker": "", "text": "He reaches out. Of course he reaches out."},
- {"event": "set_flag", "flag": "kai_awakened"},
- {"speaker": "", "text": "The light does not answer gently."}
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "Bigger than you look. Of course you are.",
+  "backdrop": "res://assets/art/vn/cave.png"
+ },
+ {
+  "speaker": "",
+  "text": "The cave narrows, then turns, then — doesn't end. Cold air moving across his face, where no air should move.",
+  "voice": "res://assets/audio/vo/prologue/p2_narrows.wav"
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "A draft. Deep in a hill. …Drafts mean openings."
+ },
+ {
+  "speaker": "",
+  "text": "A wall that is not a wall: worked stone, seamless, old past counting. And as he stands there — runes surface. Faint lines waking one after another, tracing a slow ring, like a crown being drawn in light. Like something noticing him."
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "Hello? …That's stupid. Walls don't—"
+ },
+ {
+  "speaker": "",
+  "text": "The wall opens. Not like stone breaking. Like a door being answered."
+ },
+ {
+  "speaker": "",
+  "text": "It does not open because he was clever. It opens because of who is standing in front of it.",
+  "voice": "res://assets/audio/vo/prologue/p2_answered.wav"
+ },
+ {
+  "speaker": "",
+  "text": "Beyond: a round chamber no torch has lit in centuries — lit anyway. In the center, a stone hangs in the air. Unsupported. Ringed with slow-turning runes.",
+  "backdrop": "res://assets/art/vn/sanctum.png"
+ },
+ {
+  "speaker": "",
+  "text": "Its light is not firelight. Not daylight. It is warm the way a window is warm at night — when you're coming home late, and someone left the lamp burning for you.",
+  "voice": "res://assets/audio/vo/prologue/p2_hearthlight.wav"
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "…Oh."
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "What *are* you…?"
+ },
+ {
+  "speaker": "",
+  "text": "He steps closer. Hand half-raised. Stops an inch away."
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "This is a bad idea. This is — *such* a bad idea."
+ },
+ {
+  "speaker": "",
+  "text": "But the light was warm, and the dark behind him was cold, and he had come much too far to not know.",
+  "voice": "res://assets/audio/vo/prologue/p2_toofar.wav"
+ },
+ {
+  "speaker": "",
+  "text": "He touches it."
+ },
+ {
+  "event": "set_flag",
+  "flag": "kai_awakened"
+ },
+ {
+  "speaker": "",
+  "text": "A sound like a bell, the size of the sky.",
+  "backdrop": "white",
+  "voice": "res://assets/audio/vo/prologue/p2_bell.wav"
+ },
+ {
+  "speaker": "",
+  "text": "Light stands up out of the hill in a column — seen from Oakstead's square, from the garrison tower, from further away than anyone will ever admit. The ground around the cave scorches in a perfect ring."
+ },
+ {
+  "speaker": "",
+  "text": "Somewhere very far away, something that had been searching for a long, long time… lifted its head.",
+  "backdrop": "black",
+  "voice": "res://assets/audio/vo/prologue/p2_lifted.wav"
+ }
 ]

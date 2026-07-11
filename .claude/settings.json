@@ -35,7 +35,12 @@
       "mcp__aseprite-mcp-pro__*",
       "Bash(launchctl kickstart -k gui/*/com.neal.aseprite-mcp-pro)",
       "Bash(python3 assets/sprites/sources/generators/*.py)",
-      "Bash(python3 assets/sprites/sources/generators/*)"
+      "Bash(python3 assets/sprites/sources/generators/*)",
+      "Bash(python3 tools/chatterbox_narrate.py *)",
+      "Bash(afinfo *)",
+      "Bash(file *)",
+      "Bash(shasum -a 256 *)",
+      "Bash(python3 tools/kokoro_narrate.py *)"
     ]
   }
 }

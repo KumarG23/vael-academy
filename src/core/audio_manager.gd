@@ -17,6 +17,7 @@ var _voices: Array[AudioStreamPlayer] = []
 var _next := 0
 var _music: AudioStreamPlayer
 var _music_path := ""
+var _voice: AudioStreamPlayer  # AW-78: the narrator's own channel (VN scenes)
 
 
 func _ready() -> void:
@@ -27,6 +28,8 @@ func _ready() -> void:
 		_voices.append(p)
 	_music = AudioStreamPlayer.new()
 	add_child(_music)
+	_voice = AudioStreamPlayer.new()
+	add_child(_voice)
 	# AW-36: global game beats chime through here, wherever they fire from.
 	EventBus.support_rank_up.connect(func(_pair: String, _rank: String) -> void: play_sfx("rank_up"))
 	EventBus.battle_won.connect(func() -> void: play_sfx("victory"))
@@ -74,6 +77,26 @@ func play_music(path: String) -> void:
 	_music.volume_db = linear_to_db(clampf(music_volume * master_volume, 0.0001, 1.0))
 	if not muted:
 		_music.play()
+
+
+## AW-78: play a narration clip by res:// path (the hearth narrator). One voice
+## at a time — starting a new line stops the previous. Null-safe like the SFX.
+func play_voice(path: String) -> void:
+	_voice.stop()
+	if muted or path == "":
+		return
+	var s: AudioStream = load(path) if ResourceLoader.exists(path) else null
+	if s == null:
+		return
+	if s is AudioStreamWAV:
+		(s as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_DISABLED
+	_voice.stream = s
+	_voice.volume_db = linear_to_db(clampf(sfx_volume * master_volume, 0.0001, 1.0))
+	_voice.play()
+
+
+func stop_voice() -> void:
+	_voice.stop()
 
 
 func stop_music() -> void:

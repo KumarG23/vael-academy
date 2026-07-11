@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://vnbackdrop001"]
+
+[ext_resource type="Script" path="res://src/tools/vn_backdrop_host.gd" id="1"]
+
+[node name="VNBackdropHost" type="Node"]
+script = ExtResource("1")

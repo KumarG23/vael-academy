@@ -44,6 +44,7 @@ const DEV_JUMPS := [
 	["▶ Mock Battle (3 houses)", "mock"],
 	["▶ House-Choice screen", "housechoice"],
 	["▶ Prologue battle", "prologue"],
+	["▶ The Awakening (prologue VN)", "awakening"],
 	["Back", "back"],
 ]
 
@@ -99,6 +100,9 @@ func _dev_jump(kind: String) -> void:
 			Campaign.reset_new_game(false)
 			Campaign.active = true
 			get_tree().change_scene_to_file.call_deferred("res://scenes/battle/prologue.tscn")
+		"awakening":
+			# AW-78: the co-write's forest→cave VN, narrated (scenes 1–2 wired)
+			get_tree().change_scene_to_file.call_deferred("res://scenes/flow/prologue_vn.tscn")
 		_:
 			_open_main()
 

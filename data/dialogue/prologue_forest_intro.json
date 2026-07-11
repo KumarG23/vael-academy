@@ -1,8 +1,48 @@
 [
- {"speaker": "", "text": "The deep woods past Oakstead, further than anyone else in town bothers to go. Kai bothers."},
- {"speaker": "Kai", "portrait": "kai", "text": "Two more ridges than I told Mum I'd go. Three, if the redcaps are up over the far one."},
- {"speaker": "Kai", "portrait": "kai", "text": "...they're always up over the far one. That's the whole point of the far one."},
- {"speaker": "", "text": "He knows this forest the way most people know a house. And there, in a hillside he's walked past a hundred times: the mouth of a cave. Plain. Ordinary. Never once explored."},
- {"speaker": "Kai", "portrait": "kai", "text": "Huh. How have I never gone in there?"},
- {"speaker": "Kai", "portrait": "kai", "text": "...that's not a reason to keep not going in there."}
+ {
+  "speaker": "",
+  "text": "The King's Land. The village of Oakstead — a half-day's walk from anywhere that matters.",
+  "backdrop": "black",
+  "voice": "res://assets/audio/vo/prologue/p1_opener.wav"
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "Chanterelles by the fallen beech. Bilberries up the ridge, if the birds left any. Da wants willow bark…",
+  "backdrop": "res://assets/art/vn/forest.png"
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "…and Ma wants me home before the light goes. One of those is going to happen."
+ },
+ {
+  "speaker": "",
+  "text": "He knows this forest the way he knows his own kitchen. Everyone in Oakstead walks the woods. Kai is the only one who never learned where to stop.",
+  "voice": "res://assets/audio/vo/prologue/p1_knows.wav"
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "Just to the ridge. …Just past the ridge."
+ },
+ {
+  "speaker": "",
+  "text": "The trees thin. A low shoulder of rock — and set into it, a cave mouth. Plain. Unremarkable. Every child in Oakstead has thrown a stone into it and run away. It has never once been interesting."
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "Huh. You've always been there, haven't you. And I've never once—"
+ },
+ {
+  "speaker": "",
+  "text": "He does not hesitate long enough to talk himself out of it. He never has.",
+  "voice": "res://assets/audio/vo/prologue/p1_hesitate.wav"
+ },
+ {
+  "speaker": "Kai",
+  "portrait": "kai_nomark",
+  "text": "Five minutes. What's the worst a hole in a hill can do?"
+ }
 ]

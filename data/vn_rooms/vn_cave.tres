@@ -1,0 +1,59 @@
+[gd_resource type="Resource" script_class="CastleRoomDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_rb632"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/rocks.png" id="2_dbdnw"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="3_4d322"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="4_epyyp"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="5_kwk5t"]
+[ext_resource type="Script" path="res://src/castle/castle_door.gd" id="6_54th6"]
+[ext_resource type="Script" path="res://src/castle/castle_point.gd" id="7_hl3hq"]
+[ext_resource type="Script" path="res://src/castle/castle_room_def.gd" id="8_d6d8d"]
+
+[sub_resource type="Resource" id="Resource_56tvx"]
+script = ExtResource("1_rb632")
+texture = ExtResource("2_dbdnw")
+cell = Vector2i(7, 3)
+
+[sub_resource type="Resource" id="Resource_uhdqv"]
+script = ExtResource("1_rb632")
+texture = ExtResource("2_dbdnw")
+cell = Vector2i(12, 8)
+
+[sub_resource type="Resource" id="Resource_x4pn7"]
+script = ExtResource("1_rb632")
+texture = ExtResource("2_dbdnw")
+cell = Vector2i(5, 6)
+
+[sub_resource type="Resource" id="Resource_a5rqx"]
+script = ExtResource("1_rb632")
+texture = ExtResource("2_dbdnw")
+cell = Vector2i(15, 5)
+
+[sub_resource type="Resource" id="Resource_1u1ch"]
+script = ExtResource("4_epyyp")
+id = "vn_cave"
+display_name = "The Old Cave"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = false
+is_arena = false
+enemy_spawns = Array[ExtResource("3_4d322")]([])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("3_4d322")]([])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 20
+height = 12
+terrain = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+base_terrain = 7
+decor = Array[ExtResource("1_rb632")]([SubResource("Resource_56tvx"), SubResource("Resource_uhdqv"), SubResource("Resource_x4pn7"), SubResource("Resource_a5rqx")])
+visits = Array[ExtResource("5_kwk5t")]([])
+
+[resource]
+script = ExtResource("8_d6d8d")
+id = "vn_cave"
+display_name = "The Old Cave"
+chapter = SubResource("Resource_1u1ch")
