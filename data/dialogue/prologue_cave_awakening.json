@@ -3,7 +3,7 @@
   "speaker": "Kai",
   "portrait": "kai_nomark",
   "text": "Bigger than you look. Of course you are.",
-  "backdrop": "res://assets/art/vn/cave.png"
+  "backdrop": "res://assets/art/vn/painted/cave_dark.png"
  },
  {
   "speaker": "",
@@ -83,7 +83,8 @@
  },
  {
   "speaker": "",
-  "text": "Light stands up out of the hill in a column — seen from Oakstead's square, from the garrison tower, from further away than anyone will ever admit. The ground around the cave scorches in a perfect ring."
+  "text": "Light stands up out of the hill in a column — seen from Oakstead's square, from the garrison tower, from further away than anyone will ever admit. The ground around the cave scorches in a perfect ring.",
+  "backdrop": "res://assets/art/vn/painted/light_column.png"
  },
  {
   "speaker": "",

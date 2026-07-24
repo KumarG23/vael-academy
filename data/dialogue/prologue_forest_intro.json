@@ -9,7 +9,7 @@
   "speaker": "Kai",
   "portrait": "kai_nomark",
   "text": "Chanterelles by the fallen beech. Bilberries up the ridge, if the birds left any. Da wants willow bark…",
-  "backdrop": "res://assets/art/vn/forest.png"
+  "backdrop": "res://assets/art/vn/painted/forest_path.png"
  },
  {
   "speaker": "Kai",
@@ -28,7 +28,8 @@
  },
  {
   "speaker": "",
-  "text": "The trees thin. A low shoulder of rock — and set into it, a cave mouth. Plain. Unremarkable. Every child in Oakstead has thrown a stone into it and run away. It has never once been interesting."
+  "text": "The trees thin. A low shoulder of rock — and set into it, a cave mouth. Plain. Unremarkable. Every child in Oakstead has thrown a stone into it and run away. It has never once been interesting.",
+  "backdrop": "res://assets/art/vn/painted/cave_mouth.png"
  },
  {
   "speaker": "Kai",

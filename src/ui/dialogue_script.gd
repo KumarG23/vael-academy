@@ -84,15 +84,7 @@ static func _parse_step(entry: Dictionary, index: int, script: DialogueScript) -
 	if not entry.has("text"):
 		script.error = "step %d is neither an event, label, goto, choice, nor a line (no \"text\")" % index
 		return null
-	return DialogueStep.make_line(
-		str(entry.get("speaker", "")),
-		str(entry["text"]),
-		str(entry.get("side", "left")),
-		str(entry.get("portrait", "")),
-		str(entry.get("expression", "neutral")),
-		str(entry.get("voice", "")),      # AW-78: narrator clip for this line
-		str(entry.get("backdrop", "")),   # AW-78: backdrop change on this line
-	)
+	return DialogueStep.make_line_full(entry)  # AW-78/79: voice/backdrop/music ride along
 
 
 static func _parse_choice(entry: Dictionary, index: int, script: DialogueScript) -> DialogueStep:

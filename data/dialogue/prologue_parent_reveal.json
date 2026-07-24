@@ -2,7 +2,8 @@
  {
   "speaker": "Essa",
   "side": "right",
-  "text": "Sixteen years ago. The hard winter — the one they still talk about."
+  "text": "Sixteen years ago. The hard winter — the one they still talk about.",
+  "backdrop": "res://assets/art/vn/painted/kitchen_lantern.png"
  },
  {
   "speaker": "Essa",

@@ -11,3 +11,37 @@ battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not know
 battle: rpc [Errno 54] Connection reset by peer, retry
 battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
 battle: rpc [Errno 60] Operation timed out, retry
+party: rpc HTTP Error 503: Service Unavailable, retry
+school: busy, retry
+party: rpc The read operation timed out, retry
+battle: rpc <urlopen error [Errno 60] Operation timed out>, retry
+battle: rpc The read operation timed out, retry
+battle: rpc HTTP Error 503: Service Unavailable, retry
+battle: rpc The read operation timed out, retry
+battle: rpc [Errno 60] Operation timed out, retry
+battle: rpc Remote end closed connection without response, retry
+battle: rpc [Errno 60] Operation timed out, retry
+school: rpc The read operation timed out, retry
+school: rpc <urlopen error [Errno 54] Connection reset by peer>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 60] Operation timed out>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+battle: rpc The read operation timed out, retry
+battle: rpc The read operation timed out, retry
+battle: rpc <urlopen error [Errno 8] nodename nor servname provided, or not known>, retry
+school done
+party done
+battle done
+downloaded battle
+downloaded school
+downloaded party
+SOUTH FIX COMPLETE

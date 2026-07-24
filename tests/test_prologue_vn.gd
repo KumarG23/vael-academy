@@ -30,7 +30,7 @@ func test_voice_and_backdrop_fields_ride_the_steps():
 	var s := DialogueScript.from_file(SCRIPTS[0])
 	assert_eq(s.get_step(0).backdrop, "black", "text-on-black opener")
 	assert_string_contains(s.get_step(0).voice, "p1_opener")
-	assert_string_contains(s.get_step(1).backdrop, "forest.png", "the woods fade in on Kai's first line")
+	assert_string_contains(s.get_step(1).backdrop, "forest_path.png", "the painted woods fade in on Kai's first line")
 
 
 func test_referenced_backdrops_and_voices_exist():
@@ -79,3 +79,13 @@ func test_backdrop_specials_and_texture_load():
 	d._set_backdrop("res://assets/art/vn/sanctum.png")
 	assert_not_null(d._backdrop_tex, "the sanctum backdrop loads")
 	assert_eq(d._backdrop_flat.a, 0.0, "texture replaces the flat")
+
+
+## AW-79: scripts can score themselves — the music field parses and defaults empty.
+func test_music_field_parses():
+	var s := DialogueScript.from_json('[{"speaker":"","text":"x","music":"res://assets/audio/music/vn/forest.mp3"}]')
+	assert_true(s.ok())
+	assert_string_contains(s.get_step(0).music, "forest.mp3")
+	var plain := DialogueScript.from_json('[{"speaker":"","text":"x"}]')
+	assert_eq(plain.get_step(0).music, "", "no field, no change")
+

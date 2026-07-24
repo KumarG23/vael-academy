@@ -183,6 +183,10 @@ func _advance_logical() -> void:
 		_current = step
 		if step.backdrop != "":  # AW-78: this line changes the stage
 			_set_backdrop(step.backdrop)
+		if step.music == "stop":  # AW-79: scripts can score themselves
+			AudioManager.stop_music()
+		elif step.music != "":
+			AudioManager.play_music(step.music)
 		AudioManager.stop_voice()
 		if step.voice != "":     # AW-78: the storyteller reads this one aloud
 			AudioManager.play_voice(step.voice)

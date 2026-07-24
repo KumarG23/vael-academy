@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://vnprologue001"]
+[gd_scene format=3 uid="uid://ccofqb261em77"]
 
 [ext_resource type="Script" path="res://src/flow/prologue_vn.gd" id="1"]
 

@@ -19,6 +19,7 @@ var expression: String = "neutral"
 # `backdrop` is a res:// image path, or the specials "black" / "white".
 var voice: String = ""
 var backdrop: String = ""
+var music: String = ""   # AW-79: music change on this line ("" = no change, "stop" = silence)
 
 # EVENT fields.
 var event_name: String = ""
@@ -42,6 +43,16 @@ static func make_line(speaker: String, text: String, side := "left", portrait :=
 	s.expression = expression
 	s.voice = voice
 	s.backdrop = backdrop
+	return s
+
+
+static func make_line_full(entry: Dictionary) -> DialogueStep:
+	## AW-79: dictionary form so new optional fields stop growing the signature.
+	var s := make_line(str(entry.get("speaker", "")), str(entry["text"]),
+		str(entry.get("side", "left")), str(entry.get("portrait", "")),
+		str(entry.get("expression", "neutral")), str(entry.get("voice", "")),
+		str(entry.get("backdrop", "")))
+	s.music = str(entry.get("music", ""))
 	return s
 
 

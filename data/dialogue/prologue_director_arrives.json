@@ -1,7 +1,8 @@
 [
  {
   "speaker": "",
-  "text": "The knocks still hanging in the air. His father opens the door. Lantern light — and a woman in gray robes carrying all three house trims, and a single gold thread. Two riders wait at the gate. She has come to the door alone."
+  "text": "The knocks still hanging in the air. His father opens the door. Lantern light — and a woman in gray robes carrying all three house trims, and a single gold thread. Two riders wait at the gate. She has come to the door alone.",
+  "backdrop": "res://assets/art/vn/painted/kitchen_lantern.png"
  },
  {
   "speaker": "Hesta",
@@ -80,7 +81,8 @@
  },
  {
   "speaker": "",
-  "text": "First light. The gate. His mother presses a cloth bundle into his hands — bread, still warm from the oven. Neither of them says why that, of all things. Both of them know."
+  "text": "First light. The gate. His mother presses a cloth bundle into his hands — bread, still warm from the oven. Neither of them says why that, of all things. Both of them know.",
+  "backdrop": "res://assets/art/vn/painted/gate_firstlight.png"
  },
  {
   "speaker": "",
