@@ -1,5 +1,14 @@
 # STYLE_BIBLE.md — AW-1 v6.5 (maps doctrine: HYBRID)
 
+> **CP-3 review, 2026-10-14:** Neal rejected the detached-parts procedural walk,
+> including its joint/grip correction: motion still looks injured/awkward and
+> the sword backward. That runtime was removed; CP-2 is restored. Walking is
+> unresolved. Preserve the liked attack/cast art and exact original head/left
+> brow mark. Do not scale this cutout rig to the cast. A consistent rig with
+> authored/mocap motion, potentially rendered from cel-shaded 3D into 2D sprites,
+> is a proposed alternative requiring an actual motion/style proof. It is not
+> an approved switch to a 3D game. Evidence: `assets/art_review/cp3_walk/`.
+
 > **CP-2 pilot proposal (2026-10-14), awaiting Neal's taste review.** Neal has
 > authorized exploring **away from pixel art**. The moving example is
 > `scenes/proto/illustrated_pilot.tscn`: Gemini 3.1 Flash Image character pose

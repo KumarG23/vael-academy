@@ -1,0 +1,16 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Reference 1 is Kai's approved character, reference 2 supplies matching cloth/sword materials. Draw ONE clean isolated game-animation component: his anatomical RIGHT FOREARM with RIGHT HAND actually GRIPPING his lowered relic SWORD. Navy uniform forearm sleeve runs vertically from a rounded elbow at TOP to narrow gold cuff then warm-brown hand at the BOTTOM of the sleeve. The wrist is STRAIGHT, relaxed and anatomically correct. Hand is a closed carrying fist: all FOUR fingers curl around the green sword handle, thumb wraps across the index finger; show the OUTSIDE / BACK of the right hand and curved knuckles, NOT an open palm, NOT backward fingers, NOT a left hand. Kai is facing RIGHT in three-quarter view, so this is his NEAR arm hanging beside the viewer-left side of his body. Hand and sword must form ONE convincing continuous grip; green handle passes inside the fist and guard below the fist. Blade extends down and LEFT approximately 30 degrees from vertical, point safely down, matching the approved sword's slim steel blade, green edge, simple green crossguard and pommel. Complete sword tip and elbow, generous white margins. No upper arm, head, torso, cape, legs or other objects. Exactly ONE forearm/closed-hand/sword assembly, no copies, no text or diagrams. Clean matte cel shading and outline weight matching approved in-game sprite, not glossy realism. Pure WHITE background, no shadows, grid or labels. Keep sleeve length human-proportionate to sword: elbow-to-fist approximately one third of fist-to-swordtip. Output only this detached rig component, with intact anatomy and unmistakably correct right-handed sword grip.",
+  "references": [
+    {
+      "path": "assets/art/illustrated_pilot/kai/idle.png",
+      "sha256": "46b92d2e3a9ebcd2a8872524ae9b44447a503d6366e43af2ec3ea47b1834cd79"
+    },
+    {
+      "path": "assets/source/illustrated_pilot/kai_walk_upper_layers_gemini_sheet.png",
+      "sha256": "8f1f685b29a23c54b941f016f67298f384e90db1062a3d5b4beb8819edfaf430"
+    }
+  ],
+  "elapsed_seconds": 19.01,
+  "output": "kai_walk_grip_gemini_sheet.png"
+}

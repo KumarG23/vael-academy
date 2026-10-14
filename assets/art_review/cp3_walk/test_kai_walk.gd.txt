@@ -1,0 +1,119 @@
+extends GutTest
+## CP-3 mechanics regressions; visual approval remains Neal's.
+
+const HEEL := Vector2(-6.7, 11.5)
+const TOE := Vector2(37.0, 15.4)
+const STRIDE := 240.0
+const FLOOR_Y := 604.0
+
+
+func test_support_contact_stays_fixed_as_the_actor_moves():
+	for phases in [[0.02, 0.08, 0.20, 0.40], [0.46, 0.50, 0.55, 0.59]]:
+		var reference := Vector2.ZERO
+		for i in range(phases.size()):
+			var phase: float = phases[i]
+			var foot := WalkCycleMotion.foot(phase, STRIDE, HEEL, TOE, FLOOR_Y)
+			var pivot := TOE if foot["contact"] == "toe" else HEEL
+			var contact: Vector2 = foot["ankle"] + pivot.rotated(foot["angle"]) + Vector2(phase * STRIDE, 0)
+			if i == 0:
+				reference = contact
+			assert_almost_eq(contact.x, reference.x, 0.001, "root travel cancels stance travel")
+			assert_almost_eq(contact.y, FLOOR_Y, 0.001, "support touches the floor")
+
+
+func test_alternating_steps_have_support_and_low_clearance():
+	var swinging := [0, 0]
+	for sample in range(100):
+		var p := float(sample) / 100.0
+		var a := WalkCycleMotion.foot(p, STRIDE, HEEL, TOE, FLOOR_Y)
+		var b := WalkCycleMotion.foot(p + 0.5, STRIDE, HEEL, TOE, FLOOR_Y)
+		assert_true(a["planted"] or b["planted"], "no running flight phase")
+		for i in range(2):
+			var foot := a if i == 0 else b
+			if not foot["planted"]:
+				swinging[i] += 1
+				assert_between(float(foot["clearance"]), 0.0, 6.001)
+	assert_gt(swinging[0], 0)
+	assert_eq(swinging[0], swinging[1], "both legs take equally many steps")
+
+
+func test_loop_and_toe_off_have_no_position_pop():
+	for phase in [0.60, 1.0]:
+		var before := WalkCycleMotion.foot(phase - 0.00001, STRIDE, HEEL, TOE, FLOOR_Y)
+		var after := WalkCycleMotion.foot(phase + 0.00001, STRIDE, HEEL, TOE, FLOOR_Y)
+		assert_lt(Vector2(before["ankle"]).distance_to(after["ankle"]), 0.02)
+		assert_almost_eq(float(before["angle"]), float(after["angle"]), 0.001)
+
+
+func test_live_rig_preserves_head_pixels_scale_and_left_brow_correction():
+	var kit := IllustratedArt.from_directory("res://assets/art/illustrated_pilot/kai")
+	var actor := IllustratedActor.new()
+	add_child_autofree(actor)
+	actor.setup(kit, Vector2.ZERO, 238.0)
+	actor.set_process(false)
+	actor.walking = true
+	actor.walk_rig.advance(60.0, true, 0.2, true)
+	actor._refresh()
+	var rig := actor.walk_rig
+	assert_true(rig.visible)
+	assert_false(actor.body.visible)
+	assert_eq(rig.torso.texture, kit.texture_for("idle"), "head is the approved idle drawing")
+	assert_eq(rig.torso.polygon, rig.torso.uv, "source pixels are not stretched by a separate head mesh")
+	var size := rig.scale.abs()
+	var polygon := rig.torso.polygon
+	actor.face_right = false
+	actor._refresh()
+	assert_eq(rig.scale.abs(), size)
+	assert_eq(rig.torso.polygon, polygon)
+	assert_not_null(rig.torso.material)
+	var source: Vector4 = rig.torso.material.get_shader_parameter("source_mark")
+	var target: Vector4 = rig.torso.material.get_shader_parameter("target_mark")
+	assert_eq(target.x, source.x - 32.0)
+	assert_eq(target.z, source.z)
+	assert_eq(target.w, source.w)
+	assert_true(rig.right_carry.visible, "closed grip and weapon are one painted assembly")
+	assert_eq(rig.right_carry.polygons.size(), 3, "sleeve, intact grip, blade registration bands")
+	assert_false(rig.arms[0]["lower"].visible, "west carry replaces the far anatomical right forearm")
+	assert_true(rig.arms[1]["lower"].visible)
+	assert_eq(rig.right_carry.position, rig.arms[0]["lower"].position)
+	assert_false(rig.sword.visible, "no loose sword floating over open fingers")
+
+
+func test_leg_joints_never_lock_or_stretch_to_reach_the_floor():
+	var kit := IllustratedArt.from_directory("res://assets/art/illustrated_pilot/kai")
+	var actor := IllustratedActor.new()
+	add_child_autofree(actor)
+	actor.setup(kit, Vector2.ZERO, 238.0)
+	actor.set_process(false)
+	for sample in range(100):
+		actor.walk_rig.pose_at(float(sample) / 100.0, 1.0, true)
+		for leg in actor.walk_rig.legs:
+			var shin: Sprite2D = leg["shin"]
+			var thigh: Sprite2D = leg["thigh"]
+			var foot: Sprite2D = leg["foot"]
+			var depth: float = leg["depth"]
+			assert_almost_eq(shin.position.distance_to(foot.position), 102.0 * depth, 0.02, "support needs no calf stretch")
+			assert_lt(thigh.position.distance_to(foot.position), 237.0 * depth - 0.1, "keep a soft knee, never snap into a lock")
+
+
+func test_walk_blends_in_out_and_leaves_combat_pose_intact():
+	var kit := IllustratedArt.from_directory("res://assets/art/illustrated_pilot/kai")
+	var actor := IllustratedActor.new()
+	add_child_autofree(actor)
+	actor.setup(kit, Vector2.ZERO, 238.0)
+	actor.set_process(false)
+	actor.walking = true
+	actor.position.x += 10.0
+	actor._process(0.07)
+	assert_almost_eq(actor.walk_rig._weight, 0.5, 0.001)
+	actor.pose = "action"
+	actor.walking = false
+	actor._process(0.01)
+	assert_false(actor.walk_rig.visible)
+	assert_eq(actor.body.texture, kit.texture_for("action"))
+	actor.pose = "idle"
+	actor._process(0.2)
+	assert_false(actor.walk_rig.visible)
+	assert_true(actor.body.visible)
+	assert_eq(actor.body.texture, kit.texture_for("idle"))
+	assert_eq(actor.walk_rig._phase, 0.0, "a stopped walk resets the starting contact")

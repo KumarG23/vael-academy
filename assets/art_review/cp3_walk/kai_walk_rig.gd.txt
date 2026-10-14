@@ -1,0 +1,175 @@
+class_name KaiWalkRig
+extends Node2D
+## CP-3 pilot-only cutout locomotion. The head/torso keep Kai's approved idle
+## pixels. Gemini supplies complete detached limbs, cape and carried sword.
+
+var torso: Polygon2D
+var cape: Sprite2D
+var sword: Sprite2D
+var right_carry: Polygon2D
+var legs: Array[Dictionary] = []
+var arms: Array[Dictionary] = []
+var stride := 240.0
+var carry_weapon := true
+var _heel := Vector2.ZERO
+var _toe := Vector2.ZERO
+var _parts: Dictionary = {}
+var _textures: Dictionary = {}
+var _kit: IllustratedArt
+var _weight := 0.0
+var _distance := 0.0
+var _phase := 0.0
+var _crown_material: ShaderMaterial
+
+
+func setup(directory: String, kit: IllustratedArt) -> void:
+	_kit = kit
+	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(directory.path_join("rig.json")))
+	_parts = spec["parts"]
+	stride = float(spec["stride"])
+	for name in _parts:
+		_textures[name] = load(directory.path_join(str(_parts[name]["texture"])))
+	_heel = _point(spec["heel"]) - _point(_parts["foot"]["pivot"])
+	_toe = _point(spec["toe"]) - _point(_parts["foot"]["pivot"])
+	cape = _sprite("cape", -4)
+	# Far/near source-space planes match the existing three-quarter camera.
+	for spec_leg in [[Vector2(393, 361), 592.0, 425.0, 0.95, -2, Vector2(410, 492)], [Vector2(363, 361), 604.0, 344.0, 1.0, -1, Vector2(354, 493)]]:
+		var depth: float = spec_leg[3]
+		legs.append({"hip": spec_leg[0], "floor": spec_leg[1], "idle_x": spec_leg[2], "depth": depth, "idle_knee": spec_leg[5],
+			"thigh": _sprite("thigh", spec_leg[4]), "shin": _sprite("shin", spec_leg[4]), "foot": _sprite("foot", spec_leg[4])})
+	for arm_spec in [[Vector2(412, 263), -0.20, -0.24, -1], [Vector2(332, 263), 0.28, 0.22, 2]]:
+		arms.append({"shoulder": arm_spec[0], "upper_rest": arm_spec[1], "lower_rest": arm_spec[2],
+			"upper": _sprite("upper_arm", arm_spec[3]), "lower": _sprite("forearm", arm_spec[3]), "grip": Vector2.ZERO})
+	torso = Polygon2D.new()
+	torso.z_index = 4
+	torso.texture = kit.texture_for("idle")
+	var points := PackedVector2Array()
+	for point in spec["torso_polygon"]:
+		points.append(_point(point))
+	torso.polygon = points
+	torso.uv = points
+	add_child(torso)
+	sword = _sprite("sword", 3)
+	if spec.has("right_carry_mesh"):
+		var carry: Dictionary = spec["right_carry_mesh"]
+		right_carry = Polygon2D.new()
+		right_carry.texture = load(directory.path_join(carry["texture"]))
+		var vertices := PackedVector2Array()
+		var uv := PackedVector2Array()
+		for point in carry["vertices"]:
+			vertices.append(_point(point))
+		for point in carry["uv"]:
+			uv.append(_point(point))
+		right_carry.polygon = vertices
+		right_carry.uv = uv
+		var sections: Array[PackedInt32Array] = []
+		for polygon in carry["polygons"]:
+			sections.append(PackedInt32Array(polygon))
+		right_carry.polygons = sections
+		add_child(right_carry)
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	pose_at(0.0, 0.0, true)
+
+
+static func _point(point: Array) -> Vector2:
+	return Vector2(float(point[0]), float(point[1]))
+
+
+func _sprite(name: String, layer: int) -> Sprite2D:
+	var part := Sprite2D.new()
+	part.texture = _textures[name]
+	part.centered = false
+	part.offset = -_point(_parts[name]["pivot"])
+	part.z_index = layer + 4
+	add_child(part)
+	return part
+
+
+func advance(distance: float, moving: bool, delta: float, east: bool) -> void:
+	_distance += distance
+	_phase = _distance / stride
+	_weight = move_toward(_weight, 1.0 if moving else 0.0, delta / 0.14)
+	pose_at(_phase, _weight, east)
+	if not moving and _weight == 0.0:
+		# Start next walk from the contact nearest the neutral stance, preserving
+		# phase across movement cells but avoiding a random starting foot.
+		_distance = 0.0
+		_phase = 0.0
+
+
+func pose_at(phase: float, weight: float, east: bool) -> void:
+	var p := fposmod(phase, 1.0)
+	scale.x = absf(scale.x) * (1.0 if east else -1.0)
+	var bob := (3.0 + 2.0 * cos(TAU * p * 2.0)) * weight
+	torso.position.y = bob
+	torso.material = _mark_material(east)
+	cape.position = Vector2(367, 244 + bob)
+	cape.rotation = (0.015 * sin(TAU * p - 0.65) + 0.025) * weight
+	for i in range(legs.size()):
+		var leg := legs[i]
+		var depth: float = leg["depth"]
+		var flat := -(_toe - _heel).angle()
+		var neutral := Vector2(float(leg["idle_x"]), float(leg["floor"]) - _heel.rotated(flat).y * depth)
+		var motion := WalkCycleMotion.foot(p + i * 0.5, stride, _heel * depth, _toe * depth, float(leg["floor"]))
+		var ankle: Vector2 = motion["ankle"] + Vector2(Vector2(leg["hip"]).x, 0)
+		ankle = neutral.lerp(ankle, weight)
+		var hip: Vector2 = leg["hip"] + Vector2(0, bob)
+		var knee := WalkCycleMotion.knee(hip, ankle, 135.0 * depth, 102.0 * depth)
+		knee = Vector2(leg["idle_knee"]).lerp(knee, weight)
+		_bone(leg["thigh"], hip, knee, "thigh", depth)
+		_bone(leg["shin"], knee, ankle, "shin", depth)
+		leg["foot"].position = ankle
+		leg["foot"].rotation = lerpf(flat, float(motion["angle"]), weight)
+		leg["foot"].scale = Vector2.ONE * depth
+	for i in range(arms.size()):
+		var arm := arms[i]
+		var near := i == 1
+		var wave := cos(TAU * p)
+		var upper_gait := 0.10 - 0.18 * wave if near else -0.10 + 0.20 * wave
+		var lower_gait := -0.03 - 0.14 * wave if near else 0.05 + 0.17 * wave
+		var upper_angle := lerpf(float(arm["upper_rest"]), upper_gait, weight)
+		var lower_angle := lerpf(float(arm["lower_rest"]), lower_gait, weight)
+		var shoulder: Vector2 = arm["shoulder"] + Vector2(0, bob)
+		var elbow := shoulder + Vector2.DOWN.rotated(upper_angle) * 60.0
+		var grip := elbow + Vector2.DOWN.rotated(lower_angle) * 51.0
+		_bone(arm["upper"], shoulder, elbow, "upper_arm", 1.0)
+		_bone(arm["lower"], elbow, grip, "forearm", 1.0)
+		arm["grip"] = grip
+	# Preserve the anatomical sword hand across facing instead of reflecting it.
+	var sword_arm := 1 if east else 0
+	sword.visible = carry_weapon
+	sword.position = arms[sword_arm]["grip"]
+	sword.rotation = 0.62 + 0.025 * sin(TAU * p) * weight
+	sword.z_index = 7 if sword_arm == 1 else 3
+	if right_carry != null:
+		sword.visible = false
+		right_carry.visible = carry_weapon
+		for i in range(arms.size()):
+			arms[i]["lower"].visible = not carry_weapon or i != sword_arm
+		var lower: Sprite2D = arms[sword_arm]["lower"]
+		right_carry.position = lower.position
+		right_carry.rotation = lower.rotation
+		right_carry.z_index = 6 if east else 3
+
+
+func _bone(part: Sprite2D, start: Vector2, finish: Vector2, name: String, depth: float) -> void:
+	var direction := finish - start
+	var rest := _point(_parts[name]["end"]) - _point(_parts[name]["pivot"])
+	part.position = start
+	part.rotation = direction.angle() - PI * 0.5
+	part.scale = Vector2(depth, direction.length() / rest.length())
+
+
+func _mark_material(east: bool) -> ShaderMaterial:
+	if east or not _kit.crown_marks.has("idle"):
+		return null
+	if _crown_material == null:
+		_crown_material = ShaderMaterial.new()
+		_crown_material.shader = preload("res://src/ui/illustrated_crown_facing.gdshader")
+	var source: Rect2 = _kit.crown_marks["idle"]
+	_crown_material.set_shader_parameter("source_mark", Vector4(source.position.x, source.position.y, source.size.x, source.size.y))
+	_crown_material.set_shader_parameter("target_mark", Vector4(source.position.x - 32, source.position.y + 3, source.size.x, source.size.y))
+	_crown_material.set_shader_parameter("skin_sample", source.get_center() + Vector2(-14, 2))
+	return _crown_material
+
+

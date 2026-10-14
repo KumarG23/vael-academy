@@ -1,0 +1,12 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Match the reference character's exact clothing colors, clean cel-shaded outlines and simple material shading. Create a professional 2D CUTOUT ANIMATION PARTS ATLAS, exactly 2 columns x 2 rows equal cells, FOUR separate parts, one per cell, generous margin. These are rig components, NOT poses or complete people. TOP LEFT: his isolated CRIMSON CAPE only, complete neck attachment at top, cloth hanging vertically to mid-thigh, gentle fold and modest flare, front-facing three-quarter view matching reference. Empty garment, NO head, body, arm, leg or sword visible in or behind it. TOP RIGHT: one isolated navy UNIFORM UPPER SLEEVE from rounded shoulder cap to elbow, straight vertically down; navy cloth with subtle matching trim, complete round hidden overlap at both ends, NO forearm, hand, shoulder epaulette or torso. BOTTOM LEFT: one isolated navy UNIFORM FOREARM from elbow to wrist with the narrow GOLD CUFF stripe and a complete warm-brown bare HAND at the bottom; fingers gently curled in a relaxed carrying grip, palm/thumb visible in three-quarter view, no object in hand, no upper arm; vertically down, full round coverage at elbow for joint overlap. BOTTOM RIGHT: his isolated slim RELIC SWORD, matching the exact reference design: green hilt/guard, slender steel blade with restrained green edge, held vertically point DOWN, handle TOP, full tip and pommel within cell. No hand, no arm, no cape. Human proportions, no pixel art, no chibi. Only those FOUR detached components, no duplicates. No text, numbers, labels, borders, grid lines, shadows or glows. Pure white background for extraction. This is an animation layering asset, not a diagram or character lineup.",
+  "references": [
+    {
+      "path": "assets/art/illustrated_pilot/kai/idle.png",
+      "sha256": "46b92d2e3a9ebcd2a8872524ae9b44447a503d6366e43af2ec3ea47b1834cd79"
+    }
+  ],
+  "elapsed_seconds": 13.72,
+  "output": "kai_walk_upper_layers_gemini_sheet.png"
+}

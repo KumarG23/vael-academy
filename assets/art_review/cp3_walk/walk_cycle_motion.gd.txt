@@ -1,0 +1,56 @@
+class_name WalkCycleMotion
+extends RefCounted
+## CP-3 source-space walk mechanics. Stance cancels root travel; both legs
+## share one cycle with a half-cycle offset. No rendering or gameplay state.
+
+const STANCE := 0.60
+const TOE_START := 0.44
+const HEEL_END := 0.11
+const CLEARANCE := 6.0
+
+
+static func foot(phase: float, stride: float, heel: Vector2, toe: Vector2, floor_y: float) -> Dictionary:
+	var p := fposmod(phase, 1.0)
+	var flat := -(toe - heel).angle()
+	if p < STANCE:
+		return _stance(p, stride, heel, toe, floor_y, flat)
+	var t := (p - STANCE) / (1.0 - STANCE)
+	var start := _stance(STANCE, stride, heel, toe, floor_y, flat)
+	var finish := _stance(0.0, stride, heel, toe, floor_y, flat)
+	var angle := flat + lerpf(0.26, -0.20, smoothstep(0.0, 1.0, t))
+	var clearance := CLEARANCE * sin(PI * t)
+	var x := _hermite(start["ankle"].x, finish["ankle"].x, -stride * (1.0 - STANCE), t)
+	var y := floor_y - maxf(heel.rotated(angle).y, toe.rotated(angle).y) - clearance
+	return {"ankle": Vector2(x, y), "angle": angle, "planted": false, "contact": "swing", "clearance": clearance}
+
+
+static func _stance(p: float, stride: float, heel: Vector2, toe: Vector2, floor_y: float, flat: float) -> Dictionary:
+	var pitch := lerpf(-0.20, 0.0, smoothstep(0.0, HEEL_END, p))
+	var on_toe := p > TOE_START
+	if on_toe:
+		pitch = lerpf(0.0, 0.26, smoothstep(TOE_START, STANCE, p))
+	var angle := flat + pitch
+	var heel_flat := heel.rotated(flat)
+	var toe_flat := toe.rotated(flat)
+	var contact := Vector2(stride * (0.3 - p) + heel_flat.x, floor_y)
+	var pivot := heel
+	if on_toe:
+		contact.x += toe_flat.x - heel_flat.x
+		pivot = toe
+	return {"ankle": contact - pivot.rotated(angle), "angle": angle, "planted": true,
+		"contact": "toe" if on_toe else "heel", "clearance": 0.0}
+
+
+static func _hermite(start: float, finish: float, tangent: float, t: float) -> float:
+	var t2 := t * t
+	var t3 := t2 * t
+	return (2 * t3 - 3 * t2 + 1) * start + (t3 - 2 * t2 + t) * tangent + (-2 * t3 + 3 * t2) * finish + (t3 - t2) * tangent
+
+
+static func knee(hip: Vector2, ankle: Vector2, thigh: float, shin: float) -> Vector2:
+	var delta := ankle - hip
+	var distance := maxf(0.001, delta.length())
+	var along := clampf((thigh * thigh - shin * shin + distance * distance) / (2.0 * distance), -thigh, thigh)
+	var across := sqrt(maxf(0.0, thigh * thigh - along * along))
+	var direction := delta / distance
+	return hip + direction * along + Vector2(direction.y, -direction.x) * across

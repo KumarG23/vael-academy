@@ -1,0 +1,909 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+---  GUT  ---
+[1m[INFO]:  [0musing [/Users/nealsharma/Library/Application Support/Godot/app_userdata/Vael Academy] for temporary output.
+Godot version:  4.7.2
+GUT version:  9.7.0
+[4m
+
+res://tests/test_academy_journal.gd
+[0m* test_builds_a_snapshot_for_every_fielded_unit
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_tabs_cycle
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_roster_selection_moves_and_wraps
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_saving_writes_a_slot_and_the_label_updates
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_journal_saves_round_trip_through_campaign_load
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_inventory_hub_trades_an_item_and_persists
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_inventory_full_pack_bounces_the_trade
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_innate_magic_cannot_be_traded_away
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_inventory_cancel_backs_out_before_closing
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_volume_adjust_changes_the_audio_setting
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+[1m10/10 passed.
+[0m[4m
+
+res://tests/test_ai_brain.gd
+[0m* test_evaluate_expected_damage_and_score
+* test_evaluate_no_counter_means_zero_received
+* test_evaluate_credits_a_kill_when_all_hits_would_drop_target
+* test_evaluate_doubling_scales_dealt_and_received
+* test_decide_moves_adjacent_and_attacks_a_reachable_player
+* test_decide_advances_when_no_target_in_reach
+* test_decide_prefers_the_killable_target
+* test_decide_waits_when_no_enemies
+* test_boss_attacks_only_from_its_tile_never_moving
+* test_boss_holds_when_no_one_is_adjacent
+* test_aggressor_would_advance_where_a_boss_holds
+* test_threat_tiles_include_reachable_attack_squares
+* test_boss_threat_is_only_its_attack_range
+* test_has_enemy_in_threat_detects_a_player_in_range
+[1m14/14 passed.
+[0m[4m
+
+res://tests/test_anima_triangle.gd
+[0m* test_ember_beats_gale_beats_tide_beats_ember
+* test_same_element_is_neutral
+* test_non_anima_tome_has_no_interaction
+* test_anima_and_physical_do_not_bleed_into_each_other
+* test_advantage_shows_up_in_a_real_forecast
+* test_the_mage_heirs_are_wired_to_the_three_elements
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_arena.gd
+[0m* test_waves_escalate_in_count
+* test_foes_are_arena_only_and_scale_with_depth
+* test_reward_scales_with_waves_cleared
+* test_every_archetype_borrows_real_walk_frames
+* test_unit_sprite_id_resolves_the_alias
+* test_kai_stands_alone_and_wave_one_is_on_the_sand
+* test_arena_camera_fits_the_whole_pit
+* test_clearing_a_wave_queues_the_next_for_phase_start
+* test_kai_falling_ends_the_bout_with_winnings
+* test_retreat_between_waves_banks_the_winnings
+* test_retreat_remark_never_says_downed
+* test_retreat_after_a_clear_praises_the_exit
+* test_falling_between_waves_still_counts_the_cleared_floor
+* test_personal_best_survives_a_worse_run
+[1m14/14 passed.
+[0m[4m
+
+res://tests/test_audio.gd
+[0m* test_autoload_is_registered
+* test_every_named_sfx_exists_on_disk
+* test_play_sfx_is_safe_and_caches
+* test_unknown_sfx_is_silent_not_a_crash
+* test_muted_suppresses_sfx
+* test_music_tracks_the_requested_path
+* test_missing_music_is_silent
+* test_quiz_answer_sfx_exist
+[1m8/8 passed.
+[0m[4m
+
+res://tests/test_auras.gd
+[0m* test_aura_skills_are_flagged_as_auras
+* test_a_plain_skill_is_not_an_aura
+* test_an_aura_does_not_buff_its_own_owner
+* test_pack_hunter_folds_a_combat_bonus
+* test_heirs_and_sable_carry_their_signature_skills
+* test_recompute_buffs_allies_in_range_only
+* test_aura_does_not_cross_teams
+* test_spellbow_is_magical_but_stays_a_bow
+[1m8/8 passed.
+[0m[4m
+
+res://tests/test_battle_ai.gd
+[0m* test_boss_never_leaves_the_fort
+* test_sentinel_sleeps_until_a_player_enters_its_threat
+* test_threat_overlay_toggles_and_populates_tiles
+[1m3/3 passed.
+[0m[4m
+
+res://tests/test_battle_camera.gd
+[0m* test_battle_opens_on_the_player_team
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_camera_follows_the_cursor_cell
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+[1m2/2 passed.
+[0m[4m
+
+res://tests/test_battle_campaign.gd
+[0m* test_campaign_progression_is_applied_on_deploy
+* test_victory_captures_the_roster_back_to_campaign
+* test_standalone_battle_ignores_campaign_when_not_deployed
+[1m3/3 passed.
+[0m[4m
+
+res://tests/test_battle_combat.gd
+[0m* test_full_player_attack_round_with_counter
+* test_lethal_attack_removes_unit_and_emits_eventbus
+[1m2/2 passed.
+[0m[4m
+
+res://tests/test_battle_cursor.gd
+[0m* test_starts_at_requested_cell
+* test_try_move_shifts_one_cell
+* test_clamps_at_left_edge
+* test_clamps_at_bottom_right
+* test_move_to_out_of_bounds_clamps
+* test_cell_changed_emitted_on_move
+* test_no_signal_on_noop_move
+* test_confirm_sets_selection_and_emits
+* test_cancel_clears_selection_and_emits
+* test_selection_follows_cursor_on_reconfirm
+* test_held_key_first_frame_moves_immediately
+* test_held_key_waits_initial_delay_before_repeating
+* test_held_key_repeats_after_delay_elapses
+* test_releasing_direction_resets_repeat
+* test_cursor_actions_registered
+* test_key_events_map_to_actions
+[1m16/16 passed.
+[0m[4m
+
+res://tests/test_battle_houses.gd
+[0m* test_all_three_houses_load_as_data
+* test_camaraderie_changes_the_forecast
+* test_units_tint_to_their_house_color
+* test_swapping_the_player_house_rethemes_ui_with_no_code_change
+[1m4/4 passed.
+[0m[4m
+
+res://tests/test_battle_inventory.gd
+[0m* test_weapon_breaks_at_zero_uses_and_backup_equips
+* test_vulnerary_heals_and_is_consumed
+* test_item_action_hidden_at_full_hp
+* test_trade_gives_an_item_to_an_adjacent_ally
+[1m4/4 passed.
+[0m[4m
+
+res://tests/test_battle_juice.gd
+[0m* test_crit_fires_the_clash_splash
+* test_kill_dissolves_and_removes_the_unit
+[1m2/2 passed.
+[0m[4m
+
+res://tests/test_battle_polish.gd
+[0m* test_cancelling_the_command_menu_undoes_the_move
+* test_cancelling_targeting_returns_to_the_command_menu
+* test_stats_action_opens_the_panel_and_returns_to_the_menu
+* test_selecting_an_enemy_shows_its_danger_zone_then_inspects_it
+* test_danger_zone_clears_when_you_move_on
+* test_h_union_mode_restores_after_a_single_foe_study
+* test_stats_panel_describes_a_healer
+* test_supports_stop_appearing_in_battle_once_viewed
+* test_viewed_flags_survive_save_state_round_trip
+* test_choice_menu_widens_for_long_labels
+[1m10/10 passed.
+[0m[4m
+
+res://tests/test_battle_popup.gd
+[0m* test_has_kit_for_committed_cast
+* test_has_kit_false_for_unknown
+* test_load_kit_builds_all_animations
+* test_kit_aliases_resolve
+[1m4/4 passed.
+[0m[4m
+
+res://tests/test_battle_prep.gd
+[0m* test_missions_open_on_preparations
+* test_swap_two_units_between_slots
+* test_cannot_place_outside_the_deploy_slots
+* test_begin_battle_hands_over_to_the_player_phase
+* test_prep_trade_moves_gear_without_spending_anyone
+* test_merchant_hidden_until_unlocked_then_sells_and_buys
+* test_innate_gear_has_no_price
+* test_save_menu_is_reachable_from_prep
+* test_arena_and_plain_battles_skip_prep
+[1m9/9 passed.
+[0m[4m
+
+res://tests/test_battle_promotion.gd
+[0m* test_seal_hidden_until_level_10
+* test_kael_promotes_and_gains_class_bonuses
+[1m2/2 passed.
+[0m[4m
+
+res://tests/test_battle_save_load.gd
+[0m* test_save_mid_battle_and_load_into_fresh_scene
+* test_classic_permadeath_flags_dead_player_and_load_removes_them
+[1m2/2 passed.
+[0m[4m
+
+res://tests/test_battle_supports.gd
+[0m* test_kai_kael_reach_c_and_support_menu_lists_conversation
+* test_c_rank_bonus_visibly_changes_forecast
+[1m2/2 passed.
+[0m[4m
+
+res://tests/test_battle_turns.gd
+[0m* test_five_full_rounds_vs_three_enemies_without_errors
+* test_auto_advances_when_all_player_units_have_acted
+[1m2/2 passed.
+[0m[4m
+
+res://tests/test_battle_winloss.gd
+[0m* test_victory_by_seize_when_lord_reaches_the_tile
+* test_victory_by_rout_when_all_enemies_fall
+* test_defeat_when_the_lord_is_slain_in_the_enemy_phase
+* test_input_is_locked_after_the_battle_ends
+[1m4/4 passed.
+[0m[4m
+
+res://tests/test_battle_xp.gd
+[0m* test_unit_levels_up_mid_battle_from_a_kill
+* test_healer_gains_xp_from_healing
+[1m2/2 passed.
+[0m[4m
+
+res://tests/test_calendar.gd
+[0m* test_year_one_is_bracketed_by_the_two_rites
+* test_current_event_follows_the_week
+* test_victory_advances_the_year
+* test_week_survives_save_round_trip
+* test_registry_routes_battle_chapters_by_house
+* test_war_room_respects_free_weeks
+* test_prologue_victory_does_not_advance_the_week
+* test_second_semester_closes_at_year_end
+[1m8/8 passed.
+[0m[4m
+
+res://tests/test_camaraderie.gd
+[0m* test_bonus_when_a_housemate_is_within_range
+* test_no_bonus_when_housemates_are_too_far
+* test_no_bonus_with_no_housemates
+* test_does_not_stack_per_housemate
+* test_null_house_is_safe
+* test_respects_a_custom_range
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_campaign.gd
+[0m* test_training_grants_ten_xp_to_one_unit_per_visit
+* test_a_new_visit_refreshes_training
+* test_training_can_trigger_a_level_up
+* test_training_persists_through_save_and_load
+* test_capture_stores_roster_and_result
+* test_deploy_flag_gates_battle_application
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_campaign_flow.gd
+[0m* test_new_game_opens_on_the_prologue
+* test_after_the_prologue_comes_the_oath
+* test_a_sworn_house_goes_straight_to_the_castle
+* test_choosing_a_house_binds_locks_and_marks_the_prologue_done
+* test_the_house_choice_scene_loads
+[1m5/5 passed.
+[0m[4m
+
+res://tests/test_campus_editor.gd
+[0m* test_editor_exists_and_toggles
+* test_every_brush_resolves_to_a_real_asset
+* test_place_then_delete_a_prop
+* test_help_card_shows_on_entry_and_toggles
+* test_zoom_and_fit_change_the_camera
+* test_arrows_pan_when_nothing_is_held
+* test_terrain_paint_changes_a_cell
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_castle.gd
+[0m* test_starts_on_the_campus
+* test_every_door_leads_somewhere_real_and_back
+* test_door_cells_and_spawns_are_walkable
+* test_walking_into_a_door_changes_rooms
+* test_walls_block_movement
+* test_points_prompt_within_radius_and_activate
+* test_npcs_stand_in_their_rooms
+* test_function_points_live_in_their_rooms
+* test_every_room_base_is_a_renderable_ground
+* test_the_grove_is_grass_and_lush
+* test_campus_variant_follows_the_calendar
+* test_rooms_can_have_their_own_music
+* test_accept_keypress_at_a_point_is_input_safe
+* test_actor_occludes_behind_a_tall_prop
+* test_arena_is_its_own_sub_area_off_the_training_yard
+* test_training_from_the_castle_grants_xp
+* test_mission_menu_and_system_menu
+* test_quartermaster_and_house_oath
+* test_support_scene_launches_from_the_castle
+* test_spawning_on_a_door_cannot_bounce_back
+* test_partner_labels_carry_bond_ranks
+* test_area_title_card_shows_the_room_name
+* test_resting_through_a_battle_week_is_refused
+[1m23/23 passed.
+[0m[4m
+
+res://tests/test_chapter_def.gd
+[0m* test_fill_sets_every_cell
+* test_set_and_get_are_row_major
+* test_in_bounds
+* test_make_grid_matches_dimensions
+* test_authored_test_map_loads_and_is_20x15
+* test_authored_test_map_uses_every_terrain_type
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_closing_rite.gd
+[0m* test_every_route_fields_both_rivals
+* test_closing_spawns_are_passable
+* test_year_ends_on_the_closing_rite
+[1m3/3 passed.
+[0m[4m
+
+res://tests/test_combat_forecast.gd
+[0m* test_strike_stats_fold_in_triangle_and_terrain
+* test_magical_attack_reads_resistance_not_defense
+* test_exchange_flags_doubling_and_counter_at_range_1
+* test_exchange_bow_cannot_counter_at_range_1
+* test_exchange_melee_cannot_counter_a_bow_at_range_2
+* test_support_bonus_changes_forecast_numbers
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_combat_math.gd
+[0m* test_attack_speed_burdened_only_when_weapon_heavier_than_str
+* test_attack_power_physical_vs_magical
+* test_damage_floors_at_zero_and_folds_triangle_and_terrain
+* test_hit_rate_uses_integer_luck_halving
+* test_avoid_rate
+* test_crit_rate_uses_integer_skill_halving
+* test_crit_avoid_is_luck
+* test_displayed_hit_and_crit_clamp_0_100
+* test_crit_damage_is_triple
+* test_doubles_needs_four_or_more_attack_speed_lead
+[1m10/10 passed.
+[0m[4m
+
+res://tests/test_combat_presentation_upgrade.gd
+[0m* test_hit_reaction_classification
+* test_combat_fx_profile_data_driven
+* test_combat_rig_outcome_awareness
+* test_combat_rig_hires_3pose_hook
+[1m4/4 passed.
+[0m[4m
+
+res://tests/test_combat_resolver.gd
+[0m* test_order_is_attacker_then_counter_when_both_melee
+* test_lethal_first_strike_prevents_the_counter
+* test_doubling_adds_a_third_attacker_strike
+* test_bow_attacks_at_range_2_without_a_counter
+* test_staff_wielder_cannot_counter
+* test_crit_triples_damage
+* test_seeded_determinism_full_exchange
+* test_attacking_an_unarmed_defender_does_not_crash_and_has_no_counter
+* test_result_damage_tallies_split_by_side
+[1m9/9 passed.
+[0m[4m
+
+res://tests/test_combat_rng.gd
+[0m* test_same_seed_produces_identical_roll_stream
+* test_different_seeds_diverge
+* test_rolls_are_in_0_99
+* test_hit_100_always_connects
+* test_hit_0_never_connects
+* test_crit_100_always_and_0_never
+* test_two_rn_is_less_swingy_than_one_rn
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_combat_xp.gd
+[0m* test_no_xp_on_a_whiff
+* test_hit_is_about_ten_at_equal_level
+* test_kill_is_about_thirty_at_equal_level
+* test_higher_level_target_pays_more
+* test_lower_level_target_pays_less_but_at_least_one
+* test_award_clamps_to_100
+* test_heal_xp_scales_with_amount_healed
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_cross_school.gd
+[0m* test_kai_cannot_wield_a_locked_school
+* test_house_students_are_unaffected
+* test_the_first_spark_opens_ember
+* test_unlocked_school_reaches_the_resolver
+* test_school_unlock_survives_saves
+[1m5/5 passed.
+[0m[4m
+
+res://tests/test_crownspark.gd
+[0m* test_kai_carries_crownspark
+* test_crown_school_sits_outside_the_anima_triangle
+* test_crownspark_lists_under_the_magic_command
+* test_innate_spell_needs_no_school_flag
+* test_stale_save_gains_the_innate_spell
+* test_crownspark_has_its_own_fx_style
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_dialogue_branching.gd
+[0m* test_parses_choice_labels_and_gotos
+* test_option_goto_defaults_to_fall_through
+* test_goto_to_unknown_label_is_a_parse_error
+* test_option_goto_to_unknown_label_is_a_parse_error
+* test_duplicate_label_is_a_parse_error
+* test_choice_requires_options_with_text
+* test_linear_scripts_have_no_labels
+* test_choice_pauses_playback_and_blocks_advance
+* test_choosing_left_plays_only_the_left_path
+* test_choosing_right_plays_only_the_right_path
+* test_choose_out_of_range_is_a_no_op
+* test_flags_reset_between_playbacks
+* test_fall_through_option_continues_to_the_next_step
+* test_branch_sample_file_plays_both_paths
+[1m14/14 passed.
+[0m[4m
+
+res://tests/test_dialogue_scene.gd
+[0m* test_plays_the_sample_start_to_finish
+* test_first_line_is_shown_on_play
+* test_leading_events_fire_before_the_first_line
+* test_start_battle_is_terminal
+* test_typewriter_reveal_then_advance
+[1m5/5 passed.
+[0m[4m
+
+res://tests/test_dialogue_script.gd
+[0m* test_parses_lines_and_events
+* test_line_defaults
+* test_invalid_json_reports_error
+* test_non_array_root_is_rejected
+* test_line_without_text_is_rejected
+* test_terminal_event_detection
+* test_loads_the_sample_script_from_disk
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_fishing.gd
+[0m* test_bite_arrives_then_expires
+* test_striking_in_the_window_catches
+* test_striking_early_scares_it_off
+* test_catches_land_in_the_campaign_log
+* test_fish_log_survives_save_round_trip
+* test_waterside_hosts_the_fishing_spot
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_grading.gd
+[0m* test_empty_marks_read_neutral_not_zero
+* test_marks_blend_by_weight
+* test_rank_ladder
+* test_battle_score_shape
+* test_campaign_recorders_feed_the_grade
+* test_semester_closes_and_locks_a_report_card
+* test_grade_block_survives_a_save_round_trip
+* test_lore_questions_gate_on_having_read_the_source
+* test_pick_questions_returns_a_lesson
+* test_classroom_hosts_the_lesson_point
+* test_teacher_matches_the_house
+* test_lesson_runs_once_a_week_and_grades
+* test_spellbook_magic_is_kai_bound
+* test_hub_refuses_to_trade_tomes
+    [DEPRECATED]:  wait_frames has been replaced with wait_physics_frames which is counted in _physics_process.  wait_process_frames has also been added which is counted in _process.
+* test_semester_end_plays_the_ceremony_with_rewards
+* test_perfect_score_awards_a_spellbook_once
+[1m16/16 passed.
+[0m[4m
+
+res://tests/test_grid.gd
+[0m* test_defaults_to_128px_cells
+* test_cell_to_world_is_top_left_corner
+* test_cell_center
+* test_world_to_cell_floors_within_a_cell
+* test_world_to_cell_handles_negative_positions
+* test_round_trip_cell_center_back_to_cell
+* test_in_bounds
+* test_pixel_size
+* test_custom_cell_size
+[1m9/9 passed.
+[0m[4m
+
+res://tests/test_holidays_activities.gd
+[0m* test_festival_fires_once_and_unlocks_cooking
+* test_cooking_point_is_flag_gated
+* test_cooking_grows_a_bond_once_per_week
+* test_victory_feast_plays_when_the_year_ends
+* test_unlock_persists_through_saves
+[1m5/5 passed.
+[0m[4m
+
+res://tests/test_house_choice.gd
+[0m* test_default_house_is_emberwing
+* test_choosing_thornrook_flips_the_roster
+* test_choosing_tidemark_flips_the_roster
+* test_unknown_house_is_rejected
+* test_house_survives_save_and_load
+* test_every_house_has_a_def_and_deploy_cells
+* test_battle_theming_follows_the_campaign_house
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_hub.gd
+[0m* test_hub_lists_the_full_roster
+* test_entering_the_hub_refreshes_training
+* test_training_grounds_grants_xp_through_the_menu
+* test_mission_board_deploy_flags_the_campaign
+* test_quartermaster_builds_a_unit_summary_without_error
+* test_save_game_writes_a_slot
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_illustrated_pilot.gd
+[0m* test_flinch_and_stagger_have_an_outward_beat_and_restore
+* test_trail_payloads_carry_damage_intensity_and_miss_alpha
+* test_padded_pose_uses_visible_feet_and_preserves_body_scale
+* test_illustrated_windup_stays_upright_and_spell_gathers_at_casting_hand
+* test_live_pilot_walk_and_strikes_keep_illustration_and_campaign_state
+* test_walk_pose_tracks_travel_instead_of_elapsed_time
+* test_west_facing_keeps_original_head_geometry_and_only_changes_mark_material
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_inventory.gd
+[0m* test_item_wraps_weapon_with_its_uses
+* test_spend_reports_depletion_at_zero
+* test_add_respects_five_slot_cap
+* test_equipped_weapon_is_the_first_weapon
+* test_equip_promotes_a_weapon_to_the_front
+* test_use_equipped_weapon_breaks_and_reequips
+* test_use_equipped_weapon_returns_null_until_break
+* test_use_consumable_removes_when_exhausted
+* test_transfer_moves_item_when_target_has_room
+* test_transfer_fails_when_target_full
+[1m10/10 passed.
+[0m[4m
+
+res://tests/test_juice_config.gd
+[0m* test_defaults_load_from_the_resource
+* test_shake_scales_with_damage
+* test_shake_is_capped_for_normal_hits_but_a_crit_exceeds_it
+* test_hitstop_ordering_hit_lt_crit_lt_kill
+* test_crit_is_dramatically_bigger_than_a_normal_hit
+* test_splash_fires_on_crit_and_kill_only
+* test_timings_are_tweakable_without_code
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_kai_walk.gd
+[0m* test_support_contact_stays_fixed_as_the_actor_moves
+* test_alternating_steps_have_support_and_low_clearance
+* test_loop_and_toe_off_have_no_position_pop
+* test_live_rig_preserves_head_pixels_scale_and_left_brow_correction
+* test_leg_joints_never_lock_or_stretch_to_reach_the_floor
+* test_walk_blends_in_out_and_leaves_combat_pose_intact
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_level_up.gd
+[0m* test_growth_100_always_gains_and_0_never
+* test_same_seed_gives_identical_gains
+* test_gains_match_the_roll_sequence_in_stat_order
+* test_total_gained_counts_ones
+[1m4/4 passed.
+[0m[4m
+
+res://tests/test_mock_battle.gd
+[0m* test_chapter_data_is_authored_correctly
+* test_chapter_terrain_uses_landmarks_meaningfully
+* test_a_foot_unit_can_reach_the_boss
+* test_dialogue_scripts_exist_and_parse
+* test_forces_spawn_from_chapter_data
+* test_felling_one_house_is_not_yet_victory
+* test_last_house_standing_wins
+* test_lord_fall_still_loses_the_mock_battle
+* test_defeated_players_yield_and_are_never_permadead
+* test_defeated_enemies_yield_without_permadeath_flags
+* test_fort_heals_its_occupant_at_phase_start
+* test_embers_chip_hp_but_never_kill
+* test_intro_dialogue_plays_then_battle_begins
+* test_boss_quote_plays_once_on_first_engagement
+* test_intro_card_states_the_battle_and_objective
+* test_battle_grade_counts_the_fallen
+[1m16/16 passed.
+[0m[4m
+
+res://tests/test_objective_resolver.gd
+[0m* test_rout_ongoing_while_enemies_remain
+* test_rout_victory_when_no_enemies_left
+* test_defeat_when_lord_dies_regardless_of_objective
+* test_defeat_when_all_player_units_lost
+* test_seize_victory_when_lord_on_the_cell
+* test_seize_ongoing_when_lord_elsewhere
+* test_seize_does_not_win_if_lord_is_dead
+* test_no_lord_defined_only_loses_on_full_wipe
+* test_defeat_boss_ongoing_while_boss_stands
+* test_defeat_boss_victory_when_boss_falls_with_enemies_left
+* test_defeat_boss_victory_on_full_rout
+* test_defeat_boss_lord_death_takes_precedence
+[1m12/12 passed.
+[0m[4m
+
+res://tests/test_pathfinder.gd
+[0m* test_reachable_on_open_plains_is_a_diamond
+* test_reachable_clamps_at_map_edges
+* test_forest_costs_two_to_enter
+* test_wall_is_impassable_and_blocks_pathing_around
+* test_armored_cannot_enter_mountain_but_foot_can
+* test_enemy_unit_blocks_movement_ally_does_not
+* test_ally_tile_is_passable_but_not_standable
+* test_find_path_straight_line
+* test_find_path_same_cell_is_singleton
+* test_find_path_routes_around_wall
+* test_find_path_prefers_plains_over_forest
+* test_find_path_returns_empty_when_goal_walled
+* test_find_path_returns_empty_when_fully_sealed
+* test_attack_tiles_melee_ring_excludes_standable
+* test_attack_tiles_bow_range_two
+[1m15/15 passed.
+[0m[4m
+
+res://tests/test_prologue.gd
+[0m* test_prologue_chapter_data
+* test_player_spawns_replace_the_roster
+* test_kai_is_the_lord
+* test_heir_guests_match_their_bible_identities
+* test_bandit_force_spawned
+* test_defeating_the_chief_wins
+* test_mock_battle_roster_path_unaffected
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_prologue_dialogue.gd
+[0m* test_all_prologue_dialogues_parse
+* test_awakening_sets_its_flag
+[1m2/2 passed.
+[0m[4m
+
+res://tests/test_prologue_vn.gd
+[0m* test_all_five_prologue_scripts_parse
+* test_narration_is_inferred_from_empty_speaker_and_portrait
+* test_voice_and_backdrop_fields_ride_the_steps
+* test_referenced_backdrops_and_voices_exist
+* test_prologue_vn_sequences_its_scripts
+* test_play_voice_is_null_safe
+* test_backdrop_specials_and_texture_load
+* test_music_field_parses
+[1m8/8 passed.
+[0m[4m
+
+res://tests/test_promotion.gd
+[0m* test_eligible_only_at_level_10_with_a_promotion_path
+* test_already_promoted_class_cannot_promote_again
+* test_unit_cannot_promote_before_level_10
+* test_promotion_changes_class_and_applies_bonuses
+* test_promotion_resets_level_to_one_and_clears_xp
+* test_promotion_bonus_hp_also_raises_current_hp
+* test_promoted_unit_can_still_level_up_afterward
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_promotion_ladder.gd
+[0m* test_every_authored_character_has_its_unique_target
+* test_no_two_characters_share_a_promoted_name
+* test_kai_is_a_lord_promoting_to_warder_lord
+* test_promote_applies_the_per_character_target
+* test_generic_units_keep_the_class_path
+[1m5/5 passed.
+[0m[4m
+
+res://tests/test_resume.gd
+[0m* test_field_menu_offers_save_and_it_opens_the_slot_list
+* test_mission_payload_carries_the_whole_campaign
+* test_resume_stage_restores_campaign_and_stages_the_battle
+* test_finished_battles_do_not_resume
+* test_resumed_scene_walks_back_into_the_fight
+* test_arena_run_survives_a_save_and_resume
+* test_slot_list_marks_live_battles
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_rival_forces.gd
+[0m* test_full_parity_for_every_house
+* test_rival_bosses_are_the_heirs
+* test_rival_units_spawn_as_enemies_with_brains
+* test_rival_dialogue_files_exist
+[1m4/4 passed.
+[0m[4m
+
+res://tests/test_romance.gd
+[0m* test_points_alone_never_reach_the_romance_rank
+* test_consent_blossoms_when_the_bond_is_deep
+* test_consent_before_the_bond_is_ready_waits
+* test_non_romance_pairs_cap_at_A
+* test_romance_is_exclusive
+* test_romances_and_consents_survive_save_state
+* test_authored_chain_is_flagged_and_bonus_grows
+* test_confession_scene_branches_both_ways
+* test_heart_option_hides_without_a_gate
+* test_heart_option_shows_when_the_gate_allows
+* test_choosing_the_heart_emits_the_romance_event
+* test_campus_chat_bond_event_deepens_the_support
+* test_lioras_campus_chat_carries_the_scaffold
+* test_portrait_resolves_emotion_variants_with_base_fallback
+* test_liora_ships_the_full_emotion_set
+[1m15/15 passed.
+[0m[4m
+
+res://tests/test_roster.gd
+[0m* test_roster_is_the_emberwing_house_without_kai
+* test_protagonist_is_appended_to_fielded_units
+* test_kai_is_still_the_lord
+* test_every_fielded_unit_has_a_deploy_fallback
+* test_new_units_match_their_bible_identities
+[1m5/5 passed.
+[0m[4m
+
+res://tests/test_save_system.gd
+[0m* test_save_load_and_list_slot
+[1m1/1 passed.
+[0m[4m
+
+res://tests/test_skeleton.gd
+[0m* test_toolchain_runs
+* test_event_bus_autoload_present
+* test_event_bus_declares_core_signals
+[1m3/3 passed.
+[0m[4m
+
+res://tests/test_skills.gd
+[0m* test_skills_unlock_on_schedule
+* test_combat_bonus_flows_from_skills
+* test_stat_modifier_skills_fold_into_stat
+* test_promotion_keeps_base_skills_and_adds_promoted
+* test_skills_reach_the_resolver_path
+[1m5/5 passed.
+[0m[4m
+
+res://tests/test_support_playback.gd
+[0m* test_registry_loads_all_authored_chains
+* test_registry_handles_a_missing_directory
+* test_build_state_carries_every_chain
+* test_every_rank_conversation_exists_parses_and_stays_in_voice
+* test_common_hall_plays_an_unlocked_conversation
+* test_common_hall_placeholder_row_is_inert
+* test_battle_supports_menu_plays_the_conversation
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_support_state.gd
+[0m* test_points_unlock_c_rank
+* test_rank_bonuses_require_nearby_partner
+* test_unlocked_conversation_listing_tracks_rank
+[1m3/3 passed.
+[0m[4m
+
+res://tests/test_terrain_db.gd
+[0m* test_all_types_present
+* test_plains
+* test_forest
+* test_mountain_blocks_armored_and_mounted
+* test_fort_heals_ten_percent
+* test_wall_and_water_impassable
+* test_helper_lookups
+* test_embers_are_a_passable_hazard
+* test_mire_is_a_debuff
+* test_normal_terrain_deals_no_turn_damage
+[1m10/10 passed.
+[0m[4m
+
+res://tests/test_terrain_tiles.gd
+[0m* test_wang_maps_load_all_sets_complete
+* test_junction_signatures_around_single_water_cell
+* test_junction_signature_out_of_bounds_is_not_overlay
+* test_full_overlay_grid_gives_full_signature_interior
+* test_renderer_activates_when_assets_exist
+[1m5/5 passed.
+[0m[4m
+
+res://tests/test_title_flow.gd
+[0m* test_title_opens_on_the_main_menu
+* test_new_game_classic_resets_the_campaign
+* test_new_game_casual_sets_the_flag
+* test_load_restores_a_saved_campaign
+* test_load_missing_slot_fails_gracefully
+* test_list_slots_reads_campaign_saves
+* test_slot_labels_show_saves_or_placeholder
+* test_hub_visit_after_load_keeps_the_saved_training_state
+[1m8/8 passed.
+[0m[4m
+
+res://tests/test_turn_manager.gd
+[0m* test_starts_on_player_phase_round_one
+* test_advance_toggles_and_counts_rounds
+* test_phase_name
+[1m3/3 passed.
+[0m[4m
+
+res://tests/test_unit_progression.gd
+[0m* test_gain_xp_below_100_does_not_level
+* test_crossing_100_levels_up_once
+* test_guaranteed_growths_raise_every_stat_and_current_hp
+* test_applied_gains_match_a_seeded_roll
+* test_overflow_xp_carries_into_the_next_level
+* test_level_cap_stops_growth
+* test_heal_restores_up_to_max_and_reports_amount
+[1m7/7 passed.
+[0m[4m
+
+res://tests/test_unit_sprites.gd
+[0m* test_scan_finds_variable_east_frames
+* test_scan_finds_optional_north_set
+* test_scan_missing_south_set_is_empty
+* test_scan_missing_dir_is_all_empty
+* test_idle_indices_keep_legacy_four_frame_behavior
+* test_idle_indices_generalize
+* test_sprite_frames_built_from_fixture_sets
+* test_variant_dir_resolves_when_frames_exist
+* test_variant_falls_back_to_root_when_missing
+* test_battle_variant_uses_root
+* test_scan_variant_frame_counts_differ
+[1m11/11 passed.
+[0m[4m
+
+res://tests/test_vael_town.gd
+[0m* test_the_town_stands_and_the_road_connects
+* test_smithy_sells_into_kais_kit
+* test_shop_reopens_after_a_purchase
+* test_broke_students_buy_nothing
+* test_spellbook_merchant_opens_a_school
+* test_tavern_meal_deepens_the_bond_weekly
+[1m6/6 passed.
+[0m[4m
+
+res://tests/test_visits.gd
+[0m* test_prologue_authored_visits
+* test_visit_offered_on_the_door_cell
+* test_visit_not_offered_elsewhere
+* test_visiting_grants_item_and_spends_action
+* test_visit_is_once_per_battle
+[1m5/5 passed.
+[0m[4m
+
+res://tests/test_weapon_data.gd
+[0m* test_iron_weapons_load_with_expected_stats
+* test_tome_is_magical_and_bow_is_ranged_only
+* test_staff_cannot_attack
+[1m3/3 passed.
+[0m[4m
+
+res://tests/test_weapon_triangle.gd
+[0m* test_advantage_pairs_give_plus_15_hit_plus_1_dmg
+* test_disadvantage_is_the_mirror
+* test_same_type_is_neutral
+* test_bow_and_tome_sit_outside_the_triangle
+[1m4/4 passed.
+[0m
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Deprecated           13
+
+Scripts              80
+Tests               544
+Passing Tests       544
+Asserts            3884
+Time              42.09s
+
+
+[32m---- All tests passed! ----
+[0mGUT 9.7.1:  https://github.com/bitwes/Gut/releases/tag/v9.7.1 is now available!
+
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

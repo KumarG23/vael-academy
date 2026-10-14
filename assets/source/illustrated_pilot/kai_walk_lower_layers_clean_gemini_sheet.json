@@ -1,0 +1,12 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Edit ONLY the gold piping on this exact 2x2 rig-parts sheet. REMOVE the gold vertical trouser stripe in TOP LEFT and BOTTOM RIGHT; replace it with continuous NAVY fabric matching the surrounding existing folds and shading. Kai's approved trousers are plain navy. Keep every component's exact shape, scale, placement, outline, anatomy, boot and shoe details unchanged. Preserve all four detached parts, do not redraw or reorganize them. Remove the black grid divider lines, leaving pure white backgrounds. No text, labels or new decorations. Output the same complete 2x2 parts atlas.",
+  "references": [
+    {
+      "path": "assets/source/illustrated_pilot/kai_walk_lower_layers_gemini_sheet.png",
+      "sha256": "933608a77a3ec3671320d90779b78c853bf2a845633805043a305c9216360fde"
+    }
+  ],
+  "elapsed_seconds": 16.56,
+  "output": "kai_walk_lower_layers_clean_gemini_sheet.png"
+}

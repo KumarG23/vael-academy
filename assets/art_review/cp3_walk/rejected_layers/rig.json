@@ -1,0 +1,243 @@
+{
+  "parts": {
+    "thigh": {
+      "texture": "thigh.png",
+      "pivot": [
+        64,
+        18
+      ],
+      "end": [
+        64,
+        114
+      ]
+    },
+    "shin": {
+      "texture": "shin.png",
+      "pivot": [
+        64,
+        18
+      ],
+      "end": [
+        64,
+        112
+      ]
+    },
+    "foot": {
+      "texture": "foot.png",
+      "pivot": [
+        50,
+        26
+      ],
+      "end": null
+    },
+    "cape": {
+      "texture": "cape.png",
+      "pivot": [
+        128,
+        20
+      ],
+      "end": null
+    },
+    "upper_arm": {
+      "texture": "upper_arm.png",
+      "pivot": [
+        64,
+        18
+      ],
+      "end": [
+        64,
+        78
+      ]
+    },
+    "forearm": {
+      "texture": "forearm.png",
+      "pivot": [
+        64,
+        18
+      ],
+      "end": [
+        64,
+        72
+      ]
+    },
+    "sword": {
+      "texture": "sword.png",
+      "pivot": [
+        64,
+        41
+      ],
+      "end": null
+    }
+  },
+  "source_body_height": 459.28,
+  "stride": 240.0,
+  "heel": [
+    43.3,
+    37.5
+  ],
+  "toe": [
+    87.0,
+    41.4
+  ],
+  "torso_polygon": [
+    [
+      0,
+      0
+    ],
+    [
+      640,
+      0
+    ],
+    [
+      640,
+      237
+    ],
+    [
+      430,
+      237
+    ],
+    [
+      414,
+      254
+    ],
+    [
+      422,
+      319
+    ],
+    [
+      424,
+      401
+    ],
+    [
+      329,
+      401
+    ],
+    [
+      338,
+      323
+    ],
+    [
+      342,
+      281
+    ],
+    [
+      326,
+      248
+    ],
+    [
+      310,
+      237
+    ],
+    [
+      0,
+      237
+    ]
+  ],
+  "torso_texture": "../idle.png",
+  "preparation": "isnet matting and component cleanup; detached art only; explicit source-space pivots",
+  "sources": [
+    {
+      "path": "assets/source/illustrated_pilot/kai_walk_lower_layers_clean_gemini_sheet.png",
+      "sha256": "f2a6f19e401743dcb1e17f899c860be54625e10ac5e41b4cc9724c0f0fb7ad0f"
+    },
+    {
+      "path": "assets/source/illustrated_pilot/kai_walk_upper_layers_gemini_sheet.png",
+      "sha256": "8f1f685b29a23c54b941f016f67298f384e90db1062a3d5b4beb8819edfaf430"
+    },
+    {
+      "path": "assets/source/illustrated_pilot/kai_walk_grip_gemini_sheet.png",
+      "sha256": "1dce2ca6b901d1f0e59e2657c8ab4d8a62d3acb37ae55d43abd5922c92868914"
+    }
+  ],
+  "right_carry_mesh": {
+    "texture": "right_carry.png",
+    "uv": [
+      [
+        0,
+        0
+      ],
+      [
+        640,
+        0
+      ],
+      [
+        0,
+        449
+      ],
+      [
+        640,
+        449
+      ],
+      [
+        0,
+        572
+      ],
+      [
+        640,
+        572
+      ],
+      [
+        0,
+        954
+      ],
+      [
+        640,
+        954
+      ]
+    ],
+    "vertices": [
+      [
+        -72.38933333333334,
+        -12.48
+      ],
+      [
+        74.81066666666666,
+        -12.48
+      ],
+      [
+        -85.56,
+        41.4
+      ],
+      [
+        61.64,
+        41.4
+      ],
+      [
+        -85.56,
+        69.69000000000001
+      ],
+      [
+        61.64,
+        69.69000000000001
+      ],
+      [
+        -180.39988668555242,
+        264.51
+      ],
+      [
+        -33.199886685552414,
+        264.51
+      ]
+    ],
+    "polygons": [
+      [
+        0,
+        1,
+        3,
+        2
+      ],
+      [
+        2,
+        3,
+        5,
+        4
+      ],
+      [
+        4,
+        5,
+        7,
+        6
+      ]
+    ]
+  }
+}

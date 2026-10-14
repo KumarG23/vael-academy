@@ -1,0 +1,12 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Use the reference ONLY to match the navy trousers, black boots, clean outline weight and simple cel shading. Create a professional 2D CUTOUT ANIMATION PARTS ATLAS, exactly 2 columns by 2 rows, equal cells. These are separate clean rig components, NOT animation frames, NOT characters. TOP LEFT: one isolated navy trouser THIGH from hip to knee, straight vertical, complete rounded fabric at both ends for hidden joint overlap, no pelvis, no calf or boot. TOP RIGHT: one isolated black leather BOOT SHAFT from knee to ankle, straight vertical cylinder tapering slightly toward ankle, round complete overlap ends, NO FOOT and no trousers. BOTTOM LEFT: one isolated black BOOT FOOT / shoe in side-three-quarter view, heel on LEFT and toe pointing RIGHT, sole horizontal, low heel, short ankle socket pointing upward; NO calf, no trousers. BOTTOM RIGHT: one assembled neutral straight trouser-and-boot LEG as a proportions reference only, hip at top, planted sole at bottom, toe pointing RIGHT. Human teenager proportions matching this character; trousers thigh and boot shaft approximately equal length, shoe height about one fifth of shaft length. Parts must be completely separated from each other with plentiful white margins, fully visible. No character body, head, arms, hand, cape, scenery, shadow, highlights/glows. Do NOT draw a person, a walk cycle or duplicate four full legs. Only the FOUR specified parts, one per cell, carefully centered. Navy/gold academy reference style, clean linework, matte black leather. No text, labels, numbers, borders or grid lines anywhere. Pure white background for extraction. Every detached part needs finished rounded joint coverage; nothing is sliced off at a rectangle edge.",
+  "references": [
+    {
+      "path": "assets/art/illustrated_pilot/kai/idle.png",
+      "sha256": "46b92d2e3a9ebcd2a8872524ae9b44447a503d6366e43af2ec3ea47b1834cd79"
+    }
+  ],
+  "elapsed_seconds": 14.85,
+  "output": "kai_walk_lower_layers_gemini_sheet.png"
+}
