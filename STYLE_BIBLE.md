@@ -17,7 +17,11 @@
 > Keep that attack; illustrated anticipation now stays upright, and Crown-light
 > gathers/launches from the already extended casting hand. Kai's low-knee walk
 > is calmer, but true alternating-leg motion still needs an authored cycle or
-> articulated rig; Gemini repeated the leading leg even in a targeted correction.
+> articulated rig using genuinely separated artwork; Gemini and an eight-pose
+> ImageGen attempt repeated the leading leg. Neal rejected the subsequent gait;
+> the flattened-image limb rig worsened it and was reverted. Walk remains open.
+> The return walk now uses an authored west-facing head; the Crown-mark must
+> remain over his anatomical left brow, as Neal clarified in CHARACTER_BIBLE_KAI.md.
 
 > **v6.5 (2026-07-05): THE MAPS DECISION — HYBRID (Neal: "hybrid is the
 > way").** Battle maps are **pixel Wang tilesets** (PixelLab

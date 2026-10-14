@@ -8,6 +8,8 @@ var anchors: Dictionary = {}
 var hands: Dictionary = {}
 var source_body_height: float = 400.0
 var walk_fps: float = 7.0
+var walk_stride_height: float = 0.65
+var head_anchors: Dictionary = {}
 var walk_names: Array[String] = []
 
 
@@ -23,9 +25,13 @@ static func from_directory(directory: String) -> IllustratedArt:
 			manifest = raw
 	kit.source_body_height = maxf(1.0, float(manifest.get("source_body_height", 400.0)))
 	kit.walk_fps = maxf(1.0, float(manifest.get("walk_fps", 7.0)))
+	kit.walk_stride_height = maxf(0.05, float(manifest.get("walk_stride_height", 0.65)))
+	for name in manifest.get("head_anchors", {}):
+		var point: Array = manifest["head_anchors"][name]
+		kit.head_anchors[name] = Vector2(float(point[0]), float(point[1]))
 	for name in manifest.get("walk", []):
 		kit.walk_names.append(str(name))
-	var names: Array[String] = ["idle", "action", "parry_hit", "cast", "defeat"]
+	var names: Array[String] = ["idle", "action", "parry_hit", "cast", "defeat", "head_west"]
 	names.append_array(kit.walk_names)
 	for name in names:
 		var tex_path := directory.path_join(name + ".png")

@@ -18,13 +18,13 @@ The outcome buttons use controlled presentation specimens (critical damage follo
 
 ## Neal’s first motion review
 
-Neal liked the attack and the overall start, and flagged the gait, diagonal whole-body anticipation and Crown-light changing hands. Illustrated anticipation now uses a backward weight shift with zero body rotation; the liked attack artwork stays intact. Casting raises the cast-pose hand before gathering, so the gather and projectile share that hand. Kai has a new low-knee walk sheet, slower travel and a consistent cycle start. The gait remains coarse: two targeted Gemini requests failed to provide true opposite-leg phases, so an authored cycle or articulated rig is the recommended next animation step. The unsuccessful correction is preserved with its prompt, but is not used in-engine.
+Neal liked the attack and the overall start, and flagged the gait, diagonal whole-body anticipation and Crown-light changing hands. Illustrated anticipation now uses a backward weight shift with zero body rotation; the liked attack artwork stays intact. Casting raises the cast-pose hand before gathering, so the gather and projectile share that hand. Kai has a new low-knee walk sheet, slower travel and a consistent cycle start. The gait remains unresolved: Neal rejected the follow-up motion. An eight-frame ImageGen attempt also repeated legs; cutting articulated limbs from the flattened illustration made the result worse and was reverted. The approved attack/casting changes stay in place. A properly drawn cycle or genuinely separated limb/cape artwork is needed before claiming a natural walk. The unsuccessful Gemini correction is preserved with its prompt, but is not used in-engine. The discarded ImageGen/mesh experiments are not installed. Playback now follows actual travelled distance and walking/idle torso registration is shared; those repairs do not solve the missing gait poses. A separately drawn west-facing head replaces the reflected head on the return walk, keeping the Crown-mark above Kai’s anatomical left brow. This identity rule is recorded in CHARACTER_BIBLE_KAI.md exactly as Neal clarified it.
 
 ## Gemini pipeline result
 
 **Working.** Neal restored the Google key under `VAEL_ART_API_KEY` in the project's gitignored `.env`. The scripts read it directly; they also accept the older `GEMINI_API_KEY` name. Nothing exports the key into the Gemini CLI OAuth environment, and credentials are never printed or committed.
 
-The original `gemini_emotions.edit_portrait()` produced a real 1024×1024 PNG in 16.95 seconds. The shared generation function then produced two 2048² pose sheets, a 2752×1536 courtyard and two cleanup edits. Eight Gemini image requests succeeded, including two follow-up walk passes. The opposite-leg correction still failed; it is retained as evidence, not installed. The new runner checks authentication/models and then optionally exercises the real image-edit pipeline:
+The original `gemini_emotions.edit_portrait()` produced a real 1024×1024 PNG in 16.95 seconds. The shared generation function then produced two 2048² pose sheets, a 2752×1536 courtyard and two cleanup edits. Nine Gemini image requests succeeded, including two follow-up walk passes and an authored west-facing head with the mark over the left brow. The opposite-leg correction still failed; it is retained as evidence, not installed. The new runner checks authentication/models and then optionally exercises the real image-edit pipeline:
 
 ```sh
 uv run --with pillow tools/gemini_pipeline_check.py --generate --output /tmp/vael_gemini_check.png
@@ -40,7 +40,7 @@ Final live art is from Gemini. An initial built-in ImageGen sheet served as a po
 # Bounded per-asset generator; preserves existing outputs.
 uv run --with pillow tools/gemini_pilot_art.py kai serra courtyard
 uv run --with pillow tools/gemini_pilot_art.py kai_clean courtyard_clean
-uv run --with pillow tools/gemini_pilot_art.py kai_walk
+uv run --with pillow tools/gemini_pilot_art.py kai_walk kai_head_west
 
 # Neural matting and deterministic preparation, using reviewed sources.
 uv run --with pillow --with rembg --with onnxruntime tools/prepare_illustrated_pilot.py
@@ -51,7 +51,7 @@ godot --headless --import
 
 ## Verification and acceptance
 
-- **536/536 GUT tests pass, 3,250 assertions.** Five new tests verify outward flinch/stagger motion and restoration, damage/miss trail data, padded/crouched pose geometry, upright illustrated anticipation and casting-hand continuity, and live pilot walking/striking/casting/defeat without changing campaign state.
+- **538/538 GUT tests pass, 3,258 assertions.** Seven new tests verify outward flinch/stagger motion and restoration, damage/miss trail data, padded/crouched pose geometry, upright illustrated anticipation and casting-hand continuity, distance-paced frame playback and unmirrored west-facing head art, and live pilot walking/striking/casting/defeat without changing campaign state.
 - Real keyboard actions were sent to the title menu, Dev Jump and the new scene; the entry check confirms `res://scenes/proto/illustrated_pilot.tscn`.
 - Non-headless Godot rendered and recorded every demo, including resolver-driven spar and the dialogue panel. Screenshots and video are current captures.
 - CP1-1–4 are repaired: reaction groups run sequentially and finish before counters, trail intensity/miss alpha reach rendering, poses share scale/anchors, and signature previews initialize their FX profile.

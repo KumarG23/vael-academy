@@ -1,0 +1,16 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Draw ONE isolated head-and-neck game sprite of Kai looking to the LEFT in three-quarter view. Reference1 is his current in-game full-body drawing: MATCH its clean linework, exact face, hairstyle, skin, eye color and restrained cel shading. Reference2 is his canon identity portrait and explicitly shows the correct green Crown-mark over his anatomical LEFT brow: above the eye on the VIEWER RIGHT in this LEFT-facing view. The mark must be above his left brow on the near visible forehead plane, NOT above the viewer-left eyebrow, NOT centered. It is a small distinct green crown, not a tattoo over both eyes. Brown-skinned teenage boy, amber eyes, green-streaked black hair, serious calm face. Turn head LEFT so nose points viewer LEFT, show near ear on VIEWER RIGHT. Preserve age and face from reference1, not portrait's more glossy rendering. COMPLETE head including hair top and sides and a short neck ending just above white uniform collar; no shoulders, no torso, no clothing below neck. One head only, no copies or sheet. Generous margins, plain pure WHITE background, no text, no shadow, no symbols beyond his brow mark. Output a clean sprite cutout for mounting on the existing character body.",
+  "references": [
+    {
+      "path": "assets/art/illustrated_pilot/kai/idle.png",
+      "sha256": "46b92d2e3a9ebcd2a8872524ae9b44447a503d6366e43af2ec3ea47b1834cd79"
+    },
+    {
+      "path": "assets/portraits/portrait_kai.png",
+      "sha256": "ecf39295b2638ddb001abc41bf1474d7335973b8956da83ed6cc59364ae1347f"
+    }
+  ],
+  "elapsed_seconds": 16.56,
+  "output": "kai_head_west_gemini_sheet.png"
+}

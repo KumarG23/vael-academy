@@ -6,10 +6,10 @@ Totals
 Deprecated           13
 
 Scripts              79
-Tests               536
-Passing Tests       536
-Asserts            3250
-Time              36.084s
+Tests               538
+Passing Tests       538
+Asserts            3258
+Time              36.033s
 
 
 ---- All tests passed! ----

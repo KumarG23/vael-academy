@@ -18,6 +18,8 @@ func run() -> void:
 	pilot._act("walk")
 	await create_timer(0.32).timeout
 	await shot("02-walk")
+	await create_timer(1.12).timeout
+	await shot("02b-return-walk")
 	await idle()
 	for action in ["hit", "crit", "miss", "cast", "kill", "spar"]:
 		pilot._act(action)

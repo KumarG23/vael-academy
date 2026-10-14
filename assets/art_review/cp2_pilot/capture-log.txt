@@ -4,6 +4,7 @@ OpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M2
 Movie Maker mode enabled, recording movie in 1152×648 @ 60 FPS...
 CAPTURE 01-idle
 CAPTURE 02-walk
+CAPTURE 02b-return-walk
 CAPTURE 03-hit-windup
 CAPTURE 04-hit-impact
 CAPTURE 03-crit-windup
@@ -19,8 +20,8 @@ CAPTURE 04-spar-impact
 CAPTURE 05-dialogue
 --------------------------------------------------------------------------------
 Done recording movie at path: /tmp/vael-cp2-pilot.avi
-1080 frames at 60 FPS (movie length: 00:00:18:00), recorded in 00:00:23 (78% of real-time speed).
-CPU render time: 0.28 seconds (average: 0.26 ms/frame)
+1079 frames at 60 FPS (movie length: 00:00:17:59), recorded in 00:00:23 (73% of real-time speed).
+CPU render time: 0.32 seconds (average: 0.30 ms/frame)
 GPU render time: 0.00 seconds (average: 0.00 ms/frame)
-Encoding time: 5.42 seconds (average: 5.02 ms/frame)
+Encoding time: 5.26 seconds (average: 4.87 ms/frame)
 --------------------------------------------------------------------------------

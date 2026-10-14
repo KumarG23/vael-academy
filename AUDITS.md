@@ -150,6 +150,8 @@ The probes and both control animations are retained in [`runtime-probe.txt`](ass
 
 ### CP-1 acceptance assessment
 
+**CP-2 motion review from Neal (follow-up to green `7fd8af8e`):** attack/casting refinements look better; walking still does not look natural, and subsequent generation/flattened-image limb experiments worsened it. Those experiments were reverted. Gait remains an open art issue, not resolved by passing mechanics tests. Retained follow-up repairs: distance-paced playback, matching torso registration between walking and idle, and an authored west-facing head for the return walk so the Crown-mark does not reflect to the right brow. Neal explicitly places it over Kai's anatomical left brow; that instruction is recorded in `CHARACTER_BIBLE_KAI.md`. A proper authored cycle or genuinely separated animation artwork is required for the next walk pass.
+
 | Part | What actually works | What remains |
 |---|---|---|
 | Strike outcomes | Full result reaches the rig; crit anticipation, kill follow-through, melee miss under-reach, impact HP application | Damage/miss trail rendering (CP1-2); current tests mainly inspect flags |

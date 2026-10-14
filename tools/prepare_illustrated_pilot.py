@@ -79,6 +79,11 @@ def main() -> None:
         destination = OUT / character
         destination.mkdir(exist_ok=True)
         anchors = {}
+        head_anchors = {}
+        idle_alpha = np.asarray(idle)[:, :, 3]
+        idle_head_x = float(np.median(np.nonzero(idle_alpha[:int(idle.height * 0.20), :] > 128)[1]))
+        idle_foot_x = float(np.median(np.nonzero(idle_alpha[int(idle.height * 0.80):, :] > 128)[1]))
+        idle_head_offset = (idle_head_x - idle_foot_x) * factor
         for pose, frame in extracted:
             resized = frame.resize((round(frame.width * factor), round(frame.height * factor)), Image.Resampling.LANCZOS)
             x = (CANVAS[0] - resized.width) // 2
@@ -93,14 +98,31 @@ def main() -> None:
                 # frame on the moving forward boot makes the whole body jitter.
                 xs = np.nonzero(alpha[:int(alpha.shape[0] * 0.20), :] > 128)[1]
             support_x = float(np.median(xs)) if xs.size else resized.width * 0.5
+            if pose.startswith("walk_"):
+                support_x -= idle_head_offset
             canvas = Image.new("RGBA", CANVAS)
             canvas.alpha_composite(resized, (x, y))
             canvas.save(destination / (pose + ".png"))
             anchors[pose] = [round(x + support_x, 2), 604]
+            if pose == "idle" or pose.startswith("walk_"):
+                head_xs = np.nonzero(alpha[:int(alpha.shape[0] * 0.20), :] > 128)[1]
+                head_x = float(np.median(head_xs)) if head_xs.size else resized.width * 0.5
+                head_anchors[pose] = [round(x + head_x, 2), y + 101]
             print(character, pose, resized.size, "anchor", anchors[pose], flush=True)
         hands = {"cast": [470, 254], "action": [409, 294]} if character == "kai" else {"cast": [552, 266], "action": [413, 274]}
         manifest = {"source_body_height": round(idle.height * factor, 2), "walk_fps": 7.0, "walk": ["walk_1", "walk_2", "walk_3", "walk_4"], "anchors": anchors, "hands": hands, "generator": "gemini-3.1-flash-image", "source": str(source.relative_to(ROOT)), "action_cleanup_source": str(clean_source.relative_to(ROOT)) if clean_source.exists() else None, "preparation": "isnet-general-use matting; component cleanup; shared character scale; lower-body foot anchors; hand anchors reviewed on 640px output"}
         manifest["walk_source"] = str(walk_source.relative_to(ROOT)) if walk_source.exists() else str(source.relative_to(ROOT))
+        manifest["head_anchors"] = head_anchors
+        manifest["walk_stride_height"] = 0.65
+        head_source = SOURCE / (character + "_head_west_gemini_sheet.png")
+        if character == "kai" and head_source.exists():
+            head = Image.open(head_source).convert("RGBA")
+            head = matte(head.crop((0, 0, head.width, round(head.height * 0.75))), session)
+            head = head.resize((round(head.width * 104 / head.height), 104), Image.Resampling.LANCZOS)
+            mounted = Image.new("RGBA", (128, 128))
+            mounted.alpha_composite(head, ((128 - head.width) // 2, 18))
+            mounted.save(destination / "head_west.png")
+            manifest["head_west_source"] = str(head_source.relative_to(ROOT))
         (destination / "kit.json").write_text(json.dumps(manifest, indent=2) + "\n")
     courtyard = SOURCE / "courtyard_clean_gemini_sheet.png"
     if not courtyard.exists():

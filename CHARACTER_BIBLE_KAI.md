@@ -22,7 +22,7 @@ The arc, in two threads: learning that Emberwing's wear-your-heart-on-your-sleev
 
 ## Appearance
 
-Warm brown skin, dark hair kept short and practical — cut at home, not styled. Dresses for function even in a house uniform. The mark: a fine crown of glowing green lines across his brow — hair-thin, drawn like a jeweler's work (re-canoned with the 2026-07 portrait; the old frost-crack read is retired). Faint most of the time; brighter when his magic is active or he's under real stress. Unmistakable in a crowd, and unlike anything anyone at the Academy has ever seen on a person.
+Warm brown skin, dark hair kept short and practical — cut at home, not styled. Dresses for function even in a house uniform. The mark: a fine crown of glowing green lines **over his anatomical left brow** (Neal's placement clarification, 2026-10-14; turning or facing west must not move it to his right brow) — hair-thin, drawn like a jeweler's work (re-canoned with the 2026-07 portrait; the old frost-crack read is retired). Faint most of the time; brighter when his magic is active or he's under real stress. Unmistakable in a crowd, and unlike anything anyone at the Academy has ever seen on a person.
 
 ## Origin — The Open Question
 

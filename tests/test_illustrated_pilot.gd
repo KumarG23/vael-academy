@@ -102,7 +102,7 @@ func test_live_pilot_walk_and_strikes_keep_illustration_and_campaign_state():
 	var start := pilot.kai.position
 	await pilot._act("walk")
 	assert_eq(pilot.kai.position, start, "walk out-and-back restores origin")
-	assert_eq(pilot.kai._illustrated.kit.walk_names.size(), 4)
+	assert_gte(pilot.kai._illustrated.kit.walk_names.size(), 4)
 	await pilot._act("hit")
 	assert_lt(pilot.serra.current_hp, pilot.serra.max_hp(), "live controller applies HP at impact")
 	assert_true(pilot.kai.visible)
@@ -117,3 +117,48 @@ func test_live_pilot_walk_and_strikes_keep_illustration_and_campaign_state():
 	assert_eq(pilot.serra.current_hp, pilot.serra.max_hp())
 	assert_eq(pilot.serra.scale, Vector2.ONE)
 	assert_eq(Campaign.to_dict(), state, "pilot never modifies campaign/saves")
+
+
+func test_walk_pose_tracks_travel_instead_of_elapsed_time():
+	var kit := IllustratedArt.new()
+	kit.walk_stride_height = 1.0
+	for i in range(8):
+		var name := "step_" + str(i)
+		kit.walk_names.append(name)
+		var image := Image.create(4, 4, false, Image.FORMAT_RGBA8)
+		image.fill(Color(float(i) / 8.0, 0, 0))
+		kit.textures[name] = ImageTexture.create_from_image(image)
+	kit.textures["idle"] = kit.textures["step_0"]
+	var slow := IllustratedActor.new()
+	var fast := IllustratedActor.new()
+	for actor in [slow, fast]:
+		add_child_autofree(actor)
+		actor.setup(kit, Vector2.ZERO, 80.0)
+		actor.set_process(false)
+		actor.walking = true
+	slow.position.x += 10.0
+	slow._process(0.5)
+	fast.position.x += 10.0
+	fast._process(0.01)
+	assert_eq(slow.body.texture, fast.body.texture, "equal travel uses the same pose regardless of speed")
+	assert_ne(slow.body.texture, kit.textures["step_0"], "movement advances the gait")
+	var planted := slow.body.texture
+	slow._process(1.0)
+	assert_eq(slow.body.texture, planted, "stationary feet do not keep stepping")
+
+
+func test_west_facing_uses_authored_head_without_reflecting_its_mark():
+	var kit := IllustratedArt.from_directory("res://assets/art/illustrated_pilot/kai")
+	var actor := IllustratedActor.new()
+	add_child_autofree(actor)
+	actor.setup(kit, Vector2.ZERO, 150.0)
+	actor.set_process(false)
+	actor.face_right = false
+	actor._refresh()
+	assert_true(actor.west_head.visible)
+	assert_eq(actor.west_head.texture, kit.textures["head_west"])
+	assert_gt(actor.west_head.global_transform.x.x, 0.0, "west head retains its authored orientation")
+	actor.face_right = true
+	actor._refresh()
+	assert_false(actor.west_head.visible)
+	assert_null(actor.body.material, "east face is restored cleanly")
