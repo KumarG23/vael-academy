@@ -56,6 +56,7 @@ func _build(i: int) -> void:
 	rig.position = _origins[i]
 	rig.setup(CAST[i][0], CombatRig.Facing.EAST, SCALE)
 	rig.set_weapon(CAST[i][1])
+	rig.set_spell_meta("sig_" + CAST[i][0])
 	if _rigs.size() > i:
 		_rigs[i] = rig
 	else:

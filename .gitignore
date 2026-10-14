@@ -1,6 +1,10 @@
 # Godot 4+ import cache and editor state
 .godot/
 
+# Python tooling bytecode
+__pycache__/
+*.pyc
+
 # Legacy import folder
 .import/
 

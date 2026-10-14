@@ -55,23 +55,26 @@ func play_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: boo
 	var lunge := create_tween()
 	lunge.tween_property(striker, "position", contact, cfg.lunge_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await lunge.finished
+	var reaction: Tween = null
 
 	if strike.connected:
 		target.set_hp(strike.defender_hp_after)  # white flash + hp bar
-		_spawn_number(target.position, strike)
+		_spawn_number(target.position + target.combat_aim_offset(), strike)
 		_shake_amount = maxf(_shake_amount, cfg.shake_magnitude(strike.damage, strike.was_crit))
 		if cfg.wants_splash(strike.was_crit, is_kill):
 			var label := "CRIT" if strike.was_crit else "DOWN"
 			_splash.play(striker.team, label, cfg)
-		_react_target(target, toward, strike, is_kill)
+		reaction = _react_target(target, toward, strike, is_kill)
 		await _hitstop(cfg.hitstop_duration(strike.was_crit, is_kill))
 	else:
-		_spawn_miss(target.position)
-		_react_target(target, toward, strike, is_kill)
+		_spawn_miss(target.position + target.combat_aim_offset())
+		reaction = _react_target(target, toward, strike, is_kill)
 
 	var back := create_tween()
 	back.tween_property(striker, "position", home, cfg.recoil_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	await back.finished
+	if reaction != null and reaction.is_running():
+		await reaction.finished
 
 
 ## Attacker swaps to its cut-out rig, plays the weapon's attack clip on its tile,
@@ -92,7 +95,7 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 		striker.set_facing(true)
 	elif facing == CombatRig.Facing.WEST:
 		striker.set_facing(false)
-	rig.setup(striker.sprite_id(), facing, striker.map_sprite_scale())
+	rig.setup(striker.sprite_id(), facing, striker.map_sprite_scale(), striker.illustrated_art_dir, striker.illustrated_height)
 	var w := striker.weapon()
 	var wt: int = w.weapon_type if w != null else 0
 	rig.set_weapon(wt)
@@ -100,6 +103,7 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 	rig.set_outcome(strike, is_kill, cfg)
 	striker.visible = false
 	var fired := [false]
+	var reactions: Array[Tween] = []
 	rig.impact.connect(func() -> void:
 		if fired[0]:
 			return
@@ -107,18 +111,20 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 		if strike.connected:
 			AudioManager.play_sfx("crit" if strike.was_crit else "hit")  # AW-36
 			target.set_hp(strike.defender_hp_after)
-			_spawn_number(target.position, strike)
+			_spawn_number(target.position + target.combat_aim_offset(), strike)
 			_shake_amount = maxf(_shake_amount, cfg.shake_magnitude(strike.damage, strike.was_crit))
 			if cfg.wants_splash(strike.was_crit, is_kill):
 				_splash.play(striker.team, "CRIT" if strike.was_crit else "DOWN", cfg)
-			_react_target(target, toward, strike, is_kill)
+			reactions.append(_react_target(target, toward, strike, is_kill))
 			_hitstop_fire(cfg.hitstop_duration(strike.was_crit, is_kill))
 		else:
 			AudioManager.play_sfx("miss")  # AW-36
-			_spawn_miss(target.position)
-			_react_target(target, toward, strike, is_kill))
+			_spawn_miss(target.position + target.combat_aim_offset())
+			reactions.append(_react_target(target, toward, strike, is_kill)))
 	# aim ranged attacks at the real target (diagonals included), not straight ahead
-	await rig.play_attack(wt, target.global_position)
+	await rig.play_attack(wt, target.global_position, target.global_position + target.combat_aim_offset())
+	if not reactions.is_empty() and reactions[0] != null and reactions[0].is_running():
+		await reactions[0].finished
 	striker.visible = true
 	rig.queue_free()
 
@@ -137,12 +143,12 @@ func play_heal(healer: Unit, ally: Unit) -> bool:
 		healer.set_facing(true)
 	elif facing == CombatRig.Facing.WEST:
 		healer.set_facing(false)
-	rig.setup(healer.sprite_id(), facing, healer.map_sprite_scale())
+	rig.setup(healer.sprite_id(), facing, healer.map_sprite_scale(), healer.illustrated_art_dir, healer.illustrated_height)
 	var w := healer.weapon()
 	rig.set_weapon(WeaponDef.WeaponType.STAFF)
 	rig.set_fx_source(healer.unit_def if "unit_def" in healer else null, w)
 	healer.visible = false
-	await rig.play_attack(WeaponDef.WeaponType.STAFF, ally.global_position)
+	await rig.play_attack(WeaponDef.WeaponType.STAFF, ally.global_position, ally.global_position + ally.combat_aim_offset())
 	healer.visible = true
 	rig.queue_free()
 	return true
@@ -181,10 +187,13 @@ func play_death(unit: Unit) -> void:
 
 
 ## CP-1: Data-driven target hit reaction at impact (DODGE, FLINCH, STAGGER, KNOCKBACK)
-func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill: bool) -> void:
+func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill: bool) -> Tween:
 	if target == null or not is_instance_valid(target) or cfg == null:
-		return
+		return null
 	var kind := HitReaction.classify(strike, is_kill, target.max_hp(), cfg.stagger_hp_frac)
+	if kind == HitReaction.Kind.NONE:
+		return null
+	target.set_illustrated_pose("defeat" if kind == HitReaction.Kind.KNOCKBACK else ("idle" if kind == HitReaction.Kind.DODGE else "parry_hit"))
 	var home := target.position
 	var r_out := cfg.reaction_out
 	var r_back := cfg.reaction_back
@@ -199,9 +208,8 @@ func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill:
 			tw.set_parallel(true)
 			tw.tween_property(target, "position", home + toward * cfg.flinch_distance, r_out).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 			tw.tween_property(target, "scale", Vector2(orig_scale.x * (1.0 + cfg.squash * 0.5), orig_scale.y * (1.0 - cfg.squash)), r_out)
-			tw.chain().set_parallel(true)
-			tw.tween_property(target, "position", home, r_back).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-			tw.tween_property(target, "scale", orig_scale, r_back)
+			tw.chain().tween_property(target, "position", home, r_back).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			tw.parallel().tween_property(target, "scale", orig_scale, r_back)
 		HitReaction.Kind.STAGGER:
 			var orig_scale := target.scale
 			var wobble := cfg.stagger_wobble * (1.0 if toward.x >= 0.0 else -1.0)
@@ -209,12 +217,16 @@ func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill:
 			tw.tween_property(target, "position", home + toward * cfg.stagger_distance, r_out * 1.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 			tw.tween_property(target, "rotation", wobble, r_out * 1.2)
 			tw.tween_property(target, "scale", Vector2(orig_scale.x * (1.0 + cfg.squash), orig_scale.y * (1.0 - cfg.squash * 1.5)), r_out * 1.2)
-			tw.chain().set_parallel(true)
-			tw.tween_property(target, "position", home, r_back * 1.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-			tw.tween_property(target, "rotation", 0.0, r_back * 1.3)
-			tw.tween_property(target, "scale", orig_scale, r_back * 1.3)
+			tw.chain().tween_property(target, "position", home, r_back * 1.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			tw.parallel().tween_property(target, "rotation", 0.0, r_back * 1.3)
+			tw.parallel().tween_property(target, "scale", orig_scale, r_back * 1.3)
 		HitReaction.Kind.KNOCKBACK:
 			tw.tween_property(target, "position", home + toward * cfg.knockback_distance, r_out * 1.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	if kind != HitReaction.Kind.KNOCKBACK:
+		tw.finished.connect(func() -> void:
+			if is_instance_valid(target):
+				target.set_illustrated_pose("idle"))
+	return tw
 
 
 func _recoil(target: Unit, toward: Vector2) -> void:

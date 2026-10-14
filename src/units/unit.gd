@@ -62,6 +62,12 @@ var _standee: Texture2D = null
 ## Animated pixel sprite (AW-7): built from `assets/sprites/units/<id>/walk_f*.png`
 ## when present — supersedes both the token and the standee. Pure presentation.
 var _anim: AnimatedSprite2D = null
+## CP-2: optional illustrated presentation, explicitly enabled by the pilot.
+var illustrated_art_dir: String = ""
+var illustrated_height: float = CombatRig.HIRES_HEIGHT
+var show_map_ui: bool = true
+var move_speed_px: float = MOVE_SPEED_PX  # presentation pacing; tile costs stay unchanged
+var _illustrated: IllustratedActor = null
 
 ## AW-33: hover idle — the unit perks up (breathing bob) and shows a signature
 ## gleam in its own colour while the cursor rests on it. Pure presentation.
@@ -200,16 +206,50 @@ func map_sprite_offset() -> Vector2:
 	return Vector2(0, -_grid.cell_size * 0.06) if _grid != null else Vector2.ZERO
 
 
+func set_illustrated_art(directory: String, map_height: float = CombatRig.HIRES_HEIGHT) -> bool:
+	var kit := IllustratedArt.from_directory(directory)
+	if kit == null:
+		return false
+	if _illustrated != null:
+		_illustrated.queue_free()
+	illustrated_art_dir = directory
+	illustrated_height = maxf(1.0, map_height)
+	_stop_idle_bob()
+	if _anim != null:
+		_anim.visible = false
+	_illustrated = IllustratedActor.new()
+	add_child(_illustrated)
+	var factor := map_sprite_scale()
+	_illustrated.setup(kit, map_sprite_offset() + Vector2(0, CombatRig.MAP_FOOT * factor), illustrated_height * factor)
+	queue_redraw()
+	return true
+
+
+func set_illustrated_pose(pose: String) -> void:
+	if _illustrated != null:
+		_illustrated.pose = pose
+
+
+func combat_aim_offset() -> Vector2:
+	if _illustrated == null:
+		return Vector2.ZERO
+	return map_sprite_offset() + Vector2(0, (CombatRig.MAP_FOOT - illustrated_height * 0.60) * map_sprite_scale())
+
+
 ## Which way the on-map sprite currently faces (art faces east/right by default;
 ## flip_h true = facing west/left). Used so an attack/heal on a straight-up or
 ## straight-down tile keeps the unit's facing instead of snapping it around.
 func facing_right() -> bool:
+	if _illustrated != null:
+		return _illustrated.face_right
 	return _anim == null or not _anim.flip_h
 
 
 ## Turn the on-map sprite to face left/right (e.g. toward the tile it's acting
 ## on), so the unit keeps that facing after an attack/heal.
 func set_facing(face_right: bool) -> void:
+	if _illustrated != null:
+		_illustrated.face_right = face_right
 	if _anim != null:
 		_anim.flip_h = not face_right
 
@@ -707,6 +747,8 @@ func flash() -> void:
 
 
 func _process(delta: float) -> void:
+	if _illustrated != null:
+		_illustrated.walking = _moving
 	if _flash > 0.0:
 		_flash = maxf(0.0, _flash - delta * 4.0)
 		queue_redraw()
@@ -725,6 +767,8 @@ func move_along_path(path: Array) -> void:
 	_moving = true
 	for i in range(1, path.size()):
 		var target: Vector2 = _grid.cell_center(path[i])
+		if _illustrated != null and absf(target.x - position.x) > 1.0:
+			_illustrated.face_right = target.x > position.x
 		if _anim != null:
 			var step: Vector2i = Vector2i(path[i]) - Vector2i(path[i - 1])
 			if absi(step.y) > absi(step.x) and (step.y < 0 and _has_walk_n or step.y > 0 and _has_walk_s):
@@ -736,7 +780,7 @@ func move_along_path(path: Array) -> void:
 					_anim.flip_h = target.x < position.x  # faces right by default
 		while position.distance_to(target) > 1.0:
 			var delta: float = get_process_delta_time()
-			position = position.move_toward(target, MOVE_SPEED_PX * delta)
+			position = position.move_toward(target, move_speed_px * delta)
 			await get_tree().process_frame
 		position = target
 	cell = path[-1]
@@ -764,7 +808,7 @@ func _team_color() -> Color:
 func _draw() -> void:
 	if _grid == null:
 		return
-	if _anim != null:
+	if _illustrated != null or _anim != null:
 		_draw_sprite_underlay()
 		return
 	if _standee != null:
@@ -790,15 +834,20 @@ func _draw_sprite_underlay() -> void:
 	var ring := base.darkened(0.4) if has_acted else base
 	var foot_y := cs * 0.40
 	draw_set_transform(Vector2(0, foot_y), 0.0, Vector2(1.0, 0.42))
-	draw_circle(Vector2.ZERO, cs * 0.32, Color(ring.r, ring.g, ring.b, 0.28))
-	draw_arc(Vector2.ZERO, cs * 0.32, 0.0, TAU, 40, ring, 3.0)
+	if show_map_ui:
+		draw_circle(Vector2.ZERO, cs * 0.32, Color(ring.r, ring.g, ring.b, 0.28))
+		draw_arc(Vector2.ZERO, cs * 0.32, 0.0, TAU, 40, ring, 3.0)
+	else:
+		draw_circle(Vector2.ZERO, cs * 0.24, Color(0.04, 0.035, 0.045, 0.18))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	_anim.modulate = Color(0.55, 0.55, 0.58) if has_acted else Color.WHITE
+	var visual: CanvasItem = _illustrated if _illustrated != null else _anim
+	visual.modulate = Color(0.55, 0.55, 0.58) if has_acted else Color.WHITE
 	if _flash > 0.0:
-		_anim.modulate = Color(1.0 + _flash, 1.0 + _flash, 1.0 + _flash)
+		visual.modulate = Color(1.0 + _flash, 1.0 + _flash, 1.0 + _flash)
 	if _hovered:
 		_draw_hover_flourish(cs)
-	_draw_hp_bar(cs * 0.32)
+	if show_map_ui:
+		_draw_hp_bar(cs * 0.32)
 
 
 ## AW-37: a calm looping hover idle in the unit's signature colour. Neal's call —

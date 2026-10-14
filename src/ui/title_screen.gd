@@ -45,6 +45,7 @@ const DEV_JUMPS := [
 	["▶ House-Choice screen", "housechoice"],
 	["▶ Prologue battle", "prologue"],
 	["▶ The Awakening (prologue VN)", "awakening"],
+	["▶ Illustrated art pilot", "illustrated"],
 	["Back", "back"],
 ]
 
@@ -60,11 +61,16 @@ func _open_dev() -> void:
 	var labels: Array = []
 	for j in DEV_JUMPS:
 		labels.append(j[0])
-	_menu.open("Dev Jump", labels, _menu_pos())
+	var pos := _menu_pos()
+	var height := ChoiceMenu.PAD * 2 + ChoiceMenu.ROW_H * (labels.size() + 1)
+	pos.y = minf(pos.y, get_viewport_rect().size.y - height - 20.0)
+	_menu.open("Dev Jump", labels, pos)
 
 
 func _dev_jump(kind: String) -> void:
 	match kind:
+		"illustrated":
+			get_tree().change_scene_to_file.call_deferred("res://scenes/proto/illustrated_pilot.tscn")
 		"castle":
 			Campaign.reset_new_game(false)
 			Campaign.set_house("emberwing")

@@ -1,0 +1,12 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Edit this exact 3x3 character sprite sheet. REMOVE ALL TEXT, captions, annotations and every black vertical/horizontal grid divider. Replace those markings with pure white background. Preserve all nine character illustrations, their faces, clothes, poses, scale, position and anatomy exactly. All backgrounds plain white. Remove the grid line crossing behind the extended sword. No new labels, no lines, no frames, no typography anywhere. Complete character artwork including sword tip must be kept, not erased. Output the cleaned sprite sheet only.",
+  "references": [
+    {
+      "path": "assets/source/illustrated_pilot/kai_gemini_sheet.png",
+      "sha256": "37086dce6f0bf684daae5125c35d13ca47f0a7647e60a96005c1a08cde159564"
+    }
+  ],
+  "elapsed_seconds": 17.98,
+  "output": "kai_clean_gemini_sheet.png"
+}

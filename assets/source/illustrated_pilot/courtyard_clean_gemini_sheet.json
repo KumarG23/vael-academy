@@ -1,0 +1,12 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Edit this exact painted academy courtyard. Keep all architecture, composition, light, foliage, fountain, perspective and paving completely unchanged. ONLY change the heraldic designs on the hanging fabric banners: the crimson banner on left should have a GOLD FIREBIRD with spread feathered wings, not a lion; the two blue banners in center should have a SILVER LEVIATHAN sea serpent, not owls; keep the bronze stag on green banner at right. Simple elegant fantasy heraldry, no text or Christian symbols. Preserve painterly style. Output the complete environment.",
+  "references": [
+    {
+      "path": "assets/source/illustrated_pilot/courtyard_gemini.png",
+      "sha256": "46db2af68954f16b2f13cacf6a8da96905724b3074397791ed52486a9e9d2cbf"
+    }
+  ],
+  "elapsed_seconds": 21.02,
+  "output": "courtyard_clean_gemini_sheet.png"
+}

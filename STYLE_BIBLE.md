@@ -1,5 +1,24 @@
 # STYLE_BIBLE.md — AW-1 v6.5 (maps doctrine: HYBRID)
 
+> **CP-2 pilot proposal (2026-10-14), awaiting Neal's taste review.** Neal has
+> authorized exploring **away from pixel art**. The moving example is
+> `scenes/proto/illustrated_pilot.tscn`: Gemini 3.1 Flash Image character pose
+> sheets (Kai/Serra) + a warm painted academy cloister, neural-matted cutouts,
+> explicit foot/hand anchors, short frame walks, pose-based combat and restrained
+> ink/gold UI. Source prompts/reference hashes and raw variants live in
+> `assets/source/illustrated_pilot/`; review video/screens in
+> `assets/art_review/cp2_pilot/`. The July pixel prescriptions below are history,
+> not constraints on this exploration. This is **not a production style lock**:
+> duplicated gait phases, small identity marks, asymmetric facing, additional
+> weapon poses and background collision/occlusion remain production questions.
+> Review actual movement before scaling to the cast. Character/story canon
+> stays with the owning bibles.
+> **First motion feedback:** Neal likes the overall start and attack artwork.
+> Keep that attack; illustrated anticipation now stays upright, and Crown-light
+> gathers/launches from the already extended casting hand. Kai's low-knee walk
+> is calmer, but true alternating-leg motion still needs an authored cycle or
+> articulated rig; Gemini repeated the leading leg even in a targeted correction.
+
 > **v6.5 (2026-07-05): THE MAPS DECISION — HYBRID (Neal: "hybrid is the
 > way").** Battle maps are **pixel Wang tilesets** (PixelLab
 > `create_topdown_tileset`, 32px tiles matching the unit cells — units and

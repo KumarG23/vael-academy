@@ -1,0 +1,63 @@
+{
+  "source_body_height": 459.28,
+  "walk_fps": 7.0,
+  "walk": [
+    "walk_1",
+    "walk_2",
+    "walk_3",
+    "walk_4"
+  ],
+  "anchors": {
+    "idle": [
+      350.0,
+      604
+    ],
+    "action": [
+      288.0,
+      604
+    ],
+    "parry_hit": [
+      312.0,
+      604
+    ],
+    "walk_1": [
+      371.0,
+      604
+    ],
+    "walk_2": [
+      381.0,
+      604
+    ],
+    "walk_3": [
+      375.0,
+      604
+    ],
+    "walk_4": [
+      388.0,
+      604
+    ],
+    "cast": [
+      314.0,
+      604
+    ],
+    "defeat": [
+      322.0,
+      604
+    ]
+  },
+  "hands": {
+    "cast": [
+      470,
+      254
+    ],
+    "action": [
+      409,
+      294
+    ]
+  },
+  "generator": "gemini-3.1-flash-image",
+  "source": "assets/source/illustrated_pilot/kai_gemini_sheet.png",
+  "action_cleanup_source": "assets/source/illustrated_pilot/kai_clean_gemini_sheet.png",
+  "preparation": "isnet-general-use matting; component cleanup; shared character scale; lower-body foot anchors; hand anchors reviewed on 640px output",
+  "walk_source": "assets/source/illustrated_pilot/kai_walk_gemini_sheet.png"
+}

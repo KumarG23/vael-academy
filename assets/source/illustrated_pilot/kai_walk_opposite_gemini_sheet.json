@@ -1,0 +1,12 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Edit this exact 2x2 animation sprite sheet, preserving the character identity, head position, camera, clothes, sword and scale in all four cells. The top two frames are correct and must stay unchanged. The bottom two frames INCORRECTLY repeat the same leading leg as the top two. REDRAW ONLY THE LEGS BELOW THE BELT in the BOTTOM TWO CELLS to the OPPOSITE phase. In BOTTOM LEFT, the boot connected to the hip on the VIEWER LEFT must stride across in front toward the RIGHT and land heel-first at the forwardmost position, while the boot connected to the hip on the VIEWER RIGHT trails toward the LEFT with raised heel. The diagonal pant-leg crossing and occlusion must switch relative to top left. In BOTTOM RIGHT, the VIEWER-LEFT hip/leg supports the weight with a straight planted boot, and the VIEWER-RIGHT hip/leg bends slightly and passes forward, its toe just above the floor. This is relaxed low-knee walking, no marching. The visible leg occlusion must SWITCH between top-row and bottom-row half-cycles. Keep complete boots, upright torso and same foot baseline; simple anatomically correct gait. Remove all black grid divider lines, output on pure white with no text. Four full-body frames in the same equal 2x2 cell positions.",
+  "references": [
+    {
+      "path": "assets/source/illustrated_pilot/kai_walk_gemini_sheet.png",
+      "sha256": "33038766bc2a1f4aa0c02079fa90fdef49c33fd44fc2446d81fcc01b64d73ebf"
+    }
+  ],
+  "elapsed_seconds": 17.55,
+  "output": "kai_walk_opposite_gemini_sheet.png"
+}

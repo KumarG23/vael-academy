@@ -1,0 +1,16 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Create exactly FOUR animation frames of this exact Kai character in a regular 2 columns by 2 rows square sprite sheet, each equal-size cell. Reference 1 is his approved full-body look and outfit. Reference 2 is his face. Preserve his full body proportions, face, brown skin, amber eyes, green-black hair, small green brow crown, navy/gold dress uniform, red cravat and crimson cape, black boots and slender lowered green-edged sword. Camera stays three-quarter facing RIGHT, fixed scale, head/shoulder height and planted foot baseline. This is a relaxed ordinary WALK, NOT a march, jog, skip or high-knee exercise. Knees remain low; the swinging boot passes barely above the paving, never lifted to the waist. Keep torso upright and steady. FRAME1 top-left: anatomical LEFT leg strides forward and plants its HEEL on ground, right foot trails behind with heel raised. FRAME2 top-right: weight shifts onto the planted LEFT leg, RIGHT foot passes underneath the hips with bent knee and toe barely off the ground. FRAME3 bottom-left: anatomical RIGHT leg now strides forward and plants its HEEL on ground, LEFT foot trails back. This must be a distinct OPPOSITE-LEG contact pose, NOT a copy of frame1. FRAME4 bottom-right: weight on planted RIGHT leg, LEFT foot passes underneath the hips, toe barely above ground. Distinct OPPOSITE-LEG passing pose, NOT a copy of frame2. Subtle alternating arm/cape counter-motion, relaxed shoulders, sword safely lowered. Each cell complete head and boots, plentiful margins, no overlapping characters, no grid lines, no text, no captions, no labels, no motion trails, no shadows. Plain pure WHITE background for matting. Clean consistent cel-shaded illustration, no pixel art, no chibi. Anatomically coherent alternating gait that can loop 1-2-3-4.",
+  "references": [
+    {
+      "path": "assets/art/illustrated_pilot/kai/idle.png",
+      "sha256": "46b92d2e3a9ebcd2a8872524ae9b44447a503d6366e43af2ec3ea47b1834cd79"
+    },
+    {
+      "path": "assets/portraits/portrait_kai.png",
+      "sha256": "ecf39295b2638ddb001abc41bf1474d7335973b8956da83ed6cc59364ae1347f"
+    }
+  ],
+  "elapsed_seconds": 26.7,
+  "output": "kai_walk_gemini_sheet.png"
+}

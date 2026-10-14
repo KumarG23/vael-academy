@@ -6,8 +6,9 @@ edit-in-place prompt per emotion and installs the results as
 assets/portraits/portrait_<id>_<emotion>.png. Identity holds because the model
 edits the provided image rather than re-rolling the character.
 
-Reads GEMINI_API_KEY from the environment (source .env first). The key is
-never printed. Run `godot --headless --import` after a batch.
+Reads VAEL_ART_API_KEY (or GEMINI_API_KEY) directly from the project .env or
+environment. No shell export is needed, keeping Gemini CLI OAuth independent.
+The key is never printed. Run `godot --headless --import` after a batch.
 
 Usage:
   python3 tools/gemini_emotions.py <unit_id> [emotion ...]
@@ -40,22 +41,16 @@ PROMPTS = {
 }
 
 
-def edit_portrait(key: str, base_png: bytes, emotion: str) -> bytes:
-    prompt = (
-        "Redraw this exact character in the same anime art style: same face, same "
-        "hair, same outfit and colors, same background mood — and PRESERVE every "
-        "identifying feature exactly (scars, facial marks, glowing emblems, "
-        "glasses, jewelry, hair ornaments). The pose, gesture and head angle MAY "
-        "change naturally to sell the emotion. New expression: "
-        f"{PROMPTS[emotion]}. Output a single image."
-    )
+def generate_image(key: str, prompt: str, references: list[bytes], aspect_ratio: str = "1:1", image_size: str = "1K") -> bytes:
+    """Shared established endpoint; callers keep prompts and reference provenance."""
     body = {
-        "contents": [{"parts": [
+        "contents": [{"parts": [*[
             {"inline_data": {"mime_type": "image/png",
-                             "data": base64.b64encode(base_png).decode()}},
+                             "data": base64.b64encode(reference).decode()}}
+            for reference in references],
             {"text": prompt},
         ]}],
-        "generationConfig": {"responseModalities": ["IMAGE"]},
+        "generationConfig": {"responseModalities": ["IMAGE"], "imageConfig": {"aspectRatio": aspect_ratio, "imageSize": image_size}},
     }
     req = urllib.request.Request(
         f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent",
@@ -71,11 +66,23 @@ def edit_portrait(key: str, base_png: bytes, emotion: str) -> bytes:
                 # Gemini may return JPEG bytes regardless of the ask — always
                 # re-encode to real PNG so Godot's by-extension loader is happy
                 # (the mislabeled-JPEG batch corrupted 88 imports once).
-                im = Image.open(io.BytesIO(raw)).convert("RGB")
+                im = Image.open(io.BytesIO(raw)).convert("RGBA")
                 buf = io.BytesIO()
                 im.save(buf, "PNG")
                 return buf.getvalue()
     raise RuntimeError(f"no image in response: {json.dumps(out)[:300]}")
+
+
+def edit_portrait(key: str, base_png: bytes, emotion: str) -> bytes:
+    prompt = (
+        "Redraw this exact character in the same anime art style: same face, same "
+        "hair, same outfit and colors, same background mood — and PRESERVE every "
+        "identifying feature exactly (scars, facial marks, glowing emblems, "
+        "glasses, jewelry, hair ornaments). The pose, gesture and head angle MAY "
+        "change naturally to sell the emotion. New expression: "
+        f"{PROMPTS[emotion]}. Output a single image."
+    )
+    return generate_image(key, prompt, [base_png])
 
 
 def run_unit(key: str, unit_id: str, emotions: list) -> None:
@@ -104,9 +111,10 @@ def run_unit(key: str, unit_id: str, emotions: list) -> None:
 
 
 def main() -> None:
-    key = os.environ.get("GEMINI_API_KEY", "")
+    from gemini_pipeline_check import read_key
+    key = read_key(pathlib.Path(__file__).resolve().parents[1] / ".env")
     if not key:
-        sys.exit("GEMINI_API_KEY not in environment (source .env first)")
+        sys.exit("Set VAEL_ART_API_KEY in the gitignored project .env")
     args = sys.argv[1:]
     if not args:
         sys.exit(__doc__)

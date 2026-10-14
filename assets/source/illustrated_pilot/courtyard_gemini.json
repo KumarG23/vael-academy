@@ -1,0 +1,12 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Paint a sumptuous fantasy academy courtyard for a 2D illustrated tactics RPG. Reference image establishes warm painterly storybook atmosphere ONLY, not the forest location. Wide 16:9 scene, warm late afternoon sunlight, ancient cream stone Gothic cloisters, tall arched windows with blue and amber stained glass, ivy and climbing roses, a modest reflecting fountain BACK by the cloister, bronze lanterns and crimson/gold, deep-blue/silver and forest-green/bronze banners representing three equal houses. Feeling of a beloved inhabited school, quiet and luminous. Clean composition, restrained brush texture, harmonious softly painted background complementary to cel-shaded anime characters. Camera moderately elevated, shallow three-quarter view. Lower HALF of image is a spacious OPEN cobblestone terrace where two characters can walk and spar; readable low-detail neutral paving, no furniture or plants blocking the walk area. Architectural detail concentrated in upper half and far sides. No people, no creatures, no text, no logos, no UI, no pixel art, no Christian crosses, no excessive filigree. Full finished environment, not a mockup.",
+  "references": [
+    {
+      "path": "assets/art/vn/painted/forest_path.png",
+      "sha256": "3bb002f70a3c17500651ddd4f8256c1ca52551a7b2c8367bd3b48fc3a07a9b31"
+    }
+  ],
+  "elapsed_seconds": 19.71,
+  "output": "courtyard_gemini.png"
+}

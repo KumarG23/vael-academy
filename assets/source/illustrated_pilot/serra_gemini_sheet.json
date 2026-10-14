@@ -1,0 +1,16 @@
+{
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Create a high resolution, clean linework, cel-shaded anime GAME ANIMATION SPRITE SHEET. Exactly 9 FULL BODY figures on a mathematically regular 3 columns x 3 rows equal-cell grid. Each figure stays WITHIN its cell, including all weapons and clothing. Give each cell generous margin on all four sides. ALL FIGURES same height, face, outfit, body proportions, camera and scale. No text, no labels, no grid lines, no decorative frames. Pure flat white background, no shadows or scenery, easy to extract. Human proportions, not chibi, not pixel art. Three-quarter view looking to RIGHT; modestly elevated camera. Fixed relative head height and foot baseline across each cell. Reading order: row1 IDLE ready with weapon lowered, ATTACK extending weapon toward right, HIT bracing with guard up and shoulders back; row2 WALK left leg forward contact, WALK passing left leg planted right knee forward and lifted, WALK right leg forward contact; row3 WALK passing right leg planted left knee forward and lifted, CAST with free palm extended right (weapon lowered), DEFEAT kneeling head lowered. Alternate anatomical left and right legs genuinely in those FOUR walk phases. Character faces right in all standing poses. No motion trails, no baked particles or glows extending into adjacent cells. Every cell shows complete boots and head. The action poses must remain clearly different but the body size identical. Reference 1 is Serra's definitive identity: teenage girl, pale skin, long blonde twin tails, cool blue eyes, silver circlet with blue gems, navy-and-silver academy uniform, white cravat and restrained silver armor. Extend to matching fitted navy trousers, silver-trimmed armored boots and elegant light silver gauntlets. She uses a slim silver LANCE, keep its full point inside every cell; hold it upright in idle and walking, thrust right in attack, guard across torso in hit. Her CAST is a calm defensive blessing gesture, not a fire spell. Reference 2 is another character's sprite sheet for MATCHING ART STYLE, proportions and grid only; do not copy its male face, green hair, red cape, sword or skin color. Serra remains exactly the girl in reference 1. Disciplined poised expression.",
+  "references": [
+    {
+      "path": "assets/portraits/portrait_serra.png",
+      "sha256": "5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453"
+    },
+    {
+      "path": "assets/source/illustrated_pilot/kai_gemini_sheet.png",
+      "sha256": "37086dce6f0bf684daae5125c35d13ca47f0a7647e60a96005c1a08cde159564"
+    }
+  ],
+  "elapsed_seconds": 21.84,
+  "output": "serra_gemini_sheet.png"
+}

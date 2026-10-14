@@ -105,6 +105,9 @@ const MAP_FOOT := 16.0       # the 32px map sprite is centered: its feet sit at 
 var _poses := {}             # Pose -> Texture2D; members keep textures alive (gotcha #11)
 var _hires := false
 var _pose := Pose.IDLE
+var _illustrated_kit: IllustratedArt = null
+var _illustrated_action := "action"
+var _hires_height := HIRES_HEIGHT
 
 
 static func has_rig(unit_id: String) -> bool:
@@ -124,8 +127,9 @@ static func has_facing(unit_id: String, facing: int) -> bool:
 	return suffix != "" and ResourceLoader.exists("res://assets/art/cutout/%s/body_map%s.png" % [unit_id, suffix])
 
 
-func setup(unit_id: String, facing: int, rig_scale: float) -> void:
+func setup(unit_id: String, facing: int, rig_scale: float, art_dir: String = "", map_height: float = HIRES_HEIGHT) -> void:
 	_unit_id = unit_id
+	_hires_height = maxf(1.0, map_height)
 	_facing = facing
 	var flip := -1.0 if facing == Facing.WEST else 1.0
 	scale = Vector2(flip * rig_scale, rig_scale)
@@ -149,6 +153,11 @@ func setup(unit_id: String, facing: int, rig_scale: float) -> void:
 	_fx.z_index = 6
 	_fx.draw.connect(_draw_fx)
 	add_child(_fx)
+	if art_dir != "":
+		_illustrated_kit = IllustratedArt.from_directory(art_dir)
+		if _illustrated_kit != null:
+			set_pose_textures(_illustrated_kit.texture_for("idle"), _illustrated_kit.texture_for("action"), _illustrated_kit.texture_for("parry_hit"))
+			return
 	if has_hires(unit_id):
 		var tex := {}
 		for p in POSE_FILES:
@@ -209,12 +218,24 @@ func set_pose(pose: int) -> void:
 	if not _hires or _body == null:
 		return
 	_pose = pose
+	if _illustrated_kit != null:
+		var name: String = _illustrated_action if pose == Pose.ACTION else POSE_FILES.get(pose, "idle")
+		_illustrated_kit.apply(_body, name, Vector2(0, MAP_FOOT), _hires_height)
+		_pivot.position = Vector2(0, MAP_FOOT) + (_illustrated_kit.hand_for(name) - _illustrated_kit.foot_for(name)) * (_hires_height / _illustrated_kit.source_body_height)
+		return
 	var tex: Texture2D = _poses.get(pose, _poses[Pose.IDLE])
 	_body.texture = tex
-	var h := maxf(1.0, float(tex.get_height()))
-	var s := HIRES_HEIGHT / h
+	# Legacy injected poses use their opaque bounds instead of transparent
+	# canvas edges. Production pilot kits specify shared scale + foot anchors.
+	var bounds := tex.get_image().get_used_rect()
+	var idle_tex: Texture2D = _poses[Pose.IDLE]
+	var idle_bounds := idle_tex.get_image().get_used_rect()
+	var s := _hires_height / maxf(1.0, float(idle_bounds.size.y))
 	_body.scale = Vector2(s, s)
-	_body.position = Vector2(0.0, MAP_FOOT - h * s * 0.5)
+	var anchor := Vector2(bounds.position.x + bounds.size.x * 0.5, bounds.end.y)
+	_body.centered = false
+	_body.offset = -anchor
+	_body.position = Vector2(0, MAP_FOOT)
 
 
 # --- CP-1: data-driven FX + strike outcome ------------------------------------
@@ -356,10 +377,12 @@ func _process(delta: float) -> void:
 ## melee lunges drive toward it (any direction — up/down/diagonal, not just
 ## sideways). Pass nothing (Vector2.INF) to fire straight ahead. Call
 ## set_outcome() first (or use play_strike) for crit/miss/kill-aware motion.
-func play_attack(weapon_type: int, aim_global := Vector2.INF) -> void:
+func play_attack(weapon_type: int, aim_global := Vector2.INF, impact_global := Vector2.INF) -> void:
+	_illustrated_action = "cast" if weapon_type in [WeaponDef.WeaponType.TOME, WeaponDef.WeaponType.STAFF] else "action"
+	var fx_aim: Vector2 = aim_global if is_inf(impact_global.x) or is_inf(impact_global.y) else impact_global
 	if not (is_inf(aim_global.x) or is_inf(aim_global.y)) and get_parent() != null:
 		_aim_parent = (get_parent() as Node2D).to_local(aim_global)
-		_aim_fx = _fx.to_local(aim_global)
+		_aim_fx = _fx.to_local(fx_aim)
 	else:
 		_aim_parent = Vector2.INF
 		_aim_fx = Vector2.INF
@@ -368,11 +391,11 @@ func play_attack(weapon_type: int, aim_global := Vector2.INF) -> void:
 		WeaponDef.WeaponType.LANCE:
 			await _stab()
 		WeaponDef.WeaponType.BOW:
-			await _shoot(aim_global)
+			await _shoot(fx_aim)
 		WeaponDef.WeaponType.TOME:
-			await _magic(aim_global)
+			await _magic(fx_aim)
 		WeaponDef.WeaponType.STAFF:
-			await _heal(aim_global)
+			await _heal(fx_aim)
 		_:
 			await _swing(weapon_type == WeaponDef.WeaponType.AXE)
 	set_pose(Pose.IDLE)
@@ -428,14 +451,14 @@ func _stab() -> void:
 	_pivot.rotation = _rest_rot + aim   # level the point at the target tile
 	var wind := create_tween().set_parallel(true)
 	wind.tween_property(_pivot, "rotation", _rest_rot + aim - 0.25, 0.18).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	wind.tween_property(_body, "rotation", -0.08, 0.18).set_trans(Tween.TRANS_SINE)
+	wind.tween_property(_body, "rotation", 0.0 if _hires else -0.08, 0.18).set_trans(Tween.TRANS_SINE)
 	wind.tween_property(self, "position", home - dir * (reach * 0.22), 0.18)
 	await wind.finished
 	await _crit_beat()
 	set_pose(Pose.ACTION)
 	var hit := create_tween().set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + aim + 0.15, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	hit.tween_property(_body, "rotation", 0.06, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(_body, "rotation", 0.0 if _hires else 0.06, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(self, "position", home + dir * reach, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await hit.finished
 	_thrust_streak()
@@ -456,14 +479,14 @@ func _swing(heavy: bool) -> void:
 	_pivot.rotation = _rest_rot + aim   # aim the swing at the target tile
 	var wind := create_tween().set_parallel(true)
 	wind.tween_property(_pivot, "rotation", _rest_rot + aim + back, 0.20).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	wind.tween_property(_body, "rotation", -0.22, 0.20).set_trans(Tween.TRANS_SINE)
+	wind.tween_property(_body, "rotation", 0.0 if _hires else -0.22, 0.20).set_trans(Tween.TRANS_SINE)
 	wind.tween_property(self, "position", home - dir * (reach * 0.25), 0.20)
 	await wind.finished
 	await _crit_beat()
 	set_pose(Pose.ACTION)
 	var hit := create_tween().set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + aim + thru, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	hit.tween_property(_body, "rotation", 0.24, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hit.tween_property(_body, "rotation", 0.0 if _hires else 0.24, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(self, "position", home + dir * reach, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await hit.finished
 	_slash_trail(heavy or _crit or _kill)
@@ -479,7 +502,7 @@ func _shoot(aim_global: Vector2) -> void:
 	var home := position
 	var w := create_tween().set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.35, 0.26).set_trans(Tween.TRANS_SINE)
-	w.tween_property(_body, "rotation", -0.1, 0.26).set_trans(Tween.TRANS_SINE)
+	w.tween_property(_body, "rotation", 0.0 if _hires else -0.1, 0.26).set_trans(Tween.TRANS_SINE)
 	w.tween_property(self, "position", home - _lunge_dir() * 3.0 * absf(scale.x), 0.26)
 	await w.finished
 	await get_tree().create_timer(0.14).timeout
@@ -501,11 +524,13 @@ func _shoot(aim_global: Vector2) -> void:
 
 
 func _magic(aim_global: Vector2) -> void:
+	if _hires:
+		set_pose(Pose.ACTION)  # raise the casting hand before the gather starts
 	var dest := _aim_local(aim_global)
 	var home := position
 	var w := create_tween().set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.3, 0.28).set_trans(Tween.TRANS_SINE)
-	w.tween_property(_body, "rotation", -0.06, 0.28).set_trans(Tween.TRANS_SINE)
+	w.tween_property(_body, "rotation", 0.0 if _hires else -0.06, 0.28).set_trans(Tween.TRANS_SINE)
 	await w.finished
 	_cast_gather()
 	await get_tree().create_timer(0.26).timeout
@@ -521,6 +546,8 @@ func _magic(aim_global: Vector2) -> void:
 
 
 func _heal(aim_global := Vector2.INF) -> void:
+	if _hires:
+		set_pose(Pose.ACTION)
 	var home := position
 	var w := create_tween()
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.5, 0.26).set_trans(Tween.TRANS_SINE)
@@ -558,14 +585,15 @@ func _hit_point(frac: float) -> Vector2:
 func _slash_trail(heavy: bool) -> void:
 	# centered at the hand; a crescent that opens toward the target and expands
 	_fx_items.append({"kind": "slash", "pos": _tip(), "ang": _aim_angle(),
-		"age": 0.0, "life": 0.3, "big": heavy, "col": _melee_color()})
+		"age": 0.0, "life": 0.3, "big": heavy, "col": _melee_color(),
+		"power": _power(), "alpha": 1.0 if _connected else 0.35})
 func _thrust_streak() -> void:
 	var from := _tip()
 	var to := _aim_fx if not (is_inf(_aim_fx.x) or is_inf(_aim_fx.y)) else from + Vector2(46, 0)
 	var nd := (to - from)
 	nd = nd.normalized() if nd.length() > 0.1 else Vector2.RIGHT
 	_fx_items.append({"kind": "streak", "pos": from.lerp(to, 0.45), "ndir": nd, "perp": nd.orthogonal(),
-		"age": 0.0, "life": 0.22})
+		"age": 0.0, "life": 0.22, "power": _power(), "alpha": 1.0 if _connected else 0.35})
 ## CP-1: Data-driven FX getters — all presentation styles and tints resolve
 ## through CombatFxProfile (WeaponDef -> UnitDef -> defaults) rather than
 ## hardcoded match statements.
@@ -611,14 +639,17 @@ func _draw_fx() -> void:
 				_fx.draw_line(gp - Vector2(0, gs), gp + Vector2(0, gs), Color(1.0, 1.0, 0.8, a), 2.0)
 				_fx.draw_circle(gp, maxf(1.0, 2.5 * a), Color(1.0, 1.0, 1.0, a))
 			"slash":
-				var rr := (22.0 if it.get("big", false) else 17.0)
+				var rr: float = (22.0 if it.get("big", false) else 17.0) * float(it.get("power", 1.0))
+				a *= float(it.get("alpha", 1.0))
 				var sc: Color = it.get("col", Color(0.85, 1.0, 0.9))
 				for k in range(3):
 					_fx.draw_arc(it["pos"], (rr + k * 4.0) * (0.8 + t * 0.5), float(it.get("ang",0.0)) - 1.15, float(it.get("ang",0.0)) + 1.15, 22,
 						Color(sc.r, sc.g, sc.b, a * 0.85), 3.0 - k)
 			"streak":
+				a *= float(it.get("alpha", 1.0))
+				var length: float = 23.0 * float(it.get("power", 1.0))
 				for k in range(3):
-					_fx.draw_line(it["pos"] - it["ndir"]*23.0 + it["perp"]*float(k*3-3), it["pos"] + it["ndir"]*23.0 + it["perp"]*float(k*3-3),
+					_fx.draw_line(it["pos"] - it["ndir"]*length + it["perp"]*float(k*3-3), it["pos"] + it["ndir"]*length + it["perp"]*float(k*3-3),
 						Color(1,1,0.88,a), 2.6 - k*0.6)
 			"gather":
 				var gc: Color = it.get("col", Color(0.85,0.75,1.0))
