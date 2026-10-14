@@ -42,6 +42,23 @@ extends Resource
 @export var splash_on_crit: bool = true
 @export var splash_on_kill: bool = true
 
+@export_group("Target reaction (CP-1)")
+## Share of max HP one non-crit hit must take to STAGGER instead of FLINCH.
+@export var stagger_hp_frac: float = 0.35
+@export var flinch_distance: float = 8.0      # px shove on an ordinary hit
+@export var stagger_distance: float = 16.0    # px shove on a crit / heavy hit
+@export var stagger_wobble: float = 0.22      # radians of rock on a stagger
+@export var knockback_distance: float = 30.0  # px a killing blow throws the target
+@export var dodge_distance: float = 14.0      # px sidestep across the line on a miss
+@export var reaction_out: float = 0.07        # time to the reaction's extreme
+@export var reaction_back: float = 0.16       # time to settle back home
+@export var squash: float = 0.14              # squash/stretch amount on a hit
+
+@export_group("Outcome timing (CP-1)")
+@export var crit_anticipation: float = 0.14   # extra wind-up hold before a crit lands
+@export var kill_follow_through: float = 1.8  # post-impact hold multiplier on a kill
+@export var miss_reach: float = 0.7           # lunge reach multiplier on a miss
+
 
 ## Screen-shake magnitude for a strike. Base scales with damage (capped); a crit
 ## multiplies past the cap so it reads bigger.

@@ -28,3 +28,5 @@ growth_mag = 55
 growth_lck = 40
 growth_def = 20
 growth_res = 45
+fx_heal_style = "motes"
+fx_heal_color = Color(1, 0.76, 0.36, 1.0)

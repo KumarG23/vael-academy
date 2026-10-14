@@ -31,3 +31,5 @@ growth_spd = 40
 growth_lck = 45
 growth_def = 15
 growth_res = 50
+fx_heal_style = "rays"
+fx_heal_color = Color(0.5, 0.82, 1, 1.0)

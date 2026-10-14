@@ -31,3 +31,5 @@ growth_spd = 35
 growth_lck = 25
 growth_def = 20
 growth_res = 45
+fx_magic_style = "crystal"
+fx_magic_color = Color(0.4, 0.72, 1, 1.0)

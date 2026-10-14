@@ -12,3 +12,4 @@ might = 8
 hit = 92
 crit = 5
 max_range = 2
+fx_style = "beam"

@@ -31,3 +31,4 @@ growth_spd = 40
 growth_lck = 30
 growth_def = 15
 growth_res = 45
+fx_heal_style = "cross"

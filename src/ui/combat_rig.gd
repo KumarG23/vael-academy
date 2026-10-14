@@ -64,9 +64,10 @@ const GRIP_FRAC := {
 
 var _unit_id := "kai"
 # AW-31: the equipped weapon's identity, so FX vary per SPELL/WEAPON, not just
-# per caster — set via set_spell_meta() before an attack plays.
+# per caster. CP-1: the look itself now comes from DATA (CombatFxProfile built
+# from the UnitDef + WeaponDef fx_* fields) — see set_fx_source().
 var _weapon_id := ""
-var _weapon_school := ""
+var _fx_profile := CombatFxProfile.new()
 var _body: Sprite2D
 var _pivot: Node2D
 var _weapon: Sprite2D
@@ -78,9 +79,42 @@ var _hand := Vector2(5, 3)
 var _aim_parent := Vector2.INF   # target position in the rig's PARENT space (for lunges)
 var _aim_fx := Vector2.INF        # target position in the FX layer's local space (for hit FX)
 
+# --- CP-1: strike outcome -----------------------------------------------------
+# The resolved StrikeResult (crit / miss / kill / damage) drives the motion: a
+# crit holds its wind-up and flashes, a miss under-reaches with a dim trail, a
+# kill follows through longer, and damage scales the trail. Defaults = a plain
+# connecting hit, so play_attack() without an outcome behaves as before.
+var _connected := true
+var _crit := false
+var _kill := false
+var _damage := 0
+var _crit_hold := 0.14
+var _kill_mult := 1.8
+var _miss_reach := 0.7
+
+# --- CP-1: high-res 3-pose hook -----------------------------------------------
+# Direction pivot (2026-10, Neal): combat moves off the 32px limit toward
+# illustrated 2.5D cut-outs (Persona 5 / Expedition 33). When a unit has
+# `assets/art/cutout/<id>/idle.png` (+ optional action.png / parry_hit.png),
+# the rig swaps POSES instead of only tilting the flat map sprite. Illustrated
+# poses carry their weapon in the art, so the swung weapon sprite is hidden.
+enum Pose { IDLE, ACTION, PARRY_HIT }
+const POSE_FILES := {Pose.IDLE: "idle", Pose.ACTION: "action", Pose.PARRY_HIT: "parry_hit"}
+const HIRES_HEIGHT := 52.0   # on-screen height in map-sprite px (a cell is 32) — stands ~1.6 tiles tall
+const MAP_FOOT := 16.0       # the 32px map sprite is centered: its feet sit at +16
+var _poses := {}             # Pose -> Texture2D; members keep textures alive (gotcha #11)
+var _hires := false
+var _pose := Pose.IDLE
+
 
 static func has_rig(unit_id: String) -> bool:
-	return ResourceLoader.exists("res://assets/sprites/units/%s/walk_f1.png" % unit_id)
+	return ResourceLoader.exists("res://assets/sprites/units/%s/walk_f1.png" % unit_id) or has_hires(unit_id)
+
+
+## CP-1: true when the unit has illustrated high-res combat art (at minimum an
+## `idle.png`; `action.png` / `parry_hit.png` fall back to idle when absent).
+static func has_hires(unit_id: String) -> bool:
+	return unit_id != "" and ResourceLoader.exists("res://assets/art/cutout/%s/%s.png" % [unit_id, POSE_FILES[Pose.IDLE]])
 
 
 ## True if the unit has dedicated north/south (back/front) combat bodies, so the
@@ -115,6 +149,13 @@ func setup(unit_id: String, facing: int, rig_scale: float) -> void:
 	_fx.z_index = 6
 	_fx.draw.connect(_draw_fx)
 	add_child(_fx)
+	if has_hires(unit_id):
+		var tex := {}
+		for p in POSE_FILES:
+			var path := "res://assets/art/cutout/%s/%s.png" % [unit_id, POSE_FILES[p]]
+			if ResourceLoader.exists(path):
+				tex[p] = load(path)
+		set_pose_textures(tex.get(Pose.IDLE), tex.get(Pose.ACTION), tex.get(Pose.PARRY_HIT))
 
 
 ## The weaponless combat body for a facing: a dedicated back/front body when the
@@ -133,11 +174,119 @@ func _facing_body(unit_id: String, facing: int) -> Texture2D:
 	return null
 
 
-## AW-31: tell the rig which specific weapon/spell is being used, so its FX
-## (element bolt, signature-blade trail) can differ from the caster's default.
-func set_spell_meta(weapon_id: String, school: String) -> void:
+# --- CP-1: high-res poses -----------------------------------------------------
+
+## Install illustrated pose textures (setup() does this from the art convention;
+## tests and tools may inject their own). `idle` is required — null leaves the
+## rig in classic flat-sprite mode. Missing action/parry poses fall back to idle.
+func set_pose_textures(idle: Texture2D, action: Texture2D = null, parry_hit: Texture2D = null) -> void:
+	_poses = {}
+	_hires = idle != null
+	if not _hires:
+		return
+	_poses[Pose.IDLE] = idle
+	_poses[Pose.ACTION] = action if action != null else idle
+	_poses[Pose.PARRY_HIT] = parry_hit if parry_hit != null else idle
+	if _body != null:
+		# illustrated art is painted, not pixel art — filter it smoothly
+		_body.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	if _weapon != null:
+		_weapon.visible = false  # the poses hold their weapon in the art
+	set_pose(Pose.IDLE)
+
+
+func is_hires() -> bool:
+	return _hires
+
+
+func current_pose() -> int:
+	return _pose
+
+
+## Swap the body to an illustrated pose, scaled to HIRES_HEIGHT and planted on
+## the same foot line as the 32px map sprite. No-op in flat-sprite mode.
+func set_pose(pose: int) -> void:
+	if not _hires or _body == null:
+		return
+	_pose = pose
+	var tex: Texture2D = _poses.get(pose, _poses[Pose.IDLE])
+	_body.texture = tex
+	var h := maxf(1.0, float(tex.get_height()))
+	var s := HIRES_HEIGHT / h
+	_body.scale = Vector2(s, s)
+	_body.position = Vector2(0.0, MAP_FOOT - h * s * 0.5)
+
+
+# --- CP-1: data-driven FX + strike outcome ------------------------------------
+
+## Resolve this attack's look from DATA: the attacker's UnitDef and the weapon
+## in hand (CombatFxProfile: weapon → caster → default). Either may be null.
+func set_fx_source(unit_def: UnitDef, weapon: WeaponDef) -> void:
+	var udef := unit_def
+	if udef == null and _unit_id != "":
+		var upath := "res://data/units/%s.tres" % _unit_id
+		if ResourceLoader.exists(upath):
+			udef = load(upath)
+	_weapon_id = weapon.id if weapon != null else ""
+	_fx_profile = CombatFxProfile.build(udef, weapon)
+	if _weapon != null and not _hires:
+		_weapon.visible = _fx_profile.show_weapon
+
+
+## AW-31 compatibility shim (protos/tools): resolves the weapon by id from
+## data/weapons/. The school argument is fallback if weapon.fx_style / fx_color unset.
+func set_spell_meta(weapon_id: String, school: String = "") -> void:
+	var path := "res://data/weapons/%s.tres" % weapon_id
+	var w: WeaponDef = load(path) if weapon_id != "" and ResourceLoader.exists(path) else null
+	if w == null and (weapon_id != "" or school != ""):
+		w = WeaponDef.new()
+		w.id = weapon_id
+		w.school = school
+		w.weapon_type = WeaponDef.WeaponType.TOME if school != "" else WeaponDef.WeaponType.SWORD
+	elif w != null and school != "" and w.school == "":
+		w.school = school
+	set_fx_source(null, w)
 	_weapon_id = weapon_id
-	_weapon_school = school
+
+
+## Feed the resolved strike into the motion (call before play_attack, or use
+## play_strike). `cfg` supplies the outcome-timing knobs; null keeps defaults.
+func set_outcome(strike: StrikeResult, is_kill: bool, cfg: JuiceConfig = null) -> void:
+	_connected = strike == null or strike.connected
+	_crit = strike != null and strike.connected and strike.was_crit
+	_kill = is_kill and _connected
+	_damage = strike.damage if strike != null and strike.connected else 0
+	if cfg != null:
+		_crit_hold = cfg.crit_anticipation
+		_kill_mult = cfg.kill_follow_through
+		_miss_reach = cfg.miss_reach
+
+
+## One strike, outcome-aware: crit / miss / kill / damage shape the motion.
+func play_strike(weapon_type: int, aim_global: Vector2, strike: StrikeResult, is_kill: bool, cfg: JuiceConfig = null) -> void:
+	set_outcome(strike, is_kill, cfg)
+	await play_attack(weapon_type, aim_global)
+
+
+## Trail intensity from damage: 1.0 for a scratch, up to 1.6 for a big hit.
+func _power() -> float:
+	return 1.0 + clampf(float(_damage) / 20.0, 0.0, 0.6)
+
+
+## Crit anticipation: hold the wind-up and flash the body before the blow lands.
+func _crit_beat() -> void:
+	if not _crit or _crit_hold <= 0.0:
+		return
+	_fx_items.append({"kind": "glint", "pos": _tip(), "age": 0.0, "life": _crit_hold + 0.1})
+	_body.modulate = Color(1.8, 1.8, 1.6)
+	var f := create_tween()
+	f.tween_property(_body, "modulate", Color.WHITE, _crit_hold)
+	await get_tree().create_timer(_crit_hold).timeout
+
+
+## Post-impact hold, stretched on a killing blow so the finisher reads.
+func _follow_through(base: float) -> void:
+	await get_tree().create_timer(base * (_kill_mult if _kill else 1.0)).timeout
 
 
 func set_weapon(weapon_type: int) -> void:
@@ -185,23 +334,28 @@ func set_weapon(weapon_type: int) -> void:
 		rest = 0.0
 	_rest_rot = rest
 	_pivot.rotation = _rest_rot
-	# a beast has no weapon sprite — its lunge + slash arc read as a claw swipe
-	_weapon.visible = _unit_id != "nilu"
+	# natural weapons (Nilu's claws: WeaponDef.fx_hide_sprite) have no weapon
+	# sprite — the lunge + slash arc read as a swipe; hi-res poses carry their
+	# weapon in the art.
+	_weapon.visible = _fx_profile.show_weapon and not _hires
 
 
 func _process(delta: float) -> void:
+	if _fx_items.is_empty():
+		return
 	var alive := []
 	for it in _fx_items:
 		it["age"] += delta
 		if it["age"] < it["life"]:
 			alive.append(it)
 	_fx_items = alive
-	_fx.queue_redraw()
+	_fx.queue_redraw()  # one last redraw after the final item expires clears it
 
 
 ## `aim_global` is the target's world position; ranged/cast attacks fly to it and
 ## melee lunges drive toward it (any direction — up/down/diagonal, not just
-## sideways). Pass nothing (Vector2.INF) to fire straight ahead.
+## sideways). Pass nothing (Vector2.INF) to fire straight ahead. Call
+## set_outcome() first (or use play_strike) for crit/miss/kill-aware motion.
 func play_attack(weapon_type: int, aim_global := Vector2.INF) -> void:
 	if not (is_inf(aim_global.x) or is_inf(aim_global.y)) and get_parent() != null:
 		_aim_parent = (get_parent() as Node2D).to_local(aim_global)
@@ -209,6 +363,7 @@ func play_attack(weapon_type: int, aim_global := Vector2.INF) -> void:
 	else:
 		_aim_parent = Vector2.INF
 		_aim_fx = Vector2.INF
+	set_pose(Pose.IDLE)
 	match weapon_type:
 		WeaponDef.WeaponType.LANCE:
 			await _stab()
@@ -220,6 +375,7 @@ func play_attack(weapon_type: int, aim_global := Vector2.INF) -> void:
 			await _heal(aim_global)
 		_:
 			await _swing(weapon_type == WeaponDef.WeaponType.AXE)
+	set_pose(Pose.IDLE)
 
 
 ## Target in the FX layer's local space (accounts for the rig's scale + facing
@@ -252,13 +408,14 @@ func _aim_angle() -> float:
 
 
 ## How far to drive on the strike: a fraction of the gap to the target, capped so
-## it reads as a lunge (not a teleport onto the target).
+## it reads as a lunge (not a teleport onto the target). A miss under-reaches.
 func _lunge_reach(frac: float, cap_cells: float) -> float:
 	var cap: float = absf(scale.x) * 32.0 * cap_cells   # scale.x carries cell/32
-	if is_inf(_aim_parent.x) or is_inf(_aim_parent.y):
-		return cap * 0.5
-	var gap := (_aim_parent - position).length()
-	return minf(gap * frac, cap) if gap > 1.0 else cap * 0.5
+	var r := cap * 0.5
+	if not (is_inf(_aim_parent.x) or is_inf(_aim_parent.y)):
+		var gap := (_aim_parent - position).length()
+		r = minf(gap * frac, cap) if gap > 1.0 else cap * 0.5
+	return r * (_miss_reach if not _connected else 1.0)
 
 
 ## Lance: a THRUST, not a swing — level the point forward and drive the whole
@@ -274,6 +431,8 @@ func _stab() -> void:
 	wind.tween_property(_body, "rotation", -0.08, 0.18).set_trans(Tween.TRANS_SINE)
 	wind.tween_property(self, "position", home - dir * (reach * 0.22), 0.18)
 	await wind.finished
+	await _crit_beat()
+	set_pose(Pose.ACTION)
 	var hit := create_tween().set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + aim + 0.15, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.06, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
@@ -281,7 +440,7 @@ func _stab() -> void:
 	await hit.finished
 	_thrust_streak()
 	impact.emit()
-	await get_tree().create_timer(0.09).timeout
+	await _follow_through(0.09)
 	await _recover(home)
 
 
@@ -300,39 +459,44 @@ func _swing(heavy: bool) -> void:
 	wind.tween_property(_body, "rotation", -0.22, 0.20).set_trans(Tween.TRANS_SINE)
 	wind.tween_property(self, "position", home - dir * (reach * 0.25), 0.20)
 	await wind.finished
+	await _crit_beat()
+	set_pose(Pose.ACTION)
 	var hit := create_tween().set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + aim + thru, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.24, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(self, "position", home + dir * reach, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await hit.finished
-	_slash_trail(heavy)
+	_slash_trail(heavy or _crit or _kill)
 	impact.emit()
-	await get_tree().create_timer(0.12 if heavy else 0.08).timeout
+	await _follow_through(0.12 if heavy else 0.08)
 	await _recover(home)
 
 
 func _shoot(aim_global: Vector2) -> void:
-	# draw back (body leans), hold, loose — the arrow streaks to the target
+	# draw back (body leans AWAY from the target), hold, loose — the arrow
+	# streaks to the target
 	var dest := _aim_local(aim_global)
 	var home := position
 	var w := create_tween().set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.35, 0.26).set_trans(Tween.TRANS_SINE)
 	w.tween_property(_body, "rotation", -0.1, 0.26).set_trans(Tween.TRANS_SINE)
-	w.tween_property(self, "position:x", position.x - 3.0 * scale.x, 0.26)
+	w.tween_property(self, "position", home - _lunge_dir() * 3.0 * absf(scale.x), 0.26)
 	await w.finished
 	await get_tree().create_timer(0.14).timeout
+	await _crit_beat()
+	set_pose(Pose.ACTION)
 	_pivot.rotation = _rest_rot
-	if _unit_id == "rina":
+	if _fx_profile.ranged_style == "beam":
 		_beam(dest)  # spellbow: a green energy beam, not a plain arrow
 		await get_tree().create_timer(0.07).timeout
 		impact.emit()
 		_beam_burst(dest)
-		await get_tree().create_timer(0.18).timeout
+		await _follow_through(0.18)
 	else:
 		_projectile(dest, "arrow")
 		await get_tree().create_timer(PROJ_TIME).timeout
 		impact.emit()
-		await get_tree().create_timer(0.08).timeout
+		await _follow_through(0.08)
 	await _recover(home)
 
 
@@ -345,12 +509,14 @@ func _magic(aim_global: Vector2) -> void:
 	await w.finished
 	_cast_gather()
 	await get_tree().create_timer(0.26).timeout
+	await _crit_beat()
+	set_pose(Pose.ACTION)
 	_pivot.rotation = _rest_rot
 	_projectile(dest, _magic_style())
 	await get_tree().create_timer(PROJ_TIME).timeout
 	impact.emit()
 	_cast_burst_at(dest)
-	await get_tree().create_timer(0.14).timeout
+	await _follow_through(0.14)
 	await _recover(home)
 
 
@@ -361,6 +527,7 @@ func _heal(aim_global := Vector2.INF) -> void:
 	await w.finished
 	_cast_gather()
 	await get_tree().create_timer(0.26).timeout
+	set_pose(Pose.ACTION)
 	impact.emit()
 	_heal_bloom(aim_global)
 	await get_tree().create_timer(0.3).timeout
@@ -368,6 +535,7 @@ func _heal(aim_global := Vector2.INF) -> void:
 
 
 func _recover(home: Vector2) -> void:
+	set_pose(Pose.IDLE)
 	var r := create_tween().set_parallel(true)
 	r.tween_property(_pivot, "rotation", _rest_rot, 0.26).set_trans(Tween.TRANS_SINE)
 	r.tween_property(_body, "rotation", 0.0, 0.26).set_trans(Tween.TRANS_SINE)
@@ -380,7 +548,7 @@ func _recover(home: Vector2) -> void:
 func _tip() -> Vector2:
 	return _fx.to_local(_pivot.global_position)
 
-# Point partway from the hand toward the target tile, so the hit FX lands on the
+## Point partway from the hand toward the target tile, so the hit FX lands on the
 ## target for any direction (up/down/diagonal), not just to the side.
 func _hit_point(frac: float) -> Vector2:
 	if is_inf(_aim_fx.x) or is_inf(_aim_fx.y):
@@ -398,52 +566,23 @@ func _thrust_streak() -> void:
 	nd = nd.normalized() if nd.length() > 0.1 else Vector2.RIGHT
 	_fx_items.append({"kind": "streak", "pos": from.lerp(to, 0.45), "ndir": nd, "perp": nd.orthogonal(),
 		"age": 0.0, "life": 0.22})
-## AW-31: spell look is chosen by the tome's ELEMENT first (so Ember/Gale/Tide
-## each read distinctly and match the anima triangle), then the caster, then a
-## default. Element wins so a generic Fire tome and Liora's Soulflame share fire.
+## CP-1: Data-driven FX getters — all presentation styles and tints resolve
+## through CombatFxProfile (WeaponDef -> UnitDef -> defaults) rather than
+## hardcoded match statements.
 func _magic_style() -> String:
-	match _weapon_school:
-		"ember": return "flame"
-		"gale": return "swirl"
-		"tide": return "crystal"
-		"reason": return "rays"
-		"crown": return "crown"  # AW-51: First Crown royal magic — Kai's Crownspark
-	match _unit_id:
-		"isolde": return "crystal"
-		"corvin": return "swirl"
-		_: return "flame"
+	return _fx_profile.magic_style
+
 func _magic_color() -> Color:
-	match _weapon_school:
-		"ember": return Color(1.0, 0.45, 0.15)   # fire
-		"gale": return Color(0.55, 1.0, 0.55)    # wind/nature
-		"tide": return Color(0.35, 0.70, 1.0)    # water
-		"reason": return Color(0.82, 0.55, 1.0)  # arcane
-		"crown": return Color(0.45, 1.0, 0.60)   # verdant royal — matches his blade
-	match _unit_id:
-		"isolde": return Color(0.40, 0.72, 1.0)
-		"corvin": return Color(0.42, 1.0, 0.55)
-		_: return Color(1.0, 0.42, 0.9)
-## Melee swing tint per SIGNATURE weapon — each hero's blade leaves its own trail.
+	return _fx_profile.magic_color
+
 func _melee_color() -> Color:
-	match _weapon_id:
-		"sig_kai": return Color(0.42, 1.0, 0.55)   # Verdant Blade — green
-		"sig_dain": return Color(1.0, 0.55, 0.20)  # Brazen Cleaver — molten
-		"sig_kael": return Color(0.70, 0.90, 1.0)  # keen steel
-		"sig_perrin": return Color(1.0, 0.92, 0.55) # Oathlight — gold
-		"sig_marlow": return Color(0.80, 0.55, 1.0) # violet edge
-		"claw": return Color(0.75, 1.0, 0.70)      # Nilu's claws — green
-		_: return Color(0.85, 1.0, 0.9)            # default steel gleam
+	return _fx_profile.melee_color
+
 func _heal_color() -> Color:
-	match _unit_id:
-		"wren": return Color(1.0, 0.76, 0.36)
-		"elowen": return Color(0.5, 0.82, 1.0)
-		_: return Color(0.42, 1.0, 0.56)
+	return _fx_profile.heal_color
+
 func _heal_style() -> String:
-	match _unit_id:
-		"wren": return "motes"
-		"elowen": return "rays"
-		"vesper": return "cross"
-		_: return "arcs"
+	return _fx_profile.heal_style
 func _cast_gather() -> void:
 	_fx_items.append({"kind": "gather", "pos": _tip(), "col": _magic_color(), "age": 0.0, "life": 0.3})
 func _beam(dest: Vector2) -> void:
@@ -465,6 +604,12 @@ func _draw_fx() -> void:
 		var t: float = it["age"] / it["life"]
 		var a := 1.0 - t
 		match it["kind"]:
+			"glint":
+				var gp: Vector2 = it["pos"]
+				var gs: float = 6.0 * (1.0 - t) + 2.0
+				_fx.draw_line(gp - Vector2(gs, 0), gp + Vector2(gs, 0), Color(1.0, 1.0, 0.8, a), 2.0)
+				_fx.draw_line(gp - Vector2(0, gs), gp + Vector2(0, gs), Color(1.0, 1.0, 0.8, a), 2.0)
+				_fx.draw_circle(gp, maxf(1.0, 2.5 * a), Color(1.0, 1.0, 1.0, a))
 			"slash":
 				var rr := (22.0 if it.get("big", false) else 17.0)
 				var sc: Color = it.get("col", Color(0.85, 1.0, 0.9))

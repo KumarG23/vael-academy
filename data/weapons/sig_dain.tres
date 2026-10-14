@@ -11,3 +11,4 @@ might = 11
 hit = 72
 crit = 8
 weight = 12
+fx_color = Color(1, 0.55, 0.2, 1.0)

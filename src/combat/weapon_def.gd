@@ -36,6 +36,21 @@ enum WeaponType { SWORD, AXE, LANCE, BOW, TOME, STAFF }
 @export var innate: bool = false
 
 
+@export_group("Combat FX")
+## CP-1: presentation data for the combat rig (resolved by CombatFxProfile —
+## the weapon layer beats the caster's UnitDef fx_*). Purely cosmetic; never
+## read by combat math.
+## Style keyword by type — TOME: "flame"/"crystal"/"swirl"/"crown"/"rays";
+## BOW: "arrow"/"beam" (spellbow); STAFF: "arcs"/"motes"/"rays"/"cross".
+## "" = inherit from the caster / default.
+@export var fx_style: String = ""
+## Trail / bolt / bloom tint. Alpha 0 = unset (inherit).
+@export var fx_color: Color = Color(0, 0, 0, 0)
+## Natural weapons (claws): no weapon sprite is drawn — the lunge + slash arc
+## read as a swipe. Replaces the old hardcoded `_unit_id == "nilu"` rule.
+@export var fx_hide_sprite: bool = false
+
+
 ## Tomes deal magical damage (MAG vs RES); everything else is physical (STR vs
 ## DEF) unless flagged magical (spellbow).
 func is_magical() -> bool:

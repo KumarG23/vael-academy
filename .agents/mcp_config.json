@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "godot-mcp-pro": {
+      "command": "node",
+      "args": [
+        "/Users/nealsharma/Downloads/godot-mcp-pro-v1.15.0/server/build/index.js"
+      ]
+    }
+  }
+}

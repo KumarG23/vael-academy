@@ -38,6 +38,16 @@ extends Resource
 ## "" = use `id` as always.
 @export var sprite_id: String = ""
 
+@export_group("Combat FX")
+## CP-1: the caster's signature look, used when the weapon doesn't set its own
+## (CombatFxProfile: weapon → caster → default). Cosmetic only. "" / alpha-0
+## colors = inherit the default. Styles: magic "flame"/"crystal"/"swirl"/
+## "crown"/"rays"; heal "arcs"/"motes"/"rays"/"cross".
+@export var fx_magic_style: String = ""
+@export var fx_magic_color: Color = Color(0, 0, 0, 0)
+@export var fx_heal_style: String = ""
+@export var fx_heal_color: Color = Color(0, 0, 0, 0)
+
 @export_group("Base Stats")
 @export var level: int = 1
 @export var max_hp: int = 20

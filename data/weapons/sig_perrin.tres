@@ -10,3 +10,4 @@ weapon_type = 2
 might = 8
 hit = 88
 weight = 8
+fx_color = Color(1, 0.92, 0.55, 1.0)

@@ -12,3 +12,5 @@ hit = 90
 crit = 12
 weight = 2
 max_uses = 999
+fx_color = Color(0.75, 1, 0.7, 1.0)
+fx_hide_sprite = true

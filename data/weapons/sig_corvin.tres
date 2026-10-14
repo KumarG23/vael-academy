@@ -11,3 +11,5 @@ might = 7
 hit = 94
 max_range = 2
 school = "gale"
+fx_style = "swirl"
+fx_color = Color(0.55, 1, 0.55, 1.0)

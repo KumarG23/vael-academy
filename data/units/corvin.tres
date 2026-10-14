@@ -31,3 +31,5 @@ growth_spd = 35
 growth_lck = 25
 growth_def = 15
 growth_res = 45
+fx_magic_style = "swirl"
+fx_magic_color = Color(0.42, 1, 0.55, 1.0)
