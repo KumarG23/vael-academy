@@ -1,0 +1,22 @@
+===================================
+= Run Summary
+==============================================
+
+Totals
+------
+Deprecated           13
+
+Scripts              78
+Tests               531
+Passing Tests       531
+Asserts            3214
+Time              24.422s
+
+
+---- All tests passed! ----
+GUT 9.7.1:  https://github.com/bitwes/Gut/releases/tag/v9.7.1 is now available!
+
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

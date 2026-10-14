@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PROBE trail damage1_vs20_identical=true power_high=1.6
+PROBE miss_vs_hit_trail_identical=true
+PROBE padded128 visible_foot=9.5 expected=16 offset=-6.5
+PROBE caster=swirl unset_weapon_fx_style= resolved=rays
+PROBE rina profile=beam configured_color=(0.0, 0.0, 0.0, 0.0) default_rig_profile=arrow
+PROBE flinch sample=0 pos=(0.0, 0.0) scale=(1.0, 1.0)
+PROBE flinch sample=1 pos=(0.0, 0.0) scale=(1.0, 1.0)
+PROBE flinch sample=2 pos=(0.0, 0.0) scale=(1.0, 1.0)
+PROBE flinch sample=3 pos=(0.0, 0.0) scale=(1.0, 1.0)
+PROBE flinch sample=4 pos=(0.0, 0.0) scale=(1.0, 1.0)
+PROBE flinch sample=5 pos=(0.0, 0.0) scale=(1.0, 1.0)
+PROBE flinch sample=6 pos=(0.0, 0.0) scale=(1.0, 1.0)
+PROBE flinch sample=7 pos=(0.0, 0.0) scale=(1.0, 1.0)
+PROBE stagger sample=0 pos=(0.0, 0.0) scale=(1.0, 1.0) rot=0.0
+PROBE stagger sample=1 pos=(0.0, 0.0) scale=(1.0, 1.0) rot=0.0
+PROBE stagger sample=2 pos=(0.0, 0.0) scale=(1.0, 1.0) rot=0.0
+PROBE stagger sample=3 pos=(0.0, 0.0) scale=(1.0, 1.0) rot=0.0
+PROBE stagger sample=4 pos=(0.0, 0.0) scale=(1.0, 1.0) rot=0.0
+PROBE stagger sample=5 pos=(0.0, 0.0) scale=(1.0, 1.0) rot=0.0
+PROBE stagger sample=6 pos=(0.0, 0.0) scale=(1.0, 1.0) rot=0.0
+PROBE stagger sample=7 pos=(0.0, 0.0) scale=(1.0, 1.0) rot=0.0
+PROBE dodge_control pos=(0.0, -12.85715)
+PROBE correctly_chained_control pos=(5.714279, 0.0) scale=(1.05, 0.9)
+PROBE fallback_target_offset_on_return=(0.0, 0.0)
+PROBE fallback_after_counter_a=(0.0, 0.0) b=(0.0, 0.0)

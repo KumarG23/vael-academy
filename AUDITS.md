@@ -126,3 +126,94 @@ arcs are locked. If the room is moving unusually fast, pull one C-rank back in.
 - Let the W6 character climax finish before the year-two villain hook. One scene
   doing rite payoff, route payoff, mystery reveal, and royal teaser will flatten
   whichever beat arrives first.
+
+---
+
+## Audit: Codex — 2026-10-14, AUDIT-CP-1, audited at `6e971f8f`
+
+**Verdict:** keep CP-1's architecture, repair its presentation defects, and prove the non-pixel direction with a small live pilot before producing the cast. The game systems can survive this art change. CP-1 is useful groundwork, but its completed-status wording overstates the visible result.
+
+**Scope and baseline:** the checkout was clean at `6e971f8fd0c84c105d511e36ab2cd02457d6bcbd`. This is the latest CP-1 commit Neal identified as Gemini's work; its 33-file diff was reviewed against its parent. Repo-wide inventory covers 22,869 tracked files, including 99 game scripts, 88 test/helper scripts, 213 data files, 22 scenes, and 16 tools. Review covered the handoff/plan, art and story bibles, campaign/roster/save boundary, combat resolver and executor, unit/castle/terrain/dialogue/UI renderers, generation tools, and representative source/live assets. Art inspection was sample-based, not a visual inspection of all 10,505 PNGs or an exhaustive audit of every code path.
+
+**Verification:** `godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit` passed **531/531 tests, 3,214 assertions, 78 scripts**, on Godot 4.7.2. Thirteen GUT deprecation notices and exit-time reports of two leaked objects / one live resource match prior audit cleanup debt. Non-headless OpenGL captures exercised the real renderers at 1280×720. Additional runtime probes verified the findings below. Evidence lives in [`assets/art_review/cp1_audit/`](assets/art_review/cp1_audit/).
+
+### Mechanical findings — implementer to triage into a named WO
+
+| ID | Severity | Commit | Site | Failure scenario / evidence | Outcome |
+|---|---|---|---|---|---|
+| CP1-1 | P1 | `6e971f8f` | `src/ui/juice_controller.gd:202`, `:212` | `tw.chain().set_parallel(true)` puts recovery tweens back into the outward step; both write the same position/scale/rotation concurrently. Ordinary FLINCH and critical STAGGER stay at home with scale 1 and rotation 0 at all eight runtime samples. Controls verify the same target moves on DODGE and on correctly chained flinch. The classifier tests pass without exercising this motion. | Open — use sequential outward/recovery groups and assert an intermediate displacement, deformation and final restoration through the live controller. |
+| CP1-2 | P2 | `6e971f8f` | `src/ui/combat_rig.gd:272`, `:558`, `:613` | `_power()` has no production caller; damage 1 and 20 generate identical slash items and draw through the same radius/alpha. A normal miss generates that same trail too. Crit/kill size changes and melee miss under-reach work, but the documented damage-scaled trails and miss dimming do not. | Open — feed intensity/reach/alpha into emitted FX and rendering; test the emitted/rendered behavior rather than only calling `_power()` directly. |
+| CP1-3 | P2 | `6e971f8f` | `src/ui/combat_rig.gd:214` | Illustrated scaling/foot alignment uses full texture height. A 128px canvas with visible pixels ending at y=112 puts the visible foot at 9.5 instead of the expected 16 (6.5 source-space pixels above the floor). Differing transparent margins or action silhouettes produce floating feet and body-size changes. The existing test uses fully opaque squares and misses this. | Open — define a shared body scale and foot anchor per pose (or normalize canvases/anchors during export); verify padded and differently posed figures. |
+| CP1-4 | P2, preview regression | `6e971f8f` | `src/proto/cutout_signatures.gd:57` | The signature showcase calls `setup()` and `set_weapon()` but never `set_fx_source()` / `set_spell_meta()`. After removal of the unit/id FX tables, it retains a default profile: Rina fires an arrow instead of her beam and signature melee colors use the default steel tint. Live `JuiceController` does supply the source; `cutout_magic.gd` uses the compatibility shim. | Open — migrate every direct rig caller so preview clips match live combat. |
+
+The probes and both control animations are retained in [`runtime-probe.txt`](assets/art_review/cp1_audit/runtime-probe.txt) and [`probe.gd`](assets/art_review/cp1_audit/probe.gd). Run the latter with `godot --headless -s res://assets/art_review/cp1_audit/probe.gd`. They exercise existing production code without changing it. These are cosmetic failures; this review found no CP-1 change to combat formulas, AI, progression, or the save schema.
+
+### CP-1 acceptance assessment
+
+| Part | What actually works | What remains |
+|---|---|---|
+| Strike outcomes | Full result reaches the rig; crit anticipation, kill follow-through, melee miss under-reach, impact HP application | Damage/miss trail rendering (CP1-2); current tests mainly inspect flags |
+| Target reactions | Pure classification; dodge and lethal knockback paths | Flinch/stagger are cancelled (CP1-1); reaction tests do not assert timed motion |
+| Data-driven FX | Unit/weapon fields; weapon overrides; natural-weapon hiding; live controller integration | Signature showcase migration (CP1-4); school→style defaults and bow beam colors still contain code choices, so "fully data-driven" needs qualification |
+| Three-pose hook | Optional texture loading, idle/action swapping, linear filtering, missing-pose fallback | Zero `idle.png`, `action.png`, or `parry_hit.png` assets at the new live convention; no production call selecting `PARRY_HIT`; actual foot anchors (CP1-3); persistent map and campus illustrated actors |
+
+An illustrated attacker would currently replace a pixel actor only during its strike, then return to the pixel actor. The defender stays a `Unit`, and `_react_target()` never creates its illustrated rig. This is a hook awaiting integration, not evidence that the proposed art direction has been tested in-game. Also, one baked-weapon pose set per character cannot faithfully show every equipped weapon/spell without an explicit pose/weapon policy.
+
+### Visual walkthrough — current renderer evidence
+
+Scenes were entered through a temporary capture harness using production scene/room/dialogue methods. The combat capture deliberately stages Kai beside Serra and supplies a resolved six-damage critical strike; it verifies presentation, not an organic player/RNG exchange. No saved campaign was loaded, overwritten, or deleted. Captures are current evidence, not screenshots inherited from older sessions.
+
+| Step | Surface and health | Finding / implication |
+|---|---|---|
+| 1 | [Title](assets/art_review/cp1_audit/01-title.png) — renders | Clear menu; presentation is a placeholder identity with a pixel ornament frame. |
+| 2 | [Campus](assets/art_review/cp1_audit/02-campus.png) — renders | Walkable spatial foundation works; broad bright grass and repeated props dominate. A new character alone will not establish a new environment style. |
+| 3 | [Library](assets/art_review/cp1_audit/03-library.png) — renders | Furnished scrollable room, but repeated shelves/columns and bright carpet are visually uniform. Paint architectural grouping, depth and warm pools of light into a pilot room. |
+| 4 | [Journal](assets/art_review/cp1_audit/04-journal.png) — renders | Useful roster/system structure; its nearest-filtered portrait and ornate pixel corners clash with the proposed illustrated register. Corner ornaments overlap heading/footer text. |
+| 5 | [Liora dialogue at waterside](assets/art_review/cp1_audit/05-dialogue.png) — renders | Expressive large portrait carries the scene; the baked rectangular image background interrupts the world and the decorative nameplate competes with the name. |
+| 6 | [Mock Battle overview](assets/art_review/cp1_audit/06-battle.png) — renders | Terrain, selection, houses and HP communicate the tactics layer. World and actors remain entirely pixel-based; subdued painted terrain must preserve this readability. |
+| 7 | [Critical wind-up](assets/art_review/cp1_audit/07-combat-windup.png) — renders | Camera push and actor anticipation work; close zoom magnifies the old pixel assets. |
+| 8 | [Critical impact](assets/art_review/cp1_audit/08-combat-impact.png) — renders, obscured | The wide opaque CRIT band hides much of the actual contact. A smaller character/weapon cut-in would let the impact remain visible. |
+| 9 | [VN opening](assets/art_review/cp1_audit/09-vn-opening.png) — renders | Black opening and gold-rule narration are intentional, readable, and a promising restrained treatment. |
+| 10 | [Painted forest VN](assets/art_review/cp1_audit/10-painted-vn.png) — renders | The strongest existing example of the new direction: warm painterly environment plus illustrated character. Gray portrait rectangle and pixel frame still weaken the composite. |
+
+These captures support visible legibility/overlap findings. Keyboard focus, reduced-motion controls, contrast across every scene and end-to-end accessibility were not comprehensively tested. No full new-game/year playthrough or full-cast animation review was performed.
+
+<details>
+<summary>Captured screens in walkthrough order</summary>
+
+![1. Title](assets/art_review/cp1_audit/01-title.png)
+
+![2. Campus](assets/art_review/cp1_audit/02-campus.png)
+
+![3. Library](assets/art_review/cp1_audit/03-library.png)
+
+![4. Journal](assets/art_review/cp1_audit/04-journal.png)
+
+![5. Waterside dialogue](assets/art_review/cp1_audit/05-dialogue.png)
+
+![6. Battle overview](assets/art_review/cp1_audit/06-battle.png)
+
+![7. Critical wind-up](assets/art_review/cp1_audit/07-combat-windup.png)
+
+![8. Critical impact](assets/art_review/cp1_audit/08-combat-impact.png)
+
+![9. VN opening](assets/art_review/cp1_audit/09-vn-opening.png)
+
+![10. Painted forest VN](assets/art_review/cp1_audit/10-painted-vn.png)
+
+</details>
+
+### Deferred art/design proposals — owner: Neal
+
+| ID | Proposal | Grounding / decision needed |
+|---|---|---|
+| ART-CP-1 | Explore an **illustrated fantasy academy**: clean linework and readable cel-shaded characters against softly painted architecture/environments, with restrained depth/parallax and expressive pose-based combat. | Existing 1024px portraits and seven painted VN backdrops are reusable anchors. Persona/Expedition references can inform timing, composition and lighting; literal 3D/photorealism is not required. Proposed style, not approved canon. |
+| ART-CP-2 | Preserve the established tactical grid/projection for the first pilot; make the appearance through painted terrain/modules, actors and lighting. | Combat, collision, pathfinding and saves already work. A new projection or 3D pipeline would add a separate migration without answering whether the illustrated look feels good. |
+| ART-CP-3 | Start with **Kai + one opponent + one painted room/battle patch + dialogue/journal chrome**, using the existing portraits as identity references. Include a short genuine walk cycle or limited limb rig; three combat poses can establish a prototype. | `STYLE_BIBLE.md:156` records Neal previously rejecting static sliding standees. High resolution alone does not solve that motion problem. Require consistent body scale, feet/hand anchors, transparency, facing/asymmetry and equipped-weapon handling before generating more characters. |
+| ART-CP-4 | Use academy manuscript/seal styling for the UI: fine gold rules, navy/ink panels, clean typography, house-colored accents and ample space. Keep dramatic geometry for crits. | Current pixel ornaments obscure text in journal/nameplates; the narrator's gold-rule treatment already fits the proposed world. Test the same art on dialogue, journal and combat overlays. |
+| ART-CP-5 | Build the visual mood from belonging: warm inhabited rooms, familiar objects, shared tables and lit windows; emerald Ward, violet Claim and gold hearthlight remain meaningful. | WORLD/ACADEMY/CAMPAIGN and character bibles own the tone and symbols. Preserve house crimson/gold, blue/silver and green/bronze without reducing characters to palette swaps. No story changes proposed. |
+| ART-CP-6 | Reconcile the new art brief with historical art prescriptions after the pilot review. | MASTER_PLAN §8, STYLE_BIBLE and UITheme still describe pixel rules; HANDOFF/CP-1 describe illustrated combat. Neal's current instruction authorizes non-pixel exploration, but exact style and production pipeline are not locked. |
+
+**Proposed pilot review gate:** Neal can watch Kai idle, actually walk, face targets and attack/cast; both combatants stay consistently illustrated through idle→attack→hit/miss→recovery, feet stay planted and damage lands at impact. Show ordinary hit, crit, miss and defeat on a readable painted patch; show the same character in a painted academy room, dialogue and journal. Keep silhouettes/terrain/ranges legible at overview and close zoom. Approve the moving in-engine result before batch production; then resume the game from the current systems/canon state.
+
+**Where gameplay was left:** AW-79 still needs sealed-door/sanctum selection and music when tracks arrive. The year-one story/support work remains co-written with Neal; the calendar, house routes, activities, inventory, grading and mid-battle saves already exist. Their prior backlog remains valid after the art pilot. No gameplay work order or new art production was implemented during this audit.
