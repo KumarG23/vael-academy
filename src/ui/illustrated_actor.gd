@@ -14,8 +14,7 @@ var _clock := 0.0
 var _was_walking := false
 var _walk_distance := 0.0
 var _last_position := Vector2.ZERO
-var west_head: Sprite2D
-var _head_mask: ShaderMaterial
+var _mark_material: ShaderMaterial
 
 
 func setup(art: IllustratedArt, actor_feet: Vector2, actor_height: float) -> void:
@@ -25,17 +24,9 @@ func setup(art: IllustratedArt, actor_feet: Vector2, actor_height: float) -> voi
 	body = Sprite2D.new()
 	add_child(body)
 	_last_position = global_position
-	if kit.textures.has("head_west"):
-		west_head = Sprite2D.new()
-		west_head.texture = kit.textures["head_west"]
-		west_head.centered = false
-		west_head.offset = Vector2(-64, -122)
-		west_head.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-		add_child(west_head)
-		var shader := Shader.new()
-		shader.code = "shader_type canvas_item; uniform float head_cut_y; void fragment() { if (UV.y < head_cut_y) { COLOR.a = 0.0; } }"
-		_head_mask = ShaderMaterial.new()
-		_head_mask.shader = shader
+	if not kit.crown_marks.is_empty():
+		_mark_material = ShaderMaterial.new()
+		_mark_material.shader = preload("res://src/ui/illustrated_crown_facing.gdshader")
 	_refresh()
 
 
@@ -61,13 +52,10 @@ func _refresh() -> void:
 	body.scale.x *= 1.0 if face_right else -1.0
 	if not walking and pose == "idle":
 		body.position.y -= (sin(_clock * 2.2) + 1.0) * height * 0.003
-	if west_head != null:
-		west_head.visible = not face_right and kit.head_anchors.has(frame)
-		body.material = _head_mask if west_head.visible else null
-		if west_head.visible:
-			var anchor: Vector2 = kit.head_anchors[frame]
-			_head_mask.set_shader_parameter("head_cut_y", (anchor.y - 5.0) / float(body.texture.get_height()))
-			west_head.position = body.position + (anchor - kit.foot_for(frame)) * body.scale
-			# The separate head was drawn facing left, with the mark over its
-			# anatomical left brow. Its texture never receives the body's flip.
-			west_head.scale = Vector2.ONE * absf(body.scale.y)
+	body.material = _mark_material if not face_right and kit.crown_marks.has(frame) else null
+	if body.material != null:
+		var source: Rect2 = kit.crown_marks[frame]
+		var target := Rect2(source.position + Vector2(-32, 3), source.size)
+		_mark_material.set_shader_parameter("source_mark", Vector4(source.position.x, source.position.y, source.size.x, source.size.y))
+		_mark_material.set_shader_parameter("target_mark", Vector4(target.position.x, target.position.y, target.size.x, target.size.y))
+		_mark_material.set_shader_parameter("skin_sample", source.get_center() + Vector2(-14, 2))

@@ -60,28 +60,37 @@
   "action_cleanup_source": "assets/source/illustrated_pilot/kai_clean_gemini_sheet.png",
   "preparation": "isnet-general-use matting; component cleanup; shared character scale; lower-body foot anchors; hand anchors reviewed on 640px output",
   "walk_source": "assets/source/illustrated_pilot/kai_walk_gemini_sheet.png",
-  "head_anchors": {
+  "walk_stride_height": 0.65,
+  "crown_marks": {
     "idle": [
-      383.0,
-      246
+      408,
+      180,
+      8,
+      10
     ],
     "walk_1": [
-      371.0,
-      254
+      396,
+      186,
+      10,
+      11
     ],
     "walk_2": [
-      381.0,
-      252
+      405,
+      185,
+      10,
+      10
     ],
     "walk_3": [
-      375.0,
-      246
+      400,
+      178,
+      10,
+      12
     ],
     "walk_4": [
-      388.0,
-      246
+      414,
+      180,
+      8,
+      10
     ]
-  },
-  "walk_stride_height": 0.65,
-  "head_west_source": "assets/source/illustrated_pilot/kai_head_west_gemini_sheet.png"
+  }
 }

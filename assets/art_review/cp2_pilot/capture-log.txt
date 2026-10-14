@@ -20,8 +20,8 @@ CAPTURE 04-spar-impact
 CAPTURE 05-dialogue
 --------------------------------------------------------------------------------
 Done recording movie at path: /tmp/vael-cp2-pilot.avi
-1079 frames at 60 FPS (movie length: 00:00:17:59), recorded in 00:00:23 (73% of real-time speed).
-CPU render time: 0.32 seconds (average: 0.30 ms/frame)
+1058 frames at 60 FPS (movie length: 00:00:17:38), recorded in 00:00:26 (65% of real-time speed).
+CPU render time: 0.35 seconds (average: 0.33 ms/frame)
 GPU render time: 0.00 seconds (average: 0.00 ms/frame)
-Encoding time: 5.26 seconds (average: 4.87 ms/frame)
+Encoding time: 6.23 seconds (average: 5.89 ms/frame)
 --------------------------------------------------------------------------------

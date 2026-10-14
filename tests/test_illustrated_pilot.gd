@@ -147,18 +147,22 @@ func test_walk_pose_tracks_travel_instead_of_elapsed_time():
 	assert_eq(slow.body.texture, planted, "stationary feet do not keep stepping")
 
 
-func test_west_facing_uses_authored_head_without_reflecting_its_mark():
+func test_west_facing_keeps_original_head_geometry_and_only_changes_mark_material():
 	var kit := IllustratedArt.from_directory("res://assets/art/illustrated_pilot/kai")
 	var actor := IllustratedActor.new()
 	add_child_autofree(actor)
 	actor.setup(kit, Vector2.ZERO, 150.0)
 	actor.set_process(false)
+	var texture := actor.body.texture
+	var size := actor.body.scale.abs()
+	var offset := actor.body.offset
 	actor.face_right = false
 	actor._refresh()
-	assert_true(actor.west_head.visible)
-	assert_eq(actor.west_head.texture, kit.textures["head_west"])
-	assert_gt(actor.west_head.global_transform.x.x, 0.0, "west head retains its authored orientation")
+	assert_eq(actor.body.texture, texture, "facing preserves the exact original head drawing")
+	assert_eq(actor.body.scale.abs(), size, "facing never changes head/body dimensions")
+	assert_eq(actor.body.offset, offset)
+	assert_eq(actor.get_child_count(), 1, "no differently sized head overlay")
+	assert_not_null(actor.body.material)
 	actor.face_right = true
 	actor._refresh()
-	assert_false(actor.west_head.visible)
-	assert_null(actor.body.material, "east face is restored cleanly")
+	assert_null(actor.body.material, "east mark needs no correction")

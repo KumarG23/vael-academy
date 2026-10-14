@@ -60,27 +60,5 @@
   "action_cleanup_source": null,
   "preparation": "isnet-general-use matting; component cleanup; shared character scale; lower-body foot anchors; hand anchors reviewed on 640px output",
   "walk_source": "assets/source/illustrated_pilot/serra_gemini_sheet.png",
-  "head_anchors": {
-    "idle": [
-      289.0,
-      165
-    ],
-    "walk_1": [
-      321.0,
-      147
-    ],
-    "walk_2": [
-      333.0,
-      146
-    ],
-    "walk_3": [
-      322.0,
-      147
-    ],
-    "walk_4": [
-      330.0,
-      139
-    ]
-  },
   "walk_stride_height": 0.65
 }

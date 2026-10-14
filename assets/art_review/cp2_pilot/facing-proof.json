@@ -1,0 +1,35 @@
+{
+  "east": {
+    "head_bounds": [
+      85,
+      21,
+      177,
+      112
+    ],
+    "head_size": [
+      92,
+      91
+    ]
+  },
+  "west": {
+    "head_bounds": [
+      58,
+      21,
+      150,
+      112
+    ],
+    "head_size": [
+      92,
+      91
+    ]
+  },
+  "east_crown": {
+    "green_pixel_count": 55
+  },
+  "west_crown": {
+    "green_pixel_count": 51
+  },
+  "west_old_brow": {
+    "green_pixel_count": 4
+  }
+}

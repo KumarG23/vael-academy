@@ -8,8 +8,8 @@ Deprecated           13
 Scripts              79
 Tests               538
 Passing Tests       538
-Asserts            3258
-Time              36.033s
+Asserts            3259
+Time              35.758s
 
 
 ---- All tests passed! ----

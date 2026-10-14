@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://iqvm7sq501xx"
-path="res://.godot/imported/head_west.png-68d6d688d40c37dfe06f87970903b979.ctex"
+uid="uid://wvxkmfso1fjj"
+path="res://.godot/imported/facing-proof.png-27145a6cd6b0fcd49359e9157ae09e09.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/illustrated_pilot/kai/head_west.png"
-dest_files=["res://.godot/imported/head_west.png-68d6d688d40c37dfe06f87970903b979.ctex"]
+source_file="res://assets/art_review/cp2_pilot/facing-proof.png"
+dest_files=["res://.godot/imported/facing-proof.png-27145a6cd6b0fcd49359e9157ae09e09.ctex"]
 
 [params]
 
