@@ -231,6 +231,31 @@ These captures support visible legibility/overlap findings. Keyboard focus, redu
 **Where gameplay was left:** AW-79 still needs sealed-door/sanctum selection and music when tracks arrive. The year-one story/support work remains co-written with Neal; the calendar, house routes, activities, inventory, grading and mid-battle saves already exist. Their prior backlog remains valid after the art pilot. No gameplay work order or new art production was implemented during this audit.
 
 
+## CP-7 implementation / Neal's approval — 2026-10-15
+
+Baseline named green commit: **6394aef2 (CP-6)**. Implementer's record,
+not an independent audit. Neal approves illustrated B, its color/magic pass
+and removal of illustrated walking; pixel world/tactics stays selected.
+
+- **Reported defect:** Serra appears to go down before being hit. Actual HP
+  order was correct, but the inherited lethal reaction snapped to the kneeling
+  defeat pose at contact, so hit-stop froze an already-collapsed figure.
+- **CP-7 fix:** B's lethal reaction uses upright hit/recoil + 0.16s hold after
+  hit-stop, then defeat knockback/fade. Reuses HitReaction classification;
+  actual contact HP, native results, full counter order and anatomy unchanged.
+- **Evidence:** native 1152×648/60fps movie and stills in
+  `assets/art_review/cp7_defeat/`. Ordinary/critical lethal contact precedes
+  collapse by 24 rendered frames (0.4s including hit-stop). Upright impact and
+  later collapse visually inspected. Kneeling art omits Serra's lance; remains
+  an explicit still-art limitation. No generated art or import/spend.
+- **Verification:** **553/553 tests, 3,604 assertions, 83 scripts, 110.828s**.
+  New native ordinary/critical timing regression: 1/1, 32 assertions. Existing
+  CP-6 replay parity, miss, real tactical input/RNG and campaign checks green.
+  Inherited 13 deprecations/two ObjectDB/one resource exit reports remain.
+- **Next proposed scope:** one supported existing real Kai/Serra encounter
+  integration, preserving executor progression/weapon uses/yield/map return
+  and existing unsupported-unit presentation policy. No roster production.
+
 ## CP-6 implementation / A-B review record — 2026-10-15
 
 Baseline named green commit: **32cf058c (CP-5)**. This is the implementer's

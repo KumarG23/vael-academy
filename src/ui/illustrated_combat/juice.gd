@@ -64,6 +64,19 @@ func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill:
 	var magical := active_striker.weapon().is_magical()
 	var profile := CombatFxProfile.build(active_striker.unit_def, active_striker.weapon())
 	effects.burst(target.global_position + target.combat_aim_offset(), profile.magic_color if magical else profile.melee_color, strike.was_crit, magical)
+	if HitReaction.classify(strike, is_kill, target.max_hp(), cfg.stagger_hp_frac) == HitReaction.Kind.KNOCKBACK:
+		# Read the upright impact before revealing the already-collapsed key pose.
+		# HP still changes at contact; only the visual collapse is delayed.
+		target.set_illustrated_pose("parry_hit")
+		var home := target.position
+		var reaction := target.create_tween()
+		reaction.tween_property(target, "position", home + toward * cfg.flinch_distance, cfg.reaction_out * 1.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		reaction.tween_interval(float(presentation_data["timing"]["defeat_hit_hold"]))
+		reaction.tween_callback(func() -> void:
+			target.set_illustrated_pose("defeat")
+			beat.emit("defeat"))
+		reaction.tween_property(target, "position", home + toward * cfg.knockback_distance, cfg.reaction_back).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		return reaction
 	return super._react_target(target, toward, strike, is_kill)
 
 

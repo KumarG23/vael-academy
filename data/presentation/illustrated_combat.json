@@ -40,6 +40,7 @@
     "commit": 0.12,
     "critical_hold": 0.18,
     "contact_hold": 0.13,
+    "defeat_hit_hold": 0.16,
     "recovery": 0.26,
     "cast_gather": 0.52,
     "projectile": 0.36

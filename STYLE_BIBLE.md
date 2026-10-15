@@ -1,11 +1,13 @@
 # STYLE_BIBLE.md — AW-1 v6.5 (maps doctrine: HYBRID)
 
-> **CURRENT PREFERENCE — CP-6, Neal's A/B review:** illustrated **B** combat
-> characters look better; keep the pixel-art world/tactical maps. Strengthen
-> B's color/magical character with warm lighting and emerald/gold HD effects.
-> Use approved whole key poses + shared Godot timing/reactions; preserve anatomy,
-> face, costume and Crown-mark. The color pass awaits review. A remains a
-> comparison/reference, not the selected battle direction. No roster rollout.
+> **APPROVED DIRECTION — CP-7, Neal's review, 2026-10-15:** pixel-art
+> world/exploration/tactical maps; illustrated **B** battles. Neal approved the
+> richer color/magic pass and removal of illustrated walking: "definitely this
+> is the direction to go." Use whole key poses + shared Godot timing/reactions
+> and HD effects; preserve anatomy, face, costume and Crown-mark. No illustrated
+> gait/limb deformation. A remains preserved comparison evidence. Fix the reported
+> defeat timing, then integrate one supported real encounter before roster
+> production. Direction approval does not approve unseen character/weapon kits.
 
 
 > **A/B decision history — Neal, 2026-10-15 (CP-6).** World,
