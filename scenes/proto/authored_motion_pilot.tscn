@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://q30p5a2hd73k"]
+
+[ext_resource type="Script" uid="uid://bt6e6qyqakxua" path="res://src/proto/authored_motion_pilot.gd" id="1_tdmnr"]
+
+[node name="AuthoredMotionPilot" type="Node2D" unique_id=486504656]
+script = ExtResource("1_tdmnr")

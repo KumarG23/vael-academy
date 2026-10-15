@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M2 (Apple8)
+
+Movie Maker mode enabled, recording movie in 1152×648 @ 60 FPS...
+CAPTURE 01-human-idle
+HUMAN height 1.82871651649475 factor 0.58928563062865 nominal speed 131.326492640347
+CAPTURE 02-human-walk
+CAPTURE 03-human-return
+CAPTURE 04-human-turn
+CAPTURE 05-formal-walk
+CAPTURE 06-grip-close
+--------------------------------------------------------------------------------
+Done recording movie at path: /tmp/vael-cp4-motion-review.avi
+876 frames at 60 FPS (movie length: 00:00:14:36), recorded in 00:00:16 (87% of real-time speed).
+CPU render time: 0.04 seconds (average: 0.05 ms/frame)
+GPU render time: 0.00 seconds (average: 0.00 ms/frame)
+Encoding time: 4.84 seconds (average: 5.53 ms/frame)
+--------------------------------------------------------------------------------

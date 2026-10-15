@@ -46,6 +46,7 @@ const DEV_JUMPS := [
 	["▶ Prologue battle", "prologue"],
 	["▶ The Awakening (prologue VN)", "awakening"],
 	["▶ Illustrated art pilot", "illustrated"],
+	["▶ Authored motion pilot", "authored_motion"],
 	["Back", "back"],
 ]
 
@@ -69,6 +70,8 @@ func _open_dev() -> void:
 
 func _dev_jump(kind: String) -> void:
 	match kind:
+		"authored_motion":
+			get_tree().change_scene_to_file.call_deferred("res://scenes/proto/authored_motion_pilot.tscn")
 		"illustrated":
 			get_tree().change_scene_to_file.call_deferred("res://scenes/proto/illustrated_pilot.tscn")
 		"castle":

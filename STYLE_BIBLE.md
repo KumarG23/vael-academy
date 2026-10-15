@@ -1,5 +1,19 @@
 # STYLE_BIBLE.md — AW-1 v6.5 (maps doctrine: HYBRID)
 
+> **CP-4 motion foundation, 2026-10-15:** Neal accepted the grey human
+> mannequin's artist-authored walk and true turn; preserve both. The knight
+> look was rejected and removed. Quaternius's CC0 rig renders through a
+> transparent viewport into the existing painted 2D scene; KayKit supplies only
+> an attached sword. Corrected blade/guard direction is index/thumb → blade,
+> little finger → pommel; carrying wrist tilted -35°. The correction is captured,
+> **awaiting Neal's visual review**. This proves a reusable animation foundation,
+> not Kai's appearance or a production style. Kai's clothes, hair, face/left-brow
+> mark and painted material treatment need another art pass. The green head
+> marker is diagnostic. Preserve CP-2's liked combat/cast art; do not expand to
+> the cast or change gameplay projection from this proof. Source licenses/hashes:
+> `assets/source/authored_motion/README.md`; runnable review/clip:
+> `assets/art_review/cp4_motion/README.md`. 542 tests green.
+
 > **CP-3 review, 2026-10-14:** Neal rejected the detached-parts procedural walk,
 > including its joint/grip correction: motion still looks injured/awkward and
 > the sword backward. That runtime was removed; CP-2 is restored. Walking is
