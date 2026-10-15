@@ -1,0 +1,91 @@
+{
+  "effects": [
+    {
+      "name": "white_slash",
+      "element": "white",
+      "shape": "slash",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frames": 16,
+      "fps": 30,
+      "loop": false,
+      "columns": 8,
+      "rows": 2,
+      "cell": {
+        "256": [
+          256,
+          256
+        ],
+        "128": [
+          128,
+          128
+        ],
+        "pixel": [
+          64,
+          64
+        ]
+      },
+      "file": "white/white_slash.png"
+    },
+    {
+      "name": "white_hit",
+      "element": "white",
+      "shape": "hit",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frames": 12,
+      "fps": 30,
+      "loop": false,
+      "columns": 8,
+      "rows": 2,
+      "cell": {
+        "256": [
+          256,
+          256
+        ],
+        "128": [
+          128,
+          128
+        ],
+        "pixel": [
+          64,
+          64
+        ]
+      },
+      "file": "white/white_hit.png"
+    },
+    {
+      "name": "gold_crit",
+      "element": "gold",
+      "shape": "crit",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frames": 20,
+      "fps": 30,
+      "loop": false,
+      "columns": 8,
+      "rows": 3,
+      "cell": {
+        "256": [
+          256,
+          256
+        ],
+        "128": [
+          128,
+          128
+        ],
+        "pixel": [
+          64,
+          64
+        ]
+      },
+      "file": "gold/gold_crit.png"
+    }
+  ]
+}

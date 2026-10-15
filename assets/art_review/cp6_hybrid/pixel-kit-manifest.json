@@ -1,0 +1,212 @@
+{
+  "kai": {
+    "character_id": "bd17ee88-5685-455b-b9a6-465c6706d855",
+    "source_archive": "assets/source/pixellab/kai_battle_pro/kai_battle_pro.zip",
+    "archive_sha256": "c2c9831d9dea031f41d58b6b63e8ab4bc977a7fde9d507c8a1177fde092f182b",
+    "new_generation_calls": 0,
+    "new_cleanup_frames": 0,
+    "animations": {
+      "idle": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/kai/idle_east/idle_f1.png": "91ccb8d3345c069b9f3c39911ed6289a1ec7c2f92a419921df8c0eb34b982bce",
+          "assets/art/pixellab/kai/idle_east/idle_f2.png": "0b5dc0faa76a5b74f80844b086ed22d836ad22f945da5d39897eee44c0fa5ac1",
+          "assets/art/pixellab/kai/idle_east/idle_f3.png": "5b26634b5c92fd70b37b7bbe8f3874990540b8cd327f233b134638c18a83ccd0",
+          "assets/art/pixellab/kai/idle_east/idle_f4.png": "dd55e73d4c7584677a1f030555c5cb987b3c9364c5eb566ffe7b1131d53d7ac3",
+          "assets/art/pixellab/kai/idle_east/idle_f5.png": "2e7b2be4d26a05cdbe5cfd26bbea2ffe0592e16e552f25d384f620ba96d8b1a6",
+          "assets/art/pixellab/kai/idle_east/idle_f6.png": "c212a6e1ad076e2e807dffdeec1188bcd72d59ea960cca6e05eca69f4985078e",
+          "assets/art/pixellab/kai/idle_east/idle_f7.png": "6bef375c70539455ea9ce61a0602b0c676c0d2e55326013551b214dac99ef71a",
+          "assets/art/pixellab/kai/idle_east/idle_f8.png": "b2ee7c6946490c6edfcac7a09d02f4aef43151f97303555f93b307c6c2e0ab15",
+          "assets/art/pixellab/kai/idle_east/idle_f9.png": "3cbd0f8f5a213d9040804da1087ba2cf728e6a6bd2c6361276c7ce7e7204e2f2"
+        }
+      },
+      "attack_wind": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/kai/attack_wind_east/attack_wind_f1.png": "91ccb8d3345c069b9f3c39911ed6289a1ec7c2f92a419921df8c0eb34b982bce",
+          "assets/art/pixellab/kai/attack_wind_east/attack_wind_f2.png": "e9db8e25143d9ac6cf354d1e3e4d3add4059dcac9a4fdc02b12c03059c689def",
+          "assets/art/pixellab/kai/attack_wind_east/attack_wind_f3.png": "c333c464b0d1ca39967ede55f0bd5d2833b341497870f260f80f7d8e51a8c7ae",
+          "assets/art/pixellab/kai/attack_wind_east/attack_wind_f4.png": "c816a8d3530cc7514cf049b3250098b588a3d4e3ba36c972741fd2296cd74507",
+          "assets/art/pixellab/kai/attack_wind_east/attack_wind_f5.png": "e72cc3b16c8d74dbdc46bee4bc7db00319389718acda0dd23220eeb520cd819a",
+          "assets/art/pixellab/kai/attack_wind_east/attack_wind_f6.png": "80676f7e5062f4dd3f9db2f3e8c31bad5c572afd74d5b18768168b0cbe8bdd70",
+          "assets/art/pixellab/kai/attack_wind_east/attack_wind_f7.png": "a59ffb7d18281269d84e9880df335f6fae87221c0cf075fb197c41f79e9b5539",
+          "assets/art/pixellab/kai/attack_wind_east/attack_wind_f8.png": "5008d6101c7f46bd25fb9d39484612291ae51643a43857571ea7846b58a6b5db",
+          "assets/art/pixellab/kai/attack_wind_east/attack_wind_f9.png": "faba7ab8dfe8b85db16498de302d724b89fb1cb84446ecbb7c8ef4a202f92c4b"
+        }
+      },
+      "attack_strike": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/kai/attack_strike_east/attack_strike_f1.png": "faba7ab8dfe8b85db16498de302d724b89fb1cb84446ecbb7c8ef4a202f92c4b",
+          "assets/art/pixellab/kai/attack_strike_east/attack_strike_f2.png": "6fffc2f097f30ba60e8c66a7c5aef8fcb8a0aa80f97676f393b472a95a09f62a",
+          "assets/art/pixellab/kai/attack_strike_east/attack_strike_f3.png": "5b560975c3f20253b55fa3e3aa98653708c3244d94989696951a76256dd99781",
+          "assets/art/pixellab/kai/attack_strike_east/attack_strike_f4.png": "85cb8d989dbbe63a9e2d84e051e99da90bb8e5b3a02b7e18e1e30d152c895825",
+          "assets/art/pixellab/kai/attack_strike_east/attack_strike_f5.png": "901ff43f0f393dc09aaa6fb34aac65a15e37e4fb31a7cd69b8b042685cc14795",
+          "assets/art/pixellab/kai/attack_strike_east/attack_strike_f6.png": "a01bde38fa806ac2f883a23a896a3e7ba06d2579642ddaae5f6cc57892c592d8",
+          "assets/art/pixellab/kai/attack_strike_east/attack_strike_f7.png": "526f9c1719b98c43e3362ee2bfefe6d4f8aba776bbcbe26270a07d8945567084",
+          "assets/art/pixellab/kai/attack_strike_east/attack_strike_f8.png": "242a95bce29f71333b640171c709f09f5cb8ed6b8f530826e7005f822683e3d0",
+          "assets/art/pixellab/kai/attack_strike_east/attack_strike_f9.png": "09b0b9d85ea4db0a8b8fcdea02dad42c5f9e22abd3628172bce6898fc26a9c8a"
+        }
+      },
+      "crit_wind": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/kai/crit_wind_east/crit_wind_f1.png": "91ccb8d3345c069b9f3c39911ed6289a1ec7c2f92a419921df8c0eb34b982bce",
+          "assets/art/pixellab/kai/crit_wind_east/crit_wind_f2.png": "1a889fa2bf35b043bc332a08a66d2fd7f712109dde829eb0e729ad08a18c42b3",
+          "assets/art/pixellab/kai/crit_wind_east/crit_wind_f3.png": "927de729bf9dcb6c188cbd651e09638175580ddf893c24e3cdfc1be46e59e29a",
+          "assets/art/pixellab/kai/crit_wind_east/crit_wind_f4.png": "d6866bc7de2e32d07c8c2f11da73ec70ee2de16cca7ded4a9c63c7f277b9f1ad",
+          "assets/art/pixellab/kai/crit_wind_east/crit_wind_f5.png": "a8bb5d0229cd97ceeb58aed1dcc3aca54942b0302193989d014aef14858618da",
+          "assets/art/pixellab/kai/crit_wind_east/crit_wind_f6.png": "2c80eeb920c518cc23e44e4ed9e361db977cbd63909926fe2519f67de6df1afe",
+          "assets/art/pixellab/kai/crit_wind_east/crit_wind_f7.png": "c7d03c70a637fe16dea5864466378704c2f48ea958aae5c9dd8f8e8b953aa41b",
+          "assets/art/pixellab/kai/crit_wind_east/crit_wind_f8.png": "021cff8c92f21d70c8bf28f0cd65a88e3d299abe48602281929790072380e3f2",
+          "assets/art/pixellab/kai/crit_wind_east/crit_wind_f9.png": "6454209e85ef39e7246ce176bfd542b30ae52fcc2b5733f066e1ac7c32d02b5a"
+        }
+      },
+      "crit_strike": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/kai/crit_strike_east/crit_strike_f1.png": "6454209e85ef39e7246ce176bfd542b30ae52fcc2b5733f066e1ac7c32d02b5a",
+          "assets/art/pixellab/kai/crit_strike_east/crit_strike_f2.png": "cfb5ec9332f00bec6d9d6daf57ed5fb349116c5e461dac2095ec56bb50f82552",
+          "assets/art/pixellab/kai/crit_strike_east/crit_strike_f3.png": "98435debd59f0c6a8ea3458dbc810ef8382fc8c040c216e686d67378aec61593",
+          "assets/art/pixellab/kai/crit_strike_east/crit_strike_f4.png": "1ea9691cf6bebfde29df2138ac9368cdd29f69780dd971e6781dead2b0ab0647",
+          "assets/art/pixellab/kai/crit_strike_east/crit_strike_f5.png": "0ffe129476b9710a9f83b432295a3b49ff53830c92231d6c6900318aa3d41d57",
+          "assets/art/pixellab/kai/crit_strike_east/crit_strike_f6.png": "ee264a226f867981a146715c09d0929e2c9efd46d1ad8ef872be33c46cb81d16",
+          "assets/art/pixellab/kai/crit_strike_east/crit_strike_f7.png": "f5981d78608da8c99a2bd88b4bc17b8efa3e4117f62b27255c093093f758091b",
+          "assets/art/pixellab/kai/crit_strike_east/crit_strike_f8.png": "8be6c1e5f79f9fb4a479512215d308377abca4e4f75c774a656a16a57be9351b",
+          "assets/art/pixellab/kai/crit_strike_east/crit_strike_f9.png": "6cef57d7b33cbb3f59439fc13899532c1b969c00b8d74cf49d4783843fa1a744"
+        }
+      },
+      "hit": {
+        "frame_count": 7,
+        "files": {
+          "assets/art/pixellab/kai/hit_east/hit_f1.png": "91ccb8d3345c069b9f3c39911ed6289a1ec7c2f92a419921df8c0eb34b982bce",
+          "assets/art/pixellab/kai/hit_east/hit_f2.png": "8d50e0af5a890da3336ace113a16cab723b41f3c38a262188eb318ca7c0dc344",
+          "assets/art/pixellab/kai/hit_east/hit_f3.png": "1cd4477be8244e3b75cb9367a6b1836163d683e8a4e96f1d7b59e77d0f5c0367",
+          "assets/art/pixellab/kai/hit_east/hit_f4.png": "c09ffed3ed0dd84e7dc11ae797e4bb1dad50bb63a89592fada0f3021efdab89d",
+          "assets/art/pixellab/kai/hit_east/hit_f5.png": "c8eb1e81c69e1bea86fd58d10225095fb4f82f605611d43c385c068779180e86",
+          "assets/art/pixellab/kai/hit_east/hit_f6.png": "3107280b048253e927f86129a2050e3518861a0cb1b00138c8a2b77f35f382e1",
+          "assets/art/pixellab/kai/hit_east/hit_f7.png": "20dec30c085a4b12caf3b4d304e84d7a14e40d84d2ac9c7522e18a703b1b7555"
+        }
+      },
+      "ko": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/kai/ko_east/ko_f1.png": "91ccb8d3345c069b9f3c39911ed6289a1ec7c2f92a419921df8c0eb34b982bce",
+          "assets/art/pixellab/kai/ko_east/ko_f2.png": "61d9481b71afc07de3b9b590e8f4fd524447b41ebe461023a05159ebcbe41969",
+          "assets/art/pixellab/kai/ko_east/ko_f3.png": "72ceb6cb80a9bfa3175ac319e655545e09d652a3b52217108be5b88473a2d992",
+          "assets/art/pixellab/kai/ko_east/ko_f4.png": "d2179ebbfa09140a0a1910cf881c895d983b5e6b004238fcdd745fd20094cf51",
+          "assets/art/pixellab/kai/ko_east/ko_f5.png": "1c2b56a29b166600eb4b081fcaaa78f67a8c8ac55ea098ada75a0c18601d6ec4",
+          "assets/art/pixellab/kai/ko_east/ko_f6.png": "de1a0ea5cdb7127fc70f515bb168ed9c33d6120518f316b2b795cdd61d887f0a",
+          "assets/art/pixellab/kai/ko_east/ko_f7.png": "abe289ca513ab91140c76bf69729cf5eab901e1c71dfe85ea7274d646a4af571",
+          "assets/art/pixellab/kai/ko_east/ko_f8.png": "9aea4a44f6bcb9ffbf6d40e0143be103bd193ee437f57f7d54fa6a5666ce46e3",
+          "assets/art/pixellab/kai/ko_east/ko_f9.png": "aaf60b21c7ca17f8e7158591ea52dda0e732dea5f722fe19a81a31f1cfb5849b"
+        }
+      }
+    }
+  },
+  "serra": {
+    "character_id": "d40d9a93-7610-44c5-b556-894ef5b9fecf",
+    "source_archive": "assets/source/pixellab/serra_battle_pro/serra_battle_pro.zip",
+    "archive_sha256": "83dabb27bea1b596c0885e3cd3485367b699870a1dd9b4c96fbe948abd391c6a",
+    "new_generation_calls": 0,
+    "new_cleanup_frames": 0,
+    "animations": {
+      "idle": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/serra/idle_east/idle_f1.png": "bfc4eaf210bfd7a91341f0a2cb191c51da56f9c9723708ab11842e4639c17cea",
+          "assets/art/pixellab/serra/idle_east/idle_f2.png": "df702b73126f4083a8be9ac5d1a1c50c5e3c6974e9c2fdf6cf2cb560be9c6f0c",
+          "assets/art/pixellab/serra/idle_east/idle_f3.png": "47ba83d57277b0056c3cee0998af845dbbf5f7e80fc67da0a009560413a283fc",
+          "assets/art/pixellab/serra/idle_east/idle_f4.png": "6006bd2158f57ddafa5bfde6080118279120630387862d870fd170dcc559f612",
+          "assets/art/pixellab/serra/idle_east/idle_f5.png": "138025bee61d8f058268e1694b8435cfd3ffe533827af3cd407ec96dd4d3d5ec",
+          "assets/art/pixellab/serra/idle_east/idle_f6.png": "98f89733471011a19a0605c6f45e161950aaa71ac4aaa6ae41467be15b1b1459",
+          "assets/art/pixellab/serra/idle_east/idle_f7.png": "11b912d31c66a4972e6614ac6db398858d2120d41c5a305174b837fd4ce5c6cf",
+          "assets/art/pixellab/serra/idle_east/idle_f8.png": "f76afa3517686f7012df007a8baf3373b371b19c0e0a516a38390b3bf22d2d84",
+          "assets/art/pixellab/serra/idle_east/idle_f9.png": "3a9e20a302d28021ca1b33054a29512eec3f3eb758e3d2c873dd2106d79480ea"
+        }
+      },
+      "attack_wind": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/serra/attack_wind_east/attack_wind_f1.png": "bfc4eaf210bfd7a91341f0a2cb191c51da56f9c9723708ab11842e4639c17cea",
+          "assets/art/pixellab/serra/attack_wind_east/attack_wind_f2.png": "08633e7ab15583be9c71f7cb8fc74f22dbbe44908739e2b82a98d87efc1d2b55",
+          "assets/art/pixellab/serra/attack_wind_east/attack_wind_f3.png": "128c3208a446a970676d63e1835e2e94b791e3a5b4ee8e1a7c42a4e9e56a5eb3",
+          "assets/art/pixellab/serra/attack_wind_east/attack_wind_f4.png": "2274020a8285de8dfe2e15b9947e6f45540f5c882d8c88b6f255adfd3afdc6d0",
+          "assets/art/pixellab/serra/attack_wind_east/attack_wind_f5.png": "04149344f1fc915177098798dac4312c11c245726a34bad1c8bc4c8b4fd27dba",
+          "assets/art/pixellab/serra/attack_wind_east/attack_wind_f6.png": "c245e3feffb860e4c8c676d9fd516acf73611de7523d1ad78ce27fd35444d54e",
+          "assets/art/pixellab/serra/attack_wind_east/attack_wind_f7.png": "82e840dc2daebf1a27fe69933c9da7e054366242a3d1fee0da600bf23f0f41f5",
+          "assets/art/pixellab/serra/attack_wind_east/attack_wind_f8.png": "3d9d7ab0d6dfc780f5006fc9e6bce4ce6c5486ff96fb6fa18899cfafb01aa67b",
+          "assets/art/pixellab/serra/attack_wind_east/attack_wind_f9.png": "ef1d0c24a159af73f74c4cba8503b456bf47b30e33de63b6f051520629eb6f7a"
+        }
+      },
+      "attack_strike": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/serra/attack_strike_east/attack_strike_f1.png": "ef1d0c24a159af73f74c4cba8503b456bf47b30e33de63b6f051520629eb6f7a",
+          "assets/art/pixellab/serra/attack_strike_east/attack_strike_f2.png": "d6ba20aba6bf05975e3a22dd16d8e0cd0f8cc0c15ac9bd42a7690024962af4d0",
+          "assets/art/pixellab/serra/attack_strike_east/attack_strike_f3.png": "d4373196f52dd9f4795255c7dc9f78f714152b178de12dbda8baad560433dae9",
+          "assets/art/pixellab/serra/attack_strike_east/attack_strike_f4.png": "c77ab529893ec8f72f709ab31105daec030f57647c91410af1b3b8438bd02354",
+          "assets/art/pixellab/serra/attack_strike_east/attack_strike_f5.png": "fbd562c1ff732b584f25c7fa48de7419548819927f4234eae54d1b48e359c675",
+          "assets/art/pixellab/serra/attack_strike_east/attack_strike_f6.png": "a3e9b585bd0d56b2091877a49f718b3bb3969a5b4a850f2e99bc14034569d4a1",
+          "assets/art/pixellab/serra/attack_strike_east/attack_strike_f7.png": "c4e5045a02c60b8125496d675e3d40da6e76335f391eeff4903d4ca5e2ee325d",
+          "assets/art/pixellab/serra/attack_strike_east/attack_strike_f8.png": "65c3ddbfdce71f595fefc5757f3edb9f636b580d3cf99bb52457b881948f137a",
+          "assets/art/pixellab/serra/attack_strike_east/attack_strike_f9.png": "71fd5f8d276c36ffbaa0d3fc08ec188ffeedf16c604eb14383b4d2a09b724943"
+        }
+      },
+      "crit_wind": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/serra/crit_wind_east/crit_wind_f1.png": "bfc4eaf210bfd7a91341f0a2cb191c51da56f9c9723708ab11842e4639c17cea",
+          "assets/art/pixellab/serra/crit_wind_east/crit_wind_f2.png": "0be8d973fcf4e76143be00b4099d218069052de8ef3915cdf46c856130ab770b",
+          "assets/art/pixellab/serra/crit_wind_east/crit_wind_f3.png": "d8d04c04fc5b159e099fd847bfed6e504eed8fac8c843737038e4f1b7a42919d",
+          "assets/art/pixellab/serra/crit_wind_east/crit_wind_f4.png": "1bc155e19674fca72c0a581146de336ba69d1e4ba360750a80a31c0d2c2cb2f9",
+          "assets/art/pixellab/serra/crit_wind_east/crit_wind_f5.png": "3ab8f122587765baa41b118d3c2e18189b82b8ba84ebd64ff0008fe63001bcb4",
+          "assets/art/pixellab/serra/crit_wind_east/crit_wind_f6.png": "3be45d2e5562a3cb27fd5d2e5b44d0fa2fbb516289b5f9037d3b7f6f250d42d0",
+          "assets/art/pixellab/serra/crit_wind_east/crit_wind_f7.png": "e267922a833d8bd46294625a984c8689f4aa3dbb9eee26081e0c6c78d292a586",
+          "assets/art/pixellab/serra/crit_wind_east/crit_wind_f8.png": "d6cc32b2e10e050aada8d0e8a9e7f6849ec4ea6d6a82eabe23a764f7a16d7efd",
+          "assets/art/pixellab/serra/crit_wind_east/crit_wind_f9.png": "1a48f76a2f1bd54b5d24de463f1467f84a421bd7c04a9b3aa97d9d0548274964"
+        }
+      },
+      "crit_strike": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/serra/crit_strike_east/crit_strike_f1.png": "1a48f76a2f1bd54b5d24de463f1467f84a421bd7c04a9b3aa97d9d0548274964",
+          "assets/art/pixellab/serra/crit_strike_east/crit_strike_f2.png": "7fdaf6ae6bcc4a7641772cdfe768fc4bb681b1f91f2eb6882e95ffbe04068362",
+          "assets/art/pixellab/serra/crit_strike_east/crit_strike_f3.png": "c2ae93cb30eb946eea4db1bd16265c50109df22ce058fd5c8cbadd054cc684c0",
+          "assets/art/pixellab/serra/crit_strike_east/crit_strike_f4.png": "b6779f016daad5c5f0a1f4fc8095010b581d81c2220606f4d26c522c6b9a843c",
+          "assets/art/pixellab/serra/crit_strike_east/crit_strike_f5.png": "c5ad2b938bb09825be3e4f6cfe7c363bf2cc168f1b52016253f5f3c6b43f9d45",
+          "assets/art/pixellab/serra/crit_strike_east/crit_strike_f6.png": "184ccbd7cb048aa339634e0ca88b69f1ac810e77beebfe1f1030869295b4ed8d",
+          "assets/art/pixellab/serra/crit_strike_east/crit_strike_f7.png": "f750d0c441de26e2cb77dfe2a6f6f7a6c82d6d1f148e7f64133faa9a5694c73d",
+          "assets/art/pixellab/serra/crit_strike_east/crit_strike_f8.png": "16e4df21fbff519358f9da7c7c37b79bc09f435b5b01fcfe19d618a10339fa62",
+          "assets/art/pixellab/serra/crit_strike_east/crit_strike_f9.png": "f4bb5e3f4d9bb49efec40831843a7324669a2f8aa87baf59715b5dd9873abc53"
+        }
+      },
+      "hit": {
+        "frame_count": 7,
+        "files": {
+          "assets/art/pixellab/serra/hit_east/hit_f1.png": "bfc4eaf210bfd7a91341f0a2cb191c51da56f9c9723708ab11842e4639c17cea",
+          "assets/art/pixellab/serra/hit_east/hit_f2.png": "94b125c744d6f8c403240ce9df8f435c3e0ed9b5c967f55cb0f04accb81da067",
+          "assets/art/pixellab/serra/hit_east/hit_f3.png": "d4ac0aeacef5327e4965487d2bf34c5c73f6ebad489f6a73a901f362b3e96f8c",
+          "assets/art/pixellab/serra/hit_east/hit_f4.png": "a1f75a7cf364b5cf86790160733b7b9efd87f4242523d0e357d103e70e3efad8",
+          "assets/art/pixellab/serra/hit_east/hit_f5.png": "de595696b3b34ae62d769d0cf15be6d7dafcb7016d278e1f0664a2dc9beffacd",
+          "assets/art/pixellab/serra/hit_east/hit_f6.png": "ebafe73c026d560b1d3305bd27bf9cbb5e57f283423df11a1936b2399b4b11b3",
+          "assets/art/pixellab/serra/hit_east/hit_f7.png": "9f74b03782dfad8652a6c77b8bc5b7bc79e52373ff09acd7ef06641d4461ac82"
+        }
+      },
+      "ko": {
+        "frame_count": 9,
+        "files": {
+          "assets/art/pixellab/serra/ko_east/ko_f1.png": "bfc4eaf210bfd7a91341f0a2cb191c51da56f9c9723708ab11842e4639c17cea",
+          "assets/art/pixellab/serra/ko_east/ko_f2.png": "dac77d5ee1cdad7fb066b0e9141fbff671474dce48a8b6cdcfb6ecfa0c1d04b5",
+          "assets/art/pixellab/serra/ko_east/ko_f3.png": "b3238f39774652ff09ab062ce71543b78e376e0119a45fb5b32826ba0ac2e7c3",
+          "assets/art/pixellab/serra/ko_east/ko_f4.png": "7dec0cfa1d32071b532b9f0d834134bd1beab65e0655bd8675536d7db07595e1",
+          "assets/art/pixellab/serra/ko_east/ko_f5.png": "ed98a0ecf4bbb80816696f3be744ac9fe640e593562b599b8feadcc8602e1541",
+          "assets/art/pixellab/serra/ko_east/ko_f6.png": "712043e75edca0ac60e088d4fc54ae0bde2f0f4b4c3086e45163cfbf56e5936a",
+          "assets/art/pixellab/serra/ko_east/ko_f7.png": "b56ffeb4a545ee4b9fda79091c0cbde1839e6153a932266c98cc3388fc0dba47",
+          "assets/art/pixellab/serra/ko_east/ko_f8.png": "696b24748079ceec9e36fac2a24da572dde2a8b53e30a3cc8487fec8fd1b3fc6",
+          "assets/art/pixellab/serra/ko_east/ko_f9.png": "239f521eefa4f0bbbbe6a8ed42402b23a77ae2ff1c6197930b0ae63838b3de37"
+        }
+      }
+    }
+  }
+}

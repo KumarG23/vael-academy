@@ -1,0 +1,47 @@
+{
+  "characters": {
+    "kai": {
+      "art": "res://assets/art/illustrated_pilot/kai",
+      "height": 340.0,
+      "strike_tip": [
+        615,
+        263
+      ],
+      "guard_tip": [
+        495,
+        348
+      ],
+      "pixel_body_height": 85,
+      "blade_base": [
+        438,
+        286
+      ]
+    },
+    "serra": {
+      "art": "res://assets/art/illustrated_pilot/serra",
+      "height": 340.0,
+      "strike_tip": [
+        600,
+        256
+      ],
+      "guard_tip": [
+        581,
+        190
+      ],
+      "pixel_body_height": 80,
+      "blade_base": [
+        533,
+        269
+      ]
+    }
+  },
+  "timing": {
+    "windup": 0.23,
+    "commit": 0.12,
+    "critical_hold": 0.18,
+    "contact_hold": 0.13,
+    "recovery": 0.26,
+    "cast_gather": 0.52,
+    "projectile": 0.36
+  }
+}

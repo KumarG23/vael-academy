@@ -1,0 +1,68 @@
+[gd_resource type="Resource" script_class="ChapterDef" format=3]
+
+[ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_2oilb"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/banner.png" id="2_xhdsq"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/archery_target.png" id="3_udj77"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/well.png" id="4_fy5om"]
+[ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="5_1bb16"]
+[ext_resource type="Resource" path="res://data/units/serra_prologue.tres" id="6_3pn01"]
+[ext_resource type="Resource" path="res://data/units/kai.tres" id="7_mx5un"]
+[ext_resource type="Script" path="res://src/core/chapter_def.gd" id="8_hu231"]
+[ext_resource type="Script" path="res://src/core/visit_spot.gd" id="9_1m3t5"]
+
+[sub_resource type="Resource" id="Resource_v12k0"]
+script = ExtResource("1_2oilb")
+texture = ExtResource("2_xhdsq")
+cell = Vector2i(4, 1)
+
+[sub_resource type="Resource" id="Resource_07ca0"]
+script = ExtResource("1_2oilb")
+texture = ExtResource("2_xhdsq")
+cell = Vector2i(9, 1)
+
+[sub_resource type="Resource" id="Resource_3s1j2"]
+script = ExtResource("1_2oilb")
+texture = ExtResource("3_udj77")
+cell = Vector2i(3, 6)
+
+[sub_resource type="Resource" id="Resource_djoc1"]
+script = ExtResource("1_2oilb")
+texture = ExtResource("4_fy5om")
+cell = Vector2i(10, 6)
+
+[sub_resource type="Resource" id="Resource_rq6u0"]
+script = ExtResource("5_1bb16")
+unit = ExtResource("6_3pn01")
+cell = Vector2i(7, 4)
+team_override = 1
+ai_override = -1
+
+[sub_resource type="Resource" id="Resource_5xf00"]
+script = ExtResource("5_1bb16")
+unit = ExtResource("7_mx5un")
+cell = Vector2i(6, 4)
+team_override = -1
+ai_override = -1
+
+[resource]
+script = ExtResource("8_hu231")
+id = "hybrid_combat_pilot"
+display_name = "The Sunlit Cloister — combat study"
+objective = 0
+seize_cell = Vector2i(-1, -1)
+boss_unit_id = ""
+non_lethal = true
+is_arena = false
+enemy_spawns = Array[ExtResource("5_1bb16")]([SubResource("Resource_rq6u0")])
+deploy_cells = Dictionary[String, Vector2i]({})
+player_spawns = Array[ExtResource("5_1bb16")]([SubResource("Resource_5xf00")])
+intro_dialogue = ""
+outro_dialogue = ""
+boss_quote_dialogue = ""
+boss_yield_dialogue = ""
+width = 14
+height = 8
+terrain = PackedInt32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 11, 0, 0, 11, 0, 0, 11, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1)
+base_terrain = 0
+decor = Array[ExtResource("1_2oilb")]([SubResource("Resource_v12k0"), SubResource("Resource_07ca0"), SubResource("Resource_3s1j2"), SubResource("Resource_djoc1")])
+visits = Array[ExtResource("9_1m3t5")]([])

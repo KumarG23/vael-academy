@@ -77,14 +77,17 @@ func play_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: boo
 		await reaction.finished
 
 
-## Attacker swaps to its cut-out rig, plays the weapon's attack clip on its tile,
-## and the strike's effects (hp, number, shake, recoil, hit-stop) fire on the
-## rig's `impact` beat. Then the flat sprite is restored.
+## CP-6: a presentation may supply a specialized rig; map/CP-2 keep the default.
+func _make_rig() -> CombatRig:
+	return CombatRig.new()
+
+
+## Attacker swaps to its cut-out rig; HP and reactions fire at its impact beat.
 func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: bool) -> void:
 	var toward := (target.position - striker.position).normalized()
 	if toward == Vector2.ZERO:
 		toward = Vector2.RIGHT
-	var rig := CombatRig.new()
+	var rig := _make_rig()
 	striker.get_parent().add_child(rig)
 	# match the unit's on-map sprite exactly (same 32px source, same cell scale
 	# and offset) so swapping the rig in doesn't resize or shift the fighter.

@@ -1,0 +1,178 @@
+{
+ "effects": [
+  {
+   "name": "fire_bolt",
+   "element": "fire",
+   "shape": "bolt",
+   "anchor": [
+    0.78,
+    0.5
+   ],
+   "frames": 16,
+   "fps": 24,
+   "loop": true,
+   "columns": 8,
+   "rows": 2,
+   "cell": {
+    "256": [
+     256,
+     128
+    ],
+    "128": [
+     128,
+     64
+    ],
+    "pixel": [
+     64,
+     32
+    ]
+   },
+   "file": "fire/fire_bolt.png"
+  },
+  {
+   "name": "fire_impact",
+   "element": "fire",
+   "shape": "impact",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "frames": 24,
+   "fps": 30,
+   "loop": false,
+   "columns": 8,
+   "rows": 3,
+   "cell": {
+    "256": [
+     256,
+     256
+    ],
+    "128": [
+     128,
+     128
+    ],
+    "pixel": [
+     64,
+     64
+    ]
+   },
+   "file": "fire/fire_impact.png"
+  },
+  {
+   "name": "ice_bolt",
+   "element": "ice",
+   "shape": "bolt",
+   "anchor": [
+    0.78,
+    0.5
+   ],
+   "frames": 16,
+   "fps": 24,
+   "loop": true,
+   "columns": 8,
+   "rows": 2,
+   "cell": {
+    "256": [
+     256,
+     128
+    ],
+    "128": [
+     128,
+     64
+    ],
+    "pixel": [
+     64,
+     32
+    ]
+   },
+   "file": "ice/ice_bolt.png"
+  },
+  {
+   "name": "ice_impact",
+   "element": "ice",
+   "shape": "impact",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "frames": 24,
+   "fps": 30,
+   "loop": false,
+   "columns": 8,
+   "rows": 3,
+   "cell": {
+    "256": [
+     256,
+     256
+    ],
+    "128": [
+     128,
+     128
+    ],
+    "pixel": [
+     64,
+     64
+    ]
+   },
+   "file": "ice/ice_impact.png"
+  },
+  {
+   "name": "arcane_bolt",
+   "element": "arcane",
+   "shape": "bolt",
+   "anchor": [
+    0.78,
+    0.5
+   ],
+   "frames": 16,
+   "fps": 24,
+   "loop": true,
+   "columns": 8,
+   "rows": 2,
+   "cell": {
+    "256": [
+     256,
+     128
+    ],
+    "128": [
+     128,
+     64
+    ],
+    "pixel": [
+     64,
+     32
+    ]
+   },
+   "file": "arcane/arcane_bolt.png"
+  },
+  {
+   "name": "arcane_impact",
+   "element": "arcane",
+   "shape": "impact",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "frames": 24,
+   "fps": 30,
+   "loop": false,
+   "columns": 8,
+   "rows": 3,
+   "cell": {
+    "256": [
+     256,
+     256
+    ],
+    "128": [
+     128,
+     128
+    ],
+    "pixel": [
+     64,
+     64
+    ]
+   },
+   "file": "arcane/arcane_impact.png"
+  }
+ ]
+}

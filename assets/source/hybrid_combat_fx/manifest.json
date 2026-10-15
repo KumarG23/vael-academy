@@ -1,0 +1,92 @@
+{
+  "retrieved": "2026-10-15",
+  "note": "Only selected unmodified 256px HD sheets, two Godot players and two CC0 particle textures imported. Metadata filtered to installed effects; runtime effects tinted/scaled, no source pixels changed.",
+  "files": [
+    {
+      "path": "addons/hybrid_free_fx/combat_fx.gd",
+      "source_path": "addons/combat_fx/combat_fx.gd",
+      "sha256": "04b83172b9da41dce69812b33dcfaccb0a90b4a2a6549531b687214f63a314c4",
+      "license": "CC BY 4.0",
+      "creator": "heyheythere",
+      "source": "https://heyheythere.itch.io/combat-fx-free"
+    },
+    {
+      "path": "assets/art/hybrid_fx/combat/256/white/white_slash.png",
+      "source_path": "sheets/256/white/white_slash.png",
+      "sha256": "cf40499f8a835931c79a97926845f5eb41988e8a8b21d5ef17a779155ab027e8",
+      "license": "CC BY 4.0",
+      "creator": "heyheythere",
+      "source": "https://heyheythere.itch.io/combat-fx-free"
+    },
+    {
+      "path": "assets/art/hybrid_fx/combat/256/white/white_hit.png",
+      "source_path": "sheets/256/white/white_hit.png",
+      "sha256": "8eb88af8c2529baa919359fc8b26e790c438f5bd51c5e3d7ea9d93a65a88e3c6",
+      "license": "CC BY 4.0",
+      "creator": "heyheythere",
+      "source": "https://heyheythere.itch.io/combat-fx-free"
+    },
+    {
+      "path": "assets/art/hybrid_fx/combat/256/gold/gold_crit.png",
+      "source_path": "sheets/256/gold/gold_crit.png",
+      "sha256": "adb3796acb8b6abf65791d54f8bab203e6b44942f25bc7f421a744cce8c0c93c",
+      "license": "CC BY 4.0",
+      "creator": "heyheythere",
+      "source": "https://heyheythere.itch.io/combat-fx-free"
+    },
+    {
+      "path": "addons/hybrid_free_fx/spell_fx.gd",
+      "source_path": "addons/spell_fx/spell_fx.gd",
+      "sha256": "42b68ed48e9b98a277dfd9d1b339062137221ad8e620a4b34cb01ad778a28791",
+      "license": "CC BY 4.0",
+      "creator": "heyheythere",
+      "source": "https://heyheythere.itch.io/spell-fx-free"
+    },
+    {
+      "path": "assets/art/hybrid_fx/spell/256/arcane/arcane_bolt.png",
+      "source_path": "sheets/256/arcane/arcane_bolt.png",
+      "sha256": "0acf75bd6cfe158608be5fa1cb265f84fe00b85fc52c631527ba115b4a450241",
+      "license": "CC BY 4.0",
+      "creator": "heyheythere",
+      "source": "https://heyheythere.itch.io/spell-fx-free"
+    },
+    {
+      "path": "assets/art/hybrid_fx/spell/256/arcane/arcane_impact.png",
+      "source_path": "sheets/256/arcane/arcane_impact.png",
+      "sha256": "cd7db559dc58ac75a154c1c2d74f7844a31e238b47ec89de2e56ce615cfa2f60",
+      "license": "CC BY 4.0",
+      "creator": "heyheythere",
+      "source": "https://heyheythere.itch.io/spell-fx-free"
+    },
+    {
+      "path": "assets/art/hybrid_fx/kenney/flare_01.png",
+      "source_path": "PNG (Transparent)/flare_01.png",
+      "sha256": "254f5bd4f0548612bf29305d27899efdee8cb8d8306292761ebbddebd3e57935",
+      "license": "CC0",
+      "creator": "Kenney",
+      "source": "https://kenney.nl/assets/particle-pack"
+    },
+    {
+      "path": "assets/art/hybrid_fx/kenney/spark_01.png",
+      "source_path": "PNG (Transparent)/spark_01.png",
+      "sha256": "5902da3a324cad0a4b5a88ce1e3c9cc18fee50922c358ce93d8c9f1ad7708f0a",
+      "license": "CC0",
+      "creator": "Kenney",
+      "source": "https://kenney.nl/assets/particle-pack"
+    }
+  ],
+  "archives": [
+    {
+      "pack": "combat",
+      "sha256": "26dd78458e4277679abd32b259ab8aec46b384b43cd6219d4294ca0eb87a5e49"
+    },
+    {
+      "pack": "spell",
+      "sha256": "c0a718862c2b2a74f49526a2b0d1058694b851730f19d59eb4626364f3edf014"
+    },
+    {
+      "pack": "kenney",
+      "sha256": "b631d4b07f7002549fdcf155f01141ad482f79f3440e4e301eed49ce5f1d8958"
+    }
+  ]
+}

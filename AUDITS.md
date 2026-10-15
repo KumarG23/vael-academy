@@ -229,3 +229,36 @@ These captures support visible legibility/overlap findings. Keyboard focus, redu
 **Proposed pilot review gate:** Neal can watch Kai idle, actually walk, face targets and attack/cast; both combatants stay consistently illustrated through idle→attack→hit/miss→recovery, feet stay planted and damage lands at impact. Show ordinary hit, crit, miss and defeat on a readable painted patch; show the same character in a painted academy room, dialogue and journal. Keep silhouettes/terrain/ranges legible at overview and close zoom. Approve the moving in-engine result before batch production; then resume the game from the current systems/canon state.
 
 **Where gameplay was left:** AW-79 still needs sealed-door/sanctum selection and music when tracks arrive. The year-one story/support work remains co-written with Neal; the calendar, house routes, activities, inventory, grading and mid-battle saves already exist. Their prior backlog remains valid after the art pilot. No gameplay work order or new art production was implemented during this audit.
+
+
+## CP-6 implementation / A-B review record — 2026-10-15
+
+Baseline named green commit: **32cf058c (CP-5)**. This is the implementer's
+record and Neal's comparative review, not an independent audit of itself.
+One WO was revised while uncommitted: initial illustrated-hybrid brief →
+PixelLab A versus illustrated B evaluation → Neal prefers B and requests
+stronger color/magic. No second WO or silent roster rollout.
+
+Reused: unchanged CombatResolver/StrikeResult/CombatForecast/CombatRNG,
+HitReaction/CombatFxProfile, BattleView pixel map/path/menus, CP-2 whole art,
+and PixelLab's existing chained battle kits/player. One JuiceController
+factory hook preserves its default rig and allows B's timing subclass.
+CP-3 procedural anatomy is absent; CP-4/5 and CP-2 originals are preserved.
+
+| Finding | Evidence / disposition |
+|---|---|
+| Comparative visual preference | Neal: **"the 2d version is definitely better than the pixel version. just not as colorful or magical looking as the pixel art."** Prefer B's illustrated actors; borrow A's saturation/elemental expression through HD effects. |
+| Initial B too dim / desaturated | Final pass restores courtyard warmth, tinted emerald blade light, gather motes, larger Crown bolt and colored impact. Reduced blown-out face flash. New color pass remains for Neal's review. |
+| A has useful motion but older identity / spell limitations | Existing 9-frame wind/strike/crit sequences and animated reactions are coherent; four seams are pixel-identical. Older outfit/headband/armor differ from illustrated references; duplicated weapon/afterimage shapes remain in some frames. A's sword gesture for magic is explicitly a placeholder. No new generation or per-frame cleanup. |
+| B's real art limits | Small whole-pose set supports the shown thrusts/Crown-light. No broad slash/draw/independent recovery or unseen directional view; other weapon/cast kits need approved stills. Do not turn those gaps into procedural anatomy fixes. |
+| Cost evidence | 0 new PixelLab, Gemini or ImageGen requests; 0 new pixel cleanup frames. Existing subscription outputs reused. No newly measured per-character yield, current account balance, plan price or roster ROI. |
+| Licenses | Five HD Combat/Spell FX Free sheets (CC BY 4.0), unchanged creator players, two Kenney textures (CC0); hashes/license/adaptation record and in-engine Credits. VFX 2D/Foozle evaluated, not imported. |
+| Mechanics / regression | **552/552 tests, 3,572 assertions; focused 5/5, 186 assertions.** All five native A/B cases match complete results and HP; checks cover contact order, pre-contact miss, actual tactical input, unchanged live RNG consumption/campaign and filtering. Tests are not visual approval. |
+
+Native-resolution GPU evidence, 62.32s A/B reel, 26.63s final B reel (audio),
+screenshots, source hashes, reusable-pipeline notes, caveats and reproduction:
+`assets/art_review/cp6_hybrid/`. Recommended path: illustrated battle actors,
+pixel world/tactics, Gemini still art and shared Godot timing/HD FX; retain
+PixelLab as the world pipeline and battle reference/fallback. Stop at this
+slice for review. No combat formulas, RNG roll order, progression, saves or
+canon changed. Inherited 13 deprecations and exit cleanup reports remain.

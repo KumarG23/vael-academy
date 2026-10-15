@@ -1,5 +1,34 @@
 # STYLE_BIBLE.md — AW-1 v6.5 (maps doctrine: HYBRID)
 
+> **CURRENT PREFERENCE — CP-6, Neal's A/B review:** illustrated **B** combat
+> characters look better; keep the pixel-art world/tactical maps. Strengthen
+> B's color/magical character with warm lighting and emerald/gold HD effects.
+> Use approved whole key poses + shared Godot timing/reactions; preserve anatomy,
+> face, costume and Crown-mark. The color pass awaits review. A remains a
+> comparison/reference, not the selected battle direction. No roster rollout.
+
+
+> **A/B decision history — Neal, 2026-10-15 (CP-6).** World,
+> academy exploration, tactical maps, units/NPCs and environmental animation
+> remain crisp **pixel art** with nearest filtering. **Battle presentation is
+> OPEN**, superseding the earlier same-session illustrated-battle lock. Compare
+> existing PixelLab battle animation against the best CP-2-derived Gemini
+> whole-pose presentation in-engine, using matching resolver scenarios. Choose
+> based on motion/cohesion, character identity, cleanup, maintainability, roster
+> scalability, world fit and cost/value—not resolution or sunk effort.
+> PixelLab is an active paid production resource per Neal; use strategically,
+> no mass generation. Gemini remains useful for still artwork. No assumed A/B
+> winner until captures are reviewed; any recommendation remains for Neal's
+> approval. Preserve CP-2/4/5; no CP-3 procedural cutout revival or 3D migration.
+> Illustrated filtering stays local to that presentation. No cast rollout.
+
+> **Follow-up review — Neal, CP-6:** "the 2d version is definitely better
+> than the pixel version. just not as colorful or magical looking as the pixel
+> art." Prefer illustrated **B** battle characters; retain pixel world/maps.
+> Strengthen B's color, lighting, Crown-light and attack effects while preserving
+> the whole-pose anatomy. Preserve A/B evidence and candid production limits.
+> This is Neal's comparative preference, not approval of a finished roster.
+
 > **CP-5 user correction, 2026-10-15:** Neal rejected the generic clothed 3D
 > model because it did not look like Kai. **Use the existing Kai artwork.**
 > The isolated `kai_art_motion_pilot` retains the exact original head/torso,
