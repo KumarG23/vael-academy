@@ -22,9 +22,8 @@ Neal accepted the grey mannequin's walk and turn on October 14 ("really good")
 and rejected the knight look. That gait and turn are preserved. His remaining
 feedback was a backward sword. The corrected hilt now points blade/guard out
 the index/thumb end, with the pommel toward the little finger; only the carrying
-wrist is tilted to rest the blade forward/down. **This correction is implemented
-and captured; Neal's visual review remains pending.** Tests do not replace that
-review.
+wrist is tilted to rest the blade forward/down. **Neal approved the corrected grip on October 15: "the corrected sword grip
+looks good."** Walk, turn and corrected carry have now passed his review.
 
 | CP-4 acceptance | Evidence |
 |---|---|

@@ -5,8 +5,7 @@
 > look was rejected and removed. Quaternius's CC0 rig renders through a
 > transparent viewport into the existing painted 2D scene; KayKit supplies only
 > an attached sword. Corrected blade/guard direction is index/thumb → blade,
-> little finger → pommel; carrying wrist tilted -35°. The correction is captured,
-> **awaiting Neal's visual review**. This proves a reusable animation foundation,
+> little finger → pommel; carrying wrist tilted -35°. Neal approved the corrected grip on October 15: **"looks good."** This proves a reusable animation foundation,
 > not Kai's appearance or a production style. Kai's clothes, hair, face/left-brow
 > mark and painted material treatment need another art pass. The green head
 > marker is diagnostic. Preserve CP-2's liked combat/cast art; do not expand to
