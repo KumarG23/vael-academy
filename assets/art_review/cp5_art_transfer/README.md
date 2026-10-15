@@ -2,7 +2,9 @@
 
 Neal rejected the first clothed 3D substitute: it did not look like Kai. He asked
 for the existing Kai artwork with the better walking animation. This isolated
-proof follows that correction; **the motion/joins are not yet approved**.
+proof follows that correction. Neal called it **"a pretty good improvement"**
+and requested a forward sword grip and trousers without a knee-pad appearance.
+Those corrections are now implemented; **the corrected art awaits review**.
 
 Open **Title → Dev Jump → Kai art motion test**, or:
 
@@ -16,18 +18,21 @@ resets, **Esc** returns to title. **T shows the actual mannequin turn**. The one
 painted view does not contain Kai's back/side artwork; this proof does not invent
 those views or claim the reflected drawing is a genuine 3D turn.
 
-[Watch the current transfer](pilot.mp4) · [Idle](01-kai-art-idle.png) ·
+[Watch the corrected transfer](corrections_v2/pilot.mp4) ·
+[Corrected close view](corrections_v2/06-kai-art-close.png) ·
+[Corrected return](corrections_v2/03-kai-art-return.png)
+
+Initial transfer evidence retained for comparison: [v1 video](pilot.mp4) · [Idle](01-kai-art-idle.png) ·
 [Walk](02-kai-art-walk.png) · [Return](03-kai-art-return.png) ·
 [Real turn reference](04-mannequin-turn.png) · [Formal walk](05-formal-walk.png) ·
 [Close view](06-kai-art-close.png)
 
 ## What is preserved
 
-The exact original `assets/art/illustrated_pilot/kai/idle.png` supplies head,
-torso and the painted carrying hand/sword. Head UV geometry and scale do not
+The exact original `assets/art/illustrated_pilot/kai/idle.png` supplies head
+and torso. Head UV geometry and scale do not
 change through the walk or return. The established mark-facing shader preserves
-Kai's anatomical-left brow mark. No face replacement or newly generated art is
-used. Accepted CP-2 attack/cast code and CP-4 mannequin code are unchanged.
+Kai's anatomical-left brow mark. No face or torso replacement is used. Accepted CP-2 attack/cast code and CP-4 mannequin code are unchanged.
 
 The clean thigh/boot/foot/sleeve/cape textures already made during CP-3 are
 reused as art only, with source hashes in
@@ -39,8 +44,13 @@ became distorted. Separated artwork is needed for independently moving limbs.
 
 `KaiArtMotion` projects actual UAL thigh/knee/ankle/toe and arm joints into the
 painted scene. Arms keep the illustration's rest registration, then follow the
-source joint displacements. The original painted hand and sword stay together;
-the painted support toe registers at the authored ball joint, with sole angle
+source joint displacements. The corrected carrying forearm, closed hand, hilt, guard and blade stay
+together at uniform scale, pointing forward/down from the index/thumb end.
+This one targeted built-in ImageGen request uses original Kai, the approved
+CP-4 grip and the existing sleeve as references. Raw transparent output, exact
+prompt and hashes: `assets/source/kai_motion_corrections/`. Continuous navy
+trouser cloth now spans the knee and ends inside calf-high boots, removing the
+segmented knee-pad appearance. The painted support toe registers at the authored ball joint, with sole angle
 from the source toe bones. It uses source animation, not a guessed foot path.
 
 ## What still needs art review
@@ -56,7 +66,8 @@ the strength of green tests.
 
 The rejected generic model is disabled in `../cp5_model_rejected/`; it is not
 loaded by this scene or either accepted pilot. Campaign/math/save/canon remain
-unchanged. No new image-generation request, purchase or account was needed.
+unchanged. The first transfer reused existing art; the grip correction uses
+one built-in ImageGen request. No purchase or account was needed.
 
 ## Walk styles verified
 
@@ -73,19 +84,20 @@ character after Kai's artwork/motion method is accepted.
 
 ## Verification and reproduction
 
-**545/545 tests pass, 3,379 assertions.** Three new tests preserve the original
+**546/546 tests pass, 3,385 assertions.** Four CP-5 tests preserve the original
 head texture/UV geometry/scale, sample actual support contact cancelling travel
-within one screen pixel, and verify comparison/real-turn fallback without
-Campaign changes. Tests establish mechanics, not visual acceptance. The suite
+within one screen pixel, verify comparison/real-turn fallback without
+Campaign changes, and sample actual steel/hilt pixels to check forward/down
+blade direction in both facings. Current logs are in `corrections_v2/`. Tests establish mechanics, not visual acceptance. The suite
 retains its inherited 13 deprecations and two object/one resource exit reports.
 
 ```sh
 godot --headless --import
 godot --headless -s addons/gut/gut_cmdln.gd \
   -gdir=res://tests -ginclude_subdirs -gexit
-godot --path . --fixed-fps 60 --write-movie /tmp/vael-cp5-art-review.avi \
-  -s assets/art_review/cp5_art_transfer/capture.gd
+godot --path . --fixed-fps 60 --write-movie /tmp/vael-cp5-art-corrected.avi \
+  -s assets/art_review/cp5_art_transfer/corrections_v2/capture.gd
 ```
 
 The capture needs a real renderer. It writes screenshots to
-`/tmp/vael-cp5-art-captures/`; encode its AVI with ffmpeg as in the CP-4 README.
+`/tmp/vael-cp5-art-corrected-captures/`; encode its AVI with ffmpeg as in the CP-4 README.

@@ -1,0 +1,22 @@
+{
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit / game animation layer. Create ONE isolated illustrated anatomical RIGHT FOREARM + CLOSED HAND + SWORD assembly on a genuinely TRANSPARENT background. Input 1 (Kai) establishes exact clean cel-shaded 2D linework, warm brown skin, navy uniform sleeve, narrow gold cuff and slender steel relic sword with green hilt/guard/edge. DO NOT copy its backward blade direction. Input 2 is the APPROVED GRIP/DIRECTION guide: the same right carrying hand, blade and guard at the INDEX/THUMB end facing forward and diagonally DOWN-RIGHT, pommel at the LITTLE FINGER end behind the fist toward LEFT. Input 3 is a style/material reference for the detached sleeve only. Draw no body, head, upper arm, legs, scene, labels or duplicated parts. Elbow is at upper left-ish (about 30% width, 12% height); forearm hangs almost vertically down to closed warm-brown fist (about 32% width, 45% height). Preserve a natural continuous wrist; fist can pronate naturally to support the approved carry. The four fingers visibly curl around the green grip, thumb closes over them. Hand must clearly grasp the handle INSIDE the fist, not the crossguard or blade. Guard/blade emerge beyond the index/thumb toward image RIGHT; pommel emerges beyond the pinky toward LEFT. From the guard the straight slender blade points diagonally DOWN and RIGHT, approximately 35 degrees below horizontal, ending around 88% width and 88% height. This is a NORMAL forward sword carry, NOT a reverse grip, NOT an icepick grip. Keep blade, guard, grip, fist and cuff in ONE convincing attached assembly; guard should be subtle, not huge. Navy cloth sleeve from elbow to cuff, matching input 1's simple shading and ink outline. Complete rounded elbow overlap, complete blade tip and pommel, generous transparent margins. Do not redesign Kai's sword, do not draw armor or gloves. One forearm/hand/sword sprite only. Match the ORIGINAL KAI ILLUSTRATION, not the grey 3D mannequin's rendering style.",
+  "references": [
+    {
+      "path": "assets/art/illustrated_pilot/kai/idle.png",
+      "sha256": "46b92d2e3a9ebcd2a8872524ae9b44447a503d6366e43af2ec3ea47b1834cd79"
+    },
+    {
+      "path": "assets/art_review/cp4_motion/06-grip-close.png",
+      "sha256": "1e48856a12211538ebb24f1ddd4ff23faa2c5c52ad70133f24c36c15c7148537"
+    },
+    {
+      "path": "assets/art/kai_motion_transfer/forearm.png",
+      "sha256": "d1729acd1cc847acffd3e298b3097bd535624d16cd6e65287fc87153e3c187c8"
+    }
+  ],
+  "output": "carry_forward_v2.png",
+  "output_sha256": "1137063c0b5c9ff76e1d6937272d222d5f11b6a9363f85fd4bbf02aebf4f59cd",
+  "note": "One bounded image request, prompted against the approved CP-4 grip. Head/torso unchanged. Native mesh placement only; raw generated alpha preserved."
+}

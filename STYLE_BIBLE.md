@@ -2,13 +2,16 @@
 
 > **CP-5 user correction, 2026-10-15:** Neal rejected the generic clothed 3D
 > model because it did not look like Kai. **Use the existing Kai artwork.**
-> The isolated `kai_art_motion_pilot` retains the exact original head/torso and
-> painted hand/sword, with existing clean cloth layers driven by UAL's actual
-> joints. It does not use CP-3's rejected procedural gait. The accepted grey
+> The isolated `kai_art_motion_pilot` retains the exact original head/torso,
+> with clean cloth layers driven by UAL's actual joints. Neal called this a
+> "pretty good improvement" and requested two corrections: the sword must face
+> forward/down from the index/thumb end, and trousers must read as continuous
+> navy cloth through the knees. The corrected forearm/closed-hand/weapon layer
+> is one targeted built-in ImageGen asset; boots begin below the knee. It does not use CP-3's rejected procedural gait. The accepted grey
 > mannequin remains the motion/turn comparison. A single painted view cannot
 > provide a genuine full turn; directional artwork remains necessary. This
 > transfer is **awaiting Neal's motion/joins review**, not a production lock.
-> Evidence: `assets/art_review/cp5_art_transfer/`; rejected model archive:
+> Current corrected evidence: `assets/art_review/cp5_art_transfer/corrections_v2/`; rejected model archive:
 > `assets/art_review/cp5_model_rejected/`. No generic Kai model in runtime.
 
 > **CP-4 motion foundation, 2026-10-15:** Neal accepted the grey human

@@ -1,13 +1,16 @@
 class_name KaiArtMotion
 extends Node2D
 ## CP-5: existing Kai art driven by actual authored UAL joint positions.
-## Original head/torso and weapon pixels; existing clean cloth layers fill the
+## Original head/torso with a corrected carrying-hand layer; clean cloth fills the
 ## occluded limbs. No procedural stride and no substitute face/model.
 
 const ART := preload("res://assets/art/illustrated_pilot/kai/idle.png")
 const LAYERS := "res://assets/art/kai_motion_transfer/"
 const ANCHOR := Vector2(350,604)
 const SOURCE_HEIGHT := 459.28
+const CARRY_ELBOW := Vector2(356,132)
+const CARRY_WRIST := Vector2(422,486)
+const CARRY_SCALE := 0.18
 var driver: AuthoredModelActor
 var source_scale := 238.0 / SOURCE_HEIGHT
 var parts: Array[Dictionary] = []
@@ -39,14 +42,17 @@ func setup(motion: AuthoredModelActor) -> void:
 	add_child(torso)
 	for side: String in ["l","r"]:
 		var near := side=="r"
+		var thigh := _sprite("thigh",Vector2(64,18),9 if near else 8)
+		thigh.visible = false
 		parts.append({"bones":["thigh_"+side,"calf_"+side,"foot_"+side,"ball_"+side],
 			"hip":Vector2(363 if near else 393,361),
-			"upper":_sprite("thigh",Vector2(64,18),9 if near else 8),
+			"upper":thigh,
+			"pants":_pants_mesh(9 if near else 8),
 			"lower":_sprite("shin",Vector2(64,18),9 if near else 8),
 			"foot":_sprite("foot",Vector2(50,19),9 if near else 8),"type":"leg"})
 		var forearm := _sprite("forearm",Vector2(64,18),14 if near else 10)
 		if near:
-			# Keep the original illustrated carrying hand; no regenerated fist.
+			# Hide this free-hand layer when the corrected carrying assembly is shown.
 			forearm.region_enabled = true
 			forearm.region_rect = Rect2(0,0,128,75)
 		parts.append({"bones":["upperarm_"+side,"lowerarm_"+side,"hand_"+side],
@@ -55,12 +61,14 @@ func setup(motion: AuthoredModelActor) -> void:
 			"upper":_sprite("upper_arm",Vector2(64,18),14 if near else 10),
 			"lower":forearm,"type":"arm","near":near})
 	carry = Polygon2D.new()
-	carry.name = "OriginalPaintedHandAndSword"
-	carry.texture = ART
+	carry.name = "ForwardPaintedForearmHandAndSword"
+	carry.texture = load(LAYERS+"carry_forward_v2.png")
 	carry.z_index = 15
-	carry.uv = PackedVector2Array([Vector2(298,381),Vector2(321,381),Vector2(335,363),Vector2(344,365),Vector2(336,394),Vector2(354,413),Vector2(189,584),Vector2(172,578),Vector2(299,408),Vector2(297,397)])
+	var size := carry.texture.get_size()
+	carry.uv = PackedVector2Array([Vector2.ZERO,Vector2(size.x,0),size,Vector2(0,size.y)])
 	carry.polygon = carry.uv
-	carry.offset = -Vector2(315,395)
+	carry.offset = -CARRY_ELBOW
+	carry.scale = Vector2.ONE*CARRY_SCALE
 	add_child(carry)
 	set_carrying(driver.carrying)
 	update_from_motion()
@@ -87,6 +95,43 @@ static func _align(sprite: Sprite2D,a: Vector2,b: Vector2,length: float) -> void
 	sprite.position = a
 	sprite.rotation = (b-a).angle()-PI*0.5
 	sprite.scale = Vector2(1.0,a.distance_to(b)/length)
+
+
+func _pants_mesh(layer: int) -> Polygon2D:
+	var pants := Polygon2D.new()
+	pants.name = "ContinuousTrousers"
+	pants.texture = _textures["thigh"]
+	pants.z_index = layer
+	var uv := PackedVector2Array()
+	var sections: Array[PackedInt32Array] = []
+	for ring in range(10):
+		var y := lerpf(18.0,110.0,float(ring)/9.0)
+		uv.append(Vector2(42,y))
+		uv.append(Vector2(86,y))
+		if ring>0:
+			var index := ring*2
+			sections.append(PackedInt32Array([index-2,index-1,index+1,index]))
+	pants.uv = uv
+	pants.polygon = uv
+	pants.polygons = sections
+	add_child(pants)
+	return pants
+
+
+static func _fit_pants(pants: Polygon2D,hip: Vector2,knee: Vector2,ankle: Vector2) -> void:
+	# One cloth surface crosses the knee, ending inside the calf-high boot.
+	# These are garment vertices, not a new gait or a knee/foot trajectory.
+	var samples: Array[float] = [0.0,0.2,0.4,0.6,0.8,0.94,1.0,1.08,1.2,1.34]
+	var thigh_axis := (knee-hip).normalized()
+	var calf_axis := (ankle-knee).normalized()
+	var vertices := PackedVector2Array()
+	for t in samples:
+		var center := hip.lerp(knee,t) if t<=1.0 else knee.lerp(ankle,t-1.0)
+		var tangent := thigh_axis.lerp(calf_axis,smoothstep(0.8,1.2,t)).normalized()
+		var width := lerpf(23.0,18.0,t/1.34)
+		vertices.append(center+tangent.orthogonal()*width)
+		vertices.append(center-tangent.orthogonal()*width)
+	pants.polygon = vertices
 
 
 func _process(_delta: float) -> void:
@@ -118,6 +163,8 @@ func update_from_motion() -> void:
 		_align(part["upper"],points[0],points[1],96.0 if part["type"]=="leg" else 60.0)
 		_align(part["lower"],points[1],points[2],94.0 if part["type"]=="leg" else 54.0)
 		if part["type"]=="leg":
+			_fit_pants(part["pants"],points[0],points[1],points[2])
+			_align(part["lower"],points[1].lerp(points[2],0.30),points[2],94.0)
 			var foot: Sprite2D = part["foot"]
 			var toe := projected_bone(str(bones[3]).replace("ball_", "ball_leaf_"))+offset
 			foot.rotation = (toe-points[3]).angle()-Vector2(43.7,3.9).angle()
@@ -125,8 +172,8 @@ func update_from_motion() -> void:
 			# source stance travel rather than inventing heel/toe trajectories.
 			foot.position = points[3]-(Vector2(87,41.4)+foot.offset).rotated(foot.rotation)
 		elif part["near"]:
-			carry.position = points[2]
-			carry.rotation = (points[2]-points[1]).angle()-Vector2(-5,63).angle()
+			carry.position = points[1]
+			carry.rotation = (points[2]-points[1]).angle()-(CARRY_WRIST-CARRY_ELBOW).angle()
 
 
 func set_carrying(value: bool) -> void:
@@ -135,6 +182,7 @@ func set_carrying(value: bool) -> void:
 		if part["type"] == "arm" and part["near"]:
 			var forearm: Sprite2D = part["lower"]
 			forearm.region_enabled = value
+			forearm.visible = not value
 
 
 func _apply_mark() -> void:

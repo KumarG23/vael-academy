@@ -77,3 +77,41 @@ func test_comparison_uses_same_model_and_turn_displays_real_reference():
 	assert_true(pilot.actor.sprite.visible)
 	assert_eq(pilot.actor.model, model)
 	assert_eq(Campaign.to_dict(), state)
+
+
+func test_actual_painted_blade_points_forward_and_down_in_both_facings():
+	var pilot := _pilot()
+	var image := pilot.illustration.carry.texture.get_image()
+	if image.is_compressed():
+		image.decompress()
+	var blade := Vector2.ZERO
+	var hilt := Vector2.ZERO
+	var blade_pixels := 0
+	var hilt_pixels := 0
+	# Inspect the actual steel and green pixels, rather than a facing flag or
+	# a configured tip coordinate. The old backward painting fails this check.
+	for y in range(450, image.get_height(), 8):
+		for x in range(0, image.get_width(), 8):
+			var color := image.get_pixel(x, y)
+			if color.a < 0.8:
+				continue
+			if y > 650 and minf(color.r, minf(color.g, color.b)) > 0.35 and maxf(color.r, maxf(color.g, color.b)) - minf(color.r, minf(color.g, color.b)) < 0.15:
+				blade += Vector2(x, y)
+				blade_pixels += 1
+			elif color.g > color.r * 1.2 and color.g > color.b * 1.2:
+				hilt += Vector2(x, y)
+				hilt_pixels += 1
+	assert_gt(blade_pixels, 30)
+	assert_gt(hilt_pixels, 10)
+	if blade_pixels == 0 or hilt_pixels == 0:
+		return
+	blade /= float(blade_pixels)
+	hilt /= float(hilt_pixels)
+	for direction: float in [1.0, -1.0]:
+		pilot.actor.target_yaw = direction * AuthoredModelActor.YAW
+		pilot.illustration.update_from_motion()
+		var carry := pilot.illustration.carry
+		var blade_world := carry.to_global(blade + carry.offset)
+		var hilt_world := carry.to_global(hilt + carry.offset)
+		assert_gt((blade_world.x - hilt_world.x) * direction, 15.0)
+		assert_gt(blade_world.y, hilt_world.y)

@@ -1,7 +1,7 @@
 {
   "original_character": "assets/art/illustrated_pilot/kai/idle.png",
   "motion_source": "assets/source/authored_motion/quaternius/UAL1_Standard.glb",
-  "note": "CP-5 user-directed existing-art proof. Reuses clean cloth art from CP-3, never its rejected procedural gait. Head, torso, hand and sword use the exact CP-2 idle texture. Missing directional views remain open.",
+  "note": "CP-5 user-directed existing-art proof. Reuses clean cloth art from CP-3, never its rejected procedural gait. Head and torso use the exact CP-2 idle texture. Navy trousers cross the knee continuously; boots start below it. Missing directional views remain open.",
   "cloth_layers": [
     {
       "path": "assets/art_review/cp3_walk/rejected_layers/thigh.png",
@@ -27,5 +27,12 @@
       "path": "assets/art_review/cp3_walk/rejected_layers/forearm.png",
       "sha256": "d1729acd1cc847acffd3e298b3097bd535624d16cd6e65287fc87153e3c187c8"
     }
-  ]
+  ],
+  "carry_correction": {
+    "path": "assets/source/kai_motion_corrections/carry_forward_v2.png",
+    "sha256": "1137063c0b5c9ff76e1d6937272d222d5f11b6a9363f85fd4bbf02aebf4f59cd",
+    "prompt_and_references": "assets/source/kai_motion_corrections/carry_forward_v2.json",
+    "tool": "built-in image_gen",
+    "note": "One targeted forearm/hand/sword correction after user flagged backward grip. Original head/torso preserved; raw alpha unchanged."
+  }
 }
