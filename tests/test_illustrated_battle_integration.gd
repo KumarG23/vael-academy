@@ -164,7 +164,7 @@ func _advance_dialogues(view: BattleView, scripts: Array) -> void:
 	var accept := InputEventKey.new()
 	accept.keycode = KEY_ENTER
 	accept.pressed = true
-	while not view._result_screen.is_shown() and Time.get_ticks_msec() < deadline:
+	while is_instance_valid(view) and not view._result_screen.is_shown() and Time.get_ticks_msec() < deadline:
 		for node in view.find_children("*", "", true, false):
 			if node is DialogueScene and not node.is_finished():
 				if not scripts.has(node._script):

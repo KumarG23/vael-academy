@@ -1,5 +1,12 @@
 # STYLE_BIBLE.md — AW-1 v6.5 (maps doctrine: HYBRID)
 
+> **CP-9 practice only:** Neal approved CP-8 as the visual baseline and authorized
+> a single incoming-strike dodge/block trial. Reuse whole Kai/Serra poses, clear
+> timing/cue audio and separate guard/evade feedback; never deform limbs. Trial
+> block trades a wider timing window for half damage; dodge is tighter and avoids
+> damage. Wide practice and auto-block assist are available. This is not a new
+> campaign combat rule or approval of timed defense across the roster.
+
 > **APPROVED DIRECTION — CP-7, Neal's review, 2026-10-15:** pixel-art
 > world/exploration/tactical maps; illustrated **B** battles. Neal approved the
 > richer color/magic pass and removal of illustrated walking: "definitely this

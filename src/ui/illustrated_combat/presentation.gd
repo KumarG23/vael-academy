@@ -79,7 +79,7 @@ func _ready() -> void:
 	effects = IllustratedCombatFX.new()
 	effects.z_index = 20
 	world.add_child(effects)
-	juice = IllustratedCombatJuice.new()
+	juice = _make_juice()
 	juice.presentation_data = presentation_data
 	juice.effects = effects
 	juice.shake_layer = world
@@ -105,6 +105,10 @@ func _ready() -> void:
 	_stage.visible = false
 	_resize()
 	get_viewport().size_changed.connect(_resize)
+
+
+func _make_juice() -> IllustratedCombatJuice:
+	return IllustratedCombatJuice.new()
 
 
 static func label(text: String, at: Vector2, size: int, color: Color = Color.WHITE) -> Label:

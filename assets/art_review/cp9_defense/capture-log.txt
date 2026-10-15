@@ -1,0 +1,28 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M2 (Apple8)
+
+Movie Maker mode enabled, recording movie in 1152×648 @ 60 FPS...
+INPUT dodge dodge elapsed=1.0
+JUDGED dodge { "strike": Serra -> Kai: MISS, "result": "dodge", "action": "dodge", "offset": 0.0, "assisted": false } hp_before_contact=26
+CONTACT dodge hp=26 Serra -> Kai: MISS
+INPUT block block elapsed=1.0
+JUDGED block { "strike": Serra -> Kai: 6 dmg (26 -> 20), "result": "block", "action": "block", "offset": 0.0, "assisted": false } hp_before_contact=26
+CONTACT block hp=20 Serra -> Kai: 6 dmg (26 -> 20)
+INPUT early dodge elapsed=0.41666666666667
+JUDGED early { "strike": Serra -> Kai: 11 dmg (26 -> 15), "result": "failed", "action": "dodge", "offset": -0.58333333333333, "assisted": false } hp_before_contact=26
+CONTACT early hp=15 Serra -> Kai: 11 dmg (26 -> 15)
+JUDGED no-input { "strike": Serra -> Kai: 11 dmg (26 -> 15), "result": "no_input", "action": "", "offset": -2.0, "assisted": false } hp_before_contact=26
+CONTACT no-input hp=15 Serra -> Kai: 11 dmg (26 -> 15)
+JUDGED assist { "strike": Serra -> Kai: 6 dmg (26 -> 20), "result": "block", "action": "block", "offset": 0.0, "assisted": true } hp_before_contact=26
+CONTACT assist hp=20 Serra -> Kai: 6 dmg (26 -> 20)
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+--------------------------------------------------------------------------------
+Done recording movie at path: /tmp/vael-cp9-defense.avi
+1339 frames at 60 FPS (movie length: 00:00:22:19), recorded in 00:00:23 (95% of real-time speed).
+CPU render time: 0.11 seconds (average: 0.08 ms/frame)
+GPU render time: 0.00 seconds (average: 0.00 ms/frame)
+Encoding time: 7.20 seconds (average: 5.38 ms/frame)
+--------------------------------------------------------------------------------

@@ -49,6 +49,7 @@ const DEV_JUMPS := [
 	["▶ Authored motion pilot", "authored_motion"],
 	["▶ Kai art motion test", "kai_art_motion"],
 	["▶ Battle art A/B comparison", "hybrid_combat"],
+	["▶ Dodge / block practice", "active_defense"],
 	["Back", "back"],
 ]
 
@@ -72,6 +73,8 @@ func _open_dev() -> void:
 
 func _dev_jump(kind: String) -> void:
 	match kind:
+		"active_defense":
+			get_tree().change_scene_to_file.call_deferred("res://scenes/proto/active_defense_pilot.tscn")
 		"hybrid_combat":
 			get_tree().change_scene_to_file.call_deferred("res://scenes/proto/hybrid_combat_pilot.tscn")
 		"kai_art_motion":

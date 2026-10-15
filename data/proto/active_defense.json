@@ -1,0 +1,5 @@
+{
+  "normal": {"windup": 0.9, "cue": 0.68, "dodge_window": 0.09, "block_window": 0.18},
+  "practice": {"windup": 1.35, "cue": 1.0, "dodge_window": 0.18, "block_window": 0.28},
+  "block_damage_fraction": 0.5
+}

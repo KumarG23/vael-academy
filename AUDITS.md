@@ -231,6 +231,44 @@ These captures support visible legibility/overlap findings. Keyboard focus, redu
 **Where gameplay was left:** AW-79 still needs sealed-door/sanctum selection and music when tracks arrive. The year-one story/support work remains co-written with Neal; the calendar, house routes, activities, inventory, grading and mid-battle saves already exist. Their prior backlog remains valid after the art pilot. No gameplay work order or new art production was implemented during this audit.
 
 
+## CP-9 implementation / optional active defense — 2026-10-15
+
+Baseline named green commit: **f6736cc0 (CP-8)**. Implementer's record, not an
+independent audit. Neal approves CP-8 as the visual/game-flow baseline and
+authorizes the small optional dodge/block trial. No production combat adoption.
+
+- **Scope:** dedicated Title Dev Jump / `active_defense_pilot.tscn`, Kai versus
+  one incoming Serra thrust. Reuses original whole art, CP-6/7 player, CP-8
+  sounds/FX and real native resolver first strike (11 damage). Campaign and
+  progression untouched; no counters re-used after defense alters damage.
+- **Provisional mechanics:** first attempt only; dodge takes0, block takes
+  ceil(11×0.5)=6, failed/unused defense takes11. Block has wider timing because
+  it protects less; the previously proposed tighter block would be dominated
+  by the easier full dodge. Normal/wide profiles, visual meter/cue sound,
+  offset feedback, keyboard/buttons and auto-block assist. Config is data.
+- **Correct order:** input evaluated before commitment; the pending strike is
+  finalized, then inherited contact applies HP once. Original native result
+  unchanged. Actual dodge clears the blade by >75px before contact; block uses
+  whole guard/recoil/metal flash. Timing measures anticipation, not a last-frame
+  parry at contact. Final campaign forecast/counter semantics remain unapproved.
+- **Validation:** new focused suite **3/3, 129 assertions** covers boundaries,
+  damage rounding, spam, native misses, low/high-FPS assist, real input/contact,
+  no stale counters and unchanged RNG/XP/uses/Campaign. Real Title route + Esc
+  at impact checked separately, including time-scale restoration and deferred
+  cleanup. Final logs/capture: `assets/art_review/cp9_defense/`.
+- **Regression repair:** full-suite timing exposed CP-8's asynchronous test
+  dialogue driver waking after its view was freed, falsely failing the following
+  CP-7 test. Added an instance-validity guard to that test helper; no production
+  combat/dialogue behavior changed. Final suite: **560/560 tests, 3,808 assertions,
+  85 scripts, 148.221s**. Inherited13 deprecations/two ObjectDB/one resource exit
+  reports remain; no new runtime errors in final runs.
+- **Evidence / cost:** native 1152×648/60fps, 22.32s sound-on movie shows dodge,
+  block, early failure, no-input and assist. Anatomy/silhouettes, physical evade,
+  HP, UI and map return visually inspected. Three original local synthesized
+  cues; no third-party import, image/API generation or spend. Existing art/FX
+  credits preserved. Reused guard art is not a new drawn parry. Stop for Neal's
+  feel review; no campaign or roster rollout.
+
 ## CP-8 implementation / real encounter integration — 2026-10-15
 
 Baseline named green commit: **b8d927eb (CP-7)**. Implementer's record, not an
