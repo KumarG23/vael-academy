@@ -1,0 +1,31 @@
+{
+  "original_character": "assets/art/illustrated_pilot/kai/idle.png",
+  "motion_source": "assets/source/authored_motion/quaternius/UAL1_Standard.glb",
+  "note": "CP-5 user-directed existing-art proof. Reuses clean cloth art from CP-3, never its rejected procedural gait. Head, torso, hand and sword use the exact CP-2 idle texture. Missing directional views remain open.",
+  "cloth_layers": [
+    {
+      "path": "assets/art_review/cp3_walk/rejected_layers/thigh.png",
+      "sha256": "28cc4f1cc10abdf4d5ff24279f466855217d862782db30b61abfb08e83cf678a"
+    },
+    {
+      "path": "assets/art_review/cp3_walk/rejected_layers/shin.png",
+      "sha256": "2a48700c2c4148abe175a225d6dcee6905ee1d98caa73d628f6287bcc72a95d2"
+    },
+    {
+      "path": "assets/art_review/cp3_walk/rejected_layers/foot.png",
+      "sha256": "8fb6045cc7d16a6fd8ed88b6a77cd78986a8fc8cc42c117620b5502d483316bd"
+    },
+    {
+      "path": "assets/art_review/cp3_walk/rejected_layers/cape.png",
+      "sha256": "502230b084718ea7e7c50f3ac1b2aa4f35f2ad8b7340b499f51ee67bb7d4c2f6"
+    },
+    {
+      "path": "assets/art_review/cp3_walk/rejected_layers/upper_arm.png",
+      "sha256": "621f28e27d9a85e8b2b07e906df22f5e38d413d14a6e809b25e0c4d922140809"
+    },
+    {
+      "path": "assets/art_review/cp3_walk/rejected_layers/forearm.png",
+      "sha256": "d1729acd1cc847acffd3e298b3097bd535624d16cd6e65287fc87153e3c187c8"
+    }
+  ]
+}

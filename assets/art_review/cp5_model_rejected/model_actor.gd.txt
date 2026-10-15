@@ -1,0 +1,233 @@
+class_name AuthoredModelActor
+extends Node2D
+## CP-4 reference-only 3D rig drawn through a transparent viewport into 2D.
+## Uses imported animations. Does not own combat, pathfinding or campaign data.
+
+const HUMAN := "res://assets/source/authored_motion/quaternius/UAL1_Standard.glb"
+const KAI := "res://assets/art/rigged_kai/kai_uniform.glb"
+const REFERENCE_SWORD := "res://assets/art/authored_motion/reference_sword.glb"
+const GRIP_SCRIPT := preload("res://src/proto/authored_motion/sword_grip.gd")
+const KAI_OUTLINE := preload("res://assets/shaders/rigged_kai/outline.gdshader")
+const KAI_CAPE := preload("res://assets/shaders/rigged_kai/cape.gdshader")
+const KAI_SWORD := preload("res://assets/shaders/rigged_kai/relic_sword.gdshader")
+const HUMAN_STRIDE := 1.2999999523162842 # Measured from supplied root-motion Walk_Loop.
+const VIEW_SIZE := 640
+const CAMERA_SIZE := 2.8
+const YAW := PI / 2.0
+
+var moving := false
+var carrying := true
+var formal := false
+var kai_appearance := false
+var target_yaw := YAW
+var model: Node3D
+var skeleton: Skeleton3D
+var player: AnimationPlayer
+var camera: Camera3D
+var viewport: SubViewport
+var sprite: Sprite2D
+var socket: BoneAttachment3D
+var weapon: Node3D
+var brow_marker: MeshInstance3D
+var source_height := 1.8
+var pixel_factor := 1.0
+var cycle_stride := HUMAN_STRIDE
+var _previous_position := Vector2.ZERO
+var _was_moving := false
+var _grip: AuthoredSwordGrip
+var _walk := "Walk"
+var _idle := "Idle"
+
+
+func setup(height: float = 238.0) -> void:
+	viewport = SubViewport.new()
+	viewport.size = Vector2i(VIEW_SIZE, VIEW_SIZE)
+	viewport.transparent_bg = true
+	viewport.own_world_3d = true
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	viewport.msaa_3d = Viewport.MSAA_4X
+	add_child(viewport)
+	var world := Node3D.new()
+	viewport.add_child(world)
+	model = (load(KAI if kai_appearance else HUMAN) as PackedScene).instantiate()
+	world.add_child(model)
+	skeleton = model.find_children("*", "Skeleton3D", true, false)[0]
+	player = model.find_children("*", "AnimationPlayer", true, false)[0]
+	player.playback_default_blend_time = 0.18
+	_prepare_human()
+	for clip: String in [_idle, _walk, "Walk_Formal"]:
+		if player.has_animation(clip):
+			player.get_animation(clip).loop_mode = Animation.LOOP_LINEAR
+	player.play(_idle)
+	player.advance(0.0)
+	var bounds := _model_bounds()
+	source_height = bounds.size.y
+	camera = Camera3D.new()
+	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	camera.size = CAMERA_SIZE
+	world.add_child(camera)
+	camera.position = Vector3(0, source_height * 0.55 + 1.6, 6)
+	camera.look_at(Vector3(0, source_height * 0.55, 0))
+	camera.current = true
+	var env := WorldEnvironment.new()
+	var environment := Environment.new()
+	environment.background_mode = Environment.BG_COLOR
+	environment.background_color = Color(0, 0, 0, 0)
+	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	environment.ambient_light_color = Color(0.86, 0.88, 1.0)
+	environment.ambient_light_energy = 0.65
+	env.environment = environment
+	world.add_child(env)
+	var light := DirectionalLight3D.new()
+	light.rotation_degrees = Vector3(-35, -40, 0)
+	light.light_energy = 1.3
+	world.add_child(light)
+	sprite = Sprite2D.new()
+	sprite.centered = false
+	sprite.texture = viewport.get_texture()
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	sprite.offset = -camera.unproject_position(Vector3.ZERO)
+	var projected_height := camera.unproject_position(Vector3.ZERO).distance_to(camera.unproject_position(Vector3(0, source_height, 0)))
+	pixel_factor = height / projected_height
+	sprite.scale = Vector2.ONE * pixel_factor
+	add_child(sprite)
+	model.rotation.y = target_yaw
+	_previous_position = global_position
+	set_carrying(carrying)
+	queue_redraw()
+
+
+func _model_bounds() -> AABB:
+	var result := AABB()
+	var first := true
+	for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		if not mesh.is_visible_in_tree():
+			continue
+		var bounds: AABB = mesh.global_transform * mesh.get_aabb()
+		result = bounds if first else result.merge(bounds)
+		first = false
+	return result
+
+
+func _prepare_human() -> void:
+	# Neutral colors keep this clearly a motion specimen, not a new Kai design.
+	var body := StandardMaterial3D.new()
+	body.albedo_color = Color("899aa9")
+	body.roughness = 0.9
+	body.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
+	var joints := body.duplicate() as StandardMaterial3D
+	joints.albedo_color = Color("303b4e")
+	var mesh: MeshInstance3D = model.find_child("Mannequin", true, false)
+	if mesh != null:
+		mesh.set_surface_override_material(0, body)
+		mesh.set_surface_override_material(1, joints)
+	else:
+		for part: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+			for surface in range(part.mesh.get_surface_count()):
+				var material := part.mesh.surface_get_material(surface).duplicate() as StandardMaterial3D
+				material.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
+				material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+				if part.name == "CrimsonCape":
+					var cloth := ShaderMaterial.new()
+					cloth.shader = KAI_CAPE
+					part.set_surface_override_material(surface, cloth)
+				else:
+					if not part.name.contains("Eyes") and not part.name.contains("Crown"):
+						var outline := ShaderMaterial.new()
+						outline.shader = KAI_OUTLINE
+						material.next_pass = outline
+					part.set_surface_override_material(surface, material)
+	# Sample the artist's closed right fingers once. No guessed finger anatomy.
+	player.play("Sword_Idle")
+	player.advance(0.0)
+	player.seek(0.3, true)
+	player.advance(0.0)
+	_grip = GRIP_SCRIPT.new()
+	_grip.wrist = skeleton.find_bone("hand_r")
+	for i in range(skeleton.get_bone_count()):
+		var name := skeleton.get_bone_name(i)
+		var finger := name.begins_with("index_") or name.begins_with("middle_") or name.begins_with("ring_") or name.begins_with("pinky_") or name.begins_with("thumb_")
+		if name.ends_with("_r") and finger:
+			_grip.rotations[i] = skeleton.get_bone_pose_rotation(i)
+	# The blade/guard exits at the index/thumb end; pommel at the pinky end.
+	var hand := skeleton.get_bone_global_pose(skeleton.find_bone("hand_r"))
+	var index := hand.affine_inverse() * skeleton.get_bone_global_pose(skeleton.find_bone("index_01_r")).origin
+	var pinky := hand.affine_inverse() * skeleton.get_bone_global_pose(skeleton.find_bone("pinky_01_r")).origin
+	var middle := hand.affine_inverse() * skeleton.get_bone_global_pose(skeleton.find_bone("middle_02_r")).origin
+	var thumb := hand.affine_inverse() * skeleton.get_bone_global_pose(skeleton.find_bone("thumb_02_r")).origin
+	var hilt_center := (middle + thumb) * 0.5
+	var axis := (index - pinky).normalized()
+	var side := axis.cross((middle - hilt_center).normalized()).normalized()
+	var forward := side.cross(axis).normalized()
+	socket = BoneAttachment3D.new()
+	socket.bone_name = "hand_r"
+	skeleton.add_child(socket)
+	weapon = _sword()
+	weapon.transform = Transform3D(Basis(side, axis, forward), hilt_center)
+	socket.add_child(weapon)
+	skeleton.add_child(_grip)
+	var head := BoneAttachment3D.new()
+	head.bone_name = "Head"
+	skeleton.add_child(head)
+	brow_marker = MeshInstance3D.new()
+	var marker := SphereMesh.new()
+	marker.radius = 0.018
+	marker.height = 0.036
+	brow_marker.mesh = marker
+	var green := StandardMaterial3D.new()
+	green.albedo_color = Color("73ed99")
+	green.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	brow_marker.material_override = green
+	brow_marker.position = Vector3(0.075, 0.15, 0.12)
+	head.add_child(brow_marker)
+	brow_marker.visible = not kai_appearance
+
+
+func _sword() -> Node3D:
+	# Reuse the artist's complete sword mesh/material, not another generated grip.
+	var reference := (load(REFERENCE_SWORD) as PackedScene).instantiate()
+	var original: MeshInstance3D = reference.find_child("Sword", true, false)
+	var mesh := MeshInstance3D.new()
+	mesh.mesh = original.mesh
+	if kai_appearance:
+		var material := ShaderMaterial.new()
+		material.shader = KAI_SWORD
+		mesh.material_override = material
+	mesh.scale = Vector3.ONE * 0.5
+	mesh.position.y = 0.08 # Original handle center becomes the palm-space origin.
+	var sword := Node3D.new()
+	sword.add_child(mesh)
+	reference.free()
+	return sword
+
+
+func set_carrying(value: bool) -> void:
+	carrying = value
+	if weapon != null:
+		weapon.visible = value
+	if _grip != null:
+		_grip.active = value
+
+
+func nominal_speed() -> float:
+	var displacement := Vector3(0, 0, cycle_stride).rotated(Vector3.UP, target_yaw)
+	var pixels := camera.unproject_position(displacement).distance_to(camera.unproject_position(Vector3.ZERO)) * pixel_factor
+	return pixels / player.get_animation(_walk).length
+
+
+func _process(delta: float) -> void:
+	if player == null:
+		return
+	var traveled := global_position.distance_to(_previous_position)
+	_previous_position = global_position
+	var clip := "Walk_Formal" if formal else _walk
+	if moving != _was_moving or moving and player.current_animation != clip:
+		player.play(clip if moving else _idle)
+		_was_moving = moving
+	player.speed_scale = traveled / delta / nominal_speed() if moving and delta > 0.0 else 1.0
+	model.rotation.y = lerp_angle(model.rotation.y, target_yaw, minf(1.0, delta * 12.0))
+
+
+func _draw() -> void:
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.23))
+	draw_circle(Vector2.ZERO, 29.0, Color(0.08, 0.08, 0.07, 0.22))

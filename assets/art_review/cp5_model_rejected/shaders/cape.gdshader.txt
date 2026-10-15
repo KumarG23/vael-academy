@@ -1,0 +1,19 @@
+shader_type spatial;
+render_mode cull_disabled;
+uniform vec4 cloth_color : source_color = vec4(0.52, 0.18, 0.26, 1.0);
+
+void vertex() {
+	float hem = clamp((1.45 - VERTEX.y) / 0.85, 0.0, 1.0);
+	VERTEX.z -= sin(TIME * 3.8 + VERTEX.y * 6.0) * 0.012 * hem;
+	VERTEX.x += sin(TIME * 3.8) * 0.006 * hem;
+}
+
+void fragment() {
+	ALBEDO = cloth_color.rgb;
+	ROUGHNESS = 1.0;
+}
+
+void light() {
+	float band = 0.3 + 0.7 * step(0.35, dot(NORMAL, LIGHT));
+	DIFFUSE_LIGHT += ALBEDO * LIGHT_COLOR * ATTENUATION * band / PI;
+}

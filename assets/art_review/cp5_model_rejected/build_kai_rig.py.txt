@@ -1,0 +1,265 @@
+#!/usr/bin/env python3
+"""CP-5: fit licensed skinned geometry to the unchanged CP-4 rest skeleton.
+
+uv run --with numpy tools/build_kai_rig.py
+No gait keys or skeleton transforms are changed. Originals remain in assets/source.
+"""
+from pathlib import Path
+import copy
+import hashlib
+import json
+import struct
+import numpy as np
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE = ROOT / 'assets/source/rigged_kai'
+OUT = ROOT / 'assets/art/rigged_kai'
+DTYPES = {5121: '<u1', 5123: '<u2', 5125: '<u4', 5126: '<f4'}
+WIDTHS = {'SCALAR': 1, 'VEC2': 2, 'VEC3': 3, 'VEC4': 4, 'MAT4': 16}
+
+
+class Document:
+    def __init__(self, path):
+        self.path = Path(path)
+        raw = self.path.read_bytes()
+        if raw[:4] == b'glTF':
+            size = struct.unpack_from('<I', raw, 12)[0]
+            self.g = json.loads(raw[20:20 + size])
+            self.buffer = raw[28 + size:]
+        else:
+            self.g = json.loads(raw)
+            self.buffer = (self.path.parent / self.g['buffers'][0]['uri']).read_bytes()
+        self.global_rest = [None] * len(self.g['nodes'])
+        def visit(index, parent):
+            node = self.g['nodes'][index]
+            x, y, z, w = node.get('rotation', [0, 0, 0, 1])
+            rot = np.array([[1-2*(y*y+z*z), 2*(x*y-z*w), 2*(x*z+y*w)],
+                            [2*(x*y+z*w), 1-2*(x*x+z*z), 2*(y*z-x*w)],
+                            [2*(x*z-y*w), 2*(y*z+x*w), 1-2*(x*x+y*y)]])
+            mat = np.eye(4)
+            mat[:3, :3] = rot @ np.diag(node.get('scale', [1, 1, 1]))
+            mat[:3, 3] = node.get('translation', [0, 0, 0])
+            if 'matrix' in node:
+                mat = np.array(node['matrix']).reshape(4, 4).T
+            self.global_rest[index] = parent @ mat
+            for child in node.get('children', []):
+                visit(child, self.global_rest[index])
+        for node in self.g['scenes'][self.g.get('scene', 0)]['nodes']:
+            visit(node, np.eye(4))
+
+    def read(self, accessor):
+        a = self.g['accessors'][accessor]
+        view = self.g['bufferViews'][a['bufferView']]
+        dtype = np.dtype(DTYPES[a['componentType']])
+        width = WIDTHS[a['type']]
+        offset = view.get('byteOffset', 0) + a.get('byteOffset', 0)
+        stride = view.get('byteStride', width * dtype.itemsize)
+        return np.ndarray((a['count'], width), dtype=dtype, buffer=self.buffer,
+                          offset=offset, strides=(stride, dtype.itemsize)).copy()
+
+
+class KaiBuilder:
+    def __init__(self):
+        self.rig = Document(ROOT / 'assets/source/authored_motion/quaternius/UAL1_Standard.glb')
+        self.g = copy.deepcopy(self.rig.g)
+        self.buffer = bytearray(self.rig.buffer)
+        self.g['meshes'] = []
+        self.g['materials'] = []
+        self.g.pop('images', None)
+        self.g.pop('textures', None)
+        self.g.pop('samplers', None)
+        self.g['nodes'][65] = {'name': 'KaiAppearance'}
+        self.bone_nodes = self.g['skins'][0]['joints']
+        self.bone_names = [self.g['nodes'][i]['name'] for i in self.bone_nodes]
+        self.palette = {}
+        for name, color in [('Skin', 'a87554'), ('Uniform', '263752'), ('Gold', 'c9a45f'),
+                            ('Boots', '191e29'), ('Hair', '101d20'), ('Eyes', 'ffffff'),
+                            ('Collar', 'eee9db'), ('Crimson', '852e42'), ('Crown', '53cf8c')]:
+            rgb = [int(color[i:i+2], 16)/255 for i in (0, 2, 4)]
+            rgb = [c/12.92 if c <= 0.04045 else ((c+0.055)/1.055)**2.4 for c in rgb]
+            material = {'name': name, 'doubleSided': True,
+                        'pbrMetallicRoughness': {'baseColorFactor': rgb+[1], 'metallicFactor': 0, 'roughnessFactor': 0.9}}
+            if name == 'Crown':
+                material['emissiveFactor'] = [0.03, 0.30, 0.10]
+            self.palette[name] = len(self.g['materials'])
+            self.g['materials'].append(material)
+        # Embed the creator's UV eye texture; keep sclera and iris detail.
+        eye = (SOURCE / 'base/T_Eye_Brown.png').read_bytes()
+        while len(self.buffer) % 4:
+            self.buffer.append(0)
+        view = len(self.g['bufferViews'])
+        self.g['bufferViews'].append({'buffer': 0, 'byteOffset': len(self.buffer), 'byteLength': len(eye)})
+        self.buffer.extend(eye)
+        self.g['images'] = [{'bufferView': view, 'mimeType': 'image/png'}]
+        self.g['textures'] = [{'source': 0}]
+        self.g['materials'][self.palette['Eyes']]['pbrMetallicRoughness']['baseColorTexture'] = {'index': 0}
+        self.bounds = {}
+        self.source_hashes = {}
+
+    def put(self, data, kind='VEC3', component=5126):
+        data = np.asarray(data, dtype=DTYPES[component]).reshape(-1, WIDTHS[kind])
+        while len(self.buffer) % 4:
+            self.buffer.append(0)
+        view = len(self.g['bufferViews'])
+        self.g['bufferViews'].append({'buffer': 0, 'byteOffset': len(self.buffer), 'byteLength': data.nbytes})
+        self.buffer.extend(data.tobytes())
+        index = len(self.g['accessors'])
+        a = {'bufferView': view, 'componentType': component, 'count': len(data), 'type': kind}
+        if kind == 'VEC3':
+            a['min'] = data.min(axis=0).tolist()
+            a['max'] = data.max(axis=0).tolist()
+        self.g['accessors'].append(a)
+        return index
+
+    def primitive(self, name, pos, normal, joints, weights, triangles, material, uv=None):
+        triangles = np.asarray(triangles).reshape(-1, 3)
+        used, indices = np.unique(triangles, return_inverse=True)
+        if not len(used):
+            return
+        attributes = {
+            'POSITION': self.put(pos[used]), 'NORMAL': self.put(normal[used]),
+            'JOINTS_0': self.put(joints[used], 'VEC4', 5123),
+            'WEIGHTS_0': self.put(weights[used], 'VEC4')}
+        if uv is not None:
+            attributes['TEXCOORD_0'] = self.put(uv[used], 'VEC2')
+        primitive = {'attributes': attributes, 'indices': self.put(indices, 'SCALAR', 5125),
+                     'material': self.palette[material]}
+        self.add_mesh(name, primitive)
+        self.bounds[name] = [pos[used].min(axis=0).tolist(), pos[used].max(axis=0).tolist()]
+
+    def add_mesh(self, name, primitive):
+        index = len(self.g['meshes'])
+        self.g['meshes'].append({'name': name, 'primitives': [primitive]})
+        node = len(self.g['nodes'])
+        self.g['nodes'].append({'name': name, 'mesh': index, 'skin': 0})
+        self.g['nodes'][66]['children'].append(node)
+
+    def source(self, file, mesh_name, material, select=None, primitive_number=0):
+        doc = Document(SOURCE / file)
+        self.source_hashes[file] = hashlib.sha256(doc.path.read_bytes()).hexdigest()
+        mesh = next(m for m in doc.g['meshes'] if m['name'] == mesh_name)
+        primitive = mesh['primitives'][primitive_number]
+        attrs = primitive['attributes']
+        pos = doc.read(attrs['POSITION'])
+        original = pos.copy()
+        normals = doc.read(attrs['NORMAL'])
+        joints = doc.read(attrs['JOINTS_0']).astype(int)
+        weights = doc.read(attrs['WEIGHTS_0'])
+        source_skin = doc.g['skins'][0]
+        names = [doc.g['nodes'][n]['name'] for n in source_skin['joints']]
+        mapped = np.array([self.bone_names.index(n) for n in names])
+        ibm = doc.read(source_skin['inverseBindMatrices']).reshape(-1, 4, 4).transpose(0, 2, 1)
+        transforms = np.stack([self.rig.global_rest[self.bone_nodes[mapped[i]]] @ ibm[i] for i in range(len(names))])
+        mixed = (transforms[joints] * weights[:, :, None, None]).sum(axis=1)
+        pos = np.einsum('nij,nj->ni', mixed, np.c_[pos, np.ones(len(pos))])[:, :3]
+        normals = np.einsum('nij,nj->ni', np.linalg.inv(mixed[:, :3, :3]).transpose(0, 2, 1), normals)
+        normals /= np.maximum(np.linalg.norm(normals, axis=1)[:, None], 1e-8)
+        triangles = doc.read(primitive['indices']).reshape(-1, 3)
+        if select:
+            triangles = triangles[select(original)[triangles].all(axis=1)]
+        self.primitive(mesh_name+'_'+material, pos, normals, mapped[joints], weights, triangles, material,
+                       doc.read(attrs['TEXCOORD_0']) if 'TEXCOORD_0' in attrs else None)
+        return pos
+
+    def patch(self, name, points, triangles, material, bone='spine_03'):
+        points = np.asarray(points, dtype=float)
+        normals = np.zeros_like(points)
+        for a, b, c in triangles:
+            n = np.cross(points[b]-points[a], points[c]-points[a])
+            normals[[a, b, c]] += n
+        normals /= np.maximum(np.linalg.norm(normals, axis=1)[:, None], 1e-8)
+        joints = np.zeros((len(points), 4), int)
+        joints[:, 0] = self.bone_names.index(bone)
+        weights = np.zeros((len(points), 4))
+        weights[:, 0] = 1
+        self.primitive(name, points, normals, joints, weights, triangles, material)
+
+    def tube(self, name, points, radius, material, bone='spine_03'):
+        vertices, faces = [], []
+        for p in points:
+            for side in range(6):
+                a = side*np.pi/3
+                vertices.append(np.array(p)+[radius*np.cos(a), 0, radius*np.sin(a)])
+        for ring in range(len(points)-1):
+            for side in range(6):
+                a = ring*6+side; b = ring*6+(side+1)%6
+                faces += [(a,b,a+6),(b,b+6,a+6)]
+        self.patch(name, vertices, faces, material, bone)
+
+    def build(self):
+        base = 'base/Superhero_Male_FullBody.gltf.txt'
+        # Keep the creator's actual head/ears/neck, not a primitive head or painted billboard.
+        self.source(base, 'Sphere.005_Retopology.004', 'Skin', lambda p: (p[:,1] > 1.60) | ((p[:,1] > 1.48) & (abs(p[:,0]) < 0.075)))
+        brows = self.source(base, 'Face', 'Hair')
+        self.source(base, 'Face.001', 'Eyes')
+        self.source('base/Hair_SimpleParted.gltf.txt', 'Plane.002', 'Hair')
+        shirt = 'outfit/Male_Peasant.gltf.txt'
+        self.source(shirt, 'Male_Peasant_Body', 'Uniform')
+        self.source(shirt, 'Male_Peasant_Arms', 'Uniform')
+        # Forearms become fitted long sleeves; authored fingers/hands stay bare.
+        self.source(shirt, 'Male_Peasant_Arms', 'Uniform', lambda p: abs(p[:,0]) < 0.76, 1)
+        self.source(shirt, 'Male_Peasant_Arms', 'Skin', lambda p: abs(p[:,0]) >= 0.755, 1)
+        self.source('outfit/Male_Ranger.gltf.txt', 'Male_Ranger_Legs', 'Uniform')
+        self.source('outfit/Male_Ranger.gltf.txt', 'Male_Ranger_Feet_Boots', 'Boots')
+        # Simple tailored overlays are skinned to the same unchanged skeleton.
+        self.patch('IvoryCollar', [(-.072,1.49,.085),(0,1.46,.142),(-.054,1.395,.147),
+                                  (.072,1.49,.085),(.054,1.395,.147)], [(0,1,2),(1,3,4)], 'Collar')
+        self.patch('Cravat', [(-.021,1.454,.151),(.021,1.454,.151),(.037,1.35,.157),
+                             (0,1.31,.157),(-.037,1.35,.157)], [(0,1,2),(0,2,3),(0,3,4)], 'Crimson')
+        for side in [-1,1]:
+            self.patch('Epaulette_'+str(side), [(side*.10,1.53,.065),(side*.28,1.51,.035),
+                                              (side*.28,1.515,-.08),(side*.10,1.54,-.07)],
+                       [(0,1,2),(0,2,3)], 'Gold', 'clavicle_l' if side>0 else 'clavicle_r')
+        self.tube('JacketPiping', [(.042,1.42,.144),(.065,1.32,.152),(.025,1.18,.14),(.02,1.04,.13)], .004, 'Gold')
+        belt_points = []
+        belt_faces = []
+        for y in [1.065, 1.10]:
+            for i in range(32):
+                angle = i*np.pi/16
+                belt_points.append([.165*np.cos(angle), y, .145*np.sin(angle)])
+        for i in range(32):
+            j=(i+1)%32
+            belt_faces += [(i,j,i+32),(j,j+32,i+32)]
+        self.patch('WaistBelt',belt_points,belt_faces,'Boots','spine_01')
+        self.patch('BeltBuckle',[(-.026,1.063,.149),(.026,1.063,.149),(.026,1.102,.149),(-.026,1.102,.149)],
+                   [(0,1,2),(0,2,3)],'Gold','spine_01')
+        # Cape is one continuous mesh. It follows torso rotation, with a later shader for cloth response.
+        points=[];faces=[]
+        for row in range(9):
+            t=row/8
+            for col in range(9):
+                u=col/8*2-1
+                points.append([u*(.17+.11*t),1.47-.88*t,-.155-.15*t+.025*np.cos(u*np.pi*3)*t])
+        for row in range(8):
+            for col in range(8):
+                a=row*9+col; faces += [(a,a+1,a+9),(a+1,a+10,a+9)]
+        self.patch('CrimsonCape',points,faces,'Crimson')
+        # Crown sits above the anatomical left brow, in the head's bind space.
+        near=brows[brows[:,0]>.01]
+        center=near.mean(axis=0)+[0,.044,.004]
+        x,y,z=center
+        crown=[(x-.024,y,z),(x-.031,y+.025,z),(x-.012,y+.013,z),
+               (x,y+.039,z),(x+.012,y+.013,z),(x+.031,y+.025,z),(x+.024,y,z),(x-.024,y,z)]
+        self.tube('LeftBrowCrown',crown,.0017,'Crown','Head')
+        self.write()
+
+    def write(self):
+        OUT.mkdir(parents=True,exist_ok=True)
+        self.g['buffers']=[{'byteLength':len(self.buffer)}]
+        raw=json.dumps(self.g,separators=(',',':')).encode()
+        raw+=b' '*((-len(raw))%4)
+        self.buffer.extend(b'\0'*((-len(self.buffer))%4))
+        data=struct.pack('<4sII',b'glTF',2,28+len(raw)+len(self.buffer))
+        data+=struct.pack('<I4s',len(raw),b'JSON')+raw
+        data+=struct.pack('<I4s',len(self.buffer),b'BIN\0')+self.buffer
+        (OUT/'kai_uniform.glb').write_bytes(data)
+        record={'source_rig_sha256':hashlib.sha256(self.rig.path.read_bytes()).hexdigest(),
+                'source_gltf_sha256':self.source_hashes,'output_sha256':hashlib.sha256(data).hexdigest(),
+                'bone_count':len(self.bone_names),'animations_preserved':len(self.g['animations']),
+                'mesh_bounds':self.bounds}
+        (OUT/'build.json').write_text(json.dumps(record,indent=2)+'\n')
+        print('Built',OUT/'kai_uniform.glb',len(data),'bytes; unchanged animation clips:',len(self.g['animations']))
+
+
+if __name__ == '__main__':
+    KaiBuilder().build()

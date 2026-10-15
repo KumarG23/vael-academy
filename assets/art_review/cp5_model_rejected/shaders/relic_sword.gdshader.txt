@@ -1,0 +1,17 @@
+shader_type spatial;
+render_mode cull_disabled;
+varying vec3 mesh_position;
+uniform vec4 steel : source_color = vec4(0.67, 0.73, 0.76, 1.0);
+uniform vec4 green : source_color = vec4(0.08, 0.32, 0.20, 1.0);
+
+void vertex() {
+	mesh_position = VERTEX;
+}
+
+void fragment() {
+	bool blade = mesh_position.y > 0.12;
+	bool edge = abs(mesh_position.x) > 0.065;
+	ALBEDO = blade && !edge ? steel.rgb : green.rgb;
+	ROUGHNESS = 0.75;
+	METALLIC = 0.12;
+}

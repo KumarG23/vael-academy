@@ -1,0 +1,205 @@
+class_name AuthoredMotionPilot
+extends Node2D
+## CP-4: motion-reference proof. Existing illustrated combat pilot is separate.
+
+var actor: AuthoredModelActor
+var busy := false
+var moving := false
+var _background: Sprite2D
+var _status: Label
+var _home := Vector2.ZERO
+var _direction := 1.0
+var _velocity := 0.0
+var _tour := false
+var _tour_leg := 0
+var _pause := 0.0
+var _target := Vector2.ZERO
+var _turning := false
+var _turn_time := 0.0
+var _turn_start := 0.0
+var _kai_appearance := true
+
+
+func _ready() -> void:
+	AudioManager.stop_music()
+	_background = Sprite2D.new()
+	_background.texture = load("res://assets/art/illustrated_pilot/courtyard.png")
+	_background.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	add_child(_background)
+	_build_ui()
+	_make_actor()
+	_resize()
+	get_viewport().size_changed.connect(_resize)
+
+
+func _label(value: String, size: int) -> Label:
+	var label := Label.new()
+	label.text = value
+	label.add_theme_font_size_override("font_size", size)
+	label.add_theme_color_override("font_color", Color("f5e5c6"))
+	label.add_theme_color_override("font_outline_color", Color("18202a"))
+	label.add_theme_constant_override("outline_size", 4)
+	return label
+
+
+func _build_ui() -> void:
+	var canvas := CanvasLayer.new()
+	add_child(canvas)
+	var top := VBoxContainer.new()
+	top.position = Vector2(32, 26)
+	canvas.add_child(top)
+	top.add_child(_label("Kai • appearance and motion study", 29))
+	top.add_child(_label("An appearance draft on the accepted walk • K compares the grey mannequin", 17))
+	_status = _label("Quaternius • authored human walk", 18)
+	top.add_child(_status)
+	var bottom := PanelContainer.new()
+	bottom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	bottom.offset_top = -106
+	bottom.offset_left = 24
+	bottom.offset_right = -24
+	bottom.offset_bottom = -12
+	canvas.add_child(bottom)
+	var column := VBoxContainer.new()
+	bottom.add_child(column)
+	var buttons := HBoxContainer.new()
+	column.add_child(buttons)
+	for item in [["Walk", "walk"], ["Turn", "turn"], ["Kai / mannequin", "appearance"], ["Sword / free hand", "carry"], ["Normal / formal", "formal"], ["Reset", "reset"], ["Illustrated combat", "combat"]]:
+		var button := Button.new()
+		button.text = item[0]
+		button.custom_minimum_size = Vector2(140, 43)
+		button.pressed.connect(_act.bind(item[1]))
+		buttons.add_child(button)
+	column.add_child(_label("← / →: walk • 6: out-and-back • T: turn • K: compare • F: walk style • C: sword • R: reset • Esc: title", 14))
+
+
+func _make_actor() -> void:
+	var carrying := true if actor == null else actor.carrying
+	var formal := false if actor == null else actor.formal
+	if actor != null:
+		actor.free()
+	actor = AuthoredModelActor.new()
+	actor.kai_appearance = _kai_appearance
+	actor.carrying = carrying
+	actor.formal = formal
+	add_child(actor)
+	actor.setup()
+	actor.position = _home
+	actor._previous_position = actor.global_position
+	_update_status()
+
+
+func _update_status() -> void:
+	var appearance := "Kai appearance draft" if _kai_appearance else "Accepted grey mannequin"
+	var style := "formal walk" if actor.formal else "normal walk"
+	_status.text = appearance + " • " + style
+
+
+func _resize() -> void:
+	var screen := get_viewport_rect().size
+	_background.position = screen * 0.5
+	var texture_size := _background.texture.get_size()
+	_background.scale = Vector2.ONE * maxf(screen.x / texture_size.x, screen.y / texture_size.y)
+	_home = Vector2(screen.x * 0.34, screen.y * 0.80)
+	if not busy:
+		actor.position = _home
+		actor._previous_position = actor.global_position
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is not InputEventKey or not event.pressed or event.echo:
+		return
+	var action: String = {KEY_6: "walk", KEY_T: "turn", KEY_K: "appearance", KEY_C: "carry", KEY_R: "reset", KEY_F: "formal"}.get(event.keycode, "")
+	if event.keycode == KEY_ESCAPE:
+		get_viewport().set_input_as_handled()
+		get_tree().change_scene_to_file.call_deferred("res://scenes/title/title.tscn")
+	elif action != "":
+		get_viewport().set_input_as_handled()
+		_act(action)
+
+
+func _act(action: String) -> void:
+	if action == "combat":
+		get_tree().change_scene_to_file.call_deferred("res://scenes/proto/illustrated_pilot.tscn")
+		return
+	if action == "carry":
+		actor.set_carrying(not actor.carrying)
+		return
+	if action == "formal":
+		actor.formal = not actor.formal
+		_update_status()
+		return
+	if action == "appearance":
+		_act("reset")
+		_kai_appearance = not _kai_appearance
+		_make_actor()
+		return
+	if action == "reset":
+		busy = false
+		_tour = false
+		_turning = false
+		_velocity = 0.0
+		actor.moving = false
+		actor.position = _home
+		actor._previous_position = actor.global_position
+		actor.target_yaw = AuthoredModelActor.YAW
+		return
+	if busy:
+		return
+	if action == "walk":
+		actor.position = _home
+		actor._previous_position = actor.global_position
+		_direction = 1.0
+		actor.target_yaw = AuthoredModelActor.YAW
+		_tour = true
+		_tour_leg = 0
+		_pause = 0.0
+		_target = _home + Vector2(get_viewport_rect().size.x * 0.28, 0)
+		busy = true
+	elif action == "turn":
+		_turning = true
+		_turn_time = 0.0
+		_turn_start = actor.target_yaw
+		busy = true
+
+
+func _process(delta: float) -> void:
+	if actor == null:
+		return
+	if _turning:
+		_turn_time += delta
+		actor.target_yaw = _turn_start + TAU * smoothstep(0.0, 2.4, _turn_time)
+		actor.moving = false
+		if _turn_time >= 2.4:
+			_turning = false
+			busy = false
+		return
+	var desired := 0.0
+	if _tour:
+		if _pause > 0.0:
+			_pause -= delta
+		else:
+			desired = _direction * actor.nominal_speed()
+	elif not busy:
+		var axis := Input.get_axis("ui_left", "ui_right")
+		if axis != 0.0:
+			_direction = axis
+			actor.target_yaw = AuthoredModelActor.YAW * axis
+			desired = axis * actor.nominal_speed()
+	_velocity = move_toward(_velocity, desired, actor.nominal_speed() * delta / 0.18)
+	var step := _velocity * delta
+	actor.moving = absf(_velocity) > 0.1
+	if _tour and _pause <= 0.0 and absf(_target.x - actor.position.x) <= absf(step):
+		actor.position = _target
+		_velocity = 0.0
+		actor.moving = false
+		if _tour_leg == 0:
+			_tour_leg = 1
+			_direction = -1.0
+			actor.target_yaw = -AuthoredModelActor.YAW
+			_target = _home
+			_pause = 0.45
+		else:
+			_tour = false
+			busy = false
+	else:
+		actor.position.x += step
