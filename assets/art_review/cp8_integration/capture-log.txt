@@ -1,0 +1,102 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M2 (Apple8)
+
+Movie Maker mode enabled, recording movie in 1152×648 @ 60 FPS...
+NATIVE sword seed=1 [Kai -> Serra: 6 dmg (26 -> 20), Serra -> Kai: 11 dmg (26 -> 15), Kai -> Serra: 6 dmg (20 -> 14)]
+CAPTURE sword-forecast
+CAPTURE dialogue-1
+CAPTURE dialogue-2
+BEAT sword enter frame=413
+BEAT sword establish frame=434
+CAPTURE sword-establish-0
+BEAT sword windup frame=451
+SFX sword blade_whoosh
+BEAT sword commit frame=464
+CONTACT serra hp=20 Kai -> Serra: 6 dmg (26 -> 20)
+BEAT sword contact frame=472
+CAPTURE sword-contact-1
+BEAT sword recovery frame=484
+BEAT sword windup frame=514
+SFX sword blade_whoosh
+BEAT sword commit frame=527
+CONTACT kai hp=15 Serra -> Kai: 11 dmg (26 -> 15)
+BEAT sword contact frame=535
+CAPTURE sword-contact-2
+BEAT sword recovery frame=547
+BEAT sword windup frame=577
+SFX sword blade_whoosh
+BEAT sword commit frame=590
+CONTACT serra hp=14 Kai -> Serra: 6 dmg (20 -> 14)
+BEAT sword contact frame=598
+CAPTURE sword-contact-3
+BEAT sword recovery frame=610
+BEAT sword settle frame=640
+BEAT sword map frame=681
+CAPTURE sword-map-3
+PROGRESSION sword xp=11 uses=39
+NATIVE magic seed=0 [Kai -> Serra: 8 dmg (26 -> 18), Kai -> Serra: 8 dmg (18 -> 10)]
+CAPTURE magic-forecast
+BEAT magic enter frame=744
+BEAT magic establish frame=766
+CAPTURE magic-establish-0
+SFX magic magic_gather
+BEAT magic gather frame=783
+SFX magic magic_release
+BEAT magic release frame=815
+CAPTURE magic-release-0
+CONTACT serra hp=18 Kai -> Serra: 8 dmg (26 -> 18)
+SFX magic magic_impact
+BEAT magic contact frame=836
+CAPTURE magic-contact-1
+BEAT magic recovery frame=856
+SFX magic magic_gather
+BEAT magic gather frame=882
+SFX magic magic_release
+BEAT magic release frame=914
+CAPTURE magic-release-1
+CONTACT serra hp=10 Kai -> Serra: 8 dmg (18 -> 10)
+SFX magic magic_impact
+BEAT magic contact frame=935
+CAPTURE magic-contact-2
+BEAT magic recovery frame=955
+BEAT magic settle frame=981
+BEAT magic map frame=1022
+CAPTURE magic-map-2
+PROGRESSION magic xp=22 uses=998
+NATIVE yield seed=1 [Kai -> Serra: 6 dmg (1 -> 0)]
+CAPTURE yield-forecast
+BEAT yield enter frame=1085
+BEAT yield establish frame=1107
+CAPTURE yield-establish-0
+BEAT yield windup frame=1124
+SFX yield blade_whoosh
+BEAT yield commit frame=1137
+CONTACT serra hp=0 Kai -> Serra: 6 dmg (1 -> 0)
+BEAT yield contact frame=1145
+CAPTURE yield-contact-1
+BEAT yield recovery frame=1169
+SFX yield armor_drop
+BEAT yield defeat frame=1169
+CAPTURE yield-defeat-1
+BEAT yield settle frame=1233
+BEAT yield map frame=1274
+CAPTURE yield-map-1
+CAPTURE dialogue-3
+CAPTURE dialogue-4
+CAPTURE dialogue-5
+CAPTURE dialogue-6
+CAPTURE dialogue-7
+CAPTURE dialogue-8
+CAPTURE victory
+FINAL victory=true level=2 xp=28 uses=38 defeated=["serra"]
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+--------------------------------------------------------------------------------
+Done recording movie at path: /tmp/vael-cp8-integration.avi
+1917 frames at 60 FPS (movie length: 00:00:31:57), recorded in 00:00:35 (88% of real-time speed).
+CPU render time: 0.18 seconds (average: 0.09 ms/frame)
+GPU render time: 0.00 seconds (average: 0.00 ms/frame)
+Encoding time: 9.91 seconds (average: 5.17 ms/frame)
+--------------------------------------------------------------------------------

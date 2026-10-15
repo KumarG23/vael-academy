@@ -1,8 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/ui/battle_view.gd" id="1_bview"]
 [ext_resource type="Resource" path="res://data/chapters/mock_battle.tres" id="2_chapter"]
 
-[node name="Battle" type="Node2D"]
+[node name="Battle" type="Node2D" unique_id=374606787]
 script = ExtResource("1_bview")
 chapter = ExtResource("2_chapter")
+illustrated_battles_enabled = true

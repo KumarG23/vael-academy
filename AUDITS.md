@@ -231,6 +231,40 @@ These captures support visible legibility/overlap findings. Keyboard focus, redu
 **Where gameplay was left:** AW-79 still needs sealed-door/sanctum selection and music when tracks arrive. The year-one story/support work remains co-written with Neal; the calendar, house routes, activities, inventory, grading and mid-battle saves already exist. Their prior backlog remains valid after the art pilot. No gameplay work order or new art production was implemented during this audit.
 
 
+## CP-8 implementation / real encounter integration — 2026-10-15
+
+Baseline named green commit: **b8d927eb (CP-7)**. Implementer's record, not an
+independent audit. Neal approved proceeding with pixel world / illustrated
+battles, requested battle sounds and raised optional timed dodge/block.
+
+- **Integration:** existing Emberwing Mock Battle scene opts in. The production
+  executor passes its single native result into the CP-6/7 player; actual HP
+  changes at contact, without another HP replay on return. Defeat/removal,
+  one-use-per-combat durability, XP/level-up RNG, quotes/yield/outro and chapter
+  results remain in their existing executor/view flow. Only approved unpromoted
+  player-Kai/enemy-Serra kits qualify, including enemy initiation; unsupported
+  teams/designs/weapons/matchups retain their existing presentation.
+- **Audio:** five original locally synthesized sweeteners, data-driven cue map,
+  existing AudioManager volume/mute/pool/cache and hit/crit/miss. No third-party
+  imports/generation calls/spend; generator/provenance in
+  `assets/source/combat_audio/`. Gemini/Lyria music direction recorded; no music
+  generation/API access claim. Optional active defense is parked as a separate
+  proposal, not cosmetic input layered over already-resolved hit damage.
+- **Evidence:** `assets/art_review/cp8_integration/` has native 1152×648/60fps,
+  31.95s sound-on movie, stills, production replay/interactive rehearsal scripts,
+  logs and exact fixture changes. Actual menu→forecast→boss quote→combat→map,
+  magic, level-up, yield/outro and Victory captured. Normal scene deployment/
+  content unchanged. Existing CP-2/4/5/A-B evidence preserved.
+- **Checks:** **557/557 tests, 3,679 assertions, 84 scripts, 135.057s**. New
+  production tests **4/4, 75 assertions, 20.25s** cover live result/RNG/contact,
+  real input, routing gates, counters/magic, uses, XP/level-up rolls, real
+  quote/yield/outro input, victory/campaign capture and non-lethal defeat.
+  Inherited 13 deprecations/two ObjectDB/one resource exit reports remain.
+- **Review limits:** kneeling Serra has no lance and the small pose set is not
+  a full drawn fall/broad slash; bright chapter heading contrast remains UI
+  polish. New sound layers await Neal's listening review. Next: review full
+  flow, then separate optional active-defense prototype before roster expansion.
+
 ## CP-7 implementation / Neal's approval — 2026-10-15
 
 Baseline named green commit: **6394aef2 (CP-6)**. Implementer's record,

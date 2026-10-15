@@ -3,6 +3,7 @@ extends JuiceController
 ## CP-6: retain the established result/impact/HP/sound/hit-stop orchestration.
 signal beat(name: String)
 signal contact(target: Unit, strike: StrikeResult)
+signal sound_cued(name: String)
 var presentation_data: Dictionary
 var effects: IllustratedCombatFX
 var active_striker: Unit
@@ -35,9 +36,20 @@ func _make_rig() -> CombatRig:
 	var base: Array = presentation_data["characters"][active_striker.unit_id()]["blade_base"]
 	rig.blade_base = Vector2(base[0], base[1])
 	rig.effects = effects
-	rig.beat.connect(func(name: String) -> void: beat.emit(name))
+	rig.beat.connect(func(name: String) -> void:
+		play_cue(name)
+		beat.emit(name))
 	rig.committing.connect(_prepare_dodge)
 	return rig
+
+
+func play_cue(event: String) -> void:
+	var cues: Dictionary = presentation_data.get("audio", {})
+	if not cues.has(event):
+		return
+	var name := str(cues[event])
+	AudioManager.play_sfx(name)
+	sound_cued.emit(name)
 
 
 func _prepare_dodge() -> void:
@@ -62,6 +74,8 @@ func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill:
 	# Keep a brief flash while retaining face and costume detail in the painting.
 	target._flash = 0.16
 	var magical := active_striker.weapon().is_magical()
+	if magical:
+		play_cue("magic_impact")
 	var profile := CombatFxProfile.build(active_striker.unit_def, active_striker.weapon())
 	effects.burst(target.global_position + target.combat_aim_offset(), profile.magic_color if magical else profile.melee_color, strike.was_crit, magical)
 	if HitReaction.classify(strike, is_kill, target.max_hp(), cfg.stagger_hp_frac) == HitReaction.Kind.KNOCKBACK:
@@ -74,6 +88,7 @@ func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill:
 		reaction.tween_interval(float(presentation_data["timing"]["defeat_hit_hold"]))
 		reaction.tween_callback(func() -> void:
 			target.set_illustrated_pose("defeat")
+			play_cue("defeat")
 			beat.emit("defeat"))
 		reaction.tween_property(target, "position", home + toward * cfg.knockback_distance, cfg.reaction_back).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		return reaction

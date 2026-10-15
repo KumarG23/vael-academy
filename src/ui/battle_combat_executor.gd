@@ -30,7 +30,15 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 	# WO-4.9: FE-style combat cut-in when both sides have a hand-authored kit.
 	# Every combat unit is meant to have its own — see the kit rollout.
 	# Tests run strike_delay = 0 and never enter this path.
-	if _v.strike_delay > 0.0 and _v.battle_popups_enabled and _v._battle_popup != null \
+	if _v.strike_delay > 0.0 and _v._illustrated_combat != null \
+			and _v._illustrated_combat.supports_exchange(attacker, defender):
+		# CP-8: replay the SAME result; contact applies real map HP. Progression,
+		# durability and chapter completion remain below, shared by all players.
+		await _v._illustrated_combat.play_exchange(attacker, defender, result, _v._ui_layer)
+		for unit: Unit in [attacker, defender]:
+			if not unit.is_alive():
+				_v._kill(unit)
+	elif _v.strike_delay > 0.0 and _v.battle_popups_enabled and _v._battle_popup != null \
 			and BattlePopup.has_kit(attacker.unit_id()) and BattlePopup.has_kit(defender.unit_id()):
 		# v3: forecast numbers drive the chrome; the map itself (captured just
 		# before the cut-in) becomes the washed backdrop, FE field-battle style.

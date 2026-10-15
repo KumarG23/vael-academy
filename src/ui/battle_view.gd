@@ -26,6 +26,8 @@ extends Node2D
 ## ON THE MAP (unit lunges/attacks on its tile, camera pushes in on the clash).
 ## Left as a toggle for now; default off. Tests never see either path (strike_delay 0).
 @export var battle_popups_enabled: bool = false
+## CP-8: opt-in per encounter; only approved character/weapon pairs qualify.
+@export var illustrated_battles_enabled: bool = false
 
 const TERRAIN_TINTS := {
 	Terrain.Type.PLAINS: Color(0.0, 0.0, 0.0, 0.0),
@@ -162,6 +164,11 @@ func _ready() -> void:
 	_setup_camera()
 	_setup_ui()
 	_setup_juice()
+	if illustrated_battles_enabled:
+		_illustrated_combat = IllustratedCombatPresentation.new()
+		_illustrated_combat.comparison_labels = false
+		_illustrated_combat.stage_title = chapter.display_name
+		add_child(_illustrated_combat)
 	_spawn_units()
 	_fielded_at_start = _living_units_on_team(0).size()
 	if chapter.is_arena:
@@ -676,6 +683,7 @@ func _show_forecast_for(enemy: Unit) -> void:
 ## keep the view's public surface (tests, targeting flow) unchanged.
 var _combat_exec: BattleCombatExecutor
 var _battle_popup: BattlePopup
+var _illustrated_combat: IllustratedCombatPresentation
 
 
 func _execute_attack(attacker: Unit, defender: Unit) -> void:

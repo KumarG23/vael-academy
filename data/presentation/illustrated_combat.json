@@ -1,6 +1,7 @@
 {
   "characters": {
     "kai": {
+      "weapons": ["sig_kai", "iron_sword", "crownspark"],
       "art": "res://assets/art/illustrated_pilot/kai",
       "height": 340.0,
       "strike_tip": [
@@ -18,6 +19,7 @@
       ]
     },
     "serra": {
+      "weapons": ["iron_lance", "sig_serra"],
       "art": "res://assets/art/illustrated_pilot/serra",
       "height": 340.0,
       "strike_tip": [
@@ -34,6 +36,13 @@
         269
       ]
     }
+  },
+  "audio": {
+    "commit": "blade_whoosh",
+    "gather": "magic_gather",
+    "release": "magic_release",
+    "magic_impact": "magic_impact",
+    "defeat": "armor_drop"
   },
   "timing": {
     "windup": 0.23,

@@ -9,6 +9,17 @@
 > defeat timing, then integrate one supported real encounter before roster
 > production. Direction approval does not approve unseen character/weapon kits.
 
+> **CP-8 production / audio follow-up:** the existing Mock Battle opts into
+> illustrated combat for the approved, unpromoted player Kai / enemy Serra pair
+> and approved sword/Crownspark/lance weapons; other matchups retain their current
+> presentation. Pixel map actors remain pixel art. Music direction per Neal:
+> Gemini / Google's Lyria, exported and reviewed as normal game audio (no runtime
+> generation). Battle SFX follow commitment, spell gather/release, connected impact
+> and delayed defeat; preserve the existing volume/mute system. CP-8 uses locally
+> synthesized cue layers plus existing impact/UI/music assets; no music generation
+> or spending. Optional player-timed dodge/block remains a separate design
+> proposal; current dodges still show actual resolver misses.
+
 
 > **A/B decision history — Neal, 2026-10-15 (CP-6).** World,
 > academy exploration, tactical maps, units/NPCs and environmental animation

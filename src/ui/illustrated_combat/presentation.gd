@@ -8,6 +8,8 @@ const DATA := "res://data/presentation/illustrated_combat.json"
 const SIZE := Vector2(1280, 720)
 const GOLD := Color("d8bd80")
 var presentation_data: Dictionary
+var comparison_labels := true
+var stage_title := "THE SUNLIT CLOISTER"
 var busy := false
 var world: Node2D
 var juice: IllustratedCombatJuice
@@ -62,8 +64,8 @@ func _ready() -> void:
 		line.position = Vector2(0, 48 if y == 0 else y)
 		line.size = Vector2(1280, 1)
 		_hud.add_child(line)
-	_headline = label("THE SUNLIT CLOISTER", Vector2(400, 66), 26, GOLD)
-	_headline.size.x = 480
+	_headline = label(stage_title.to_upper(), Vector2(240, 66), 24, GOLD)
+	_headline.size.x = 800
 	_headline.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hud.add_child(_headline)
 	_subhead = label("", Vector2(320, 104), 16, Color(0.82, 0.85, 0.86))
@@ -71,7 +73,7 @@ func _ready() -> void:
 	_subhead.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hud.add_child(_subhead)
 	_hud.add_child(label("VAEL ACADEMY", Vector2(44, 14), 15, GOLD))
-	_hud.add_child(label("B  /  ILLUSTRATED KEY POSES", Vector2(920, 14), 15, GOLD))
+	_hud.add_child(label("B  /  ILLUSTRATED KEY POSES" if comparison_labels else "ILLUSTRATED COMBAT", Vector2(920, 14), 15, GOLD))
 	var credits := label("Combat / Spell FX: heyheythere · CC BY 4.0   |   Particles: Kenney · CC0", Vector2(330, 695), 12, Color(0.60, 0.65, 0.70))
 	_hud.add_child(credits)
 	effects = IllustratedCombatFX.new()
@@ -112,6 +114,26 @@ static func label(text: String, at: Vector2, size: int, color: Color = Color.WHI
 	node.add_theme_font_size_override("font_size", size)
 	node.add_theme_color_override("font_color", color)
 	return node
+
+
+func supports_exchange(attacker: Unit, defender: Unit) -> bool:
+	# One approved pairing, in its authored orientation. An axe, unapproved spell,
+	# promoted design or another character must not borrow a misleading painting.
+	var pair: Array[Unit] = []
+	pair.assign([attacker, defender] if attacker.unit_id() == "kai" else [defender, attacker])
+	if pair[0].unit_id() != "kai" or pair[1].unit_id() != "serra" or pair[0].team != 0 or pair[1].team != 1:
+		return false
+	for unit in pair:
+		var record: Dictionary = presentation_data["characters"][unit.unit_id()]
+		if unit.current_class() != unit.unit_def.char_class or unit.weapon() == null or unit.weapon().id not in record["weapons"]:
+			return false
+		var kit := IllustratedArt.from_directory(str(record["art"]))
+		if kit == null:
+			return false
+		for pose: String in ["idle", "action", "parry_hit", "cast", "defeat"]:
+			if not kit.textures.has(pose):
+				return false
+	return true
 
 
 func _resize() -> void:
