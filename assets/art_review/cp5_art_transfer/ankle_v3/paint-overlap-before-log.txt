@@ -1,0 +1,4 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Walk minimum painted ankle cuff overlap { "frame": 0, "side": "thigh_r", "overlap_pixels": 0 }
+Walk_Formal minimum painted ankle cuff overlap { "frame": 0, "side": "thigh_r", "overlap_pixels": 0 }

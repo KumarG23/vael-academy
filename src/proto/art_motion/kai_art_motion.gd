@@ -164,13 +164,16 @@ func update_from_motion() -> void:
 		_align(part["lower"],points[1],points[2],94.0 if part["type"]=="leg" else 54.0)
 		if part["type"]=="leg":
 			_fit_pants(part["pants"],points[0],points[1],points[2])
-			_align(part["lower"],points[1].lerp(points[2],0.30),points[2],94.0)
 			var foot: Sprite2D = part["foot"]
 			var toe := projected_bone(str(bones[3]).replace("ball_", "ball_leaf_"))+offset
 			foot.rotation = (toe-points[3]).angle()-Vector2(43.7,3.9).angle()
 			# Register the painted toe at the actual planted ball joint. This keeps
 			# source stance travel rather than inventing heel/toe trajectories.
 			foot.position = points[3]-(Vector2(87,41.4)+foot.offset).rotated(foot.rotation)
+			# The rigid painting's ankle differs from the source ankle. Join the
+			# shaft to its painted cuff while retaining the source-driven toe.
+			var painted_ankle := foot.position+(Vector2(50,19)+foot.offset).rotated(foot.rotation)
+			_align(part["lower"],points[1].lerp(points[2],0.30),painted_ankle,94.0)
 		elif part["near"]:
 			carry.position = points[1]
 			carry.rotation = (points[2]-points[1]).angle()-(CARRY_WRIST-CARRY_ELBOW).angle()

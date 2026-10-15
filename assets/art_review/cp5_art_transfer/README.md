@@ -4,7 +4,9 @@ Neal rejected the first clothed 3D substitute: it did not look like Kai. He aske
 for the existing Kai artwork with the better walking animation. This isolated
 proof follows that correction. Neal called it **"a pretty good improvement"**
 and requested a forward sword grip and trousers without a knee-pad appearance.
-Those corrections are now implemented; **the corrected art awaits review**.
+Neal called those corrections "looking better," then reported the foot
+detaching during steps. The boot shaft now meets the painted foot cuff while
+keeping the same source-driven toe motion; **the ankle fix awaits review**.
 
 Open **Title → Dev Jump → Kai art motion test**, or:
 
@@ -18,9 +20,12 @@ resets, **Esc** returns to title. **T shows the actual mannequin turn**. The one
 painted view does not contain Kai's back/side artwork; this proof does not invent
 those views or claim the reflected drawing is a genuine 3D turn.
 
-[Watch the corrected transfer](corrections_v2/pilot.mp4) ·
-[Corrected close view](corrections_v2/06-kai-art-close.png) ·
-[Corrected return](corrections_v2/03-kai-art-return.png)
+[Watch the current ankle repair](ankle_v3/pilot.mp4) ·
+[Repaired close-up](ankle_v3/ankle-Walk-east-40.png) ·
+[Detached-foot reproduction](ankle_v3/before-detached-foot.png) ·
+[Join measurements and reproduction](ankle_v3/README.md)
+
+[Earlier grip/trouser correction](corrections_v2/pilot.mp4)
 
 Initial transfer evidence retained for comparison: [v1 video](pilot.mp4) · [Idle](01-kai-art-idle.png) ·
 [Walk](02-kai-art-walk.png) · [Return](03-kai-art-return.png) ·
@@ -51,7 +56,9 @@ CP-4 grip and the existing sleeve as references. Raw transparent output, exact
 prompt and hashes: `assets/source/kai_motion_corrections/`. Continuous navy
 trouser cloth now spans the knee and ends inside calf-high boots, removing the
 segmented knee-pad appearance. The painted support toe registers at the authored ball joint, with sole angle
-from the source toe bones. It uses source animation, not a guessed foot path.
+from the source toe bones. The painted cuff differs from the source ankle;
+the shaft now connects directly to that cuff so the foot cannot float away.
+It uses source animation, not a guessed foot path.
 
 ## What still needs art review
 
@@ -84,20 +91,22 @@ character after Kai's artwork/motion method is accepted.
 
 ## Verification and reproduction
 
-**546/546 tests pass, 3,385 assertions.** Four CP-5 tests preserve the original
+**547/547 tests pass, 3,386 assertions.** Five CP-5 tests preserve the original
 head texture/UV geometry/scale, sample actual support contact cancelling travel
 within one screen pixel, verify comparison/real-turn fallback without
 Campaign changes, and sample actual steel/hilt pixels to check forward/down
-blade direction in both facings. Current logs are in `corrections_v2/`. Tests establish mechanics, not visual acceptance. The suite
+blade direction in both facings, and verify actual opaque cuff/shaft overlap
+in 960 poses across Idle/Normal/Formal, both legs and both facings. Current
+logs are in `ankle_v3/`. Tests establish mechanics, not visual acceptance. The suite
 retains its inherited 13 deprecations and two object/one resource exit reports.
 
 ```sh
 godot --headless --import
 godot --headless -s addons/gut/gut_cmdln.gd \
   -gdir=res://tests -ginclude_subdirs -gexit
-godot --path . --fixed-fps 60 --write-movie /tmp/vael-cp5-art-corrected.avi \
-  -s assets/art_review/cp5_art_transfer/corrections_v2/capture.gd
+godot --path . --fixed-fps 60 --write-movie /tmp/vael-cp5-ankle.avi \
+  -s assets/art_review/cp5_art_transfer/ankle_v3/capture.gd
 ```
 
 The capture needs a real renderer. It writes screenshots to
-`/tmp/vael-cp5-art-corrected-captures/`; encode its AVI with ffmpeg as in the CP-4 README.
+`/tmp/vael-cp5-ankle-captures/`; encode its AVI with ffmpeg as in the CP-4 README.

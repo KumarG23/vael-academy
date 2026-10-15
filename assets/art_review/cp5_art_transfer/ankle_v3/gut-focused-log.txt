@@ -1,0 +1,34 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+---  GUT  ---
+[1m[INFO]:  [0musing [/Users/nealsharma/Library/Application Support/Godot/app_userdata/Vael Academy] for temporary output.
+Godot version:  4.7.2
+GUT version:  9.7.0
+[4m
+
+res://tests/test_art_motion_transfer.gd
+[0m* test_original_head_texture_geometry_and_scale_survive_walk_and_return
+* test_painted_contact_toe_follows_authored_stance_and_root_travel
+* test_comparison_uses_same_model_and_turn_displays_real_reference
+* test_painted_ankle_stays_inside_boot_through_both_walks_and_facings
+* test_actual_painted_blade_points_forward_and_down_in_both_facings
+[1m5/5 passed.
+[0m
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Scripts               1
+Tests                 5
+Passing Tests         5
+Asserts              61
+Time              0.989s
+
+
+[32m---- All tests passed! ----
+[0mGUT 9.7.1:  https://github.com/bitwes/Gut/releases/tag/v9.7.1 is now available!

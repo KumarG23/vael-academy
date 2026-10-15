@@ -11,7 +11,9 @@
 > mannequin remains the motion/turn comparison. A single painted view cannot
 > provide a genuine full turn; directional artwork remains necessary. This
 > transfer is **awaiting Neal's motion/joins review**, not a production lock.
-> Current corrected evidence: `assets/art_review/cp5_art_transfer/corrections_v2/`; rejected model archive:
+> Follow-up: Neal found the foot detached during steps. The boot shaft now
+> meets the painted foot cuff while its authored toe registration stays intact.
+> Current corrected evidence: `assets/art_review/cp5_art_transfer/ankle_v3/`; rejected model archive:
 > `assets/art_review/cp5_model_rejected/`. No generic Kai model in runtime.
 
 > **CP-4 motion foundation, 2026-10-15:** Neal accepted the grey human

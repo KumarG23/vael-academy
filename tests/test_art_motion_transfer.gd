@@ -79,6 +79,46 @@ func test_comparison_uses_same_model_and_turn_displays_real_reference():
 	assert_eq(Campaign.to_dict(), state)
 
 
+func test_painted_ankle_stays_inside_boot_through_both_walks_and_facings():
+	var pilot := _pilot()
+	var rig := pilot.illustration
+	var shin_image: Image = load(KaiArtMotion.LAYERS + "shin.png").get_image()
+	var foot_image: Image = load(KaiArtMotion.LAYERS + "foot.png").get_image()
+	if shin_image.is_compressed():
+		shin_image.decompress()
+	if foot_image.is_compressed():
+		foot_image.decompress()
+	var least_overlap := 1000
+	var worst_pose := ""
+	for clip: String in ["Idle", "Walk", "Walk_Formal"]:
+		pilot.actor.player.play(clip, 0.0)
+		for frame in range(80):
+			pilot.actor.player.seek(pilot.actor.player.current_animation_length * frame / 80.0, true)
+			pilot.actor.player.advance(0.0)
+			for yaw: float in [AuthoredModelActor.YAW, -AuthoredModelActor.YAW]:
+				pilot.actor.target_yaw = yaw
+				rig.update_from_motion()
+				for part: Dictionary in rig.parts:
+					if part["type"] != "leg":
+						continue
+					var shin: Sprite2D = part["lower"]
+					var foot: Sprite2D = part["foot"]
+					var overlap := 0
+					# Compare opaque painted pixels at the cuff in world space.
+					# Coincident bone positions alone missed the detached foot.
+					for y in range(12, 28, 2):
+						for x in range(40, 58, 2):
+							if foot_image.get_pixel(x, y).a < 0.9:
+								continue
+							var sample := shin.to_local(foot.to_global(Vector2(x, y) + foot.offset)) - shin.offset
+							if Rect2(Vector2.ZERO, shin_image.get_size()).has_point(sample) and shin_image.get_pixelv(Vector2i(sample)).a > 0.9:
+								overlap += 1
+					if overlap < least_overlap:
+						least_overlap = overlap
+						worst_pose = "%s frame %s yaw %s %s" % [clip, frame, yaw, part["bones"][0]]
+	assert_gte(least_overlap, 12, "painted ankle must overlap its boot shaft: " + worst_pose)
+
+
 func test_actual_painted_blade_points_forward_and_down_in_both_facings():
 	var pilot := _pilot()
 	var image := pilot.illustration.carry.texture.get_image()

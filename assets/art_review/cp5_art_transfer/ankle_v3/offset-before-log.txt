@@ -1,0 +1,4 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Walk worst { "frame": 40, "side": "thigh_l", "shaft_end": (1.420752, 20.54036), "ankle": (-5.656921, 29.58435), "gap_px": 11.4842138290405 }
+Walk_Formal worst { "frame": 40, "side": "thigh_l", "shaft_end": (1.413273, 20.56641), "ankle": (-5.665482, 29.6138), "gap_px": 11.4875564575195 }
