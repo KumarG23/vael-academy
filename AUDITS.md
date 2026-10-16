@@ -478,3 +478,11 @@ Neal's findings against the completed VS-1B raid, addressed in one visual WO.
 Evidence `assets/art_review/vs1b5_raid/`; full rationale/provenance in
 `VS1B5_VISUAL_NOTES.md`. No story-bible canon changes. Known inherited GUT/exit
 cleanup reports unchanged. VS-1C arrival remains separate.
+
+
+### VS-1B.5 delivery correction — audited at `17b26615`, 2026-10-16
+
+| Finding | Outcome |
+|---|---|
+| NewGame references two live scripts absent from Git (`data/dialogue/prologue_home_morning.json`, `prologue_road_waystation.json`); local green tests masked files present only in the checkout | ✅ Follow-up VS-1B.5 commit tracks both existing scripts, with approved prose and portrait mappings unchanged. All7 opening scripts/38 direct dialogue-art-audio dependencies checked against staged tracked paths; focused5/5 and full-suite recheck. |
+| VS Code shows199 changes despite report that work was saved | All199 were untracked:195 generated Godot metadata +2 preserved input/unrelated files +2 omitted live scripts above. Those scripts fixed; remaining197 intentionally left intact. Previous report did not clearly distinguish tracked cleanliness from untracked files. |

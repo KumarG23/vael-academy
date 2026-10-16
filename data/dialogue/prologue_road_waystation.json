@@ -1,0 +1,109 @@
+[
+  {
+    "speaker": "",
+    "text": "At the first waystation on the Vael road, the Director is already saddling a fresh horse.",
+    "backdrop": "res://assets/art/vn/painted/road_waystation_departure.png"
+  },
+  {
+    "speaker": "Kai",
+    "text": "You said four days. That was one.",
+    "portrait": "kai_travel"
+  },
+  {
+    "speaker": "Hesta",
+    "text": "You still have three to go.",
+    "side": "right",
+    "portrait": "hesta"
+  },
+  {
+    "speaker": "Kai",
+    "text": "And you?",
+    "portrait": "kai_travel"
+  },
+  {
+    "speaker": "Hesta",
+    "text": "There are matters at the Academy that cannot wait three days.",
+    "side": "right",
+    "portrait": "hesta"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Does one of them involve me?",
+    "portrait": "kai_travel"
+  },
+  {
+    "speaker": "Hesta",
+    "text": "Yes.",
+    "side": "right",
+    "portrait": "hesta"
+  },
+  {
+    "speaker": "Kai",
+    "text": "You could try being less reassuring.",
+    "portrait": "kai_travel"
+  },
+  {
+    "speaker": "Hesta",
+    "text": "I am not trying to reassure you. I am trying to have the gates ready before you arrive.",
+    "side": "right",
+    "portrait": "hesta"
+  },
+  {
+    "speaker": "",
+    "text": "She passes a sealed travel order to the road warden waiting beside the supply wagon."
+  },
+  {
+    "speaker": "Hesta",
+    "text": "He travels with your party. The main road, the usual stops. No shortcuts.",
+    "side": "right",
+    "portrait": "hesta"
+  },
+  {
+    "speaker": "Road Warden",
+    "text": "Understood, Director.",
+    "side": "right",
+    "portrait": "road_warden"
+  },
+  {
+    "speaker": "Kai",
+    "text": "You know what that sword is. I saw your face.",
+    "portrait": "kai_travel"
+  },
+  {
+    "speaker": "Hesta",
+    "text": "You saw a woman in a hurry.",
+    "side": "right",
+    "portrait": "hesta"
+  },
+  {
+    "speaker": "Kai",
+    "text": "That is not an answer.",
+    "portrait": "kai_travel"
+  },
+  {
+    "speaker": "Hesta",
+    "text": "You will find I rarely give one before it is useful.",
+    "side": "right",
+    "portrait": "hesta"
+  },
+  {
+    "speaker": "",
+    "text": "Before he can ask again, the Director turns her horse toward the northern road."
+  },
+  {
+    "speaker": "Road Warden",
+    "text": "Come along, then. People on foot arrive later than people with opinions and fresh horses.",
+    "side": "right",
+    "portrait": "road_warden"
+  },
+  {
+    "speaker": "Kai",
+    "text": "I am beginning to suspect the Academy is full of both.",
+    "portrait": "kai_travel"
+  },
+  {
+    "speaker": "",
+    "text": "Days later, a day's travel from Vael, smoke rises beyond the roofs of a roadside hamlet.",
+    "backdrop": "res://assets/art/vn/painted/road_hamlet_approach.png"
+  }
+]
