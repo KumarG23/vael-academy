@@ -1,0 +1,70 @@
+{
+  "raid_square_v1": {
+    "references": [
+      "assets/art/vn/painted/road_raid_well.png"
+    ],
+    "prompt": "Use case: illustration-story / environmental edit. Edit reference image 1, the approved Vael road hamlet still. Preserve its warm hand-painted fantasy storybook style, camera, light, timber/thatched construction and recognizable village square. Change the isolated fire into a serious hamlet-wide bandit raid. The circular well remains left of center, ONE overturned wooden cart right of center, right market stalls and west fence/stone steps remain. Show a modest shallow stream with an open stone ford crossing the road in the middle distance to the right of the square, with a weathered low stone boundary at the far eastern edge; this connects the location to our tactical map. Beyond the well and cart, the road winds between several densely clustered homes. Three SEPARATE fire/smoke sites: original right cottage, far left lane thatched roof, distant roof beyond the ford. Visible orange flames at two sites; windblown charcoal smoke rises above roofs, warm sun still lights the foreground. FOUR distinct ordinary human leather-clad axe/club bandits in separate midground positions: one threatening near overturned cart, two looting upper lane, one at far ford. No royal/military uniforms. FIVE or six villagers in small readable action groups fleeing sideways, an adult helping an elderly neighbor, another carrying water; clear distressed body language, no gore. Spilled apples/grain, abandoned cloth bundles, a broken wheel and splintered stall make a disturbed public place. Strong diagonals of running people and wind. The foreground intervention lane between left approach, well and cart is readable and uncrowded for a subsequent hero entrance. Nobody posed for the viewer, no named heroes yet. No huge army, no monsters, no modern objects, no text/UI/borders. Not a screenshot or pixel map. 16:9 cinematic wide painted VN backdrop, dramatic but humane. Lower quarter relatively simple warm dirt for dialogue overlay. Keep faces and most action above the lower quarter. This should feel like one active square inside an attack on the whole roadside hamlet, not a single burning shed."
+  },
+  "kai_rush_v1": {
+    "references": [
+      "assets/source/vs1b5_raid_art/raid_square_v1.png",
+      "assets/art/vn/painted/road_kai_rush.png",
+      "assets/portraits/portrait_kai_travel.png",
+      "assets/portraits/portrait_road_child.png"
+    ],
+    "prompt": "Painted storybook Vael Academy illustration, same warm painterly rendering and 16:9 composition as the references. Reference 1 is the approved multi-fire raid environment: preserve that exact square, well left of center, tipped cart right of center, east ford, west fence/steps, original right burning cottage, left burning roof and distant smoke. Ordinary bandits and escaping villagers remain active in small midground groups, not a hero lineup. Keep the immediate foreground action clearly readable, with air around the characters and the bottom quarter open for dialogue. No UI, no text, no borders. Named faces/costumes match their references, nobody duplicated. No magical spell display, no supernatural fire. Scene: Kai sees a terrified brown-haired little girl in teal/cream trapped between the well and overturned cart; one axe bandit is bearing down on her. Kai runs in from the left to put himself between the child and the brigand. Preserve the running intervention pose, cream rolled-sleeve shirt, brown waistcoat and trousers, messy dark teal hair, sword at hip from reference 2. The tiny green Crown mark is over his anatomical LEFT brow (viewer-right in a frontal face), no glow/sparks. Kai looks toward the threat and girl, not at the viewer. Clear urgent action triangle Kai/axe brigand/girl above the bottom quarter. Child is crouched with hands close to chest, not running toward bandits. The bandit in immediate foreground is the only large enemy; other looters remain midground, several villagers flee via west lane. Do not keep the bucket-carrying foreground man from reference1: that space is Kai's entrance lane now. Not a soldier, not in school uniform. The scene must communicate one reckless protective decision amid an attack on a whole village."
+  },
+  "approach_v1": {
+    "references": [
+      "assets/art/vn/painted/road_hamlet_approach.png",
+      "assets/source/vs1b5_raid_art/raid_square_v1.png"
+    ],
+    "prompt": "Edit reference1, preserving the exact wooded winding road, rural thatched hamlet and beautiful warm painterly landscape, camera and early-afternoon lighting. Now the hamlet is in the wider raid of reference2: show THREE distinct dark smoke columns at separated roofs (left lane, right square, far east), with small visible orange fire patches. Tiny distinct running villagers with bundles flee along the lower hamlet road; a tipped cart and spilled pale sacks beside the village entrance. Small ordinary leather-clad bandits deeper in the hamlet, no huge army, no focal named heroes. Modest river/ford visible at the right edge of the clustered homes. Keep the foreground woodland approach quiet and uncluttered for narration. A genuine inhabited hamlet under coordinated attack rather than a peaceful village with one chimney. Retain style, depth, readable village silhouettes; no UI/text/border. 16:9."
+  },
+  "raid_square_v2": {
+    "references": [
+      "assets/source/vs1b5_raid_art/raid_square_v1.png",
+      "assets/portraits/portrait_road_child.png"
+    ],
+    "prompt": "Edit reference1 with two localized subject fixes, preserving exact environment, flames, three smoke columns, well/cart/ford/market geography, all bandits and escaping/helping adult villagers. Remove ONLY the large boy running toward camera with bucket at center foreground. Place the frightened LITTLE GIRL from ref2 (brown bob, teal dress and cream blouse) crouched immediately between well and cart, just to the right of well, clear face around x49%, y49%. She is the endangered child in the approved rescue. She must be small, no duplicates, and an axe bandit already behind the cart is closing toward her. Otherwise keep this dramatic multi-bandit hamlet raid exactly. Same painterly warm daylight, no UI/text/magic."
+  },
+  "kai_rush_v2": {
+    "references": [
+      "assets/source/vs1b5_raid_art/kai_rush_v1.png",
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Refine reference1, preserving its style, setting, all three fire/smoke sites, tipped cart, well, child and axe brigand. Two specific composition improvements. Move running Kai inward, with his HEAD centered x39%, y38%, body natural and not huge. Same commoner clothes/sheathed sword and face from ref2. Tiny GREEN crown mark above anatomical left brow, no magic blast. Kai looks toward brigand and girl, protective urgent expression. Add two small fleeing VILLAGER groups in upper-left lane: adult helping elderly neighbor toward left fence, mother carrying toddler behind them. They are behind Kai above y45%, visibly escaping rather than fighting. Keep distant raiders at ford and upper lane, not a duplicate foreground axeman behind the well: turn that one into a bandit looting behind the far market stall instead. Keep foreground threat triangle legible, girl's face around x57%, y55%, not lower. No extra hero/child/cart, no soldiers, no text/UI. Lowerquarter quiet dirt for dialogue, outermost left/right quarter can be overlapped by portraits."
+  },
+  "strangers_v1": {
+    "references": [
+      "assets/source/vs1b5_raid_art/raid_square_v1.png",
+      "assets/art/vn/painted/road_strangers_form.png",
+      "assets/portraits/portrait_kai_travel.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_perrin.png",
+      "assets/portraits/portrait_rina.png"
+    ],
+    "prompt": "Create the next 16:9 painted Vael story tableau in the EXACT multi-fire hamlet of reference1, with character staging from ref2. Preserve same well left-middle, ONE tipped cart right-middle, right burning cottage, west burning roof, distant fire, shallow eastern ford, west fence lane/steps, scattered apples and broken market awning. The rescued child is already SAFE OFFSCREEN; no child foreground. Four named teenage strangers, exact faces and costumes refs3-6, not friends posing. KAI: x41%, head y39%, teal messy hair, cream shirt/brown waistcoat, tiny green left-brow mark, sheathed sword, holds well side. SERRA: x54%, blonde twin-tails, blue/silver lance armor, standing protects lane with lance. PERRIN: x69%, golden blond crimson/gold coat over navy, mounted correctly in saddle on ONE brown horse, reins in hand, keeping east lane open. RINA: x32%, farther away up west steps, red braid green/bronze over white sleeves, points to west escape lane. Clear distinct practical tasks, concerned expressions, no smiles/royal emblems. Larger raid remains visible: small leather bandits looting far upper lane and beyond ford, fleeing villagers helping elder through far west lane; foreground bandit from ref1 now retreats toward far road. Three distinct roofs burn/smoke, wind carries ash above roofs, foreground not fogged. Keep main faces above y50%, center clear above bottomquarter dialogue. No duplicate actors, no extra horses/carts, no magic spell, no text/UI/borders. Warm painterly fantasy rendering; characters recognizable, not redesigns."
+  },
+  "aftermath_v1": {
+    "references": [
+      "assets/source/vs1b5_raid_art/raid_square_v1.png",
+      "assets/art/vn/painted/road_aftermath_square.png"
+    ],
+    "prompt": "Paint the quiet immediate AFTERMATH of reference1 in exactly the same camera, 16:9 warm painted storybook style, same well/cart/west steps/east ford and damaged hamlet. The raiders are GONE; remove all bandits, no armed people or named heroes. Big flames now extinguished; three damaged roofs (right cottage, west roof, far lane) remain scorched with separate thinning gray smoke columns, no active major flames or new pristine rebuilds. 5 ordinary survivors around upper/middle square: two bucket-carriers near well/right cottage, one adult supports elderly neighbor in west lane, a villager kneels to gather scattered goods. Same tipped cart, broken wheel, torn market awning, apples/grain/bundles. Dust settles; exhausted relief and neighbors helping, not pristine peace or festive market. Foreground and middle35-65% quiet space for dialogue portraits. Keep visual connection to the attack and new tactical dressing. No royal/magic lore, no bodies/gore, no text/UI."
+  },
+  "strangers_v2": {
+    "references": [
+      "assets/art/vn/painted/road_strangers_form.png",
+      "assets/source/vs1b5_raid_art/raid_square_v1.png"
+    ],
+    "prompt": "Edit reference1, changing BACKGROUND ENVIRONMENT ONLY to the larger raid in reference2. CRITICAL: preserve the EXACT four heroes and SINGLE horse already in ref1, their faces, clothes, poses, scale, positions. Kai left of well around x42%, Serra lance in center, Rina farther up left steps, mounted Perrin right. No new large people or horses, no bucket boy in foreground, no child (she has escaped). Keep their anatomy and sword/lance exactly. Around and behind these unchanged heroes, show a roadside hamlet-wide raid: add burning left roof and distant roof beyond original burning right cottage, three separated smoke sources, visibly torn market awning and scattered apples/grain/boards. Add small distant bandits looting upper lane and by shallow east ford, and fleeing/helping villagers in upper west lane including adult guiding elderly neighbor. These extras all stay distant, smaller than Rina, upper40% of picture, so the heroes and lane remain readable. Same one well, ONE overturned cart, west steps/fence. Subtle shallow stream/east ford behind cart, low weathered stone boundary far east. Preserve original warm painted style, camera, foreground empty dirt, no crowds in front of heroes. Four strangers responding to crisis, not a posed celebration. No text/UI/magic or additional foreground actor."
+  },
+  "kai_rush_v3": {
+    "references": [
+      "assets/art/vn/painted/road_kai_rush.png",
+      "assets/source/vs1b5_raid_art/raid_square_v2.png"
+    ],
+    "prompt": "Edit reference1 BACKGROUND ONLY. Preserve EXACT existing running Kai, his face, clothing, hair, small left-brow mark, body pose, sheathed sword and exact current position/scale. Preserve EXACT axe bandit and terrified girl by cart, well, tipped cart and the readable action triangle; do not move or enlarge any of these three people. Change only the surrounding environment to match larger hamlet raid reference2: add TWO additional fire/smoke sources in left upper thatched roof and distant roof beyond the original right burning cottage. Several small background ordinary leather bandits loot upper lane and approach shallow east ford. A small distant group of villagers helps an elderly neighbor flee through west fence lane, mother carrying toddler behind. All extras remain upper40%, much smaller than Kai, none crossing the foreground hero action. Add torn market canvas, scattered goods/splinters at edges. Subtle ford stream middle-distance right, low weathered stone boundary. Retain original painterly warm daylight and exact camera. No foreground bucket-carrier, duplicate cart/hero/girl or extra large enemy. No text/UI/magical spell. Keep the current mark discreet rather than making a big green lamp or rune on forehead. This is exactly the existing rescue moment with an appropriately larger raid behind it."
+  }
+}

@@ -11,6 +11,9 @@ extends Resource
 @export var cell: Vector2i = Vector2i.ZERO
 ## Extra pixel nudge after anchoring (art-fit tweaks).
 @export var offset: Vector2 = Vector2.ZERO
+## Flat dressing (dust, scorch, scattered goods) beneath upright scenery.
+## Still cosmetic: never changes the cell's terrain or movement cost.
+@export var ground_layer: bool = false
 
 ## Optional pixel-world overlay, exported from a VFX Creator game pack.
 ## Uniform default-animation frames, cosmetic only; no collision/RNG/save state.

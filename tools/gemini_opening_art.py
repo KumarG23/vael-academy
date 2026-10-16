@@ -9,8 +9,8 @@ No automatic install: review the master and the native Godot crop first.
 import hashlib
 import json
 from pathlib import Path
-import sys
 import time
+import argparse
 from gemini_emotions import generate_image, MODEL
 from gemini_pipeline_check import read_key
 
@@ -19,20 +19,27 @@ SOURCE = ROOT / 'assets/source/vs1b_story_art'
 
 
 def main() -> int:
-    jobs = json.loads((SOURCE / 'jobs.json').read_text())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--source', type=Path, default=SOURCE,
+                        help='Versioned job/source directory (default: VS-1B)')
+    parser.add_argument('jobs', nargs='+')
+    args = parser.parse_args()
+    source = args.source.resolve()
+    source.mkdir(parents=True, exist_ok=True)
+    jobs = json.loads((source / 'jobs.json').read_text())
     key = read_key(ROOT / '.env')
     if not key:
         print('Configured Gemini credential unavailable; no requests sent.')
         return 2
-    for name in sys.argv[1:]:
+    for name in args.jobs:
         job = jobs[name]
-        output = SOURCE / (name + '.png')
+        output = source / (name + '.png')
         if output.exists():
             print('Preserving existing', name, flush=True)
             continue
         refs = [(ROOT / p).read_bytes() for p in job['references']]
         record = {'job': name, 'model': MODEL, **job, 'reference_sha256': [hashlib.sha256(r).hexdigest() for r in refs]}
-        refdir = SOURCE / 'references'
+        refdir = source / 'references'
         refdir.mkdir(exist_ok=True)
         record['reference_snapshots'] = []
         for raw_ref in refs:

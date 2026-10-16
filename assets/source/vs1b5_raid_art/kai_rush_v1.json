@@ -1,0 +1,26 @@
+{
+  "job": "kai_rush_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b5_raid_art/raid_square_v1.png",
+    "assets/art/vn/painted/road_kai_rush.png",
+    "assets/portraits/portrait_kai_travel.png",
+    "assets/portraits/portrait_road_child.png"
+  ],
+  "prompt": "Painted storybook Vael Academy illustration, same warm painterly rendering and 16:9 composition as the references. Reference 1 is the approved multi-fire raid environment: preserve that exact square, well left of center, tipped cart right of center, east ford, west fence/steps, original right burning cottage, left burning roof and distant smoke. Ordinary bandits and escaping villagers remain active in small midground groups, not a hero lineup. Keep the immediate foreground action clearly readable, with air around the characters and the bottom quarter open for dialogue. No UI, no text, no borders. Named faces/costumes match their references, nobody duplicated. No magical spell display, no supernatural fire. Scene: Kai sees a terrified brown-haired little girl in teal/cream trapped between the well and overturned cart; one axe bandit is bearing down on her. Kai runs in from the left to put himself between the child and the brigand. Preserve the running intervention pose, cream rolled-sleeve shirt, brown waistcoat and trousers, messy dark teal hair, sword at hip from reference 2. The tiny green Crown mark is over his anatomical LEFT brow (viewer-right in a frontal face), no glow/sparks. Kai looks toward the threat and girl, not at the viewer. Clear urgent action triangle Kai/axe brigand/girl above the bottom quarter. Child is crouched with hands close to chest, not running toward bandits. The bandit in immediate foreground is the only large enemy; other looters remain midground, several villagers flee via west lane. Do not keep the bucket-carrying foreground man from reference1: that space is Kai's entrance lane now. Not a soldier, not in school uniform. The scene must communicate one reckless protective decision amid an attack on a whole village.",
+  "reference_sha256": [
+    "d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27",
+    "ac1e73b3968602640dc0a56e0aaf93d580d6c459a7a971ac606fea940cd70934",
+    "94c3503aab18c2cec5abf4bc4b3edb7c3e59f0d5290df3d5f44c8bfaceeb37b7",
+    "e791a45057c1378dcd6b340573abba20bd1234b77c34fcaf1db04d119c46d0ec"
+  ],
+  "reference_snapshots": [
+    "assets/source/vs1b5_raid_art/references/d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27.png",
+    "assets/source/vs1b5_raid_art/references/ac1e73b3968602640dc0a56e0aaf93d580d6c459a7a971ac606fea940cd70934.png",
+    "assets/source/vs1b5_raid_art/references/94c3503aab18c2cec5abf4bc4b3edb7c3e59f0d5290df3d5f44c8bfaceeb37b7.png",
+    "assets/source/vs1b5_raid_art/references/e791a45057c1378dcd6b340573abba20bd1234b77c34fcaf1db04d119c46d0ec.png"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "dca9ee9be9e8b880a72f7bdf3435e0cf3264f2c102c73e8be1866376a7b24e50",
+  "elapsed_seconds": 75.08
+}

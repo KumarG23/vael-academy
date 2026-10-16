@@ -1,0 +1,17 @@
+{
+  "job": "raid_square_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/art/vn/painted/road_raid_well.png"
+  ],
+  "prompt": "Use case: illustration-story / environmental edit. Edit reference image 1, the approved Vael road hamlet still. Preserve its warm hand-painted fantasy storybook style, camera, light, timber/thatched construction and recognizable village square. Change the isolated fire into a serious hamlet-wide bandit raid. The circular well remains left of center, ONE overturned wooden cart right of center, right market stalls and west fence/stone steps remain. Show a modest shallow stream with an open stone ford crossing the road in the middle distance to the right of the square, with a weathered low stone boundary at the far eastern edge; this connects the location to our tactical map. Beyond the well and cart, the road winds between several densely clustered homes. Three SEPARATE fire/smoke sites: original right cottage, far left lane thatched roof, distant roof beyond the ford. Visible orange flames at two sites; windblown charcoal smoke rises above roofs, warm sun still lights the foreground. FOUR distinct ordinary human leather-clad axe/club bandits in separate midground positions: one threatening near overturned cart, two looting upper lane, one at far ford. No royal/military uniforms. FIVE or six villagers in small readable action groups fleeing sideways, an adult helping an elderly neighbor, another carrying water; clear distressed body language, no gore. Spilled apples/grain, abandoned cloth bundles, a broken wheel and splintered stall make a disturbed public place. Strong diagonals of running people and wind. The foreground intervention lane between left approach, well and cart is readable and uncrowded for a subsequent hero entrance. Nobody posed for the viewer, no named heroes yet. No huge army, no monsters, no modern objects, no text/UI/borders. Not a screenshot or pixel map. 16:9 cinematic wide painted VN backdrop, dramatic but humane. Lower quarter relatively simple warm dirt for dialogue overlay. Keep faces and most action above the lower quarter. This should feel like one active square inside an attack on the whole roadside hamlet, not a single burning shed.",
+  "reference_sha256": [
+    "2b49fcbb48e642cc0aa6d95c97b2da85f38a8ad1ff76b30d64149c54d574e319"
+  ],
+  "reference_snapshots": [
+    "assets/source/vs1b5_raid_art/references/2b49fcbb48e642cc0aa6d95c97b2da85f38a8ad1ff76b30d64149c54d574e319.png"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27",
+  "elapsed_seconds": 65.19
+}

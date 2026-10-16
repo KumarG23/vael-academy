@@ -1,0 +1,20 @@
+{
+  "job": "kai_rush_v3",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/art/vn/painted/road_kai_rush.png",
+    "assets/source/vs1b5_raid_art/raid_square_v2.png"
+  ],
+  "prompt": "Edit reference1 BACKGROUND ONLY. Preserve EXACT existing running Kai, his face, clothing, hair, small left-brow mark, body pose, sheathed sword and exact current position/scale. Preserve EXACT axe bandit and terrified girl by cart, well, tipped cart and the readable action triangle; do not move or enlarge any of these three people. Change only the surrounding environment to match larger hamlet raid reference2: add TWO additional fire/smoke sources in left upper thatched roof and distant roof beyond the original right burning cottage. Several small background ordinary leather bandits loot upper lane and approach shallow east ford. A small distant group of villagers helps an elderly neighbor flee through west fence lane, mother carrying toddler behind. All extras remain upper40%, much smaller than Kai, none crossing the foreground hero action. Add torn market canvas, scattered goods/splinters at edges. Subtle ford stream middle-distance right, low weathered stone boundary. Retain original painterly warm daylight and exact camera. No foreground bucket-carrier, duplicate cart/hero/girl or extra large enemy. No text/UI/magical spell. Keep the current mark discreet rather than making a big green lamp or rune on forehead. This is exactly the existing rescue moment with an appropriately larger raid behind it.",
+  "reference_sha256": [
+    "ac1e73b3968602640dc0a56e0aaf93d580d6c459a7a971ac606fea940cd70934",
+    "d4af3f9aaf547b964c2244debcf63d3c68ab60260bbc7a004ac6c838f58e596d"
+  ],
+  "reference_snapshots": [
+    "assets/source/vs1b5_raid_art/references/ac1e73b3968602640dc0a56e0aaf93d580d6c459a7a971ac606fea940cd70934.png",
+    "assets/source/vs1b5_raid_art/references/d4af3f9aaf547b964c2244debcf63d3c68ab60260bbc7a004ac6c838f58e596d.png"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "397b16e45886cd31d7ae339a9842533f9651245f441216393218226b2ec3d26a",
+  "elapsed_seconds": 52.66
+}

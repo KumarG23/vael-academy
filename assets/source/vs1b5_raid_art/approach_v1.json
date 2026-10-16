@@ -1,0 +1,20 @@
+{
+  "job": "approach_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/art/vn/painted/road_hamlet_approach.png",
+    "assets/source/vs1b5_raid_art/raid_square_v1.png"
+  ],
+  "prompt": "Edit reference1, preserving the exact wooded winding road, rural thatched hamlet and beautiful warm painterly landscape, camera and early-afternoon lighting. Now the hamlet is in the wider raid of reference2: show THREE distinct dark smoke columns at separated roofs (left lane, right square, far east), with small visible orange fire patches. Tiny distinct running villagers with bundles flee along the lower hamlet road; a tipped cart and spilled pale sacks beside the village entrance. Small ordinary leather-clad bandits deeper in the hamlet, no huge army, no focal named heroes. Modest river/ford visible at the right edge of the clustered homes. Keep the foreground woodland approach quiet and uncluttered for narration. A genuine inhabited hamlet under coordinated attack rather than a peaceful village with one chimney. Retain style, depth, readable village silhouettes; no UI/text/border. 16:9.",
+  "reference_sha256": [
+    "542f60ab18a3ad03d749b684e974192ce61859387849213989a889fc0c124cbe",
+    "d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27"
+  ],
+  "reference_snapshots": [
+    "assets/source/vs1b5_raid_art/references/542f60ab18a3ad03d749b684e974192ce61859387849213989a889fc0c124cbe.png",
+    "assets/source/vs1b5_raid_art/references/d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27.png"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "aa91c4d08414c3886e9f17a3cee2b337bdcf90a3d2d7a0dbde1709b6c4a09f93",
+  "elapsed_seconds": 54.87
+}

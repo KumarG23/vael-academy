@@ -225,8 +225,9 @@ func _draw() -> void:
 	if draw_props:
 		for d in _chapter.decor:
 			if d != null and d.texture != null:
-				items.append({"tex": d.texture, "cell": d.cell, "off": d.offset, "prop": d})
-	items.sort_custom(func(a, b): return a["cell"].y < b["cell"].y)
+				items.append({"tex": d.texture, "cell": d.cell, "off": d.offset, "prop": d,
+					"ground": d.ground_layer})
+	items.sort_custom(_decor_before)
 	for it in items:
 		var tex: Texture2D = it["tex"]
 		var cell: Vector2i = it["cell"]
@@ -243,3 +244,9 @@ func _draw() -> void:
 				var anchor := Vector2(cell.x * cs + cs * 0.5, cell.y * cs + cs) + prop.offset
 				draw_texture_rect(effect, Rect2(anchor + prop.effect_offset * scale,
 					effect.get_size() * scale), false)
+
+
+static func _decor_before(a: Dictionary, b: Dictionary) -> bool:
+	if bool(a.get("ground", false)) != bool(b.get("ground", false)):
+		return bool(a.get("ground", false))
+	return a["cell"].y < b["cell"].y

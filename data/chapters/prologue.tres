@@ -1,7 +1,6 @@
 [gd_resource type="Resource" script_class="ChapterDef" format=3]
 
 [ext_resource type="Script" path="res://src/core/map_decor.gd" id="1_3estk"]
-[ext_resource type="SpriteFrames" path="res://data/vfx/road_cottage_fire.tres" id="vfx_fire"]
 [ext_resource type="Script" path="res://src/units/unit_spawn.gd" id="1_hatpi"]
 [ext_resource type="Resource" path="res://data/units/bandit_a.tres" id="2_5u70u"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/house_a.png" id="2_r5n3a"]
@@ -11,9 +10,9 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/house_burning.png" id="4_jap02"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/well.png" id="5_eex22"]
 [ext_resource type="Resource" path="res://data/units/bandit_d.tres" id="5_uttgq"]
-[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/cart.png" id="6_crnft"]
 [ext_resource type="Resource" path="res://data/units/bandit_boss.tres" id="6_ly3m2"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/crates.png" id="7_8lu1o"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/road_raid/cart_overturned.png" id="7_barj4"]
 [ext_resource type="Resource" path="res://data/units/kai.tres" id="7_pqq6m"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/barrels.png" id="8_barj4"]
 [ext_resource type="Resource" path="res://data/units/perrin.tres" id="8_j6pi5"]
@@ -25,8 +24,13 @@
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="11_fcoqs"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/stump.png" id="12_af417"]
 [ext_resource type="Texture2D" path="res://assets/art/pixellab/props/fence.png" id="13_ithui"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/road_raid/square_ground.png" id="15_l3u8v"]
+[ext_resource type="SpriteFrames" path="res://data/vfx/road_cottage_smoke.tres" id="16_barj4"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/road_raid/house_scorched.png" id="17_08imo"]
+[ext_resource type="Texture2D" path="res://assets/art/pixellab/props/road_raid/stall_damaged.png" id="18_af417"]
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="25_2bcyc"]
 [ext_resource type="Resource" path="res://data/items/vulnerary.tres" id="26_jap02"]
+[ext_resource type="SpriteFrames" path="res://data/vfx/road_cottage_fire.tres" id="vfx_fire"]
 
 [sub_resource type="Resource" id="Resource_barj4"]
 script = ExtResource("1_3estk")
@@ -55,8 +59,9 @@ cell = Vector2i(3, 3)
 
 [sub_resource type="Resource" id="Resource_af417"]
 script = ExtResource("1_3estk")
-texture = ExtResource("6_crnft")
+texture = ExtResource("7_barj4")
 cell = Vector2i(7, 3)
+offset = Vector2(-72, 32)
 
 [sub_resource type="Resource" id="Resource_ithui"]
 script = ExtResource("1_3estk")
@@ -102,6 +107,49 @@ cell = Vector2i(3, 7)
 script = ExtResource("1_3estk")
 texture = ExtResource("13_ithui")
 cell = Vector2i(4, 7)
+
+[sub_resource type="Resource" id="Resource_v54oj"]
+resource_name = "VS1B5_ground"
+script = ExtResource("1_3estk")
+texture = ExtResource("15_l3u8v")
+cell = Vector2i(7, 10)
+offset = Vector2(64, 0)
+ground_layer = true
+
+[sub_resource type="Resource" id="Resource_huvy2"]
+resource_name = "VS1B5_west_fire"
+script = ExtResource("1_3estk")
+texture = ExtResource("4_jap02")
+cell = Vector2i(0, 2)
+effect_frames = ExtResource("vfx_fire")
+effect_offset = Vector2(-20, -86)
+
+[sub_resource type="Resource" id="Resource_40e0f"]
+resource_name = "VS1B5_east_smoke"
+script = ExtResource("1_3estk")
+texture = ExtResource("17_08imo")
+cell = Vector2i(15, 9)
+effect_frames = ExtResource("16_barj4")
+effect_offset = Vector2(-6, -70)
+
+[sub_resource type="Resource" id="Resource_50em4"]
+resource_name = "VS1B5_west_edge"
+script = ExtResource("1_3estk")
+texture = ExtResource("3_2bcyc")
+cell = Vector2i(1, 1)
+
+[sub_resource type="Resource" id="Resource_buj7o"]
+resource_name = "VS1B5_east_edge"
+script = ExtResource("1_3estk")
+texture = ExtResource("2_r5n3a")
+cell = Vector2i(15, 3)
+
+[sub_resource type="Resource" id="Resource_lb5bs"]
+resource_name = "VS1B5_market"
+script = ExtResource("1_3estk")
+texture = ExtResource("18_af417")
+cell = Vector2i(12, 6)
+offset = Vector2(32, 16)
 
 [sub_resource type="Resource" id="Resource_hf71s"]
 script = ExtResource("1_hatpi")
@@ -165,15 +213,15 @@ dialogue = "res://data/dialogue/visit_hamlet_house.json"
 script = ExtResource("11_fcoqs")
 id = "prologue"
 display_name = "Prologue — The Road to Vael"
-intro_dialogue = "res://data/dialogue/road_bandit_intro.json"
-outro_dialogue = "res://data/dialogue/road_bandit_outro.json"
 objective = 2
 boss_unit_id = "bandit_boss"
 non_lethal = true
 enemy_spawns = Array[ExtResource("1_hatpi")]([SubResource("Resource_hf71s"), SubResource("Resource_u0amb"), SubResource("Resource_3estk"), SubResource("Resource_r5n3a"), SubResource("Resource_2bcyc")])
 player_spawns = Array[ExtResource("1_hatpi")]([SubResource("Resource_jap02"), SubResource("Resource_eex22"), SubResource("Resource_crnft"), SubResource("Resource_8lu1o")])
+intro_dialogue = "res://data/dialogue/road_bandit_intro.json"
+outro_dialogue = "res://data/dialogue/road_bandit_outro.json"
 width = 16
 height = 11
 terrain = PackedInt32Array(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 12, 12, 11, 0, 5, 0, 1, 0, 0, 1, 2, 2, 2, 1, 0, 0, 12, 12, 0, 0, 5, 0, 11, 1, 0, 0, 0, 2, 0, 0, 0, 12, 1, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6, 0, 0, 2, 6, 6, 6, 6, 6, 6, 0, 0, 0, 6, 6, 6, 6, 3, 0, 0, 0, 12, 12, 0, 0, 0, 0, 1, 5, 0, 0, 12, 12, 0, 0, 2, 0, 12, 12, 0, 0, 0, 0, 0, 5, 5, 0, 12, 12, 0, 2, 2, 0, 0, 0, 0, 1, 10, 0, 0, 0, 5, 0, 0, 1, 2, 2, 2, 0, 1, 0, 11, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 2, 2, 0, 0, 0, 1, 11, 0, 0, 0, 0, 5, 0, 1, 0, 0, 2, 2)
-decor = Array[ExtResource("1_3estk")]([SubResource("Resource_barj4"), SubResource("Resource_l3u8v"), SubResource("Resource_0j5v5"), SubResource("Resource_08imo"), SubResource("Resource_af417"), SubResource("Resource_ithui"), SubResource("Resource_hos3e"), SubResource("Resource_3xkq5"), SubResource("Resource_bsmj6"), SubResource("Resource_fxl3x"), SubResource("Resource_oanl2"), SubResource("Resource_5crhi"), SubResource("Resource_u0gpi"), SubResource("Resource_7024b")])
+decor = Array[ExtResource("1_3estk")]([SubResource("Resource_barj4"), SubResource("Resource_l3u8v"), SubResource("Resource_0j5v5"), SubResource("Resource_08imo"), SubResource("Resource_af417"), SubResource("Resource_ithui"), SubResource("Resource_hos3e"), SubResource("Resource_3xkq5"), SubResource("Resource_bsmj6"), SubResource("Resource_fxl3x"), SubResource("Resource_oanl2"), SubResource("Resource_5crhi"), SubResource("Resource_u0gpi"), SubResource("Resource_7024b"), SubResource("Resource_v54oj"), SubResource("Resource_huvy2"), SubResource("Resource_40e0f"), SubResource("Resource_50em4"), SubResource("Resource_buj7o"), SubResource("Resource_lb5bs")])
 visits = Array[ExtResource("25_2bcyc")]([SubResource("Resource_0ori1"), SubResource("Resource_l32iw")])

@@ -1,0 +1,34 @@
+{
+  "house_scorched.png": {
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "9ca9760002f7b4c53546eb46b050a337f60f885bbe560e59188949840a0d69e3",
+    "rgba_colors": 187
+  },
+  "cart_overturned.png": {
+    "size": [
+      64,
+      48
+    ],
+    "sha256": "596eaf1ae49d484779748b9bf204cdf0b5e4ab58c9720a9fa4131502ab147285",
+    "rgba_colors": 21
+  },
+  "square_ground.png": {
+    "size": [
+      512,
+      352
+    ],
+    "sha256": "5f6b9e96aa4af268b23894198547ead64b4114c27c2ccbe2f67229d542d072d7",
+    "rgba_colors": 15335
+  },
+  "stall_damaged.png": {
+    "size": [
+      48,
+      48
+    ],
+    "sha256": "2b60b7e20b013263b5d7b7f3dd54159710b77e922f10060ad8ed7a93831a9f8f",
+    "rgba_colors": 183
+  }
+}

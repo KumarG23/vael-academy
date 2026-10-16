@@ -1,0 +1,20 @@
+{
+  "job": "kai_rush_v2",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b5_raid_art/kai_rush_v1.png",
+    "assets/portraits/portrait_kai_travel.png"
+  ],
+  "prompt": "Refine reference1, preserving its style, setting, all three fire/smoke sites, tipped cart, well, child and axe brigand. Two specific composition improvements. Move running Kai inward, with his HEAD centered x39%, y38%, body natural and not huge. Same commoner clothes/sheathed sword and face from ref2. Tiny GREEN crown mark above anatomical left brow, no magic blast. Kai looks toward brigand and girl, protective urgent expression. Add two small fleeing VILLAGER groups in upper-left lane: adult helping elderly neighbor toward left fence, mother carrying toddler behind them. They are behind Kai above y45%, visibly escaping rather than fighting. Keep distant raiders at ford and upper lane, not a duplicate foreground axeman behind the well: turn that one into a bandit looting behind the far market stall instead. Keep foreground threat triangle legible, girl's face around x57%, y55%, not lower. No extra hero/child/cart, no soldiers, no text/UI. Lowerquarter quiet dirt for dialogue, outermost left/right quarter can be overlapped by portraits.",
+  "reference_sha256": [
+    "dca9ee9be9e8b880a72f7bdf3435e0cf3264f2c102c73e8be1866376a7b24e50",
+    "94c3503aab18c2cec5abf4bc4b3edb7c3e59f0d5290df3d5f44c8bfaceeb37b7"
+  ],
+  "reference_snapshots": [
+    "assets/source/vs1b5_raid_art/references/dca9ee9be9e8b880a72f7bdf3435e0cf3264f2c102c73e8be1866376a7b24e50.png",
+    "assets/source/vs1b5_raid_art/references/94c3503aab18c2cec5abf4bc4b3edb7c3e59f0d5290df3d5f44c8bfaceeb37b7.png"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "f42069b555a42356490892698ab89f14ff256293f00e35ee15655a7fbd09f291",
+  "elapsed_seconds": 35.86
+}

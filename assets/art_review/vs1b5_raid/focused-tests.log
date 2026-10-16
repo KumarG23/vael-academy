@@ -1,0 +1,50 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+---  GUT  ---
+[1m[INFO]:  [0musing [/Users/nealsharma/Library/Application Support/Godot/app_userdata/Vael Academy] for temporary output.
+Godot version:  4.7.2
+GUT version:  9.7.0
+[4m
+
+res://tests/test_road_fire.gd
+[0m* test_export_frames_and_native_anchor_match_the_delivered_game_pack
+* test_clock_uses_exported_fps_and_loops_without_affecting_other_props
+* test_only_animated_maps_redraw_and_never_change_campaign_or_terrain
+[1m3/3 passed.
+[0m[4m
+
+res://tests/test_road_raid_cohesion.gd
+[0m* test_original_board_forces_objective_visits_and_dialogue_are_preserved
+* test_flat_dressing_renders_below_upright_props_and_keeps_lanes_open
+* test_multiple_burn_sites_reuse_approved_pixel_export_without_new_state
+* test_action_tableau_uses_existing_insets_without_leaking_to_aftermath
+[1m4/4 passed.
+[0m[4m
+
+res://tests/test_road_story.gd
+[0m* test_rescue_finishes_before_player_controls_without_granting_magic
+* test_bread_aftermath_plays_before_result_and_saved_result_continues_to_oath
+* test_midroad_resume_skips_intro_keeps_flags_and_locks_old_equipped_magic
+* test_defeat_does_not_play_success_aftermath_or_open_oath_route
+* test_clear_backdrop_restores_map_after_a_painted_still_or_black
+* test_optional_painted_hooks_parse_and_fall_back_without_missing_art_errors
+[1m6/6 passed.
+[0m
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Scripts               3
+Tests                13
+Passing Tests        13
+Asserts             182
+Time              2.581s
+
+
+[32m---- All tests passed! ----
+[0mGUT 9.7.1:  https://github.com/bitwes/Gut/releases/tag/v9.7.1 is now available!

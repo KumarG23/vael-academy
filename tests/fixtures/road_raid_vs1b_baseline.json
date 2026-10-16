@@ -1,0 +1,55 @@
+{
+  "commit": "8e28b83a",
+  "width": 16,
+  "height": 11,
+  "terrain_sha256": "b9ec57cec8185eba3fe6362374f2e77da541353a463eefe67b40464a8e5a06aa",
+  "player_spawns": [
+    [
+      "kai",
+      1,
+      5
+    ],
+    [
+      "perrin",
+      2,
+      6
+    ],
+    [
+      "serra",
+      3,
+      4
+    ],
+    [
+      "rina",
+      2,
+      3
+    ]
+  ],
+  "enemy_spawns": [
+    [
+      "bandit_a",
+      7,
+      3
+    ],
+    [
+      "bandit_b",
+      8,
+      7
+    ],
+    [
+      "bandit_c",
+      11,
+      2
+    ],
+    [
+      "bandit_d",
+      12,
+      8
+    ],
+    [
+      "bandit_boss",
+      13,
+      5
+    ]
+  ]
+}

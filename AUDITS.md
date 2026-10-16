@@ -463,3 +463,18 @@ reconsideration, first chosen campus intention. Hesta's withheld-answer phrasing
 and28-panel pre-control rescue need Neal's pacing review. New face candidates
 and illustrated stills await taste approval; test success is not art approval.
 No new lore revelation, school day, controlled spell unlock or combat formula.
+
+
+## VS-1B.5 visual review follow-up — 2026-10-16, baseline `8e28b83a`
+
+Neal's findings against the completed VS-1B raid, addressed in one visual WO.
+
+| Finding | Outcome |
+|---|---|
+| Painted attack reads as one fire/one brigand rather than a hamlet raid | ✅ VS-1B.5 — five scene candidates with separated fires/smoke, several looters, fleeing/helping villagers and market wreckage. Exact prose/portraits/bread remain. ⏳ Neal taste signoff. |
+| Tactical green field and sparse cottages do not cohere with the painted square | ✅ VS-1B.5 — worn apron/scatter, wrecked cart/market, edge housing, second approved fire and separate smoke; well/cart/ford/escape-lane anchors shared. Abstract original board preserved. ⏳ Neal transition/readability signoff. |
+| Stronger atmosphere must not obscure the tutorial or expand encounter balance | ✅ All176 terrain cells and original forces/spawns unchanged; four added regressions; full589/589,4,423 asserts. Native movement/threat review, unchanged battle payload; actual original round5 road victory and all3 Week1 campus routes. No new enemies/hazards/fog veil. |
+
+Evidence `assets/art_review/vs1b5_raid/`; full rationale/provenance in
+`VS1B5_VISUAL_NOTES.md`. No story-bible canon changes. Known inherited GUT/exit
+cleanup reports unchanged. VS-1C arrival remains separate.

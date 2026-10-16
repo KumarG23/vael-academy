@@ -1,0 +1,9 @@
+credits: $0.00
+generations_remaining: 4992
+generations_used: 8
+generations_total: 5000
+subscription: active (Tier 2: Pixel Artisan)
+generations_reset: 2026-11-15
+note: generations_total is this cycle's allowance (prorated on a mid-cycle upgrade); it refills on generations_reset
+generations_today: 12
+note: generations_today is a daily bonus, spent only once generations_remaining hits 0; it refills nightly (+5, up to 20). It also counts down with every charge while plan generations remain — that is the same charge, not a second one

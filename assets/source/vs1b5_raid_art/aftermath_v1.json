@@ -1,0 +1,20 @@
+{
+  "job": "aftermath_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b5_raid_art/raid_square_v1.png",
+    "assets/art/vn/painted/road_aftermath_square.png"
+  ],
+  "prompt": "Paint the quiet immediate AFTERMATH of reference1 in exactly the same camera, 16:9 warm painted storybook style, same well/cart/west steps/east ford and damaged hamlet. The raiders are GONE; remove all bandits, no armed people or named heroes. Big flames now extinguished; three damaged roofs (right cottage, west roof, far lane) remain scorched with separate thinning gray smoke columns, no active major flames or new pristine rebuilds. 5 ordinary survivors around upper/middle square: two bucket-carriers near well/right cottage, one adult supports elderly neighbor in west lane, a villager kneels to gather scattered goods. Same tipped cart, broken wheel, torn market awning, apples/grain/bundles. Dust settles; exhausted relief and neighbors helping, not pristine peace or festive market. Foreground and middle35-65% quiet space for dialogue portraits. Keep visual connection to the attack and new tactical dressing. No royal/magic lore, no bodies/gore, no text/UI.",
+  "reference_sha256": [
+    "d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27",
+    "3bb22f6f0a1d450649c8013856431e0e464b723fd7cd7fc08044139948114c38"
+  ],
+  "reference_snapshots": [
+    "assets/source/vs1b5_raid_art/references/d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27.png",
+    "assets/source/vs1b5_raid_art/references/3bb22f6f0a1d450649c8013856431e0e464b723fd7cd7fc08044139948114c38.png"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "7563859ee063d4254d3562274dd3f61b9ac5b4b1789e4f4a8dbf6c88f37cd12f",
+  "elapsed_seconds": 49.53
+}

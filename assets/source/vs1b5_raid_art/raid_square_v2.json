@@ -1,0 +1,20 @@
+{
+  "job": "raid_square_v2",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b5_raid_art/raid_square_v1.png",
+    "assets/portraits/portrait_road_child.png"
+  ],
+  "prompt": "Edit reference1 with two localized subject fixes, preserving exact environment, flames, three smoke columns, well/cart/ford/market geography, all bandits and escaping/helping adult villagers. Remove ONLY the large boy running toward camera with bucket at center foreground. Place the frightened LITTLE GIRL from ref2 (brown bob, teal dress and cream blouse) crouched immediately between well and cart, just to the right of well, clear face around x49%, y49%. She is the endangered child in the approved rescue. She must be small, no duplicates, and an axe bandit already behind the cart is closing toward her. Otherwise keep this dramatic multi-bandit hamlet raid exactly. Same painterly warm daylight, no UI/text/magic.",
+  "reference_sha256": [
+    "d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27",
+    "e791a45057c1378dcd6b340573abba20bd1234b77c34fcaf1db04d119c46d0ec"
+  ],
+  "reference_snapshots": [
+    "assets/source/vs1b5_raid_art/references/d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27.png",
+    "assets/source/vs1b5_raid_art/references/e791a45057c1378dcd6b340573abba20bd1234b77c34fcaf1db04d119c46d0ec.png"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "d4af3f9aaf547b964c2244debcf63d3c68ab60260bbc7a004ac6c838f58e596d",
+  "elapsed_seconds": 30.38
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "output": "assets/art/vn/painted/road_hamlet_approach.png",
+    "source": "approach_v1",
+    "previous_sha256": "542f60ab18a3ad03d749b684e974192ce61859387849213989a889fc0c124cbe",
+    "sha256": "9036d76edb3ee76a7a24ab31c758947db245113292656027398d54145be64b24"
+  },
+  {
+    "output": "assets/art/vn/painted/road_raid_well.png",
+    "source": "raid_square_v2",
+    "previous_sha256": "2b49fcbb48e642cc0aa6d95c97b2da85f38a8ad1ff76b30d64149c54d574e319",
+    "sha256": "97e7fafa8f405a435a9ae9aa82b66e49a3fe80a3ef0118f17d1745119e3b186f"
+  },
+  {
+    "output": "assets/art/vn/painted/road_kai_rush.png",
+    "source": "kai_rush_v3",
+    "previous_sha256": "ac1e73b3968602640dc0a56e0aaf93d580d6c459a7a971ac606fea940cd70934",
+    "sha256": "149a5d7993908275fc5600100dc3ad52e1b7d5c1dc2ef6b68cd134427c37d7b0"
+  },
+  {
+    "output": "assets/art/vn/painted/road_strangers_form.png",
+    "source": "strangers_v2",
+    "previous_sha256": "434ea979cc51c9c135e1c93015754b183b18a1e7e00e7deee126c57ca0b38c6c",
+    "sha256": "0a12f5e1a8753679c48e894a12b27dbac90563ed6d84883743f7d1a07ef4f49d"
+  },
+  {
+    "output": "assets/art/vn/painted/road_aftermath_square.png",
+    "source": "aftermath_v1",
+    "previous_sha256": "3bb22f6f0a1d450649c8013856431e0e464b723fd7cd7fc08044139948114c38",
+    "sha256": "fcf5e018644574f06035c4d9bbccf6ee24656e853128908252b338599b26c9de"
+  }
+]

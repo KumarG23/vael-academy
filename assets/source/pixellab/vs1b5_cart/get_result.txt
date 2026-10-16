@@ -1,0 +1,10 @@
+status: completed
+id: 2520fcc2-8265-4676-a61b-71552e6d08ed
+description: overturned broken medieval wooden handcart lying on its SIDE, empty tilted rectangular oak cargo bed, two large spoked wheels one detached beside it, broken shafts on ground, small spilled ochre grain sack and scattered red apples. Rustic brown/golden oak, dark brown single-pixel outlines, compact crisp colorful fantasy tactical RPG pixel art, match small thatched village prop sprites. NO people, NO animal, NO fire, NO grass terrain, isolated transparent background, low top-down three-quarter view. Clear tipped-cart silhouette, not an upright wagon.
+size: 64x48px
+view: low top-down
+background: transparent
+created: 2026-10-16 18:43
+download: https://api.pixellab.ai/mcp/map-objects/2520fcc2-8265-4676-a61b-71552e6d08ed/download
+
+hint: place_map_object(map_id="<map>", x=..., y=..., object_id="2520fcc2-8265-4676-a61b-71552e6d08ed")

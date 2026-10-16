@@ -29,7 +29,8 @@
   {
     "speaker": "",
     "text": "Kai is already running. The brigand turns toward him instead.",
-    "backdrop": "res://assets/art/vn/painted/road_kai_rush.png"
+    "backdrop": "res://assets/art/vn/painted/road_kai_rush.png",
+    "portrait_layout": "inset"
   },
   {
     "speaker": "Kai",

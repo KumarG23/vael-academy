@@ -1,0 +1,16 @@
+{
+  "backdrops": {
+    "road_hamlet_approach": "approach_v1",
+    "road_raid_well": "raid_square_v2",
+    "road_kai_rush": "kai_rush_v3",
+    "road_strangers_form": "strangers_v2",
+    "road_aftermath_square": "aftermath_v1"
+  },
+  "review": "Runtime candidates after master/native review; Neal retains taste signoff. All portraits and intimate bread painting reused unchanged.",
+  "rejected": {
+    "raid_square_v1": "No endangered girl; large foreground bucket carrier obscures intervention lane.",
+    "kai_rush_v1": "Villagers vanished, too quiet despite bandits; composition needs compact portraits.",
+    "kai_rush_v2": "Overemphasized green mark; retain subtler existing character interpretation.",
+    "strangers_v1": "Unwanted extra foreground bucket carrier competes with four strangers."
+  }
+}

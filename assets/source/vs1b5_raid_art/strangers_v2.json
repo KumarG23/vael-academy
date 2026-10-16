@@ -1,0 +1,20 @@
+{
+  "job": "strangers_v2",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/art/vn/painted/road_strangers_form.png",
+    "assets/source/vs1b5_raid_art/raid_square_v1.png"
+  ],
+  "prompt": "Edit reference1, changing BACKGROUND ENVIRONMENT ONLY to the larger raid in reference2. CRITICAL: preserve the EXACT four heroes and SINGLE horse already in ref1, their faces, clothes, poses, scale, positions. Kai left of well around x42%, Serra lance in center, Rina farther up left steps, mounted Perrin right. No new large people or horses, no bucket boy in foreground, no child (she has escaped). Keep their anatomy and sword/lance exactly. Around and behind these unchanged heroes, show a roadside hamlet-wide raid: add burning left roof and distant roof beyond original burning right cottage, three separated smoke sources, visibly torn market awning and scattered apples/grain/boards. Add small distant bandits looting upper lane and by shallow east ford, and fleeing/helping villagers in upper west lane including adult guiding elderly neighbor. These extras all stay distant, smaller than Rina, upper40% of picture, so the heroes and lane remain readable. Same one well, ONE overturned cart, west steps/fence. Subtle shallow stream/east ford behind cart, low weathered stone boundary far east. Preserve original warm painted style, camera, foreground empty dirt, no crowds in front of heroes. Four strangers responding to crisis, not a posed celebration. No text/UI/magic or additional foreground actor.",
+  "reference_sha256": [
+    "434ea979cc51c9c135e1c93015754b183b18a1e7e00e7deee126c57ca0b38c6c",
+    "d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27"
+  ],
+  "reference_snapshots": [
+    "assets/source/vs1b5_raid_art/references/434ea979cc51c9c135e1c93015754b183b18a1e7e00e7deee126c57ca0b38c6c.png",
+    "assets/source/vs1b5_raid_art/references/d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27.png"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "59ffc0ac52148afba1cedc98e07dfa49b8e9eded03804c17527eb294fff06e1a",
+  "elapsed_seconds": 65.43
+}

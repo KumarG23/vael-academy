@@ -1,0 +1,32 @@
+{
+  "job": "strangers_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b5_raid_art/raid_square_v1.png",
+    "assets/art/vn/painted/road_strangers_form.png",
+    "assets/portraits/portrait_kai_travel.png",
+    "assets/portraits/portrait_serra.png",
+    "assets/portraits/portrait_perrin.png",
+    "assets/portraits/portrait_rina.png"
+  ],
+  "prompt": "Create the next 16:9 painted Vael story tableau in the EXACT multi-fire hamlet of reference1, with character staging from ref2. Preserve same well left-middle, ONE tipped cart right-middle, right burning cottage, west burning roof, distant fire, shallow eastern ford, west fence lane/steps, scattered apples and broken market awning. The rescued child is already SAFE OFFSCREEN; no child foreground. Four named teenage strangers, exact faces and costumes refs3-6, not friends posing. KAI: x41%, head y39%, teal messy hair, cream shirt/brown waistcoat, tiny green left-brow mark, sheathed sword, holds well side. SERRA: x54%, blonde twin-tails, blue/silver lance armor, standing protects lane with lance. PERRIN: x69%, golden blond crimson/gold coat over navy, mounted correctly in saddle on ONE brown horse, reins in hand, keeping east lane open. RINA: x32%, farther away up west steps, red braid green/bronze over white sleeves, points to west escape lane. Clear distinct practical tasks, concerned expressions, no smiles/royal emblems. Larger raid remains visible: small leather bandits looting far upper lane and beyond ford, fleeing villagers helping elder through far west lane; foreground bandit from ref1 now retreats toward far road. Three distinct roofs burn/smoke, wind carries ash above roofs, foreground not fogged. Keep main faces above y50%, center clear above bottomquarter dialogue. No duplicate actors, no extra horses/carts, no magic spell, no text/UI/borders. Warm painterly fantasy rendering; characters recognizable, not redesigns.",
+  "reference_sha256": [
+    "d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27",
+    "434ea979cc51c9c135e1c93015754b183b18a1e7e00e7deee126c57ca0b38c6c",
+    "94c3503aab18c2cec5abf4bc4b3edb7c3e59f0d5290df3d5f44c8bfaceeb37b7",
+    "5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453",
+    "c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a",
+    "681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161"
+  ],
+  "reference_snapshots": [
+    "assets/source/vs1b5_raid_art/references/d5a4c1e971eaecf75e802d36e217aa8bf54428988f8d4739f1da493134ceec27.png",
+    "assets/source/vs1b5_raid_art/references/434ea979cc51c9c135e1c93015754b183b18a1e7e00e7deee126c57ca0b38c6c.png",
+    "assets/source/vs1b5_raid_art/references/94c3503aab18c2cec5abf4bc4b3edb7c3e59f0d5290df3d5f44c8bfaceeb37b7.png",
+    "assets/source/vs1b5_raid_art/references/5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453.png",
+    "assets/source/vs1b5_raid_art/references/c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a.png",
+    "assets/source/vs1b5_raid_art/references/681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161.png"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "acdad804b19755e027f0c836e999d96ed64006a02863fa12e4cc33b0b5a87a1e",
+  "elapsed_seconds": 76.11
+}
