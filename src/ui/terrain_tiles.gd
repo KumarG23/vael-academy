@@ -53,6 +53,7 @@ var _wang := {}         # set name -> {sig(int) -> Vector2i(col,row)}
 var _decor := {}        # Terrain.Type -> Texture2D
 var _base_region: Rect2
 var _base_set_name := ""
+var _effect_time: float = 0.0
 
 
 ## When false, the authored scenery props (chapter.decor) are NOT drawn here —
@@ -67,6 +68,24 @@ func setup(grid: Grid, chapter: ChapterDef) -> void:
 	_chapter = chapter
 	_load_assets()
 	texture_filter = TEXTURE_FILTER_NEAREST
+	_effect_time = 0.0
+	set_process(draw_props and _has_animated_props())
+	queue_redraw()
+
+
+func _has_animated_props() -> bool:
+	if _chapter == null:
+		return false
+	for prop: MapDecor in _chapter.decor:
+		if prop != null and prop.effect_texture_at(0.0) != null:
+			return true
+	return false
+
+
+func _process(delta: float) -> void:
+	if not draw_props:
+		return
+	_effect_time += delta
 	queue_redraw()
 
 
@@ -206,7 +225,7 @@ func _draw() -> void:
 	if draw_props:
 		for d in _chapter.decor:
 			if d != null and d.texture != null:
-				items.append({"tex": d.texture, "cell": d.cell, "off": d.offset})
+				items.append({"tex": d.texture, "cell": d.cell, "off": d.offset, "prop": d})
 	items.sort_custom(func(a, b): return a["cell"].y < b["cell"].y)
 	for it in items:
 		var tex: Texture2D = it["tex"]
@@ -216,3 +235,11 @@ func _draw() -> void:
 		var h := tex.get_height() * scale
 		draw_texture_rect(tex, Rect2(cell.x * cs + (cs - w) * 0.5 + it["off"].x,
 			cell.y * cs + cs - h + it["off"].y, w, h), false)
+
+		if it.has("prop"):
+			var prop: MapDecor = it["prop"]
+			var effect: Texture2D = prop.effect_texture_at(_effect_time)
+			if effect != null:
+				var anchor := Vector2(cell.x * cs + cs * 0.5, cell.y * cs + cs) + prop.offset
+				draw_texture_rect(effect, Rect2(anchor + prop.effect_offset * scale,
+					effect.get_size() * scale), false)

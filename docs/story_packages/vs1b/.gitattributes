@@ -1,0 +1,2 @@
+# Preserve supplied manuscript formatting verbatim.
+*.md whitespace=-blank-at-eol

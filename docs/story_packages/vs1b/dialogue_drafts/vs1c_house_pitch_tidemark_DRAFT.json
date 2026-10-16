@@ -1,0 +1,42 @@
+[
+  {
+    "speaker": "Serra",
+    "text": "I’m going to tell you something unpleasant. On the road, you were right to help. You were also one step from getting someone else hurt.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "I noticed you were there to tell me.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Serra",
+    "text": "I was there because someone needed a shield and a clear way out. Those are not the same thing as a glorious charge.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "Serra",
+    "text": "Tidemark teaches you to stand when running would be easier, and to think before a choice becomes someone else’s injury.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Sounds like rules. A lot of rules.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Serra",
+    "text": "Yes. Sometimes they save lives. Sometimes they need challenging. I am still learning the difference.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "Serra",
+    "text": "If you come to Tidemark, I will expect you to challenge me when I’m wrong. And I will expect you to listen when I’m right.",
+    "portrait": "serra",
+    "side": "right"
+  }
+]

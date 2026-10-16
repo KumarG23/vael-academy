@@ -1,0 +1,21 @@
+{
+  "job": "kai_rush_v2",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/kai_rush_v1.png",
+    "assets/portraits/portrait_kai_travel.png"
+  ],
+  "prompt": "Refine this exact illustration, preserving the whole village setting, overturned cart, frightened girl in teal by cart/well, same light, perspective and painterly style. Two changes only: Move running Kai from far left toward x38\u201342% image width, so his face remains in uppermiddle around y33% and he is visibly shouting at the axeman to divert attention, not smirking. Match EXACT face, commoner brown vest and cream shirt from ref2, tiny faint green crown above anatomical left brow. Natural running body and hands, sword stays INSIDE plain dark sheathed scabbard on belt, NO bare blade. Replace the axe attacker's plate-armored helmet/knight uniform with a rough ordinary brigand in plain worn leather jerkin and dirty brown trousers, uncovered unremarkable adult face, ONE short-handled AXE in hands, no shield/helmet/royal insignia. He turns toward Kai and away from girl. Do not add anyone or move well/cart/cottages. No gore, magic or text.",
+  "reference_sha256": [
+    "a200d79bb24688faaf98ed5d648061be15c2abc5477e94e59b00dcc60ffc6bed",
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983"
+  ],
+  "status": "failed",
+  "error": "Remote end closed connection without response",
+  "elapsed_seconds": 27.87,
+  "review_disposition": "failed_request_no_image",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/a200d79bb24688faaf98ed5d648061be15c2abc5477e94e59b00dcc60ffc6bed.png",
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png"
+  ]
+}

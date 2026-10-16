@@ -1,0 +1,18 @@
+{
+  "job": "kitchen_morning_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/art/vn/painted/kitchen_lantern.png"
+  ],
+  "prompt": "Edit this exact Oakstead cottage kitchen painting to EARLY MORNING. Preserve the room geography, beams, door, hearth, table, shelves, chairs and camera. Replace night/lantern dominance with clear misty dawn through the window and low warm hearthlight. A woven forage basket on the table, small cloth-covered loaf, drying herbs and bark, patched chair, copper pot. Lived-in loving poor household, ordinary and specific, never stage-set luxury. No people, no magic, no crown symbols, no readable text. Match this warm painterly fantasy storybook register with rich natural brushwork. Cinematic 16:9. Center activity detail at upper middle; quiet outer quarters for VN portraits, subtle dark wood in lower quarter for dialogue readability.",
+  "reference_sha256": [
+    "1f8878da3016f48d756db7536444bc152c075527b8e717f810f28f35c9ea7088"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "e5404008cbbecf23b7ade19d1e6c49716106cda2bf6e7eb6126d836ecb933777",
+  "elapsed_seconds": 26.25,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/1f8878da3016f48d756db7536444bc152c075527b8e717f810f28f35c9ea7088.png"
+  ]
+}

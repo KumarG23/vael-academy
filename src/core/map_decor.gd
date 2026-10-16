@@ -11,3 +11,20 @@ extends Resource
 @export var cell: Vector2i = Vector2i.ZERO
 ## Extra pixel nudge after anchoring (art-fit tweaks).
 @export var offset: Vector2 = Vector2.ZERO
+
+## Optional pixel-world overlay, exported from a VFX Creator game pack.
+## Uniform default-animation frames, cosmetic only; no collision/RNG/save state.
+@export var effect_frames: SpriteFrames
+## Native sprite pixels relative to this prop's bottom-center (pack anchor).
+@export var effect_offset: Vector2 = Vector2.ZERO
+
+
+func effect_texture_at(seconds: float) -> Texture2D:
+	if effect_frames == null or not effect_frames.has_animation("default"):
+		return null
+	var count: int = effect_frames.get_frame_count("default")
+	var fps: float = effect_frames.get_animation_speed("default")
+	if count == 0 or fps <= 0.0:
+		return null
+	var frame: int = int(floor(maxf(seconds, 0.0) * fps)) % count
+	return effect_frames.get_frame_texture("default", frame)

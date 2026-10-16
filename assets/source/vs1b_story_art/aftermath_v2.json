@@ -1,0 +1,27 @@
+{
+  "job": "aftermath_v2",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/aftermath_v1.png",
+    "assets/portraits/portrait_serra.png",
+    "assets/portraits/portrait_rina.png",
+    "assets/portraits/portrait_perrin.png"
+  ],
+  "prompt": "Edit this exact hamlet aftermath illustration, preserving overall village geography, well, single scorched house, overturned cart, restrained smoke and warm painterly light. Correct the character actions/costumes: RINA (exact red-auburn long side braid from ref3) is NOT collecting apples, remove her apples; move her to the upper-left fence lane checking behind a gate for anyone left, attentive head turn, green/bronze vest over white long sleeves and practical long dark trousers, no apron. SERRA (exact blonde twin-tails/circlet from ref2) should stand MIDGROUND near well at x48%, y40%, directing the bucket line, blue-and-silver armored tunic, fitted dark blue LONG TROUSERS, armored boots and gauntlets; NO short skirt or bare legs. PERRIN (exact golden-blond/crimson/navy/gold ref4) and ordinary shopkeeper lift a fallen beam off the DOORWAY of scorched cottage at upper-right, not off the cart. Natural joint effort and hands supporting beam weight. Keep citizens ordinary, no bowmen/soldiers. Place all important figures above y60% and within center35\u201368% for VN portrait and text margins. No triumphant posing, extra protagonists or magic, no readable text.",
+  "reference_sha256": [
+    "78176e830ef7bf10441d54ea6cec0959c71aca13be7deb828fcfeb6616e2d246",
+    "5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453",
+    "681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161",
+    "c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "072a4f55bb7d8612a49fb7523b160fc7decd2e8031deea70e4d174c8de579a2a",
+  "elapsed_seconds": 52.37,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/78176e830ef7bf10441d54ea6cec0959c71aca13be7deb828fcfeb6616e2d246.png",
+    "assets/source/vs1b_story_art/references/5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453.png",
+    "assets/source/vs1b_story_art/references/681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161.png",
+    "assets/source/vs1b_story_art/references/c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a.png"
+  ]
+}

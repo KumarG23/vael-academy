@@ -1,0 +1,19 @@
+{
+  "job": "kai_portrait_style_marked_v1",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "1:1",
+  "references": [
+    "assets/portraits/portrait_kai.png"
+  ],
+  "prompt": "EDIT this exact existing Vael Academy character portrait. It must look like the SAME original portrait artist made a costume variant of the SAME IMAGE. Preserve the exact head, face, facial proportions, eyes, warm brown skin color, glossy subtle skin highlights, hair silhouette/streaks, teen age, gaze, expression, crop, shoulder scale, precise refined anime linework, smooth cel-shading, and original muted gray background. Do not redesign or reinterpret the character. Change ONLY clothing below the neck: replace academy navy/gold epaulettes and red cravat with a simple oatmeal linen open-collar shirt and plain faded brown sleeveless vest. Same shoulders/torso pose/crop as the original; this is NOT a new waist-up character sheet. Keep his fine green Crown identity mark, but position it above the ANATOMICAL LEFT eyebrow (VIEWER RIGHT), near temple rather than center forehead. Small delicate fine outline. No white background, no cutout matte, no paper texture, no rough black outlines, no painterly face, no realistic rendering, no desaturated brown wash. Match the reference's exact polished anime PORTRAIT rendering, colors and soft highlights. One square portrait only, no text, no border, no props or weapons.",
+  "reference_sha256": [
+    "ecf39295b2638ddb001abc41bf1474d7335973b8956da83ed6cc59364ae1347f"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "4a3a8ce1c72870c2e2d4278d19e1cb99f9ea95a6b5aadff7f4eb8453bbdc654e",
+  "elapsed_seconds": 19.78,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/ecf39295b2638ddb001abc41bf1474d7335973b8956da83ed6cc59364ae1347f.png"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "job": "approach_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/raid_environment_v2.png"
+  ],
+  "prompt": "Create a matching establishing view of this EXACT small hamlet as seen from a distant approaching road bend. Preserve same thatch timber/stone cottages, low fence western lane, single burning cottage toward upper-right of village, tiny stone well in square. Camera outside hamlet looking along country road between trees at late afternoon. A thin single plume of dark smoke behind the roofs, uneasy anticipation rather than apocalypse. No people or close-up faces. Painterly storybook fantasy environment consistent with source, natural gold light. 16:9 with quiet outer margins and lowerquarter for VN overlay. No text or heraldry.",
+  "reference_sha256": [
+    "cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "9231ec4fc7b7ad6ba6ce0edb752b6eb35f8231826371cea23e7c9f5ffd5637f7",
+  "elapsed_seconds": 30.57,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381.png"
+  ]
+}

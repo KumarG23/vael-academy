@@ -1,0 +1,24 @@
+{
+  "job": "bread_v3",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/portraits/portrait_kai_travel.png",
+    "assets/portraits/portrait_road_child.png",
+    "assets/source/vs1b_story_art/raid_environment_v2.png"
+  ],
+  "prompt": "A finished intimate 16:9 painted fantasy storybook illustration. Ref1 is EXACT Kai character identity: sixteen-year-old warm-brown boy, amber eyes, green-black hair, brown vest/oatmeal linen shirt, tiny faint green crown over his LEFT eyebrow near temple. Ref2 EXACT seven-year-old girl, chestnut bob with little side braid, brown eyes, faded teal dress and cream shirt. Ref3 is the same hamlet, after fighting; use its well, scorched cottage and warm dusty afternoon light, but fire now quenched, only thin residual smoke.\nAt a quiet stone wall in square, Kai kneels beside child and her mother. Mother is ordinary rural brown-haired woman in muted russet clothes, conscious and comforting child with arm around her shoulders. Kai offers ONE small broken heel of dry bread from a rumpled cloth to the girl's cautious outstretched hands. He holds bread gently at his upper chest height, so offering gesture is unmistakable in UPPER CENTER of painting between their faces. Real natural fingers, small child's hands, no dramatic crying. Kindness despite exhaustion, not triumphant smile.\nThree figures grouped close together in center third, medium-small, heads in upper third. Bread at center of frame, higher than their waists. Quiet empty shaded stone and soft foliage on both outer quarters; quiet packed dirt below. Delicate anime faces harmonized with painterly environment, natural human proportions, expressive warm light, beautiful restrained detail. Kai's mark is tiny hair-thin outline above anatomical LEFT eyebrow, never centered forehead or over nose. No weapon drawn, no magic beam. FULL FINISHED SCENE ONLY: absolutely no text, captions, lettering, border, frame, panels, interface, textbox or watermark anywhere.",
+  "reference_sha256": [
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983",
+    "d1848907507b9ed15cce0198e50f81896ccd5bc38176d58c975e308c7d92949d",
+    "cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "1017b61f98d83d1c699d32cd4ac315b29f8c1e1cfb5134380871048fcbfb0f2c",
+  "elapsed_seconds": 37.8,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png",
+    "assets/source/vs1b_story_art/references/d1848907507b9ed15cce0198e50f81896ccd5bc38176d58c975e308c7d92949d.png",
+    "assets/source/vs1b_story_art/references/cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381.png"
+  ]
+}

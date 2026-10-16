@@ -1,22 +1,26 @@
 [
  {
   "speaker": "Essa",
+  "portrait": "essa",
   "side": "right",
   "text": "Sixteen years ago. The hard winter — the one they still talk about.",
   "backdrop": "res://assets/art/vn/painted/kitchen_lantern.png"
  },
  {
   "speaker": "Essa",
+  "portrait": "essa",
   "side": "right",
   "text": "Your father was checking snares at the forest edge. And he heard—"
  },
  {
   "speaker": "Tam",
+  "portrait": "tam",
   "side": "right",
   "text": "Crying. Out of the cold, at the old beech. A baby, wrapped up warm as bread from the oven. Alone."
  },
  {
   "speaker": "Essa",
+  "portrait": "essa",
   "side": "right",
   "text": "No note. No name. No tracks in the snow — none, Kai. And laid beside the basket, like it was standing guard…"
  },
@@ -26,7 +30,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai",
+  "portrait": "kai_travel",
   "text": "…What. Laid beside the basket — what?"
  },
  {
@@ -35,17 +39,19 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai",
+  "portrait": "kai_travel",
   "expression": "angry",
   "text": "Sixteen years. You let me think— every time I asked why I don't have Ma's eyes, you laughed and changed the—"
  },
  {
   "speaker": "Essa",
+  "portrait": "essa",
   "side": "right",
   "text": "Because we were afraid! Not of you — never of you. Afraid you'd feel less ours. Afraid whoever left you would come back. Afraid of exactly this day — and look, here it is, come anyway."
  },
  {
   "speaker": "Essa",
+  "portrait": "essa",
   "side": "right",
   "text": "We kept telling ourselves: next year. When he's older. Sixteen next-years, Kai. That's my fault to carry, not yours."
  },
@@ -55,7 +61,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai",
+  "portrait": "kai_travel",
   "expression": "sad",
   "text": "…He can't even sit through it."
  },
@@ -65,11 +71,13 @@
  },
  {
   "speaker": "Tam",
+  "portrait": "tam",
   "side": "right",
   "text": "Every winter. Oiled it, checked the edge, wrapped it back up. Sixteen winters."
  },
  {
   "speaker": "Tam",
+  "portrait": "tam",
   "side": "right",
   "text": "Never let your mother watch. Felt like… if nobody saw it, it wasn't quite real yet. And you were still just ours."
  },
@@ -79,17 +87,19 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai",
+  "portrait": "kai_travel",
   "expression": "surprised",
   "text": "It's… warm."
  },
  {
   "speaker": "Tam",
+  "portrait": "tam",
   "side": "right",
   "text": "It was yours before you were ours. We kept it safe. Same as we kept you."
  },
  {
   "speaker": "Essa",
+  "portrait": "essa",
   "side": "right",
   "text": "You were never less ours, Kai. Not for one single day. Whatever that light is. Whoever's coming down that road."
  },
@@ -99,7 +109,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai",
+  "portrait": "kai_travel",
   "expression": "determined",
   "text": "I'm still angry. I think I'm going to be angry for a while. …Don't let go anyway."
  },

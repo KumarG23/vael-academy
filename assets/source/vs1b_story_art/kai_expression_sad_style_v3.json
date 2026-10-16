@@ -1,0 +1,19 @@
+{
+  "job": "kai_expression_sad_style_v3",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "1:1",
+  "references": [
+    "assets/source/vs1b_story_art/kai_portrait_style_marked_v1.png"
+  ],
+  "prompt": "Make a facial-expression variant of this EXACT existing polished Vael anime portrait. Change ONLY eyes, eyebrows and mouth to quiet wounded sadness, lifted inner brows and small mouth, no hands raised to face. Preserve EXACT face identity, age, head proportions, framing, lighting, skin color/highlights, hair, brown vest/oatmeal shirt and gray background. Most importantly preserve the exact tiny green crown's CURRENT location and size above the eyebrow on VIEWER RIGHT near temple. Do not center the crown on forehead, do not move, enlarge or redesign it. The forehead/hair pixels should remain the same as input. No hand gestures, gloves, sparkles or extra accessories. Same original portrait artist, fine linework and smooth rich cel-shading, not a new art style. One square portrait, no text or frame.",
+  "reference_sha256": [
+    "4a3a8ce1c72870c2e2d4278d19e1cb99f9ea95a6b5aadff7f4eb8453bbdc654e"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "7b2d26a4deab42fd594ebecef505ae1544eea98a548dcf06d0c88bf733d75faf",
+  "elapsed_seconds": 30.57,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/4a3a8ce1c72870c2e2d4278d19e1cb99f9ea95a6b5aadff7f4eb8453bbdc654e.png"
+  ]
+}

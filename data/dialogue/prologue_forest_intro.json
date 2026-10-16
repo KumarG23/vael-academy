@@ -7,13 +7,13 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "Chanterelles by the fallen beech. Bilberries up the ridge, if the birds left any. Da wants willow bark…",
   "backdrop": "res://assets/art/vn/painted/forest_path.png"
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "…and Ma wants me home before the light goes. One of those is going to happen."
  },
  {
@@ -23,7 +23,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "Just to the ridge. …Just past the ridge."
  },
  {
@@ -33,7 +33,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "Huh. You've always been there, haven't you. And I've never once—"
  },
  {
@@ -43,7 +43,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "Five minutes. What's the worst a hole in a hill can do?"
  }
 ]

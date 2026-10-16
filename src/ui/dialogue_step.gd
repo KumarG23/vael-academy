@@ -15,6 +15,9 @@ var text: String = ""
 var side: String = "left"          # "left" or "right"
 var portrait: String = ""          # portrait id (art swaps in at AW-6)
 var expression: String = "neutral"
+## VS-1B: optional compact dialogue portraits around a central story tableau.
+## Empty keeps the current layout; standard/inset select it for following lines.
+var portrait_layout: String = ""
 # AW-78 (VN prologue): optional per-line narration voice clip and backdrop.
 # `backdrop` is a res:// image path, or the specials "black" / "white" / "clear" (reveal the scene beneath).
 var voice: String = ""
@@ -56,6 +59,7 @@ static func make_line_full(entry: Dictionary) -> DialogueStep:
 		str(entry.get("backdrop", "")))
 	s.backdrop_fallback = str(entry.get("backdrop_fallback", "black"))
 	s.music = str(entry.get("music", ""))
+	s.portrait_layout = str(entry.get("portrait_layout", ""))
 	return s
 
 

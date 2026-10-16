@@ -1,0 +1,16 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M2 (Apple8)
+
+Movie Maker mode enabled, recording movie in 1152×648 @ 30 FPS...
+PASS fire/embers/smoke on real map with threats; native battle payload unchanged
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+--------------------------------------------------------------------------------
+Done recording movie at path: /tmp/vael-vs1b-fire.avi
+241 frames at 30 FPS (movie length: 00:00:08:01), recorded in 00:00:14 (57% of real-time speed).
+CPU render time: 0.02 seconds (average: 0.09 ms/frame)
+GPU render time: 0.00 seconds (average: 0.00 ms/frame)
+Encoding time: 1.20 seconds (average: 4.99 ms/frame)
+--------------------------------------------------------------------------------

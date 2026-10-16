@@ -1,0 +1,43 @@
+[
+  {
+    "speaker": "Perrin",
+    "text": "I’m not going to pretend Emberwing is quiet. It isn’t. It’s a room full of people who’d rather do something than stand back and discuss doing it.",
+    "portrait": "perrin",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "I have met exactly one of those people.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "And he made a spectacular mess of a market awning. Yes, yes.",
+    "portrait": "perrin",
+    "side": "right",
+    "expression": "happy"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "But you saw what happened when the cart fell. I charged. You charged. Neither of us checked whether the other needed us.",
+    "portrait": "perrin",
+    "side": "right"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "Emberwing can teach us when to move together. We might even learn when not to charge at all. I make no promises about how fast.",
+    "portrait": "perrin",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "That sounds like a terrible sales pitch.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "It’s an honest one. Come meet the rest of us, and then decide whether we’re your sort of terrible.",
+    "portrait": "perrin",
+    "side": "right"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "job": "kai_travel_sad_v1",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "3:4",
+  "references": [
+    "assets/portraits/portrait_kai_travel.png"
+  ],
+  "prompt": "Edit this exact Kai portrait, preserving EXACT face shape, age16, warm brown skin, amber eyes, green-black hair, brown vest, oatmeal shirt, pose, framing and PURE WHITE background. Change only facial expression to wounded quiet sadness, brows lifted inward, mouth small, glistening eyes but no streaming melodramatic tears. His existing tiny hair-thin crown mark above his anatomical LEFT (viewer-right) outer eyebrow MUST remain in exactly same size, shape and location, never centered forehead. No extra marks or green hair glow. Delicate same anime linework and shaded materials, complete head/shoulders, no text, no scene background, no border, no objects, no hand gestures. One portrait only.",
+  "reference_sha256": [
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "629eed6efd83be3e215b8a84da3936567d58cdf70121d5e77f1b5ba9f7ec0cbd",
+  "elapsed_seconds": 18.09,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png"
+  ]
+}

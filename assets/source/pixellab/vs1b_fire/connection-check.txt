@@ -1,0 +1,1 @@
+PASS stdio initialize → notification → real authenticated tools/list; create_vfx/get_vfx available. No credential in configuration.

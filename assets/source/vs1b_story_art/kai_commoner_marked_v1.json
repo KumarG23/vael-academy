@@ -1,0 +1,19 @@
+{
+  "job": "kai_commoner_marked_v1",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "3:4",
+  "references": [
+    "assets/source/vs1b_story_art/kai_commoner_unmarked_v1.png"
+  ],
+  "prompt": "Edit this exact Kai commoner portrait. Keep every aspect identical: exact face, pose, age, expression, hair, skin, outfit, white background, framing, drawing style. Add ONLY a small delicate emerald-green three-point crown made of hair-thin lines over his ANATOMICAL LEFT EYEBROW (the eyebrow on VIEWER RIGHT). Place it entirely above the OUTER HALF of that eyebrow, between outer brow and temple, never on forehead center, never between eyes, never above viewer-left eye. Tiny faint luminous outline about half the eyebrow width, not a solid leaf, not an ornate crown/tiara, not fire. No other marks or glow. This is his faint post-cave identity mark, not a spell. Preserve simple brown vest and oatmeal shirt exactly.",
+  "reference_sha256": [
+    "bf3a8db8188a4674bfc887c333c945c70a8f673e9e592cb5635788c7aa5bdd1c"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "514ccb8730cab16939774300da9bcdc5437b623d007fe9bc93766ef598d60150",
+  "elapsed_seconds": 27.7,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/bf3a8db8188a4674bfc887c333c945c70a8f673e9e592cb5635788c7aa5bdd1c.png"
+  ]
+}

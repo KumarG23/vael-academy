@@ -149,3 +149,24 @@ func test_new_game_clears_staged_scene_handoffs_from_previous_dev_or_load():
 	assert_eq(CastleScene.next_spawn, Vector2i(-1, -1))
 	assert_eq(BattleView.next_resume, {})
 	assert_false(BattleView.next_prep)
+
+
+func test_preopening_save_restarts_home_and_completed_legacy_opening_does_not_replay_new_scenes():
+	var sys := SaveSystem.new("user://test_home_save_%d" % Time.get_ticks_usec())
+	_title.prepare_new_game(false)
+	assert_true(Campaign.save_to_slot(0, sys))
+	Campaign.reset_new_game(false)
+	assert_true(_title.prepare_load(0, sys))
+	assert_eq(_title.next_campaign_scene(), TitleScreen.OPENING_SCENE)
+	assert_false(Campaign.flags.has("kai_awakened"))
+	assert_eq(Campaign.week, 1)
+	# A prior VS-1A/VS-1B completion is honored; a package update is not a rewind.
+	Campaign.flags["opening_complete"] = true
+	Campaign.flags["kai_awakened"] = true
+	assert_true(Campaign.save_to_slot(0, sys))
+	Campaign.reset_new_game(false)
+	assert_true(_title.prepare_load(0, sys))
+	assert_eq(_title.next_campaign_scene(), TitleScreen.PROLOGUE_SCENE)
+	assert_false(Campaign.flags.has("crownspark_unlocked"))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(sys.slot_path(0)))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(sys.save_dir))

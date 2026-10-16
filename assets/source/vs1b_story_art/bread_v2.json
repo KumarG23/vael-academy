@@ -1,0 +1,24 @@
+{
+  "job": "bread_v2",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/bread_v1.png",
+    "assets/portraits/portrait_kai_travel.png",
+    "assets/portraits/portrait_road_child.png"
+  ],
+  "prompt": "Refine this exact emotional bread-giving painting for a VN overlay. KEEP the mother supporting child, quiet compassion, same hamlet geography, golden light and painterly style. Correct Kai's face and forehead to EXACT reference2: his green mark is NOT a solid shape at forehead center. Remove central green shape entirely, restore normal brown skin. Add ONLY reference2's tiny faint thin three-point green crown just over his ANATOMICAL LEFT EYEBROW, near his left temple, never between eyes. Preserve exact reference face, age16, green-black hair and plain vest/linen shirt. The child exact ref3 age7, chestnut bob and side braid, teal dress. RECOMPOSE the THREE PEOPLE as a slightly smaller central midground group entirely between x35% and x68%, their heads y23\u201336%; raise offered bread and hands to y43\u201348%. The gesture MUST be above y50%, because an opaque UI covers below y66% and side portraits cover outerquarters. Kai kneels leaning slightly forward, elbows naturally bent to offer a small broken piece/heel of travel-worn bread with rumpled linen open below it; NOT a huge complete fresh loaf. Girl's small hand reaches for it, other hand on mother, mother's reassuring arms/hands clear, natural five fingers and no extra arms. No posing or big grin. Outerquarters are empty shaded stone, lowerquarter quiet ground. In background the same scorched house now has NO visible orange flame, only thin residual gray smoke, since this is AFTER the raid and bucket line. Do not introduce any other people, text, effects or weapons.",
+  "reference_sha256": [
+    "96e5d44d16302b55895be8d78914c1ff4d8b4e5b45c79926507dcbd2f22750ae",
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983",
+    "d1848907507b9ed15cce0198e50f81896ccd5bc38176d58c975e308c7d92949d"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "ab8a63a5ba554111fc949c68f4ab3a53daa10398cde9eb05e82ce5ab32f9f6bb",
+  "elapsed_seconds": 36.43,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/96e5d44d16302b55895be8d78914c1ff4d8b4e5b45c79926507dcbd2f22750ae.png",
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png",
+    "assets/source/vs1b_story_art/references/d1848907507b9ed15cce0198e50f81896ccd5bc38176d58c975e308c7d92949d.png"
+  ]
+}

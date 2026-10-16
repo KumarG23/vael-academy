@@ -1,0 +1,14 @@
+status: completed
+id: 2985bcb7-2b88-4e0a-a348-797a48273304
+effect_id: 290ff01a-7ee3-4c12-a63e-1b9da4d9a9b0 ('vael_road_cottage_fire', saved to My effects)
+edit on the website: https://pixellab.ai/create-vfx?effect=290ff01a-7ee3-4c12-a63e-1b9da4d9a9b0
+96x112, 12 frames @ 10 fps, loops; anchor (feet) at 48,96
+download https://api.pixellab.ai/mcp/pixel-tools/bd390704-a6ee-4bc8-9824-8c152834b29d/: vael-road-cottage-fire-game.zip, vael-road-cottage-fire.gif, vael-road-cottage-fire.json, vael-road-cottage-fire.png
+artist: Made a restrained 1.2-second loop: small orange-gold roof flames, sparse embers, and thin gray smoke, with the original cottage pixels unchanged. Fire, smoke, and embers are separate layers; the cottage remains the preview subject. No windows are visible in the supplied sprite, so I kept the flames on its already-burning roof.
+parts: fire, smoke, embers
+charged: 8 generations
+image id: bd390704-a6ee-4bc8-9824-8c152834b29d (its frames; for pixelart_workbench inspect/edit or save_to_asset)
+
+next:
+change it: create_vfx(description="...", effect_id="290ff01a-7ee3-4c12-a63e-1b9da4d9a9b0", conversation="QeO7o02epf1LTfdcjT4kEQ.ef774f14a7aeb984a714af414e457f8ff7637ef1c31033cbbbde018583ea3464")
+edit it yourself, free: vfx_workbench(argv=['start', '--effect', '290ff01a-7ee3-4c12-a63e-1b9da4d9a9b0'])

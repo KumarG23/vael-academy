@@ -1,0 +1,25 @@
+{
+  "job": "essa_portrait_style_v2",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "1:1",
+  "references": [
+    "assets/portraits/portrait_kai.png",
+    "assets/portraits/portrait_serra.png",
+    "assets/portraits/portrait_rina.png"
+  ],
+  "prompt": "MATCH THE EXACT PORTRAIT ART STYLE of all three provided existing Vael portraits: refined polished fantasy anime rendering, crisp fine lines, clean rich cel-shading with soft glossy highlights on face/hair, large expressive anime eyes, precise attractive facial planes, nuanced bright colors against muted gray-blue portrait background. Same head-and-shoulders square framing/scale as references, NOT full body, NOT a reference sheet, NOT a white cutout. No realistic skin texture/wrinkles rendering, no gritty linework or brown wash, no comic-book or western illustration. A DIFFERENT supporting character, do not copy the teens' face, hair or uniform. Render their age through simple economical anime age lines and proportions, using the SAME portrait artist's visual language. Essa, ordinary human herbalist mother about43, warm brown skin, practical dark brown hair pinned loosely back, slight gray at temples, brown eyes, expressive affectionate stern eyebrows, quiet warm mouth. Muted terracotta blouse and moss-brown apron, no jewelry or nobility. Preserve simple clear colors and same portrait background mood. ONE character only, no labels/text/UI/frame, no weapons or gesturing hands.",
+  "reference_sha256": [
+    "ecf39295b2638ddb001abc41bf1474d7335973b8956da83ed6cc59364ae1347f",
+    "5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453",
+    "681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "c286c8a20bb55a7c95e71257978cf229cdb1a0f1054e0f7329ee4e450a0bf1e2",
+  "elapsed_seconds": 19.52,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/ecf39295b2638ddb001abc41bf1474d7335973b8956da83ed6cc59364ae1347f.png",
+    "assets/source/vs1b_story_art/references/5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453.png",
+    "assets/source/vs1b_story_art/references/681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161.png"
+  ]
+}

@@ -44,6 +44,7 @@ var _right_portrait := ""
 var _left_expr := "neutral"
 var _right_expr := "neutral"
 var _portrait_cache: Dictionary = {}
+var _portrait_layout: String = "standard"
 # AW-78: the VN backdrop — a texture (cover-fit) or a flat special ("black"/"white").
 # Held in members so the textures survive redraws (gotcha #11).
 var _backdrop_tex: Texture2D = null
@@ -66,6 +67,12 @@ func play(script: DialogueScript) -> void:
 	_finished = false
 	_current = null
 	_choice = null
+	# A new scene must not carry a previous scene's silent portrait into view.
+	_left_portrait = ""
+	_right_portrait = ""
+	_portrait_layout = "standard"
+	_left_expr = "neutral"
+	_right_expr = "neutral"
 	flags = {}
 	_advance_logical()
 
@@ -181,6 +188,8 @@ func _advance_logical() -> void:
 				return
 			continue  # non-terminal event: keep going to the next step
 		_current = step
+		if step.portrait_layout in ["standard", "inset"]:
+			_portrait_layout = step.portrait_layout
 		if step.backdrop != "":  # AW-78: this line changes the stage
 			_set_backdrop(step.backdrop, step.backdrop_fallback)
 		if step.music == "stop":  # AW-79: scripts can score themselves
@@ -289,8 +298,14 @@ func _draw() -> void:
 		_draw_narration(vp)  # AW-78: the storyteller owns the whole frame
 		return
 	var active_left := _current.side == "left"
-	_draw_portrait(Vector2(vp.x * 0.08, vp.y * 0.14), LEFT_COLOR, active_left, "left")
-	_draw_portrait(Vector2(vp.x * 0.72, vp.y * 0.14), RIGHT_COLOR, not active_left, "right")
+	if _portrait_layout == "inset":
+		# Small framed identity portraits read as dialogue UI rather than a second
+		# full-size actor beside the central bread gesture. Only authored stills opt in.
+		_draw_portrait(Vector2(vp.x * 0.08, vp.y * 0.03), LEFT_COLOR, active_left, "left", 0.42)
+		_draw_portrait(Vector2(vp.x * 0.84, vp.y * 0.03), RIGHT_COLOR, not active_left, "right", 0.42)
+	else:
+		_draw_portrait(Vector2(vp.x * 0.08, vp.y * 0.14), LEFT_COLOR, active_left, "left")
+		_draw_portrait(Vector2(vp.x * 0.72, vp.y * 0.14), RIGHT_COLOR, not active_left, "right")
 
 	# Text box — the shared noble pixel frame (AW-56).
 	var box := Rect2(vp.x * 0.10, vp.y * 0.66, vp.x * 0.80, vp.y * 0.26)
@@ -371,14 +386,14 @@ func _draw_choice_panel(vp: Vector2) -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, row.size.x - 44, 20, col)
 
 
-func _draw_portrait(pos: Vector2, color: Color, active: bool, side: String) -> void:
+func _draw_portrait(pos: Vector2, color: Color, active: bool, side: String, portrait_scale: float = 1.0) -> void:
 	# AW-78: an unused side draws NOTHING — the empty placeholder card only ever
 	# looked intentional when both sides had speakers (VN scenes exposed it).
 	if (_left_portrait if side == "left" else _right_portrait) == "":
 		if not (active and _current != null and _current.speaker != ""):
 			return
 	var vp := get_viewport_rect().size
-	var size := Vector2(vp.x * 0.20, vp.y * 0.48)
+	var size := Vector2(vp.x * 0.20, vp.y * 0.48) * portrait_scale
 	# Painted portrait when the art exists (AW-6); placeholder card otherwise.
 	var tex := _portrait_texture(_left_portrait if side == "left" else _right_portrait,
 		_left_expr if side == "left" else _right_expr)
@@ -387,6 +402,9 @@ func _draw_portrait(pos: Vector2, color: Color, active: bool, side: String) -> v
 		var w := tex.get_width() * (h / tex.get_height())
 		var rect := Rect2(Vector2(pos.x + size.x * 0.5 - w * 0.5, pos.y + size.y - h + vp.y * 0.06), Vector2(w, h))
 		var mod := Color.WHITE if active else Color(0.45, 0.45, 0.50)
+		if portrait_scale < 1.0:
+			draw_rect(rect.grow(5.0), Color(0.06, 0.07, 0.10, 0.94), true)
+			draw_rect(rect.grow(5.0), Color(0.75, 0.62, 0.36, 0.85), false, 1.5)
 		draw_texture_rect(tex, rect, false, mod)
 		return
 	var card := color if active else color.darkened(0.5)

@@ -1,0 +1,18 @@
+{
+  "job": "raid_environment_v2",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/raid_environment_v1.png"
+  ],
+  "prompt": "Precisely edit this fantasy hamlet painting. The small cart beside the well is supposed to be OVERTURNED ON ITS SIDE, blocking a child-sized passage against the well, but currently looks normally standing. Change ONLY this cart: tipped onto its side with one wheel raised, broken loose axle nearby, handles canted across the ground, visibly obstructing gap by well. Coherent perspective, weight and construction, not a cart floating or exploding. Keep well, west fence lane, steps, crates, cottage fire, roads, lighting, style, camera and every other detail unchanged. No people, text or magic.",
+  "reference_sha256": [
+    "929c09fa05800eb2ab982ef1bd539a6a2e7a96ab90560d57e1ce07b4569bc585"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381",
+  "elapsed_seconds": 31.36,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/929c09fa05800eb2ab982ef1bd539a6a2e7a96ab90560d57e1ce07b4569bc585.png"
+  ]
+}

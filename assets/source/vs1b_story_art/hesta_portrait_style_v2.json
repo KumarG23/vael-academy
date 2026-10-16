@@ -1,0 +1,25 @@
+{
+  "job": "hesta_portrait_style_v2",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "1:1",
+  "references": [
+    "assets/portraits/portrait_kai.png",
+    "assets/portraits/portrait_serra.png",
+    "assets/portraits/portrait_rina.png"
+  ],
+  "prompt": "MATCH THE EXACT PORTRAIT ART STYLE of all three provided existing Vael portraits: refined polished fantasy anime rendering, crisp fine lines, clean rich cel-shading with soft glossy highlights on face/hair, large expressive anime eyes, precise attractive facial planes, nuanced bright colors against muted gray-blue portrait background. Same head-and-shoulders square framing/scale as references, NOT full body, NOT a reference sheet, NOT a white cutout. No realistic skin texture/wrinkles rendering, no gritty linework or brown wash, no comic-book or western illustration. A DIFFERENT supporting character, do not copy the teens' face, hair or uniform. Render their age through simple economical anime age lines and proportions, using the SAME portrait artist's visual language. Hesta, formidable elderly human woman in her SIXTIES, iron-gray hair in a severe low bun, steel-gray discerning eyes, composed closed mouth, sparse clear anime age lines. Gray layered robes edged with THREE narrow crimson/blue/forest-green trims and ONE fine gold thread. She is stern and purposeful, never villainous; no crown, tiara, armor or magic. Preserve simple clear colors and same portrait background mood. ONE character only, no labels/text/UI/frame, no weapons or gesturing hands.",
+  "reference_sha256": [
+    "ecf39295b2638ddb001abc41bf1474d7335973b8956da83ed6cc59364ae1347f",
+    "5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453",
+    "681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "798f45edd3f80c4ea2879dae2586d5eee4611a72b0b4478c2076f2c6f382545c",
+  "elapsed_seconds": 25.23,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/ecf39295b2638ddb001abc41bf1474d7335973b8956da83ed6cc59364ae1347f.png",
+    "assets/source/vs1b_story_art/references/5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453.png",
+    "assets/source/vs1b_story_art/references/681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161.png"
+  ]
+}

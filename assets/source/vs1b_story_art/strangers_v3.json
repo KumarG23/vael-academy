@@ -1,0 +1,30 @@
+{
+  "job": "strangers_v3",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/raid_environment_v2.png",
+    "assets/portraits/portrait_kai_travel.png",
+    "assets/portraits/portrait_serra.png",
+    "assets/portraits/portrait_perrin.png",
+    "assets/portraits/portrait_rina.png"
+  ],
+  "prompt": "Create ONE 16:9 finished painted fantasy story tableau in the exact hamlet setting of reference1. Add EXACTLY FOUR TEENAGE PEOPLE and ONE HORSE. References2\u20135 show their exact individual faces and clothing. One of each, absolutely no duplicated characters. Painterly warm afternoon natural light, coherent human anatomy and perspective.\nKAI (ref2): x42% near the stone well, plain oatmeal shirt/brown vest/brown trousers. He has just stopped running, turns to face danger ahead, one hand steadying himself on stone. Tiny faint fine green crown over anatomical LEFT eyebrow near temple, never centered forehead. His sword stays sheathed.\nSERRA (ref3): x53%, blue/silver lance armor and blonde twin tails, long dark blue trousers. She stands protectively with lance across the lane, alert and steady.\nPERRIN (ref4): x64%, golden-blond boy in crimson/gold and navy, seated correctly in saddle ON the single brown horse, bent knees/boots in stirrups, catching reins after arriving too fast. Do not put him on the ground.\nRINA (ref5): x35%, slightly farther back on cottage steps, long red side braid and green/bronze over white sleeves, pointing to a safe lane behind the well.\nFour separate tasks, first encounter, not smiling friends posing in lineup. The child has ALREADY escaped: NO other people or enemies in this shot. Preserve ONE existing overturned cart beside well, no new carts. Important heads/actions in upper60%; lowerquarter quiet for captions. No text, royal titles, magic beam, archers or soldiers.",
+  "reference_sha256": [
+    "cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381",
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983",
+    "5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453",
+    "c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a",
+    "681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "9266f33445a747e6e65e249adccee30c8cdd3d8408fe19005dacb5f8ee40adce",
+  "elapsed_seconds": 38.45,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381.png",
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png",
+    "assets/source/vs1b_story_art/references/5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453.png",
+    "assets/source/vs1b_story_art/references/c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a.png",
+    "assets/source/vs1b_story_art/references/681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161.png"
+  ]
+}

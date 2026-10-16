@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-16",
+  "baseline_repo": "KumarG23/vael-academy",
+  "baseline_commit": "f0c43294",
+  "status": "draft, not committed or generated",
+  "scripts": {
+    "prologue_home_morning.json": {
+      "lines": 23,
+      "stage": "VS-1B candidate"
+    },
+    "prologue_road_waystation.json": {
+      "lines": 20,
+      "stage": "VS-1B candidate"
+    },
+    "road_bandit_intro.json": {
+      "lines": 28,
+      "stage": "VS-1B candidate"
+    },
+    "road_bandit_outro.json": {
+      "lines": 29,
+      "stage": "VS-1B candidate"
+    },
+    "vs1c_vael_arrival_DRAFT.json": {
+      "lines": 24,
+      "stage": "VS-1C review only"
+    },
+    "vs1c_house_pitch_emberwing_DRAFT.json": {
+      "lines": 7,
+      "stage": "VS-1C review only"
+    },
+    "vs1c_house_pitch_tidemark_DRAFT.json": {
+      "lines": 7,
+      "stage": "VS-1C review only"
+    },
+    "vs1c_house_pitch_thornrook_DRAFT.json": {
+      "lines": 9,
+      "stage": "VS-1C review only"
+    }
+  },
+  "primary_document": "STORY_AND_ART_PACKAGE.md",
+  "codex_handoff": "CODEX_VS1B_HANDOFF.md",
+  "painted_still_briefs": 11,
+  "generated_images": 0
+}

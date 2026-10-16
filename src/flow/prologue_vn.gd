@@ -1,16 +1,18 @@
 class_name PrologueVN
 extends Control
-## VS-1A: the five authored Awakening scenes (co-write 2026-07-10).
+## VS-1B: approved home-first frame, five Awakening scenes, roadside handoff.
 ## opening.tscn opts into campaign flags and hands off to the road. The original
 ## prologue_vn.tscn remains a standalone preview returning to Title.
 
 ## The scripts, in order. Backdrops/voice ride inside the scripts themselves.
 @export var scripts: Array[String] = [
+	"res://data/dialogue/prologue_home_morning.json",
 	"res://data/dialogue/prologue_forest_intro.json",
 	"res://data/dialogue/prologue_cave_awakening.json",
 	"res://data/dialogue/prologue_oakstead_wake.json",
 	"res://data/dialogue/prologue_parent_reveal.json",
 	"res://data/dialogue/prologue_director_arrives.json",
+	"res://data/dialogue/prologue_road_waystation.json",
 ]
 ## Where to go when the sequence ends ("" = stay; tests set "").
 @export var exit_scene: String = "res://scenes/title/title.tscn"

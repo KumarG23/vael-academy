@@ -1,0 +1,30 @@
+{
+  "job": "strangers_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/raid_environment_v2.png",
+    "assets/portraits/portrait_kai_travel.png",
+    "assets/portraits/portrait_serra.png",
+    "assets/portraits/portrait_perrin.png",
+    "assets/portraits/portrait_rina.png"
+  ],
+  "prompt": "Ref1 establishes the exact hamlet geography and painted storybook style. Preserve the same well at center-left, overturned cart nearby, burning cottage upper-right, west fence lane and small steps. Cinematic 16:9 painted fantasy anime narrative still, rich natural warm late afternoon light and nuanced brushwork. No text, UI, new banners, archers, reserve soldiers, gore, spell projectile, glowing sword or new lore symbols. Refs2\u20135 are EXACT distinct character identities, ages16\u201318, preserve faces/hairstyles/costumes. Wide cinematic action tableau of FOUR STRANGERS, each busy on a DIFFERENT task, NOT posing as friends or a team lineup. KAI near well braces overturned cart, plain brown vest/oatmeal shirt/brown trousers, faint tiny crown above anatomical LEFT brow, practical sheathed sword. SERRA disciplined blonde twin-tails, circlet and navy/silver lance armor, guarding the WEST evacuation lane with upright lance. PERRIN golden-blond hair crimson/gold cloak and navy uniform, reining a restless brown horse farther right near broken awning; lively slightly embarrassed, clearly mounted. RINA red-auburn long side braid, green/bronze outfit, white sleeves, on small left steps observing crates flank, pointing toward safe west fence lane. NO child left at well: only tiny warden and girl already escaping far west behind defenders. Four readable silhouettes in natural perspective, painterly setting harmonizes with accurate anime faces, no copies of anyone. All crucial heads/action ABOVE bottom third; broad cinematic center-focused scene.",
+  "reference_sha256": [
+    "cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381",
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983",
+    "5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453",
+    "c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a",
+    "681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "67f7566ec226d7e54f6e398f05dad041e5d52e51a59e9bedd1af8855d2790299",
+  "elapsed_seconds": 50.36,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381.png",
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png",
+    "assets/source/vs1b_story_art/references/5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453.png",
+    "assets/source/vs1b_story_art/references/c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a.png",
+    "assets/source/vs1b_story_art/references/681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161.png"
+  ]
+}

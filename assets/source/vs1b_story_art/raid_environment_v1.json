@@ -1,0 +1,18 @@
+{
+  "job": "raid_environment_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/art/vn/painted/forest_path.png"
+  ],
+  "prompt": "Paint a production 16:9 VN background, same warm grounded fantasy storybook brushwork/color richness as reference, not a forest. Rustic small hamlet square under an axe-brigand raid, no people in this environment plate. Key geography: circular stone WELL at center-left, overturned small wooden CART directly to its right with fallen axle, crates and damaged stall along near-right, a single burning timber-and-stone cottage upper-right by the far north road. Safe WEST lane visible to left of well, narrowing between low wooden fence and two cottages; low stone STEPS upper-left from which a traveler can see behind the crates. Natural coherent walkable square, not giant medieval city. Modest dusty afternoon gold light, tense smoke only from that one house, not apocalyptic. No gore, no archers, no military troops, no text, banners, symbols or magic. Perspective slightly elevated but still cinematic. Central 35\u201365% and upper middle hold well/cart; dark quiet outer quarters for VN portraits, quiet bottom24% for dialogue. Keep a large usable central staging area.",
+  "reference_sha256": [
+    "3bb002f70a3c17500651ddd4f8256c1ca52551a7b2c8367bd3b48fc3a07a9b31"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "929c09fa05800eb2ab982ef1bd539a6a2e7a96ab90560d57e1ce07b4569bc585",
+  "elapsed_seconds": 24.03,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/3bb002f70a3c17500651ddd4f8256c1ca52551a7b2c8367bd3b48fc3a07a9b31.png"
+  ]
+}

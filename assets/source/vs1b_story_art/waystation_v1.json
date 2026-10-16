@@ -1,0 +1,24 @@
+{
+  "job": "waystation_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/portraits/portrait_hesta.png",
+    "assets/portraits/portrait_kai_travel.png",
+    "assets/art/vn/painted/forest_path.png"
+  ],
+  "prompt": "Paint a 16:9 visual novel departure tableau. Ref1 is HESTA's exact accepted face and gray robes with crimson/blue/green narrow trim and one gold thread, stern elderly woman sixties with iron-gray low bun. Ref2 Kai's exact 16-year-old face, warm brown skin, green-black hair, amber eyes, tiny green crown above anatomical LEFT brow, oatmeal linen shirt and plain brown vest, brown trousers and practical boots, old sheathed narrow sword on belt. Ref3 painterly environment register only. A modest courier waystation on a wooded northern road, stone-and-timber shelter, cloth-covered supply wagon, fresh saddled brown horse. Hesta stands at horse shoulder passing a small sealed folded travel order to an ordinary gray-cloaked road warden by wagon; Kai waits a short pace behind, trying to ask another question. She is purposeful and in a hurry, not menacing. No giant escort, no cavalry troops, only these three people and one horse. Action/figures medium-sized across center40\u201365%, heads around upper35%, handoff upper-middle. Outerquarters quiet for foreground VN portraits, bottom24% calm packed dirt for subtitles. Warm morning natural light, not grand royal setting. No text, no magic spectacle or insignia.",
+  "reference_sha256": [
+    "ba85641a638aca7cc948069830cabd811d5d85ad169aa05de143c5fa5f39c39a",
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983",
+    "3bb002f70a3c17500651ddd4f8256c1ca52551a7b2c8367bd3b48fc3a07a9b31"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "58a2365b809ec855b9e3dd1d604c61466acb357f655507879321a6f24083d58c",
+  "elapsed_seconds": 27.1,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/ba85641a638aca7cc948069830cabd811d5d85ad169aa05de143c5fa5f39c39a.png",
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png",
+    "assets/source/vs1b_story_art/references/3bb002f70a3c17500651ddd4f8256c1ca52551a7b2c8367bd3b48fc3a07a9b31.png"
+  ]
+}

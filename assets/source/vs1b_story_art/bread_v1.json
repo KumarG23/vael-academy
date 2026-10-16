@@ -1,0 +1,24 @@
+{
+  "job": "bread_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/raid_environment_v2.png",
+    "assets/portraits/portrait_kai_travel.png",
+    "assets/portraits/portrait_road_child.png"
+  ],
+  "prompt": "Ref1 establishes the exact hamlet geography and painted storybook style. Preserve the same well at center-left, overturned cart nearby, burning cottage upper-right, west fence lane and small steps. Cinematic 16:9 painted fantasy anime narrative still, rich natural warm late afternoon light and nuanced brushwork. No text, UI, new banners, archers, reserve soldiers, gore, spell projectile, glowing sword or new lore symbols. The emotional hero illustration is a QUIET corner of this square, away from fire. Ref2 exact Kai identity/outfit/mark, ref3 exact 7-year-old child. Kai (16, warm brown skin, practical short green-black hair, amber eyes, oatmeal shirt and faded brown vest) kneels, holds a small piece of slightly DRY travel-worn bread out from a rumpled linen bundle to the seated girl in faded TEAL dress and cream blouse with chestnut bob/side braid. She leans against her ordinary conscious mother's shoulder; mother in muted russet work clothes supports her gently. Child cautiously reaches with BOTH small hands; Kai's offering hand and bread form unmistakable central gesture, believable five fingers, no duplicate hands or ornate bread. Faint TINY crown line above Kai's ANATOMICAL LEFT brow, subtle no beam or magic. Private humane moment, no grand smiles or staged crying. All THREE people are MID-SIZED together contained between x35% and x68% of image. Their heads roughly y20\u201334%, bread and hands at x50%, y42%, knees/cloth lower. Keep central offered bread clearly ABOVE y55% so VN text box beginning y66% cannot obscure it. Outer left/right quarters atmospheric shaded stone/soft foliage with NO faces, for separate foreground character portrait overlays. Warm sunlight and dust, close emotional intimacy through gesture, not close-up crops. No sword drawn, no posing heroes, no fourth person.",
+  "reference_sha256": [
+    "cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381",
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983",
+    "d1848907507b9ed15cce0198e50f81896ccd5bc38176d58c975e308c7d92949d"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "96e5d44d16302b55895be8d78914c1ff4d8b4e5b45c79926507dcbd2f22750ae",
+  "elapsed_seconds": 38.38,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381.png",
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png",
+    "assets/source/vs1b_story_art/references/d1848907507b9ed15cce0198e50f81896ccd5bc38176d58c975e308c7d92949d.png"
+  ]
+}

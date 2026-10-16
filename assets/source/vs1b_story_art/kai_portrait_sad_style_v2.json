@@ -1,0 +1,19 @@
+{
+  "job": "kai_portrait_sad_style_v2",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "1:1",
+  "references": [
+    "assets/portraits/portrait_kai_sad.png"
+  ],
+  "prompt": "Edit this EXACT existing Vael Kai emotion portrait. Preserve the exact original expression, head, face, facial proportions, eyes, warm brown skin, subtle glossy skin highlights, hair silhouette/streaks, age16, gaze, crop, shoulder scale, refined anime linework, clean rich cel-shading and original muted gray/blue background. SAME portrait artist, same exact face, not a reinterpretation. Change ONLY the academy clothes below his neck to a simple oatmeal linen open-collar shirt with a plain faded brown sleeveless vest, keeping his torso/shoulder pose exactly. No epaulettes/cravat/cape or insignia remain. Keep tiny fine green Crown mark above his ANATOMICAL LEFT (viewer-right) outer eyebrow, near temple, never centered above nose. No white background or cutout matte, no paper texture, no painterly/realistic face, no rough dark outlines. One square portrait only, no text, frame, scenery, props or weapons.",
+  "reference_sha256": [
+    "1154c5368dc070146402da7ae591202fae27ddae6f294da8e8803993421dbdca"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "a4661c7ca8dc2c8e421ca997cdeff117e1cb456c03ac55f31b4ea542b67ac483",
+  "elapsed_seconds": 19.5,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/1154c5368dc070146402da7ae591202fae27ddae6f294da8e8803993421dbdca.png"
+  ]
+}

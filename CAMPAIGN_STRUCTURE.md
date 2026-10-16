@@ -109,3 +109,17 @@ involuntary flares, never controlled Crownspark; the later Vision remains its
 unlock. Hesta and Morvane sense a major ancient-magic event, not automatically
 Kai's identity or origin. Exact new road prose is a playable draft for Neal's
 edit (`VS1B_STORY_NOTES.md`); arrival/oath restructuring is not part of VS-1B.
+
+
+### VS-1B approved package integration — Neal, 2026-10-16
+
+The supplied story package now frames the existing five Awakening scenes with
+an ordinary Tam/Essa/Kai kitchen morning and a separate first-waystation Hesta
+departure. The girl at the well escapes with the road warden before tactical
+control. Perrin, Serra and Rina intervene independently; no prior Kai acquaintance
+or shared heir travel party is assumed. They exchange first names after the raid.
+Essa's dry travel bread is shared with the girl beside her mother. The four
+package scenes preserve the supplied first-pass prose. Paintings/portraits are
+review candidates; gate/registry/house-pitch drafts remain VS-1C proposals in
+`docs/story_packages/vs1b/`. The current selected-pitch/oath mechanism is unchanged.
+No new revelation or controlled spell unlock is added. See `VS1B_STORY_NOTES.md`.

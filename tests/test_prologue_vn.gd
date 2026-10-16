@@ -23,7 +23,7 @@ func test_narration_is_inferred_from_empty_speaker_and_portrait():
 	assert_true(s.get_step(0).is_narration(), "the opener belongs to the storyteller")
 	var kai_line := s.get_step(1)
 	assert_false(kai_line.is_narration(), "Kai's lines are spoken, not narrated")
-	assert_eq(kai_line.portrait, "kai_nomark", "pre-awakening Kai wears no mark")
+	assert_eq(kai_line.portrait, "kai_travel_nomark", "pre-awakening Kai wears no mark or school uniform")
 
 
 func test_voice_and_backdrop_fields_ride_the_steps():
@@ -107,19 +107,25 @@ func _finish_vn(vn: PrologueVN) -> Array:
 	return order
 
 
-func test_campaign_opening_plays_all_five_and_commits_flags_only_at_their_beats():
+func test_campaign_opening_home_then_five_then_handoff_commits_only_at_their_beats():
 	Campaign.reset_new_game(true)
 	Campaign.active = true
 	var vn: PrologueVN = load("res://scenes/flow/opening.tscn").instantiate()
 	vn.exit_scene = ""
 	add_child_autofree(vn)
-	assert_eq(vn.scripts, SCRIPTS as Array[String], "canonical co-write order")
+	var expected: Array[String] = ["res://data/dialogue/prologue_home_morning.json"]
+	expected.append_array(SCRIPTS)
+	expected.append("res://data/dialogue/prologue_road_waystation.json")
+	assert_eq(vn.scripts, expected, "home → five established scenes → handoff")
 	assert_false(Campaign.flags.has("kai_awakened"), "no mark before the touch")
 	while vn._i < 2:
 		vn._dialogue.advance()
+	assert_false(Campaign.flags.has("kai_awakened"), "home/forest cannot give the mark")
+	while vn._i < 3:
+		vn._dialogue.advance()
 	assert_true(Campaign.flags.get("kai_awakened", false), "cave event reaches Campaign")
 	assert_false(Campaign.flags.has("opening_complete"), "family and Hesta must still play")
-	assert_eq(_finish_vn(vn), [2, 3, 4], "wake → reveal → collection/goodbye, once each")
+	assert_eq(_finish_vn(vn), [3, 4, 5, 6], "wake → reveal → goodbye → Hesta departure, once each")
 	assert_true(Campaign.flags.get("opening_complete", false))
 	assert_false(Campaign.flags.has("prologue_done"), "VN never wins the road")
 	assert_false(Campaign.house_locked)
@@ -129,7 +135,7 @@ func test_campaign_opening_plays_all_five_and_commits_flags_only_at_their_beats(
 	assert_true(Campaign.active)
 	assert_eq(Campaign.unit_states, {}, "no inventory/XP grant from narration")
 	vn._next_script()
-	assert_eq(vn._i, 5, "completion is idempotent")
+	assert_eq(vn._i, 7, "completion is idempotent")
 
 
 func test_dev_preview_plays_the_whole_opening_without_campaign_writes():
@@ -142,7 +148,7 @@ func test_dev_preview_plays_the_whole_opening_without_campaign_writes():
 	assert_eq(vn.exit_scene, "res://scenes/title/title.tscn")
 	vn.exit_scene = ""
 	add_child_autofree(vn)
-	assert_eq(_finish_vn(vn), [0, 1, 2, 3, 4])
+	assert_eq(_finish_vn(vn), [0, 1, 2, 3, 4, 5, 6])
 	assert_eq(Campaign.to_dict(), before, "no awakening/completion leak into a save")
 
 

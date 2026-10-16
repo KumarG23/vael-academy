@@ -1,0 +1,116 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M2 (Apple8)
+
+Movie Maker mode enabled, recording movie in 1152×648 @ 30 FPS...
+prologue_home_morning 0 Oakstead. An ordinary morning, as far as anyone knows.
+prologue_home_morning 1 You are not “just stepping out,” Kai. Last time you were “just stepping out,” you came back after dark with wet boots and somebody else’s goat.
+prologue_home_morning 2 The goat was having a difficult day.
+prologue_home_morning 3 The goat won.
+prologue_home_morning 4 Cruelly.
+prologue_home_morning 5 You laugh now. You still need willow bark, chanterelles if you find them, and if Old Mara asks, you are not climbing her roof again.
+prologue_home_morning 6 She asked me to last time.
+prologue_home_morning 7 She asks everyone to do things she should not ask.
+prologue_home_morning 8 She only asks the ones she thinks will say yes.
+prologue_home_morning 9 So I’m beloved. Good to know.
+prologue_home_morning 10 You’re useful. Don’t dress it up.
+prologue_home_morning 11 I’ll be home before the light goes.
+prologue_home_morning 12 That is what you said yesterday.
+prologue_home_morning 13 And look how confidently I’m saying it today.
+prologue_home_morning 14 Basket.
+prologue_home_morning 15 Tam nudges the basket toward him. It is already packed for the things Kai always forgets.
+prologue_home_morning 16 If you go beyond the ridge, at least pretend you thought better of it first.
+prologue_home_morning 17 I always pretend.
+prologue_home_morning 18 Kai.
+prologue_home_morning 19 Ma.
+prologue_home_morning 20 Home before dark.
+prologue_home_morning 21 One of these days, you’ll learn to ask me for something easy.
+prologue_home_morning 22 I did. I asked you to come home.
+SCENE PASS prologue_home_morning 23
+prologue_road_waystation 0 At the first waystation on the Vael road, the Director is already saddling a fresh horse.
+prologue_road_waystation 1 You said four days. That was one.
+prologue_road_waystation 2 You still have three to go.
+prologue_road_waystation 3 And you?
+prologue_road_waystation 4 There are matters at the Academy that cannot wait three days.
+prologue_road_waystation 5 Does one of them involve me?
+prologue_road_waystation 6 Yes.
+prologue_road_waystation 7 You could try being less reassuring.
+prologue_road_waystation 8 I am not trying to reassure you. I am trying to have the gates ready before you arrive.
+prologue_road_waystation 9 She passes a sealed travel order to the road warden waiting beside the supply wagon.
+prologue_road_waystation 10 He travels with your party. The main road, the usual stops. No shortcuts.
+prologue_road_waystation 11 Understood, Director.
+prologue_road_waystation 12 You know what that sword is. I saw your face.
+prologue_road_waystation 13 You saw a woman in a hurry.
+prologue_road_waystation 14 That is not an answer.
+prologue_road_waystation 15 You will find I rarely give one before it is useful.
+prologue_road_waystation 16 Before he can ask again, the Director turns her horse toward the northern road.
+prologue_road_waystation 17 Come along, then. People on foot arrive later than people with opinions and fresh horses.
+prologue_road_waystation 18 I am beginning to suspect the Academy is full of both.
+prologue_road_waystation 19 Days later, a day's travel from Vael, smoke rises beyond the roofs of a roadside hamlet.
+SCENE PASS prologue_road_waystation 20
+road_bandit_intro 0 The road narrows beside a hamlet well. A cart lies on its side. Beyond it, a house burns.
+road_bandit_intro 1 Raiders. Keep behind the wagon. I need to get these people off the road.
+road_bandit_intro 2 A child is trapped against the well by the overturned cart. A brigand with an axe closes the distance.
+road_bandit_intro 3 There’s a child by the well.
+road_bandit_intro 4 I see her. Wait until I can—
+road_bandit_intro 5 Kai is already running. The brigand turns toward him instead.
+road_bandit_intro 6 Hey! Over here!
+road_bandit_intro 7 Beside the well, a young woman in blue steps between the child and the axe. She raises a lance.
+road_bandit_intro 8 Down, behind me. Do not run until I say.
+road_bandit_intro 9 I can get the cart out of her way!
+road_bandit_intro 10 And leave yourself exposed to the next man. Hold the well side!
+road_bandit_intro 11 A rider in crimson pulls up hard at the edge of the square. He sees the axe, the child, and the strangers trying to help.
+road_bandit_intro 12 You there! Axe in hand! Try somebody who can fight back!
+road_bandit_intro 13 His horse rears against a loose market awning. The rider catches the reins a heartbeat too late.
+road_bandit_intro 14 Ah. Bad entrance. Sorry!
+road_bandit_intro 15 Then make a better second one. Keep that lane clear!
+road_bandit_intro 16 From the steps above the square, another traveler points toward a gap between two cottages.
+road_bandit_intro 17 The cart is not the only problem. Two more are coming around the crates. Take the child through the fence lane instead.
+road_bandit_intro 18 You’ve been watching them?
+road_bandit_intro 19 Since before you shouted at one. Go.
+road_bandit_intro 20 Kai braces the cart long enough for the child to slip through. For an instant, a fine green light crosses the mark above his left brow. It vanishes before he notices.
+road_bandit_intro 21 The woman on the steps notices. She says nothing.
+road_bandit_intro 22 I have her! The families are clear of the western lane!
+road_bandit_intro 23 Good. Then we keep the raiders from following.
+road_bandit_intro 24 Well. I was heading to Vael, but I can spare a few minutes for this.
+road_bandit_intro 25 Whoever you are, thank you. Now—please—help me finish it.
+road_bandit_intro 26 The chief is holding back by the far road. Take away his men, and he has nowhere to send them.
+road_bandit_intro 27 Four strangers turn toward the raiders. The child is safe. The road is not.
+SCENE PASS road_bandit_intro 28
+road_bandit_outro 0 The last raider retreats. For a moment, nobody celebrates. The hamlet is still standing; some of it is still burning.
+road_bandit_outro 1 Count the injured. The well is clear—keep a path open for water.
+road_bandit_outro 2 The families made it out. That child is with her mother now.
+road_bandit_outro 3 Perrin helps a shopkeeper drag a beam off the doorway. Rina checks the lanes for anyone left behind.
+road_bandit_outro 4 At the edge of the square, the child sits against her mother’s shoulder, quiet and shaking.
+road_bandit_outro 5 Are you hungry?
+road_bandit_outro 6 I don’t think so.
+road_bandit_outro 7 Fair. I’m not sure I am, either.
+road_bandit_outro 8 He opens the cloth bundle Essa pressed into his hands. The last of the bread is a little dry, but the smell still takes him home.
+road_bandit_outro 9 Here.
+road_bandit_outro 10 But that’s yours.
+road_bandit_outro 11 My mother would be furious if I didn’t offer. She’d somehow hear about it all the way from Oakstead.
+road_bandit_outro 12 Is she really that scary?
+road_bandit_outro 13 Only if you’re someone she loves.
+road_bandit_outro 14 The child takes the bread. Kai waits until her hands stop trembling before he stands.
+road_bandit_outro 15 You ran at an armed man without a plan.
+road_bandit_outro 16 I noticed.
+road_bandit_outro 17 Next time, give me half a breath to make one.
+road_bandit_outro 18 Half a breath. I can try.
+road_bandit_outro 19 Try harder than you sound.
+road_bandit_outro 20 Perrin returns, sleeves dusty, wearing a grin he has not entirely earned.
+road_bandit_outro 21 For the record, I meant to arrive with more dignity than that.
+road_bandit_outro 22 And yet we all survived the disappointment.
+road_bandit_outro 23 That’s a very generous account of events.
+road_bandit_outro 24 You can argue while we walk. I’m Kai.
+road_bandit_outro 25 Perrin. And I promise the horse is usually better behaved.
+road_bandit_outro 26 Serra.
+road_bandit_outro 27 Rina. We should leave before the smoke settles over the road.
+road_bandit_outro 28 They have a road in common for the moment. None of them knows what that will mean.
+SCENE PASS road_bandit_outro 29
+PASS native VN playback all 100 package panels; reader-paced, no Campaign/save writes
+--------------------------------------------------------------------------------
+Done recording movie at path: /tmp/vael-vs1b-story.avi
+6147 frames at 30 FPS (movie length: 00:03:24:27), recorded in 00:01:46 (192% of real-time speed).
+CPU render time: 0.13 seconds (average: 0.02 ms/frame)
+GPU render time: 0.00 seconds (average: 0.00 ms/frame)
+Encoding time: 33.89 seconds (average: 5.51 ms/frame)
+--------------------------------------------------------------------------------

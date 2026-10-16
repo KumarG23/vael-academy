@@ -50,7 +50,7 @@ func _win() -> void:
 	_view._check_objective()
 
 
-func test_handoff_and_rescue_finish_before_player_controls_without_granting_magic():
+func test_rescue_finishes_before_player_controls_without_granting_magic():
 	assert_true(_view._dialogue_playing)
 	assert_false(_view._cursor.active)
 	assert_false(Campaign.flags.has("road_intro_seen"))
@@ -61,7 +61,8 @@ func test_handoff_and_rescue_finish_before_player_controls_without_granting_magi
 	assert_null(_view._selected, "the opening cannot also select a map unit")
 	var lines := _read(_view)
 	assert_eq(lines.size(), DialogueScript.from_file(_view.chapter.intro_dialogue).size())
-	assert_string_contains(lines[0], "academy's supply wagons")
+	assert_string_contains(lines[0], "hamlet well")
+	assert_string_contains(lines[-1], "The child is safe")
 	assert_true(Campaign.flags.get("road_intro_seen", false))
 	assert_false(_view._dialogue_playing)
 	assert_true(_view._cursor.active)
@@ -82,9 +83,9 @@ func test_bread_aftermath_plays_before_result_and_saved_result_continues_to_oath
 	assert_false(Campaign.flags.has("road_aftermath_seen"))
 	var lines := _read(_view)
 	assert_eq(lines.size(), DialogueScript.from_file(_view.chapter.outro_dialogue).size())
-	assert_string_contains(lines[3], "Essa's cloth bundle")
-	assert_string_contains(lines[4], "holds it out")
-	assert_string_contains(lines[-2], "Vael too")
+	assert_string_contains(lines[8], "Essa pressed into his hands")
+	assert_string_contains(lines[11], "My mother would be furious")
+	assert_string_contains(lines[24], "I’m Kai")
 	assert_true(Campaign.flags.get("road_aftermath_seen", false))
 	assert_true(_view._result_screen.is_shown())
 	assert_eq(Campaign.week, 1)
@@ -153,10 +154,10 @@ func test_clear_backdrop_restores_map_after_a_painted_still_or_black():
 func test_optional_painted_hooks_parse_and_fall_back_without_missing_art_errors():
 	var intro := DialogueScript.from_file(_view.chapter.intro_dialogue)
 	var outro := DialogueScript.from_file(_view.chapter.outro_dialogue)
-	assert_string_contains(intro.get_step(0).backdrop, "road_handoff.png")
+	assert_string_contains(intro.get_step(0).backdrop, "road_raid_well.png")
 	assert_eq(intro.get_step(0).backdrop_fallback, "black")
-	assert_string_contains(outro.get_step(3).backdrop, "road_bread.png")
-	assert_eq(outro.get_step(0).backdrop_fallback, "clear")
+	assert_string_contains(outro.get_step(8).backdrop, "road_bread_gift.png")
+	assert_eq(outro.get_step(0).backdrop_fallback, "black")
 	var d := _dialogue(_view)
 	d._set_backdrop("res://missing_optional_painting.png", "clear")
 	assert_null(d._backdrop_tex)

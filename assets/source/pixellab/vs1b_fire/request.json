@@ -1,0 +1,8 @@
+{
+  "description": "A living fire on this exact burning hamlet cottage for a top-down pixel-art tactics map. Preserve the supplied cottage silhouette and pixel scale. Animate restrained orange/gold flames licking from its already-burning windows and roof, a few drifting embers upward and thin gray smoke dissipating. Crisp deliberate pixel clusters, no smooth HD glow or giant particles. A seamless looping environmental effect, about 1.2 seconds at an 8\u201312 frame aesthetic. Keep the base building unchanged; export separable transparent fire/smoke/ember effect layers so they can be drawn over the existing building in Godot. Subtle enough that nearby units, cursor and threat tiles remain completely readable. No explosion, projectile, camera shake, green Crown magic, text or new buildings.",
+  "sprite": "assets/art/pixellab/props/house_burning.png",
+  "artist": "pro",
+  "name": "vael_road_cottage_fire",
+  "game_pack": true,
+  "sprite_sha256": "f7644a3174e46439e8e8eb6313e604db25ec6951d0aa09fd4934de40d7492436"
+}

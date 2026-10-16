@@ -1,7 +1,7 @@
 [
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "Bigger than you look. Of course you are.",
   "backdrop": "res://assets/art/vn/painted/cave_dark.png"
  },
@@ -12,7 +12,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "A draft. Deep in a hill. …Drafts mean openings."
  },
  {
@@ -21,7 +21,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "Hello? …That's stupid. Walls don't—"
  },
  {
@@ -45,12 +45,12 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "…Oh."
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "What *are* you…?"
  },
  {
@@ -59,7 +59,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai_nomark",
+  "portrait": "kai_travel_nomark",
   "text": "This is a bad idea. This is — *such* a bad idea."
  },
  {

@@ -1,0 +1,132 @@
+[
+  {
+    "speaker": "",
+    "text": "Vael Academy rises beyond the gate: towers, courtyards, three banners, and more windows than Kai can count.",
+    "backdrop": "res://assets/art/vn/painted/vael_gate_wide.png"
+  },
+  {
+    "speaker": "Kai",
+    "text": "That’s a school?",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "Some of it. You haven’t seen the part that looks like it’s trying to swallow the sky.",
+    "portrait": "perrin",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Please tell me that’s a joke.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Rina",
+    "text": "It’s an exaggeration. Not a particularly large one.",
+    "portrait": "rina",
+    "side": "right"
+  },
+  {
+    "speaker": "Serra",
+    "text": "The registry is straight ahead. We should sign in before the courtyard fills.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "",
+    "text": "At the register, an official reads the next three names from a gilded ledger.",
+    "backdrop": "res://assets/art/vn/painted/vael_rollcall.png"
+  },
+  {
+    "speaker": "Registrar",
+    "text": "Perrin of Emberwing. Serra of Tidemark. Rina of Thornrook.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Wait. Those are the names of the—",
+    "portrait": "kai",
+    "expression": "surprised"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "The people who got their boots dirty with you? Those ones.",
+    "portrait": "perrin",
+    "side": "right",
+    "expression": "happy"
+  },
+  {
+    "speaker": "Kai",
+    "text": "You could have mentioned it.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "Would it have helped?",
+    "portrait": "perrin",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "I would’ve shouted a little more politely.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Serra",
+    "text": "No, you wouldn’t.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "No. Probably not.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Registrar",
+    "text": "And ... Kai. Of Oakstead?",
+    "side": "right"
+  },
+  {
+    "speaker": "",
+    "text": "Behind them a few students exchange glances. A word—“commoner”—travels just far enough to be heard."
+  },
+  {
+    "speaker": "Kai",
+    "text": "That’s me.",
+    "portrait": "kai",
+    "expression": "neutral"
+  },
+  {
+    "speaker": "Serra",
+    "text": "Then write it down. He is standing in front of you.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "",
+    "text": "The registrar lowers the pen. A second line appears beneath Kai’s name: “House designation: pending.”"
+  },
+  {
+    "speaker": "Rina",
+    "text": "Pending. That is unusual.",
+    "portrait": "rina",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "It’s been an unusual week.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "Come on. There’s somewhere quieter to hear the invitation.",
+    "portrait": "perrin",
+    "side": "right"
+  },
+  {
+    "speaker": "",
+    "text": "Inside the oath hall, three doors wait beneath three different banners. For the first time since leaving Oakstead, Kai is asked where he wishes to go.",
+    "backdrop": "res://assets/art/vn/painted/vael_oath_hall.png"
+  }
+]

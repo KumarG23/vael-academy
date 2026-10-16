@@ -1,0 +1,24 @@
+{
+  "job": "waystation_v2",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/waystation_v1.png",
+    "assets/portraits/portrait_road_warden.png",
+    "assets/portraits/portrait_kai_travel.png"
+  ],
+  "prompt": "Repair this exact illustrated waystation scene, keeping environment, light, painterly style, Hesta (central elderly gray-robed WOMAN), wagon and horse. TWO required corrections: 1. The LEFT person receiving Hesta's sealed order is the ROAD WARDEN, a MAN from reference2. Replace this left person's head/hair/body with that exact middle-aged olive-skinned short dark-gray-haired stubbled MALE, gray-brown practical cloak/slate shirt; do NOT duplicate Hesta's bun or female profile. He accepts the paper with anatomically natural hand. 2. KAI at right must NOT be holding a bare blade in casual conversation. His right hand rests relaxed at his side, and his old narrow sword is completely INSIDE a closed plain dark leather scabbard hanging from belt with only modest hilt showing. No naked blade anywhere. Preserve exact youthful face and brown vest/oatmeal shirt from reference3, TINY green crown over his anatomical LEFT eyebrow (viewer-right when front view), not center forehead. Reposition Kai slightly LEFT beside Hesta around x64%, so rightmostquarter remains quiet for portrait overlay. Keep horse behind, no one holds sword or horse reins awkwardly. Sealed order gesture is focal. Three people total, ONE Hesta, ONE male warden, ONE Kai. No new text, magic or insignia.",
+  "reference_sha256": [
+    "58a2365b809ec855b9e3dd1d604c61466acb357f655507879321a6f24083d58c",
+    "fe2f375b62cbfe598b2ff4239915ada0f50dacbbf4613dbbbf2ba12b521e6811",
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "0f064727ea08a3c7d4f89799562c80d3198ecee261cb20d4cfbf8d1ea649f444",
+  "elapsed_seconds": 37.1,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/58a2365b809ec855b9e3dd1d604c61466acb357f655507879321a6f24083d58c.png",
+    "assets/source/vs1b_story_art/references/fe2f375b62cbfe598b2ff4239915ada0f50dacbbf4613dbbbf2ba12b521e6811.png",
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png"
+  ]
+}

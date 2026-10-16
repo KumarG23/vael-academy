@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "id: 2985bcb7-2b88-4e0a-a348-797a48273304\njob_id: 2985bcb7-2b88-4e0a-a348-797a48273304\nartist: pro\ncost: 8 generations (quoted; a new effect, charged when delivered)\nstatus: processing (~30-90s)\n\nhint: get_vfx(job_id=\"2985bcb7-2b88-4e0a-a348-797a48273304\")"
+    }
+  ],
+  "isError": false
+}

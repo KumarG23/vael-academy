@@ -1,0 +1,120 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M2 (Apple8)
+
+CAPTURE home-00
+CAPTURE home-02
+CAPTURE home-03
+CAPTURE home-22
+CAPTURE established-01
+CAPTURE established-02
+CAPTURE established-03
+CAPTURE established-04
+CAPTURE established-05
+CAPTURE handoff-00
+CAPTURE handoff-01
+CAPTURE handoff-08
+CAPTURE handoff-10
+CAPTURE handoff-11
+CAPTURE handoff-19
+INTRO 0 The road narrows beside a hamlet well. A cart lies on its side. Beyond it, a house burns.
+CAPTURE road-00
+INTRO 1 Raiders. Keep behind the wagon. I need to get these people off the road.
+INTRO 2 A child is trapped against the well by the overturned cart. A brigand with an axe closes the distance.
+INTRO 3 There’s a child by the well.
+INTRO 4 I see her. Wait until I can—
+INTRO 5 Kai is already running. The brigand turns toward him instead.
+CAPTURE road-05
+INTRO 6 Hey! Over here!
+CAPTURE road-06
+INTRO 7 Beside the well, a young woman in blue steps between the child and the axe. She raises a lance.
+INTRO 8 Down, behind me. Do not run until I say.
+CAPTURE road-08
+INTRO 9 I can get the cart out of her way!
+INTRO 10 And leave yourself exposed to the next man. Hold the well side!
+INTRO 11 A rider in crimson pulls up hard at the edge of the square. He sees the axe, the child, and the strangers trying to help.
+INTRO 12 You there! Axe in hand! Try somebody who can fight back!
+CAPTURE road-12
+INTRO 13 His horse rears against a loose market awning. The rider catches the reins a heartbeat too late.
+INTRO 14 Ah. Bad entrance. Sorry!
+INTRO 15 Then make a better second one. Keep that lane clear!
+INTRO 16 From the steps above the square, another traveler points toward a gap between two cottages.
+INTRO 17 The cart is not the only problem. Two more are coming around the crates. Take the child through the fence lane instead.
+CAPTURE road-17
+INTRO 18 You’ve been watching them?
+INTRO 19 Since before you shouted at one. Go.
+INTRO 20 Kai braces the cart long enough for the child to slip through. For an instant, a fine green light crosses the mark above his left brow. It vanishes before he notices.
+CAPTURE road-20
+INTRO 21 The woman on the steps notices. She says nothing.
+INTRO 22 I have her! The families are clear of the western lane!
+INTRO 23 Good. Then we keep the raiders from following.
+INTRO 24 Well. I was heading to Vael, but I can spare a few minutes for this.
+INTRO 25 Whoever you are, thank you. Now—please—help me finish it.
+INTRO 26 The chief is holding back by the far road. Take away his men, and he has nowhere to send them.
+INTRO 27 Four strangers turn toward the raiders. The child is safe. The road is not.
+CAPTURE road-27
+CAPTURE 06-road-playable
+CAPTURE fire-loop-a
+CAPTURE fire-loop-b
+CAPTURE 07-kai-no-controlled-magic
+CAPTURE 08-native-forecast
+ROAD WON round=5
+AFTERMATH 0 The last raider retreats. For a moment, nobody celebrates. The hamlet is still standing; some of it is still burning.
+CAPTURE aftermath-00
+AFTERMATH 1 Count the injured. The well is clear—keep a path open for water.
+AFTERMATH 2 The families made it out. That child is with her mother now.
+AFTERMATH 3 Perrin helps a shopkeeper drag a beam off the doorway. Rina checks the lanes for anyone left behind.
+AFTERMATH 4 At the edge of the square, the child sits against her mother’s shoulder, quiet and shaking.
+AFTERMATH 5 Are you hungry?
+CAPTURE aftermath-05
+AFTERMATH 6 I don’t think so.
+CAPTURE aftermath-06
+AFTERMATH 7 Fair. I’m not sure I am, either.
+AFTERMATH 8 He opens the cloth bundle Essa pressed into his hands. The last of the bread is a little dry, but the smell still takes him home.
+CAPTURE aftermath-08
+AFTERMATH 9 Here.
+CAPTURE aftermath-09
+AFTERMATH 10 But that’s yours.
+CAPTURE aftermath-10
+AFTERMATH 11 My mother would be furious if I didn’t offer. She’d somehow hear about it all the way from Oakstead.
+CAPTURE aftermath-11
+AFTERMATH 12 Is she really that scary?
+CAPTURE aftermath-12
+AFTERMATH 13 Only if you’re someone she loves.
+CAPTURE aftermath-13
+AFTERMATH 14 The child takes the bread. Kai waits until her hands stop trembling before he stands.
+CAPTURE aftermath-14
+AFTERMATH 15 You ran at an armed man without a plan.
+CAPTURE aftermath-15
+AFTERMATH 16 I noticed.
+AFTERMATH 17 Next time, give me half a breath to make one.
+AFTERMATH 18 Half a breath. I can try.
+AFTERMATH 19 Try harder than you sound.
+AFTERMATH 20 Perrin returns, sleeves dusty, wearing a grin he has not entirely earned.
+AFTERMATH 21 For the record, I meant to arrive with more dignity than that.
+AFTERMATH 22 And yet we all survived the disappointment.
+AFTERMATH 23 That’s a very generous account of events.
+AFTERMATH 24 You can argue while we walk. I’m Kai.
+CAPTURE aftermath-24
+AFTERMATH 25 Perrin. And I promise the horse is usually better behaved.
+AFTERMATH 26 Serra.
+AFTERMATH 27 Rina. We should leave before the smoke settles over the road.
+AFTERMATH 28 They have a road in common for the moment. None of them knows what that will mean.
+CAPTURE aftermath-28
+CAPTURE victory-after-bread
+CAPTURE emberwing-choice
+CAPTURE emberwing-pitch
+CAPTURE emberwing-campus
+HOUSE PASS emberwing
+CAPTURE tidemark-choice
+CAPTURE tidemark-pitch
+CAPTURE tidemark-campus
+HOUSE PASS tidemark
+CAPTURE thornrook-choice
+CAPTURE thornrook-pitch
+CAPTURE thornrook-campus
+HOUSE PASS thornrook
+PASS New Game/seven scenes → separate Hesta handoff → original native battle/sword-only Kai → bread before result → all three original pitches/oaths → Week1 campuses, completed-road save/load. No player save IO.
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

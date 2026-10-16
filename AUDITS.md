@@ -432,3 +432,34 @@ personal campus intention (proposed VS-1C). Earlier VS1-D2/D4/D5/D6 remain open
 where not explicitly addressed. Hesta's urgency is purposeful but its private
 answer is not invented; no added Morvane/royal clue. Younger sibling is not an
 opening-planning dependency; existing explicit bible statement preserved.
+
+
+---
+
+## VS-1B approved-package reconciliation / implementation review — 2026-10-16
+
+Audited baseline **ede37ffb (VS-1B,576 green)** against Neal's supplied package,
+which referred to older f0c43294. This is the one authorized VS-1B revision;
+Neal additionally corrected portrait style and authorized live PixelLab map VFX.
+
+| Finding | Outcome |
+|---|---|
+| Package claimed missing outro/early spell fix; both already implemented | Preserved existing road flags/outro/result-save route and separately tested Crownspark gate; no duplicated implementation or new migration |
+| Existing road draft bundled Hesta handoff with fight and did not reflect new co-write | Exact package words integrated in separate home/waystation/rescue/bread scripts; original five scenes unchanged except portrait IDs; girl safe before control; heirs independent and named after raid |
+| New portrait batch drifted from established cast style (Neal's live feedback) | Rejected cutout batch, retained originals, redid commoner Kai via direct costume edits and supporting faces against exact original portrait references; all versions retained for review |
+| Full-size portraits competed with bread illustration, stale opposite portrait crossed scripts | Bread-only compact framed insets with explicit restore; new-script cast/layout reset. Regression + native before/after and full-path captures |
+| PixelLab client depended on missing Claude config; VFX tools absent from active tool list | Project/env credential support + stdio adapter, project/local Codex registration, synthetic6 tests and live authenticated schemas/creation/retrieval. No key stored in tracked files |
+| User requested live pixel battlefield fire | One actual pro VFX Creator effect/8 generations, exact native atlas timing/anchor,9-color binary-alpha loop on existing cottage. Optional cosmetic renderer, unanimated maps keep existing redraw; native full battle payload invariant |
+| Replacing runtime portrait paths could obscure past image references | Preserved exact86 reference input snapshots/26 unique and source hashes, all45 request receipts,44 delivered images/one failed request |
+
+Final full **585/585,4,336 assertions,88 scripts,152.958s**; focused44/44,595;
+6 Python checks, real native NewGame→round5 original road→all three oaths/campuses,
+isolated save/load,100-panel3m24.9s story playback and8.03s pixel-fire capture.
+Existing13 GUT deprecations/two ObjectDB/one resource exit reports retained.
+Evidence `assets/art_review/vs1b_package/`; scope/criticism `VS1B_STORY_NOTES.md`.
+
+**Deferred to co-write / VS-1C:** gate/title reveal, all-three pitch preview and
+reconsideration, first chosen campus intention. Hesta's withheld-answer phrasing
+and28-panel pre-control rescue need Neal's pacing review. New face candidates
+and illustrated stills await taste approval; test success is not art approval.
+No new lore revelation, school day, controlled spell unlock or combat formula.

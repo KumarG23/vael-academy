@@ -1,0 +1,19 @@
+{
+  "job": "kai_travel_determined_v1",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "3:4",
+  "references": [
+    "assets/portraits/portrait_kai_travel.png"
+  ],
+  "prompt": "Edit this exact Kai portrait, preserving EXACT face shape, age16, warm brown skin, amber eyes, green-black hair, brown vest, oatmeal shirt, pose, framing and PURE WHITE background. Change only facial expression to focused urgency and resolve, brows drawn, mouth firm, not anger or a grin. His existing tiny hair-thin crown mark above his anatomical LEFT (viewer-right) outer eyebrow MUST remain in exactly same size, shape and location, never centered forehead. No extra marks or green hair glow. Delicate same anime linework and shaded materials, complete head/shoulders, no text, no scene background, no border, no objects, no hand gestures. One portrait only.",
+  "reference_sha256": [
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "30903c80940d1c91a3a2f83c0af7bf7efb6dcbccaee690afcb929e3243676425",
+  "elapsed_seconds": 18.7,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png"
+  ]
+}

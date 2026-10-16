@@ -1,0 +1,114 @@
+[
+  {
+    "name": "create_vfx",
+    "description": "Our effects artist makes an animated pixel art effect: explosions, slashes,\nauras, spells, fire, smoke, lightning, hits, pickups. Charged (see the quote).\n\nIt builds the effect from parts, renders it and checks its own work, around the\nsprite when one is given. The result is saved to the user's My effects (opens on\npixellab.ai/create-vfx to tweak with sliders) and comes as a GIF, a spritesheet +\nJSON (with the effect's anchor), the game pack ZIP when asked, and an image id for\npixelart_workbench / save_to_asset.\n\nCost: quoted in the reply and charged only when delivered. lite: 1 generation for a\nnew effect or a change with no sprite or one up to 128 px, 3 (a change 2) up to 256\npx, 5 (a change 2) up to 512 px; an animated sprite adds a little. pro: 6-28 for a\nnew effect, 4-8 for a change. It can cost more when the effect takes much longer\n(at most 2x the quote).\nTo change a result, pass its effect_id and conversation (the change price).\nFree alternative: vfx_workbench, where you are the artist with the same tools.\nTime: ~30-90 s (async). Poll with get_vfx(job_id).",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "description": "The effect in plain words, as you would ask an effects artist: what it is, its colours, how it moves, how long. With effect_id: what to change.",
+          "type": "string"
+        },
+        "sprite": {
+          "default": null,
+          "description": "Optional: the character or object the effect plays on or around, up to 512x512 per frame and 32 frames: `character:<id>:<direction>` (or `:<animation>` for every frame of it), `object:<id>`, `gallery:<id>`, `job:<id>`, `upload:<id>`, a pixelart_workbench result id, an https or data URL of a PNG or GIF, or base64.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sprite_fps": {
+          "default": null,
+          "description": "How fast an animated sprite plays. Default: its own timing.",
+          "maximum": 60,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "artist": {
+          "default": "lite",
+          "description": "lite: quick and cheap (1 generation for most effects). pro: the stronger artist for detailed effects, at a higher price.",
+          "enum": [
+            "lite",
+            "pro"
+          ],
+          "type": "string"
+        },
+        "effect_id": {
+          "default": null,
+          "description": "Change one of the user's saved effects (a get_vfx effect_id or one from My effects on the website). Saved over in place; keeps its sprite.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "conversation": {
+          "default": null,
+          "description": "The conversation get_vfx printed, with that result's effect_id: the change is then priced as a change, not a new effect.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "default": null,
+          "description": "The effect's name in My effects and in the file names.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "game_pack": {
+          "default": false,
+          "description": "Also make the game pack ZIP: one spritesheet per piece (whole, behind and in front of the sprite, each part) + manifest.json.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": false
+    },
+    "_meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    }
+  },
+  {
+    "name": "get_vfx",
+    "description": "Get a create_vfx result by job id: the effect's frames (inline), its download\nlinks, its My effects id and the artist's note when completed, or progress/error.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "job_id": {
+          "description": "The job id returned by create_vfx.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id"
+      ],
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    },
+    "_meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    }
+  }
+]

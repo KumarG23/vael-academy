@@ -1,0 +1,116 @@
+[
+  {
+    "speaker": "",
+    "text": "Oakstead. An ordinary morning, as far as anyone knows.",
+    "backdrop": "res://assets/art/vn/painted/oakstead_kitchen_morning.png"
+  },
+  {
+    "speaker": "Essa",
+    "text": "You are not “just stepping out,” Kai. Last time you were “just stepping out,” you came back after dark with wet boots and somebody else’s goat.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "The goat was having a difficult day.",
+    "portrait": "kai_nomark"
+  },
+  {
+    "speaker": "Tam",
+    "text": "The goat won.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Cruelly.",
+    "portrait": "kai_nomark"
+  },
+  {
+    "speaker": "Essa",
+    "text": "You laugh now. You still need willow bark, chanterelles if you find them, and if Old Mara asks, you are not climbing her roof again.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "She asked me to last time.",
+    "portrait": "kai_nomark"
+  },
+  {
+    "speaker": "Essa",
+    "text": "She asks everyone to do things she should not ask.",
+    "side": "right"
+  },
+  {
+    "speaker": "Tam",
+    "text": "She only asks the ones she thinks will say yes.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "So I’m beloved. Good to know.",
+    "portrait": "kai_nomark"
+  },
+  {
+    "speaker": "Essa",
+    "text": "You’re useful. Don’t dress it up.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "I’ll be home before the light goes.",
+    "portrait": "kai_nomark"
+  },
+  {
+    "speaker": "Essa",
+    "text": "That is what you said yesterday.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "And look how confidently I’m saying it today.",
+    "portrait": "kai_nomark"
+  },
+  {
+    "speaker": "Tam",
+    "text": "Basket.",
+    "side": "right"
+  },
+  {
+    "speaker": "",
+    "text": "Tam nudges the basket toward him. It is already packed for the things Kai always forgets."
+  },
+  {
+    "speaker": "Tam",
+    "text": "If you go beyond the ridge, at least pretend you thought better of it first.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "I always pretend.",
+    "portrait": "kai_nomark"
+  },
+  {
+    "speaker": "Essa",
+    "text": "Kai.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Ma.",
+    "portrait": "kai_nomark"
+  },
+  {
+    "speaker": "Essa",
+    "text": "Home before dark.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "One of these days, you’ll learn to ask me for something easy.",
+    "portrait": "kai_nomark"
+  },
+  {
+    "speaker": "Essa",
+    "text": "I did. I asked you to come home.",
+    "side": "right"
+  }
+]

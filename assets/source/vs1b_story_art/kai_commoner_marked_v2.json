@@ -1,0 +1,19 @@
+{
+  "job": "kai_commoner_marked_v2",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "3:4",
+  "references": [
+    "assets/source/vs1b_story_art/kai_commoner_marked_v1.png"
+  ],
+  "prompt": "Make a very precise small edit to this exact portrait. The crown is TOO LARGE. Replace the existing green brow crown with a miniature of the same delicate three-point design, 45% its current width and height. Keep its outer/right edge in same place so it sits above OUTER HALF of the VIEWER-RIGHT eyebrow (his anatomical LEFT). Not centered on forehead. Tiny hairline faint green glow, not bright paint. Completely restore natural brown skin where the larger crown was. Everything else pixel-faithful: EXACT face, eyes, hair, skin, clothes, pose, framing, white background. Change nothing else.",
+  "reference_sha256": [
+    "514ccb8730cab16939774300da9bcdc5437b623d007fe9bc93766ef598d60150"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "1882f9b02a777a1f186584d73a22c954a8b7e3dffb731706de808075df43f648",
+  "elapsed_seconds": 31.82,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/514ccb8730cab16939774300da9bcdc5437b623d007fe9bc93766ef598d60150.png"
+  ]
+}

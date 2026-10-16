@@ -1,0 +1,74 @@
+{
+  "portraits": [
+    {
+      "source": "kai_portrait_style_nomark_v1",
+      "name": "kai_travel_nomark",
+      "opaque": true
+    },
+    {
+      "source": "kai_portrait_style_marked_v1",
+      "name": "kai_travel",
+      "opaque": true
+    },
+    {
+      "source": "tam_portrait_style_v2",
+      "name": "tam",
+      "opaque": true
+    },
+    {
+      "source": "essa_portrait_style_v2",
+      "name": "essa",
+      "opaque": true
+    },
+    {
+      "source": "hesta_portrait_style_v2",
+      "name": "hesta",
+      "opaque": true
+    },
+    {
+      "source": "road_child_portrait_style_v2",
+      "name": "road_child",
+      "opaque": true
+    },
+    {
+      "source": "road_warden_portrait_style_v2",
+      "name": "road_warden",
+      "opaque": true
+    },
+    {
+      "source": "kai_expression_happy_style_v3",
+      "name": "kai_travel_happy",
+      "opaque": true
+    },
+    {
+      "source": "kai_expression_determined_style_v3",
+      "name": "kai_travel_determined",
+      "opaque": true
+    },
+    {
+      "source": "kai_expression_angry_style_v3",
+      "name": "kai_travel_angry",
+      "opaque": true
+    },
+    {
+      "source": "kai_expression_sad_style_v3",
+      "name": "kai_travel_sad",
+      "opaque": true
+    },
+    {
+      "source": "kai_expression_surprised_style_v3",
+      "name": "kai_travel_surprised",
+      "opaque": true
+    }
+  ],
+  "backdrops": {
+    "kitchen_morning_v1": "oakstead_kitchen_morning",
+    "raid_environment_v2": "road_raid_well",
+    "waystation_v2": "road_waystation_departure",
+    "approach_v1": "road_hamlet_approach",
+    "kai_rush_v3": "road_kai_rush",
+    "strangers_v3": "road_strangers_form",
+    "bread_v3": "road_bread_gift",
+    "aftermath_v3": "road_aftermath_square"
+  }
+}

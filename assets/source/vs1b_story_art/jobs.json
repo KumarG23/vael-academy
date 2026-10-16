@@ -1,0 +1,340 @@
+{
+  "kai_commoner_unmarked_v1": {
+    "aspect": "3:4",
+    "references": [
+      "assets/portraits/portrait_kai_nomark.png"
+    ],
+    "prompt": "Create a production visual novel character portrait by editing this exact Kai identity reference. Preserve EXACT face, warm brown skin, amber eyes, short practical swept dark hair with its existing deep green tint, teenage age 16, facial proportions and refined anime line/shading style. Replace ONLY the academy uniform/cape/epaulettes/cravat with simple rural clothing: oatmeal linen shirt, open collar, faded brown sleeveless wool vest with plain seams. No jewelry, no noble insignia, no weapons, no magic, absolutely NO forehead mark. Friendly dry half-smile, shoulders relaxed. Single waist-up three-quarter portrait looking slightly toward viewer right, head and both shoulders fully visible, lower torso at bottom, generous hair margin. Flat pure white background for clean extraction. No text, no frame, no shadows behind subject. Not chibi, not photorealistic, not an adult. This commoner outfit will be his consistent pre-academy story costume."
+  },
+  "kitchen_morning_v1": {
+    "references": [
+      "assets/art/vn/painted/kitchen_lantern.png"
+    ],
+    "prompt": "Edit this exact Oakstead cottage kitchen painting to EARLY MORNING. Preserve the room geography, beams, door, hearth, table, shelves, chairs and camera. Replace night/lantern dominance with clear misty dawn through the window and low warm hearthlight. A woven forage basket on the table, small cloth-covered loaf, drying herbs and bark, patched chair, copper pot. Lived-in loving poor household, ordinary and specific, never stage-set luxury. No people, no magic, no crown symbols, no readable text. Match this warm painterly fantasy storybook register with rich natural brushwork. Cinematic 16:9. Center activity detail at upper middle; quiet outer quarters for VN portraits, subtle dark wood in lower quarter for dialogue readability."
+  },
+  "family_portraits_v1": {
+    "aspect": "3:2",
+    "references": [
+      "assets/portraits/portrait_kai_nomark.png"
+    ],
+    "prompt": "Production fantasy-anime VN portrait reference sheet: EXACTLY THREE waist-up portraits arranged as three equal vertical columns on PURE WHITE, separated by generous white gaps, each complete head and shoulders. Match reference's polished delicate anime linework and painterly shading, but these are THREE DIFFERENT OLDER ADULTS, NOT Kai and not his face or outfit. LEFT: TAM, humble rural herbalist father about 45, warm brown skin, short dark hair graying at temples, modest close beard, tired kind amber-brown eyes, earth-brown work shirt and dark waistcoat, reserved wry expression. CENTER: ESSA, herbalist mother about 43, warm brown skin, practical dark brown hair pinned loosely back with gray beginning at temples, brown eyes, expressive affectionate stern brows, muted terracotta blouse, moss-brown apron, no jewelry; direct and warm, no glamour. RIGHT: HESTA, formidable commoner Director in her sixties, iron gray hair in severe low bun, age lines and discerning steel-gray eyes, cool composed mouth, restrained layered GRAY robes edged with THREE narrow trims crimson, blue and forest green, ONE fine gold thread at collar, NO crown, NO armor, NO tiara, NO villain styling. Keep hands outside frame. All individuals human, plainly distinct, head same height, quiet neutral expressions. No text, labels, frames, magic or scenery. Three columns only. These are supporting character appearance candidates, not new story revelations."
+  },
+  "kai_commoner_marked_v1": {
+    "aspect": "3:4",
+    "references": [
+      "assets/source/vs1b_story_art/kai_commoner_unmarked_v1.png"
+    ],
+    "prompt": "Edit this exact Kai commoner portrait. Keep every aspect identical: exact face, pose, age, expression, hair, skin, outfit, white background, framing, drawing style. Add ONLY a small delicate emerald-green three-point crown made of hair-thin lines over his ANATOMICAL LEFT EYEBROW (the eyebrow on VIEWER RIGHT). Place it entirely above the OUTER HALF of that eyebrow, between outer brow and temple, never on forehead center, never between eyes, never above viewer-left eye. Tiny faint luminous outline about half the eyebrow width, not a solid leaf, not an ornate crown/tiara, not fire. No other marks or glow. This is his faint post-cave identity mark, not a spell. Preserve simple brown vest and oatmeal shirt exactly."
+  },
+  "road_support_portraits_v1": {
+    "aspect": "3:2",
+    "references": [
+      "assets/source/vs1b_story_art/kai_commoner_unmarked_v1.png"
+    ],
+    "prompt": "Exactly TWO separate waist-up fantasy anime visual novel portraits, in TWO equal columns separated by broad PURE WHITE gap, matching reference1's delicate clean linework, nuanced painterly shading and natural proportions. Completely different characters, do NOT copy Kai's face, green hair or amber eyes. LEFT: frightened recovering human girl aged 7, chestnut-brown bobbed hair with one little loose braid tucked behind ear, warm tan skin and brown eyes, plain faded teal wool dress over cream shirt, dusty cheek, uncertain tentative expression rather than tears, arms/hands below frame. RIGHT: ROAD WARDEN human adult man about 50, weather-beaten olive skin, short dark-gray hair, short stubble, kind practical eyes, gray-brown travel cloak and plain dark leather vest over slate linen shirt, no armor insignia, no ornate trinkets or weapon, quiet alert expression. Complete heads/shoulders, generous top margin, same portrait baseline. No text/frames/scenery/shadows. These are unimportant unnamed ordinary villagers/traveler, no royalty or magic. PURE WHITE for clean extraction."
+  },
+  "raid_environment_v1": {
+    "references": [
+      "assets/art/vn/painted/forest_path.png"
+    ],
+    "prompt": "Paint a production 16:9 VN background, same warm grounded fantasy storybook brushwork/color richness as reference, not a forest. Rustic small hamlet square under an axe-brigand raid, no people in this environment plate. Key geography: circular stone WELL at center-left, overturned small wooden CART directly to its right with fallen axle, crates and damaged stall along near-right, a single burning timber-and-stone cottage upper-right by the far north road. Safe WEST lane visible to left of well, narrowing between low wooden fence and two cottages; low stone STEPS upper-left from which a traveler can see behind the crates. Natural coherent walkable square, not giant medieval city. Modest dusty afternoon gold light, tense smoke only from that one house, not apocalyptic. No gore, no archers, no military troops, no text, banners, symbols or magic. Perspective slightly elevated but still cinematic. Central 35\u201365% and upper middle hold well/cart; dark quiet outer quarters for VN portraits, quiet bottom24% for dialogue. Keep a large usable central staging area."
+  },
+  "kai_commoner_marked_v2": {
+    "aspect": "3:4",
+    "references": [
+      "assets/source/vs1b_story_art/kai_commoner_marked_v1.png"
+    ],
+    "prompt": "Make a very precise small edit to this exact portrait. The crown is TOO LARGE. Replace the existing green brow crown with a miniature of the same delicate three-point design, 45% its current width and height. Keep its outer/right edge in same place so it sits above OUTER HALF of the VIEWER-RIGHT eyebrow (his anatomical LEFT). Not centered on forehead. Tiny hairline faint green glow, not bright paint. Completely restore natural brown skin where the larger crown was. Everything else pixel-faithful: EXACT face, eyes, hair, skin, clothes, pose, framing, white background. Change nothing else."
+  },
+  "raid_environment_v2": {
+    "references": [
+      "assets/source/vs1b_story_art/raid_environment_v1.png"
+    ],
+    "prompt": "Precisely edit this fantasy hamlet painting. The small cart beside the well is supposed to be OVERTURNED ON ITS SIDE, blocking a child-sized passage against the well, but currently looks normally standing. Change ONLY this cart: tipped onto its side with one wheel raised, broken loose axle nearby, handles canted across the ground, visibly obstructing gap by well. Coherent perspective, weight and construction, not a cart floating or exploding. Keep well, west fence lane, steps, crates, cottage fire, roads, lighting, style, camera and every other detail unchanged. No people, text or magic."
+  },
+  "waystation_v1": {
+    "references": [
+      "assets/portraits/portrait_hesta.png",
+      "assets/portraits/portrait_kai_travel.png",
+      "assets/art/vn/painted/forest_path.png"
+    ],
+    "prompt": "Paint a 16:9 visual novel departure tableau. Ref1 is HESTA's exact accepted face and gray robes with crimson/blue/green narrow trim and one gold thread, stern elderly woman sixties with iron-gray low bun. Ref2 Kai's exact 16-year-old face, warm brown skin, green-black hair, amber eyes, tiny green crown above anatomical LEFT brow, oatmeal linen shirt and plain brown vest, brown trousers and practical boots, old sheathed narrow sword on belt. Ref3 painterly environment register only. A modest courier waystation on a wooded northern road, stone-and-timber shelter, cloth-covered supply wagon, fresh saddled brown horse. Hesta stands at horse shoulder passing a small sealed folded travel order to an ordinary gray-cloaked road warden by wagon; Kai waits a short pace behind, trying to ask another question. She is purposeful and in a hurry, not menacing. No giant escort, no cavalry troops, only these three people and one horse. Action/figures medium-sized across center40\u201365%, heads around upper35%, handoff upper-middle. Outerquarters quiet for foreground VN portraits, bottom24% calm packed dirt for subtitles. Warm morning natural light, not grand royal setting. No text, no magic spectacle or insignia."
+  },
+  "approach_v1": {
+    "references": [
+      "assets/source/vs1b_story_art/raid_environment_v2.png"
+    ],
+    "prompt": "Create a matching establishing view of this EXACT small hamlet as seen from a distant approaching road bend. Preserve same thatch timber/stone cottages, low fence western lane, single burning cottage toward upper-right of village, tiny stone well in square. Camera outside hamlet looking along country road between trees at late afternoon. A thin single plume of dark smoke behind the roofs, uneasy anticipation rather than apocalypse. No people or close-up faces. Painterly storybook fantasy environment consistent with source, natural gold light. 16:9 with quiet outer margins and lowerquarter for VN overlay. No text or heraldry."
+  },
+  "kai_rush_v1": {
+    "references": [
+      "assets/source/vs1b_story_art/raid_environment_v2.png",
+      "assets/portraits/portrait_kai_travel.png",
+      "assets/portraits/portrait_road_child.png"
+    ],
+    "prompt": "Ref1 establishes the exact hamlet geography and painted storybook style. Preserve the same well at center-left, overturned cart nearby, burning cottage upper-right, west fence lane and small steps. Cinematic 16:9 painted fantasy anime narrative still, rich natural warm late afternoon light and nuanced brushwork. No text, UI, new banners, archers, reserve soldiers, gore, spell projectile, glowing sword or new lore symbols. Ref2 exact KAI, ref3 exact CHILD. Add a coherent action beat: Kai, age16, brown skin, green-black short hair, oatmeal shirt and brown vest, brown trousers and boots, tiny faint green crown above anatomical LEFT brow, runs in from near-left of center, shouting to divert a SINGLE axe-carrying brigand from frightened chestnut-bobbed 7-year-old girl in faded teal dress trapped beside well/cart. She crouches behind the cart; axe brigand turns toward Kai rather than toward her. Kai has old narrow sword safely sheathed at belt, no drawn magic blade. Fear and resolve, not superhero swagger. Human anatomy, natural running silhouette and believable hands. Faces, figures and key danger arranged in central35\u201365% and upper-middle, important gestures ABOVE bottom24%; leave outer quarters quiet for portraits. No other heirs yet, no mounted troops."
+  },
+  "strangers_v1": {
+    "references": [
+      "assets/source/vs1b_story_art/raid_environment_v2.png",
+      "assets/portraits/portrait_kai_travel.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_perrin.png",
+      "assets/portraits/portrait_rina.png"
+    ],
+    "prompt": "Ref1 establishes the exact hamlet geography and painted storybook style. Preserve the same well at center-left, overturned cart nearby, burning cottage upper-right, west fence lane and small steps. Cinematic 16:9 painted fantasy anime narrative still, rich natural warm late afternoon light and nuanced brushwork. No text, UI, new banners, archers, reserve soldiers, gore, spell projectile, glowing sword or new lore symbols. Refs2\u20135 are EXACT distinct character identities, ages16\u201318, preserve faces/hairstyles/costumes. Wide cinematic action tableau of FOUR STRANGERS, each busy on a DIFFERENT task, NOT posing as friends or a team lineup. KAI near well braces overturned cart, plain brown vest/oatmeal shirt/brown trousers, faint tiny crown above anatomical LEFT brow, practical sheathed sword. SERRA disciplined blonde twin-tails, circlet and navy/silver lance armor, guarding the WEST evacuation lane with upright lance. PERRIN golden-blond hair crimson/gold cloak and navy uniform, reining a restless brown horse farther right near broken awning; lively slightly embarrassed, clearly mounted. RINA red-auburn long side braid, green/bronze outfit, white sleeves, on small left steps observing crates flank, pointing toward safe west fence lane. NO child left at well: only tiny warden and girl already escaping far west behind defenders. Four readable silhouettes in natural perspective, painterly setting harmonizes with accurate anime faces, no copies of anyone. All crucial heads/action ABOVE bottom third; broad cinematic center-focused scene."
+  },
+  "aftermath_v1": {
+    "references": [
+      "assets/source/vs1b_story_art/raid_environment_v2.png",
+      "assets/portraits/portrait_perrin.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_rina.png"
+    ],
+    "prompt": "Ref1 establishes the exact hamlet geography and painted storybook style. Preserve the same well at center-left, overturned cart nearby, burning cottage upper-right, west fence lane and small steps. Cinematic 16:9 painted fantasy anime narrative still, rich natural warm late afternoon light and nuanced brushwork. No text, UI, new banners, archers, reserve soldiers, gore, spell projectile, glowing sword or new lore symbols. Paint the SAME square AFTER a brief fight. No bandits remain. Fire mostly quenched, gentle thin smoke still from scorched same cottage. Ordinary villagers begin a bucket line from well, and small repair work, quiet exhausted relief rather than celebration. In midground medium-small: exact blond crimson-cloaked Perrin from ref2 and a plain villager jointly lift a fallen doorway beam. Exact blonde twin-tailed blue/silver Serra from ref3 organizes water with a practical pointing gesture. Exact red braided green/bronze Rina from ref4 checks the safe west lane. No royal procession or whole armies, no wounded gore. Cart remains overturned, signs of damage, warm late sun and dust. Important people upper-middle, outerquarters and bottom24% quiet for overlay, natural not posed."
+  },
+  "bread_v1": {
+    "references": [
+      "assets/source/vs1b_story_art/raid_environment_v2.png",
+      "assets/portraits/portrait_kai_travel.png",
+      "assets/portraits/portrait_road_child.png"
+    ],
+    "prompt": "Ref1 establishes the exact hamlet geography and painted storybook style. Preserve the same well at center-left, overturned cart nearby, burning cottage upper-right, west fence lane and small steps. Cinematic 16:9 painted fantasy anime narrative still, rich natural warm late afternoon light and nuanced brushwork. No text, UI, new banners, archers, reserve soldiers, gore, spell projectile, glowing sword or new lore symbols. The emotional hero illustration is a QUIET corner of this square, away from fire. Ref2 exact Kai identity/outfit/mark, ref3 exact 7-year-old child. Kai (16, warm brown skin, practical short green-black hair, amber eyes, oatmeal shirt and faded brown vest) kneels, holds a small piece of slightly DRY travel-worn bread out from a rumpled linen bundle to the seated girl in faded TEAL dress and cream blouse with chestnut bob/side braid. She leans against her ordinary conscious mother's shoulder; mother in muted russet work clothes supports her gently. Child cautiously reaches with BOTH small hands; Kai's offering hand and bread form unmistakable central gesture, believable five fingers, no duplicate hands or ornate bread. Faint TINY crown line above Kai's ANATOMICAL LEFT brow, subtle no beam or magic. Private humane moment, no grand smiles or staged crying. All THREE people are MID-SIZED together contained between x35% and x68% of image. Their heads roughly y20\u201334%, bread and hands at x50%, y42%, knees/cloth lower. Keep central offered bread clearly ABOVE y55% so VN text box beginning y66% cannot obscure it. Outer left/right quarters atmospheric shaded stone/soft foliage with NO faces, for separate foreground character portrait overlays. Warm sunlight and dust, close emotional intimacy through gesture, not close-up crops. No sword drawn, no posing heroes, no fourth person."
+  },
+  "waystation_v2": {
+    "references": [
+      "assets/source/vs1b_story_art/waystation_v1.png",
+      "assets/portraits/portrait_road_warden.png",
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Repair this exact illustrated waystation scene, keeping environment, light, painterly style, Hesta (central elderly gray-robed WOMAN), wagon and horse. TWO required corrections: 1. The LEFT person receiving Hesta's sealed order is the ROAD WARDEN, a MAN from reference2. Replace this left person's head/hair/body with that exact middle-aged olive-skinned short dark-gray-haired stubbled MALE, gray-brown practical cloak/slate shirt; do NOT duplicate Hesta's bun or female profile. He accepts the paper with anatomically natural hand. 2. KAI at right must NOT be holding a bare blade in casual conversation. His right hand rests relaxed at his side, and his old narrow sword is completely INSIDE a closed plain dark leather scabbard hanging from belt with only modest hilt showing. No naked blade anywhere. Preserve exact youthful face and brown vest/oatmeal shirt from reference3, TINY green crown over his anatomical LEFT eyebrow (viewer-right when front view), not center forehead. Reposition Kai slightly LEFT beside Hesta around x64%, so rightmostquarter remains quiet for portrait overlay. Keep horse behind, no one holds sword or horse reins awkwardly. Sealed order gesture is focal. Three people total, ONE Hesta, ONE male warden, ONE Kai. No new text, magic or insignia."
+  },
+  "strangers_v2": {
+    "references": [
+      "assets/source/vs1b_story_art/strangers_v1.png",
+      "assets/portraits/portrait_perrin.png",
+      "assets/portraits/portrait_rina.png",
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Correct this exact four-stranger hamlet tableau, preserve painted style, village, lighting, well, Serra's exact blonde twin-tail blue/silver design and child/warden safely evacuating far left. REQUIRED corrections: PERRIN on right (golden blond teen, crimson cloak exact ref2) must be CLEARLY SEATED MOUNTED ON the brown horse's saddle, hips ABOVE horse's back, knees bent around horse barrel, boots in stirrups, hands catching reins. He is currently drawn standing in front of horse; redraw him as correctly riding with coherent horse/rider anatomy. KAI at front-left currently holds an invented upright second cart. REMOVE that extra cart entirely. Put Kai just RIGHT of stone well at x48%, leaning to brace the EXISTING overturned cart at x59%; one hand under the raised cart edge, child already escaped, no new cart, no extra detached wheel. His exact face/costume from ref4: brown vest/cream shirt, faint tiny left-brow green crown, no drawn sword. He is looking toward raiders out of frame, anxious resolve not angry villain grin. RINA at upper-left steps is exact ref3 teenage girl with LONG RED-AUBURN SIDE BRAID, green/bronze vest and white sleeves, pointing toward fence gap; preserve mature teenage proportions, not little girl or bob haircut. Four named teens total, distinct tasks, not smiling group portrait. All important activity ABOVE lowerthird. No other changes, no extra weapons, archers, soldiers, characters or text."
+  },
+  "kai_rush_v2": {
+    "references": [
+      "assets/source/vs1b_story_art/kai_rush_v1.png",
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Refine this exact illustration, preserving the whole village setting, overturned cart, frightened girl in teal by cart/well, same light, perspective and painterly style. Two changes only: Move running Kai from far left toward x38\u201342% image width, so his face remains in uppermiddle around y33% and he is visibly shouting at the axeman to divert attention, not smirking. Match EXACT face, commoner brown vest and cream shirt from ref2, tiny faint green crown above anatomical left brow. Natural running body and hands, sword stays INSIDE plain dark sheathed scabbard on belt, NO bare blade. Replace the axe attacker's plate-armored helmet/knight uniform with a rough ordinary brigand in plain worn leather jerkin and dirty brown trousers, uncovered unremarkable adult face, ONE short-handled AXE in hands, no shield/helmet/royal insignia. He turns toward Kai and away from girl. Do not add anyone or move well/cart/cottages. No gore, magic or text."
+  },
+  "bread_v2": {
+    "references": [
+      "assets/source/vs1b_story_art/bread_v1.png",
+      "assets/portraits/portrait_kai_travel.png",
+      "assets/portraits/portrait_road_child.png"
+    ],
+    "prompt": "Refine this exact emotional bread-giving painting for a VN overlay. KEEP the mother supporting child, quiet compassion, same hamlet geography, golden light and painterly style. Correct Kai's face and forehead to EXACT reference2: his green mark is NOT a solid shape at forehead center. Remove central green shape entirely, restore normal brown skin. Add ONLY reference2's tiny faint thin three-point green crown just over his ANATOMICAL LEFT EYEBROW, near his left temple, never between eyes. Preserve exact reference face, age16, green-black hair and plain vest/linen shirt. The child exact ref3 age7, chestnut bob and side braid, teal dress. RECOMPOSE the THREE PEOPLE as a slightly smaller central midground group entirely between x35% and x68%, their heads y23\u201336%; raise offered bread and hands to y43\u201348%. The gesture MUST be above y50%, because an opaque UI covers below y66% and side portraits cover outerquarters. Kai kneels leaning slightly forward, elbows naturally bent to offer a small broken piece/heel of travel-worn bread with rumpled linen open below it; NOT a huge complete fresh loaf. Girl's small hand reaches for it, other hand on mother, mother's reassuring arms/hands clear, natural five fingers and no extra arms. No posing or big grin. Outerquarters are empty shaded stone, lowerquarter quiet ground. In background the same scorched house now has NO visible orange flame, only thin residual gray smoke, since this is AFTER the raid and bucket line. Do not introduce any other people, text, effects or weapons."
+  },
+  "aftermath_v2": {
+    "references": [
+      "assets/source/vs1b_story_art/aftermath_v1.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_rina.png",
+      "assets/portraits/portrait_perrin.png"
+    ],
+    "prompt": "Edit this exact hamlet aftermath illustration, preserving overall village geography, well, single scorched house, overturned cart, restrained smoke and warm painterly light. Correct the character actions/costumes: RINA (exact red-auburn long side braid from ref3) is NOT collecting apples, remove her apples; move her to the upper-left fence lane checking behind a gate for anyone left, attentive head turn, green/bronze vest over white long sleeves and practical long dark trousers, no apron. SERRA (exact blonde twin-tails/circlet from ref2) should stand MIDGROUND near well at x48%, y40%, directing the bucket line, blue-and-silver armored tunic, fitted dark blue LONG TROUSERS, armored boots and gauntlets; NO short skirt or bare legs. PERRIN (exact golden-blond/crimson/navy/gold ref4) and ordinary shopkeeper lift a fallen beam off the DOORWAY of scorched cottage at upper-right, not off the cart. Natural joint effort and hands supporting beam weight. Keep citizens ordinary, no bowmen/soldiers. Place all important figures above y60% and within center35\u201368% for VN portrait and text margins. No triumphant posing, extra protagonists or magic, no readable text."
+  },
+  "kai_rush_v3": {
+    "references": [
+      "assets/source/vs1b_story_art/kai_rush_v1.png",
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Refine this exact illustration, preserving the whole village setting, overturned cart, frightened girl in teal by cart/well, same light, perspective and painterly style. Two changes only: Move running Kai from far left toward x38\u201342% image width, so his face remains in uppermiddle around y33% and he is visibly shouting at the axeman to divert attention, not smirking. Match EXACT face, commoner brown vest and cream shirt from ref2, tiny faint green crown above anatomical left brow. Natural running body and hands, sword stays INSIDE plain dark sheathed scabbard on belt, NO bare blade. Replace the axe attacker's plate-armored helmet/knight uniform with a rough ordinary brigand in plain worn leather jerkin and dirty brown trousers, uncovered unremarkable adult face, ONE short-handled AXE in hands, no shield/helmet/royal insignia. He turns toward Kai and away from girl. Do not add anyone or move well/cart/cottages. No gore, magic or text."
+  },
+  "strangers_v3": {
+    "references": [
+      "assets/source/vs1b_story_art/raid_environment_v2.png",
+      "assets/portraits/portrait_kai_travel.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_perrin.png",
+      "assets/portraits/portrait_rina.png"
+    ],
+    "prompt": "Create ONE 16:9 finished painted fantasy story tableau in the exact hamlet setting of reference1. Add EXACTLY FOUR TEENAGE PEOPLE and ONE HORSE. References2\u20135 show their exact individual faces and clothing. One of each, absolutely no duplicated characters. Painterly warm afternoon natural light, coherent human anatomy and perspective.\nKAI (ref2): x42% near the stone well, plain oatmeal shirt/brown vest/brown trousers. He has just stopped running, turns to face danger ahead, one hand steadying himself on stone. Tiny faint fine green crown over anatomical LEFT eyebrow near temple, never centered forehead. His sword stays sheathed.\nSERRA (ref3): x53%, blue/silver lance armor and blonde twin tails, long dark blue trousers. She stands protectively with lance across the lane, alert and steady.\nPERRIN (ref4): x64%, golden-blond boy in crimson/gold and navy, seated correctly in saddle ON the single brown horse, bent knees/boots in stirrups, catching reins after arriving too fast. Do not put him on the ground.\nRINA (ref5): x35%, slightly farther back on cottage steps, long red side braid and green/bronze over white sleeves, pointing to a safe lane behind the well.\nFour separate tasks, first encounter, not smiling friends posing in lineup. The child has ALREADY escaped: NO other people or enemies in this shot. Preserve ONE existing overturned cart beside well, no new carts. Important heads/actions in upper60%; lowerquarter quiet for captions. No text, royal titles, magic beam, archers or soldiers."
+  },
+  "bread_v3": {
+    "references": [
+      "assets/portraits/portrait_kai_travel.png",
+      "assets/portraits/portrait_road_child.png",
+      "assets/source/vs1b_story_art/raid_environment_v2.png"
+    ],
+    "prompt": "A finished intimate 16:9 painted fantasy storybook illustration. Ref1 is EXACT Kai character identity: sixteen-year-old warm-brown boy, amber eyes, green-black hair, brown vest/oatmeal linen shirt, tiny faint green crown over his LEFT eyebrow near temple. Ref2 EXACT seven-year-old girl, chestnut bob with little side braid, brown eyes, faded teal dress and cream shirt. Ref3 is the same hamlet, after fighting; use its well, scorched cottage and warm dusty afternoon light, but fire now quenched, only thin residual smoke.\nAt a quiet stone wall in square, Kai kneels beside child and her mother. Mother is ordinary rural brown-haired woman in muted russet clothes, conscious and comforting child with arm around her shoulders. Kai offers ONE small broken heel of dry bread from a rumpled cloth to the girl's cautious outstretched hands. He holds bread gently at his upper chest height, so offering gesture is unmistakable in UPPER CENTER of painting between their faces. Real natural fingers, small child's hands, no dramatic crying. Kindness despite exhaustion, not triumphant smile.\nThree figures grouped close together in center third, medium-small, heads in upper third. Bread at center of frame, higher than their waists. Quiet empty shaded stone and soft foliage on both outer quarters; quiet packed dirt below. Delicate anime faces harmonized with painterly environment, natural human proportions, expressive warm light, beautiful restrained detail. Kai's mark is tiny hair-thin outline above anatomical LEFT eyebrow, never centered forehead or over nose. No weapon drawn, no magic beam. FULL FINISHED SCENE ONLY: absolutely no text, captions, lettering, border, frame, panels, interface, textbox or watermark anywhere."
+  },
+  "aftermath_v3": {
+    "references": [
+      "assets/source/vs1b_story_art/raid_environment_v2.png"
+    ],
+    "prompt": "Paint the SAME hamlet square AFTER the raid. Use exact composition, same well, overturned cart, cottage and fence lane as reference, same warm painterly storybook style. Extinguish the fire: scorched thatch and thin gray smoke, no orange flame. Add only THREE ORDINARY ADULT VILLAGERS mid-small in the upper-middle: one gray-haired woman lifting a water bucket at well, a plain brown-clothed man carrying water to the scorched doorway, an older shopkeeper inspecting damage beside that doorway. Ordinary adults in simple muted clothes, natural different faces, no uniformed teenagers, nobles, heroes, armor or weapons. Leave center foreground, outerquarters and lowerthird empty quiet ground for foreground dialogue portraits. Signs of small repair and continuing water work, exhaustion and practical relief, no celebration or tears-for-camera. Keep only ONE existing overturned cart, no extra carts or beams laid across it. No text, interface, frames, panels or magic. Full coherent 16:9 painted environment tableau, not a collage."
+  },
+  "kai_travel_happy_v1": {
+    "aspect": "3:4",
+    "references": [
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Edit this exact Kai portrait, preserving EXACT face shape, age16, warm brown skin, amber eyes, green-black hair, brown vest, oatmeal shirt, pose, framing and PURE WHITE background. Change only facial expression to a small tender reassuring smile, eyes open and warm, no big grin or laughing; kindness despite exhaustion. His existing tiny hair-thin crown mark above his anatomical LEFT (viewer-right) outer eyebrow MUST remain in exactly same size, shape and location, never centered forehead. No extra marks or green hair glow. Delicate same anime linework and shaded materials, complete head/shoulders, no text, no scene background, no border, no objects, no hand gestures. One portrait only."
+  },
+  "kai_travel_determined_v1": {
+    "aspect": "3:4",
+    "references": [
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Edit this exact Kai portrait, preserving EXACT face shape, age16, warm brown skin, amber eyes, green-black hair, brown vest, oatmeal shirt, pose, framing and PURE WHITE background. Change only facial expression to focused urgency and resolve, brows drawn, mouth firm, not anger or a grin. His existing tiny hair-thin crown mark above his anatomical LEFT (viewer-right) outer eyebrow MUST remain in exactly same size, shape and location, never centered forehead. No extra marks or green hair glow. Delicate same anime linework and shaded materials, complete head/shoulders, no text, no scene background, no border, no objects, no hand gestures. One portrait only."
+  },
+  "kai_travel_angry_v1": {
+    "aspect": "3:4",
+    "references": [
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Edit this exact Kai portrait, preserving EXACT face shape, age16, warm brown skin, amber eyes, green-black hair, brown vest, oatmeal shirt, pose, framing and PURE WHITE background. Change only facial expression to hurt angry disbelief, brows tight and mouth protesting, still a sixteen-year-old son, no villain snarl. His existing tiny hair-thin crown mark above his anatomical LEFT (viewer-right) outer eyebrow MUST remain in exactly same size, shape and location, never centered forehead. No extra marks or green hair glow. Delicate same anime linework and shaded materials, complete head/shoulders, no text, no scene background, no border, no objects, no hand gestures. One portrait only."
+  },
+  "kai_travel_sad_v1": {
+    "aspect": "3:4",
+    "references": [
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Edit this exact Kai portrait, preserving EXACT face shape, age16, warm brown skin, amber eyes, green-black hair, brown vest, oatmeal shirt, pose, framing and PURE WHITE background. Change only facial expression to wounded quiet sadness, brows lifted inward, mouth small, glistening eyes but no streaming melodramatic tears. His existing tiny hair-thin crown mark above his anatomical LEFT (viewer-right) outer eyebrow MUST remain in exactly same size, shape and location, never centered forehead. No extra marks or green hair glow. Delicate same anime linework and shaded materials, complete head/shoulders, no text, no scene background, no border, no objects, no hand gestures. One portrait only."
+  },
+  "kai_travel_surprised_v1": {
+    "aspect": "3:4",
+    "references": [
+      "assets/portraits/portrait_kai_travel.png"
+    ],
+    "prompt": "Edit this exact Kai portrait, preserving EXACT face shape, age16, warm brown skin, amber eyes, green-black hair, brown vest, oatmeal shirt, pose, framing and PURE WHITE background. Change only facial expression to startled, eyes widened slightly, mouth parted as if stopped mid-question. His existing tiny hair-thin crown mark above his anatomical LEFT (viewer-right) outer eyebrow MUST remain in exactly same size, shape and location, never centered forehead. No extra marks or green hair glow. Delicate same anime linework and shaded materials, complete head/shoulders, no text, no scene background, no border, no objects, no hand gestures. One portrait only."
+  },
+  "kai_portrait_style_nomark_v1": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai_nomark.png"
+    ],
+    "prompt": "EDIT this exact existing Vael Academy character portrait. It must look like the SAME original portrait artist made a costume variant of the SAME IMAGE. Preserve the exact head, face, facial proportions, eyes, warm brown skin color, glossy subtle skin highlights, hair silhouette/streaks, teen age, gaze, expression, crop, shoulder scale, precise refined anime linework, smooth cel-shading, and original muted gray background. Do not redesign or reinterpret the character. Change ONLY clothing below the neck: replace academy navy/gold epaulettes and red cravat with a simple oatmeal linen open-collar shirt and plain faded brown sleeveless vest. Same shoulders/torso pose/crop as the original; this is NOT a new waist-up character sheet. No forehead mark or magic. No white background, no cutout matte, no paper texture, no rough black outlines, no painterly face, no realistic rendering, no desaturated brown wash. Match the reference's exact polished anime PORTRAIT rendering, colors and soft highlights. One square portrait only, no text, no border, no props or weapons."
+  },
+  "kai_portrait_style_marked_v1": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai.png"
+    ],
+    "prompt": "EDIT this exact existing Vael Academy character portrait. It must look like the SAME original portrait artist made a costume variant of the SAME IMAGE. Preserve the exact head, face, facial proportions, eyes, warm brown skin color, glossy subtle skin highlights, hair silhouette/streaks, teen age, gaze, expression, crop, shoulder scale, precise refined anime linework, smooth cel-shading, and original muted gray background. Do not redesign or reinterpret the character. Change ONLY clothing below the neck: replace academy navy/gold epaulettes and red cravat with a simple oatmeal linen open-collar shirt and plain faded brown sleeveless vest. Same shoulders/torso pose/crop as the original; this is NOT a new waist-up character sheet. Keep his fine green Crown identity mark, but position it above the ANATOMICAL LEFT eyebrow (VIEWER RIGHT), near temple rather than center forehead. Small delicate fine outline. No white background, no cutout matte, no paper texture, no rough black outlines, no painterly face, no realistic rendering, no desaturated brown wash. Match the reference's exact polished anime PORTRAIT rendering, colors and soft highlights. One square portrait only, no text, no border, no props or weapons."
+  },
+  "tam_portrait_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_rina.png"
+    ],
+    "prompt": "MATCH THE EXACT PORTRAIT ART STYLE of all three provided existing Vael portraits: refined polished fantasy anime rendering, crisp fine lines, clean rich cel-shading with soft glossy highlights on face/hair, large expressive anime eyes, precise attractive facial planes, nuanced bright colors against muted gray-blue portrait background. Same head-and-shoulders square framing/scale as references, NOT full body, NOT a reference sheet, NOT a white cutout. No realistic skin texture/wrinkles rendering, no gritty linework or brown wash, no comic-book or western illustration. A DIFFERENT supporting character, do not copy the teens' face, hair or uniform. Render their age through simple economical anime age lines and proportions, using the SAME portrait artist's visual language. Tam, ordinary human rural herbalist father about45, warm brown skin, short practical dark hair graying at temples, modest close beard, amber-brown eyes, reserved wry warmth. Plain brown work shirt and worn earth-brown waistcoat, no noble insignia. Preserve simple clear colors and same portrait background mood. ONE character only, no labels/text/UI/frame, no weapons or gesturing hands."
+  },
+  "essa_portrait_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_rina.png"
+    ],
+    "prompt": "MATCH THE EXACT PORTRAIT ART STYLE of all three provided existing Vael portraits: refined polished fantasy anime rendering, crisp fine lines, clean rich cel-shading with soft glossy highlights on face/hair, large expressive anime eyes, precise attractive facial planes, nuanced bright colors against muted gray-blue portrait background. Same head-and-shoulders square framing/scale as references, NOT full body, NOT a reference sheet, NOT a white cutout. No realistic skin texture/wrinkles rendering, no gritty linework or brown wash, no comic-book or western illustration. A DIFFERENT supporting character, do not copy the teens' face, hair or uniform. Render their age through simple economical anime age lines and proportions, using the SAME portrait artist's visual language. Essa, ordinary human herbalist mother about43, warm brown skin, practical dark brown hair pinned loosely back, slight gray at temples, brown eyes, expressive affectionate stern eyebrows, quiet warm mouth. Muted terracotta blouse and moss-brown apron, no jewelry or nobility. Preserve simple clear colors and same portrait background mood. ONE character only, no labels/text/UI/frame, no weapons or gesturing hands."
+  },
+  "hesta_portrait_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_rina.png"
+    ],
+    "prompt": "MATCH THE EXACT PORTRAIT ART STYLE of all three provided existing Vael portraits: refined polished fantasy anime rendering, crisp fine lines, clean rich cel-shading with soft glossy highlights on face/hair, large expressive anime eyes, precise attractive facial planes, nuanced bright colors against muted gray-blue portrait background. Same head-and-shoulders square framing/scale as references, NOT full body, NOT a reference sheet, NOT a white cutout. No realistic skin texture/wrinkles rendering, no gritty linework or brown wash, no comic-book or western illustration. A DIFFERENT supporting character, do not copy the teens' face, hair or uniform. Render their age through simple economical anime age lines and proportions, using the SAME portrait artist's visual language. Hesta, formidable elderly human woman in her SIXTIES, iron-gray hair in a severe low bun, steel-gray discerning eyes, composed closed mouth, sparse clear anime age lines. Gray layered robes edged with THREE narrow crimson/blue/forest-green trims and ONE fine gold thread. She is stern and purposeful, never villainous; no crown, tiara, armor or magic. Preserve simple clear colors and same portrait background mood. ONE character only, no labels/text/UI/frame, no weapons or gesturing hands."
+  },
+  "road_child_portrait_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_rina.png"
+    ],
+    "prompt": "MATCH THE EXACT PORTRAIT ART STYLE of all three provided existing Vael portraits: refined polished fantasy anime rendering, crisp fine lines, clean rich cel-shading with soft glossy highlights on face/hair, large expressive anime eyes, precise attractive facial planes, nuanced bright colors against muted gray-blue portrait background. Same head-and-shoulders square framing/scale as references, NOT full body, NOT a reference sheet, NOT a white cutout. No realistic skin texture/wrinkles rendering, no gritty linework or brown wash, no comic-book or western illustration. A DIFFERENT supporting character, do not copy the teens' face, hair or uniform. Render their age through simple economical anime age lines and proportions, using the SAME portrait artist's visual language. An ordinary frightened recovering human GIRL aged7, chestnut-brown bob with one little side braid, warm tan skin, large brown eyes, dusty cheek and tentative unsure mouth, faded teal dress over cream shirt. Not a teen or glamorous child, no jewelry or crying-for-camera. Preserve simple clear colors and same portrait background mood. ONE character only, no labels/text/UI/frame, no weapons or gesturing hands."
+  },
+  "road_warden_portrait_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai.png",
+      "assets/portraits/portrait_serra.png",
+      "assets/portraits/portrait_rina.png"
+    ],
+    "prompt": "MATCH THE EXACT PORTRAIT ART STYLE of all three provided existing Vael portraits: refined polished fantasy anime rendering, crisp fine lines, clean rich cel-shading with soft glossy highlights on face/hair, large expressive anime eyes, precise attractive facial planes, nuanced bright colors against muted gray-blue portrait background. Same head-and-shoulders square framing/scale as references, NOT full body, NOT a reference sheet, NOT a white cutout. No realistic skin texture/wrinkles rendering, no gritty linework or brown wash, no comic-book or western illustration. A DIFFERENT supporting character, do not copy the teens' face, hair or uniform. Render their age through simple economical anime age lines and proportions, using the SAME portrait artist's visual language. A practical road warden, ordinary human MAN about50, weathered olive skin, SHORT dark-gray hair and modest stubble, kind alert dark eyes, gray-brown traveling cloak and plain slate linen shirt. No long hair or bun, no noble insignia, helmet or royal role. Preserve simple clear colors and same portrait background mood. ONE character only, no labels/text/UI/frame, no weapons or gesturing hands."
+  },
+  "kai_portrait_happy_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai_happy.png"
+    ],
+    "prompt": "Edit this EXACT existing Vael Kai emotion portrait. Preserve the exact original expression, head, face, facial proportions, eyes, warm brown skin, subtle glossy skin highlights, hair silhouette/streaks, age16, gaze, crop, shoulder scale, refined anime linework, clean rich cel-shading and original muted gray/blue background. SAME portrait artist, same exact face, not a reinterpretation. Change ONLY the academy clothes below his neck to a simple oatmeal linen open-collar shirt with a plain faded brown sleeveless vest, keeping his torso/shoulder pose exactly. No epaulettes/cravat/cape or insignia remain. Keep tiny fine green Crown mark above his ANATOMICAL LEFT (viewer-right) outer eyebrow, near temple, never centered above nose. No white background or cutout matte, no paper texture, no painterly/realistic face, no rough dark outlines. One square portrait only, no text, frame, scenery, props or weapons."
+  },
+  "kai_portrait_determined_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai_determined.png"
+    ],
+    "prompt": "Edit this EXACT existing Vael Kai emotion portrait. Preserve the exact original expression, head, face, facial proportions, eyes, warm brown skin, subtle glossy skin highlights, hair silhouette/streaks, age16, gaze, crop, shoulder scale, refined anime linework, clean rich cel-shading and original muted gray/blue background. SAME portrait artist, same exact face, not a reinterpretation. Change ONLY the academy clothes below his neck to a simple oatmeal linen open-collar shirt with a plain faded brown sleeveless vest, keeping his torso/shoulder pose exactly. No epaulettes/cravat/cape or insignia remain. Keep tiny fine green Crown mark above his ANATOMICAL LEFT (viewer-right) outer eyebrow, near temple, never centered above nose. No white background or cutout matte, no paper texture, no painterly/realistic face, no rough dark outlines. One square portrait only, no text, frame, scenery, props or weapons."
+  },
+  "kai_portrait_angry_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai_angry.png"
+    ],
+    "prompt": "Edit this EXACT existing Vael Kai emotion portrait. Preserve the exact original expression, head, face, facial proportions, eyes, warm brown skin, subtle glossy skin highlights, hair silhouette/streaks, age16, gaze, crop, shoulder scale, refined anime linework, clean rich cel-shading and original muted gray/blue background. SAME portrait artist, same exact face, not a reinterpretation. Change ONLY the academy clothes below his neck to a simple oatmeal linen open-collar shirt with a plain faded brown sleeveless vest, keeping his torso/shoulder pose exactly. No epaulettes/cravat/cape or insignia remain. Keep tiny fine green Crown mark above his ANATOMICAL LEFT (viewer-right) outer eyebrow, near temple, never centered above nose. No white background or cutout matte, no paper texture, no painterly/realistic face, no rough dark outlines. One square portrait only, no text, frame, scenery, props or weapons."
+  },
+  "kai_portrait_sad_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai_sad.png"
+    ],
+    "prompt": "Edit this EXACT existing Vael Kai emotion portrait. Preserve the exact original expression, head, face, facial proportions, eyes, warm brown skin, subtle glossy skin highlights, hair silhouette/streaks, age16, gaze, crop, shoulder scale, refined anime linework, clean rich cel-shading and original muted gray/blue background. SAME portrait artist, same exact face, not a reinterpretation. Change ONLY the academy clothes below his neck to a simple oatmeal linen open-collar shirt with a plain faded brown sleeveless vest, keeping his torso/shoulder pose exactly. No epaulettes/cravat/cape or insignia remain. Keep tiny fine green Crown mark above his ANATOMICAL LEFT (viewer-right) outer eyebrow, near temple, never centered above nose. No white background or cutout matte, no paper texture, no painterly/realistic face, no rough dark outlines. One square portrait only, no text, frame, scenery, props or weapons."
+  },
+  "kai_portrait_surprised_style_v2": {
+    "aspect": "1:1",
+    "references": [
+      "assets/portraits/portrait_kai_surprised.png"
+    ],
+    "prompt": "Edit this EXACT existing Vael Kai emotion portrait. Preserve the exact original expression, head, face, facial proportions, eyes, warm brown skin, subtle glossy skin highlights, hair silhouette/streaks, age16, gaze, crop, shoulder scale, refined anime linework, clean rich cel-shading and original muted gray/blue background. SAME portrait artist, same exact face, not a reinterpretation. Change ONLY the academy clothes below his neck to a simple oatmeal linen open-collar shirt with a plain faded brown sleeveless vest, keeping his torso/shoulder pose exactly. No epaulettes/cravat/cape or insignia remain. Keep tiny fine green Crown mark above his ANATOMICAL LEFT (viewer-right) outer eyebrow, near temple, never centered above nose. No white background or cutout matte, no paper texture, no painterly/realistic face, no rough dark outlines. One square portrait only, no text, frame, scenery, props or weapons."
+  },
+  "kai_expression_happy_style_v3": {
+    "aspect": "1:1",
+    "references": [
+      "assets/source/vs1b_story_art/kai_portrait_style_marked_v1.png"
+    ],
+    "prompt": "Make a facial-expression variant of this EXACT existing polished Vael anime portrait. Change ONLY eyes, eyebrows and mouth to a small gentle reassuring smile, eyes open, no open-mouth laughing or celebratory sparkle. Preserve EXACT face identity, age, head proportions, framing, lighting, skin color/highlights, hair, brown vest/oatmeal shirt and gray background. Most importantly preserve the exact tiny green crown's CURRENT location and size above the eyebrow on VIEWER RIGHT near temple. Do not center the crown on forehead, do not move, enlarge or redesign it. The forehead/hair pixels should remain the same as input. No hand gestures, gloves, sparkles or extra accessories. Same original portrait artist, fine linework and smooth rich cel-shading, not a new art style. One square portrait, no text or frame."
+  },
+  "kai_expression_determined_style_v3": {
+    "aspect": "1:1",
+    "references": [
+      "assets/source/vs1b_story_art/kai_portrait_style_marked_v1.png"
+    ],
+    "prompt": "Make a facial-expression variant of this EXACT existing polished Vael anime portrait. Change ONLY eyes, eyebrows and mouth to urgent steady resolve, brows drawn, mouth firm, no smile or gloved fist. Preserve EXACT face identity, age, head proportions, framing, lighting, skin color/highlights, hair, brown vest/oatmeal shirt and gray background. Most importantly preserve the exact tiny green crown's CURRENT location and size above the eyebrow on VIEWER RIGHT near temple. Do not center the crown on forehead, do not move, enlarge or redesign it. The forehead/hair pixels should remain the same as input. No hand gestures, gloves, sparkles or extra accessories. Same original portrait artist, fine linework and smooth rich cel-shading, not a new art style. One square portrait, no text or frame."
+  },
+  "kai_expression_angry_style_v3": {
+    "aspect": "1:1",
+    "references": [
+      "assets/source/vs1b_story_art/kai_portrait_style_marked_v1.png"
+    ],
+    "prompt": "Make a facial-expression variant of this EXACT existing polished Vael anime portrait. Change ONLY eyes, eyebrows and mouth to hurt angry disbelief, tense brows and a restrained protesting mouth. Preserve EXACT face identity, age, head proportions, framing, lighting, skin color/highlights, hair, brown vest/oatmeal shirt and gray background. Most importantly preserve the exact tiny green crown's CURRENT location and size above the eyebrow on VIEWER RIGHT near temple. Do not center the crown on forehead, do not move, enlarge or redesign it. The forehead/hair pixels should remain the same as input. No hand gestures, gloves, sparkles or extra accessories. Same original portrait artist, fine linework and smooth rich cel-shading, not a new art style. One square portrait, no text or frame."
+  },
+  "kai_expression_sad_style_v3": {
+    "aspect": "1:1",
+    "references": [
+      "assets/source/vs1b_story_art/kai_portrait_style_marked_v1.png"
+    ],
+    "prompt": "Make a facial-expression variant of this EXACT existing polished Vael anime portrait. Change ONLY eyes, eyebrows and mouth to quiet wounded sadness, lifted inner brows and small mouth, no hands raised to face. Preserve EXACT face identity, age, head proportions, framing, lighting, skin color/highlights, hair, brown vest/oatmeal shirt and gray background. Most importantly preserve the exact tiny green crown's CURRENT location and size above the eyebrow on VIEWER RIGHT near temple. Do not center the crown on forehead, do not move, enlarge or redesign it. The forehead/hair pixels should remain the same as input. No hand gestures, gloves, sparkles or extra accessories. Same original portrait artist, fine linework and smooth rich cel-shading, not a new art style. One square portrait, no text or frame."
+  },
+  "kai_expression_surprised_style_v3": {
+    "aspect": "1:1",
+    "references": [
+      "assets/source/vs1b_story_art/kai_portrait_style_marked_v1.png"
+    ],
+    "prompt": "Make a facial-expression variant of this EXACT existing polished Vael anime portrait. Change ONLY eyes, eyebrows and mouth to startled eyes and parted mouth, no hand gestures. Preserve EXACT face identity, age, head proportions, framing, lighting, skin color/highlights, hair, brown vest/oatmeal shirt and gray background. Most importantly preserve the exact tiny green crown's CURRENT location and size above the eyebrow on VIEWER RIGHT near temple. Do not center the crown on forehead, do not move, enlarge or redesign it. The forehead/hair pixels should remain the same as input. No hand gestures, gloves, sparkles or extra accessories. Same original portrait artist, fine linework and smooth rich cel-shading, not a new art style. One square portrait, no text or frame."
+  }
+}

@@ -9,6 +9,13 @@
     "aseprite-mcp-pro": {
       "type": "http",
       "url": "http://127.0.0.1:8003/mcp"
+    },
+    "pixellab": {
+      "type": "stdio",
+      "command": "python3",
+      "args": [
+        "/Users/nealsharma/code/Vael Academy/tools/pixellab_mcp_stdio.py"
+      ]
     }
   }
 }

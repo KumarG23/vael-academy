@@ -1,0 +1,24 @@
+{
+  "job": "kai_rush_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/raid_environment_v2.png",
+    "assets/portraits/portrait_kai_travel.png",
+    "assets/portraits/portrait_road_child.png"
+  ],
+  "prompt": "Ref1 establishes the exact hamlet geography and painted storybook style. Preserve the same well at center-left, overturned cart nearby, burning cottage upper-right, west fence lane and small steps. Cinematic 16:9 painted fantasy anime narrative still, rich natural warm late afternoon light and nuanced brushwork. No text, UI, new banners, archers, reserve soldiers, gore, spell projectile, glowing sword or new lore symbols. Ref2 exact KAI, ref3 exact CHILD. Add a coherent action beat: Kai, age16, brown skin, green-black short hair, oatmeal shirt and brown vest, brown trousers and boots, tiny faint green crown above anatomical LEFT brow, runs in from near-left of center, shouting to divert a SINGLE axe-carrying brigand from frightened chestnut-bobbed 7-year-old girl in faded teal dress trapped beside well/cart. She crouches behind the cart; axe brigand turns toward Kai rather than toward her. Kai has old narrow sword safely sheathed at belt, no drawn magic blade. Fear and resolve, not superhero swagger. Human anatomy, natural running silhouette and believable hands. Faces, figures and key danger arranged in central35\u201365% and upper-middle, important gestures ABOVE bottom24%; leave outer quarters quiet for portraits. No other heirs yet, no mounted troops.",
+  "reference_sha256": [
+    "cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381",
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983",
+    "d1848907507b9ed15cce0198e50f81896ccd5bc38176d58c975e308c7d92949d"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "a200d79bb24688faaf98ed5d648061be15c2abc5477e94e59b00dcc60ffc6bed",
+  "elapsed_seconds": 34.57,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381.png",
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png",
+    "assets/source/vs1b_story_art/references/d1848907507b9ed15cce0198e50f81896ccd5bc38176d58c975e308c7d92949d.png"
+  ]
+}

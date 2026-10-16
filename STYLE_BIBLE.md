@@ -1,5 +1,19 @@
 # STYLE_BIBLE.md — AW-1 v6.5 (maps doctrine: HYBRID)
 
+> **VS-1B portrait correction — Neal, 2026-10-16:** new portraits must match
+> the EXACT established Kai/heir portrait art style, not a newly invented flat
+> cutout look. Commoner Kai is a clothing variant of his existing approved face;
+> supporting faces use original cast references, square portrait framing and the
+> same rendering. Original portraits stay untouched. Painted story stills may
+> use their painterly register provided characters remain recognizable. Candidates
+> require in-engine review. The bread gesture stays central with small framed
+> dialogue portraits, rather than competing full-size duplicate figures.
+> Neal separately authorized PixelLab VFX Creator access and a first pixel-world
+> road fire: nine-color, binary-alpha, nearest-filtered 12-frame effect anchored
+> to the original burning cottage. This does not authorize new controlled magic,
+> a full-roster art rollout or a change to illustrated combat.
+
+
 > **CP-9 practice only:** Neal approved CP-8 as the visual baseline and authorized
 > a single incoming-strike dodge/block trial. Reuse whole Kai/Serra poses, clear
 > timing/cue audio and separate guard/evade feedback; never deform limbs. Trial

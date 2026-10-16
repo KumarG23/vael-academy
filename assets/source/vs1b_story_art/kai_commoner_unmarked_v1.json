@@ -1,0 +1,19 @@
+{
+  "job": "kai_commoner_unmarked_v1",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "3:4",
+  "references": [
+    "assets/portraits/portrait_kai_nomark.png"
+  ],
+  "prompt": "Create a production visual novel character portrait by editing this exact Kai identity reference. Preserve EXACT face, warm brown skin, amber eyes, short practical swept dark hair with its existing deep green tint, teenage age 16, facial proportions and refined anime line/shading style. Replace ONLY the academy uniform/cape/epaulettes/cravat with simple rural clothing: oatmeal linen shirt, open collar, faded brown sleeveless wool vest with plain seams. No jewelry, no noble insignia, no weapons, no magic, absolutely NO forehead mark. Friendly dry half-smile, shoulders relaxed. Single waist-up three-quarter portrait looking slightly toward viewer right, head and both shoulders fully visible, lower torso at bottom, generous hair margin. Flat pure white background for clean extraction. No text, no frame, no shadows behind subject. Not chibi, not photorealistic, not an adult. This commoner outfit will be his consistent pre-academy story costume.",
+  "reference_sha256": [
+    "739365dde12e8d214ab84920cf74b93f8bfe56e681479aca8471ee185ee5e855"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "bf3a8db8188a4674bfc887c333c945c70a8f673e9e592cb5635788c7aa5bdd1c",
+  "elapsed_seconds": 19.42,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/739365dde12e8d214ab84920cf74b93f8bfe56e681479aca8471ee185ee5e855.png"
+  ]
+}

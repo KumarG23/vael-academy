@@ -1,0 +1,19 @@
+{
+  "job": "family_portraits_v1",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "3:2",
+  "references": [
+    "assets/portraits/portrait_kai_nomark.png"
+  ],
+  "prompt": "Production fantasy-anime VN portrait reference sheet: EXACTLY THREE waist-up portraits arranged as three equal vertical columns on PURE WHITE, separated by generous white gaps, each complete head and shoulders. Match reference's polished delicate anime linework and painterly shading, but these are THREE DIFFERENT OLDER ADULTS, NOT Kai and not his face or outfit. LEFT: TAM, humble rural herbalist father about 45, warm brown skin, short dark hair graying at temples, modest close beard, tired kind amber-brown eyes, earth-brown work shirt and dark waistcoat, reserved wry expression. CENTER: ESSA, herbalist mother about 43, warm brown skin, practical dark brown hair pinned loosely back with gray beginning at temples, brown eyes, expressive affectionate stern brows, muted terracotta blouse, moss-brown apron, no jewelry; direct and warm, no glamour. RIGHT: HESTA, formidable commoner Director in her sixties, iron gray hair in severe low bun, age lines and discerning steel-gray eyes, cool composed mouth, restrained layered GRAY robes edged with THREE narrow trims crimson, blue and forest green, ONE fine gold thread at collar, NO crown, NO armor, NO tiara, NO villain styling. Keep hands outside frame. All individuals human, plainly distinct, head same height, quiet neutral expressions. No text, labels, frames, magic or scenery. Three columns only. These are supporting character appearance candidates, not new story revelations.",
+  "reference_sha256": [
+    "739365dde12e8d214ab84920cf74b93f8bfe56e681479aca8471ee185ee5e855"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "c9ce03f443f8b5cd3c5dd952a85b330b93aa5d4c60d114ab7620570d942a54da",
+  "elapsed_seconds": 22.2,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/739365dde12e8d214ab84920cf74b93f8bfe56e681479aca8471ee185ee5e855.png"
+  ]
+}

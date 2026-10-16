@@ -1,0 +1,27 @@
+{
+  "job": "aftermath_v1",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/raid_environment_v2.png",
+    "assets/portraits/portrait_perrin.png",
+    "assets/portraits/portrait_serra.png",
+    "assets/portraits/portrait_rina.png"
+  ],
+  "prompt": "Ref1 establishes the exact hamlet geography and painted storybook style. Preserve the same well at center-left, overturned cart nearby, burning cottage upper-right, west fence lane and small steps. Cinematic 16:9 painted fantasy anime narrative still, rich natural warm late afternoon light and nuanced brushwork. No text, UI, new banners, archers, reserve soldiers, gore, spell projectile, glowing sword or new lore symbols. Paint the SAME square AFTER a brief fight. No bandits remain. Fire mostly quenched, gentle thin smoke still from scorched same cottage. Ordinary villagers begin a bucket line from well, and small repair work, quiet exhausted relief rather than celebration. In midground medium-small: exact blond crimson-cloaked Perrin from ref2 and a plain villager jointly lift a fallen doorway beam. Exact blonde twin-tailed blue/silver Serra from ref3 organizes water with a practical pointing gesture. Exact red braided green/bronze Rina from ref4 checks the safe west lane. No royal procession or whole armies, no wounded gore. Cart remains overturned, signs of damage, warm late sun and dust. Important people upper-middle, outerquarters and bottom24% quiet for overlay, natural not posed.",
+  "reference_sha256": [
+    "cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381",
+    "c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a",
+    "5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453",
+    "681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "78176e830ef7bf10441d54ea6cec0959c71aca13be7deb828fcfeb6616e2d246",
+  "elapsed_seconds": 54.7,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381.png",
+    "assets/source/vs1b_story_art/references/c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a.png",
+    "assets/source/vs1b_story_art/references/5833598d5539349c2196c0ae8c50e3112798d9e339f1a896ca3bdfc5eeb38453.png",
+    "assets/source/vs1b_story_art/references/681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161.png"
+  ]
+}

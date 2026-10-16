@@ -1,0 +1,27 @@
+{
+  "job": "strangers_v2",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/strangers_v1.png",
+    "assets/portraits/portrait_perrin.png",
+    "assets/portraits/portrait_rina.png",
+    "assets/portraits/portrait_kai_travel.png"
+  ],
+  "prompt": "Correct this exact four-stranger hamlet tableau, preserve painted style, village, lighting, well, Serra's exact blonde twin-tail blue/silver design and child/warden safely evacuating far left. REQUIRED corrections: PERRIN on right (golden blond teen, crimson cloak exact ref2) must be CLEARLY SEATED MOUNTED ON the brown horse's saddle, hips ABOVE horse's back, knees bent around horse barrel, boots in stirrups, hands catching reins. He is currently drawn standing in front of horse; redraw him as correctly riding with coherent horse/rider anatomy. KAI at front-left currently holds an invented upright second cart. REMOVE that extra cart entirely. Put Kai just RIGHT of stone well at x48%, leaning to brace the EXISTING overturned cart at x59%; one hand under the raised cart edge, child already escaped, no new cart, no extra detached wheel. His exact face/costume from ref4: brown vest/cream shirt, faint tiny left-brow green crown, no drawn sword. He is looking toward raiders out of frame, anxious resolve not angry villain grin. RINA at upper-left steps is exact ref3 teenage girl with LONG RED-AUBURN SIDE BRAID, green/bronze vest and white sleeves, pointing toward fence gap; preserve mature teenage proportions, not little girl or bob haircut. Four named teens total, distinct tasks, not smiling group portrait. All important activity ABOVE lowerthird. No other changes, no extra weapons, archers, soldiers, characters or text.",
+  "reference_sha256": [
+    "67f7566ec226d7e54f6e398f05dad041e5d52e51a59e9bedd1af8855d2790299",
+    "c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a",
+    "681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161",
+    "28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "50b7db264ba89df86439d4b4c766dadf291e556d65141570f8948b02ca5f7f3e",
+  "elapsed_seconds": 60.14,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/67f7566ec226d7e54f6e398f05dad041e5d52e51a59e9bedd1af8855d2790299.png",
+    "assets/source/vs1b_story_art/references/c0e6dba0fafd94165d11268de12b367d8f88556dd961f1b3bfc06a79bf351e4a.png",
+    "assets/source/vs1b_story_art/references/681a3209dac139ab630ec17007f90b67d9dcc8404811c09f4e319d1df5ece161.png",
+    "assets/source/vs1b_story_art/references/28b515a492c254f11d211f99b5b235c505c347052b28691306eae6307ad48983.png"
+  ]
+}

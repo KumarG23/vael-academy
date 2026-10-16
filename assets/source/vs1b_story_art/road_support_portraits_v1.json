@@ -1,0 +1,19 @@
+{
+  "job": "road_support_portraits_v1",
+  "model": "gemini-3.1-flash-image",
+  "aspect": "3:2",
+  "references": [
+    "assets/source/vs1b_story_art/kai_commoner_unmarked_v1.png"
+  ],
+  "prompt": "Exactly TWO separate waist-up fantasy anime visual novel portraits, in TWO equal columns separated by broad PURE WHITE gap, matching reference1's delicate clean linework, nuanced painterly shading and natural proportions. Completely different characters, do NOT copy Kai's face, green hair or amber eyes. LEFT: frightened recovering human girl aged 7, chestnut-brown bobbed hair with one little loose braid tucked behind ear, warm tan skin and brown eyes, plain faded teal wool dress over cream shirt, dusty cheek, uncertain tentative expression rather than tears, arms/hands below frame. RIGHT: ROAD WARDEN human adult man about 50, weather-beaten olive skin, short dark-gray hair, short stubble, kind practical eyes, gray-brown travel cloak and plain dark leather vest over slate linen shirt, no armor insignia, no ornate trinkets or weapon, quiet alert expression. Complete heads/shoulders, generous top margin, same portrait baseline. No text/frames/scenery/shadows. These are unimportant unnamed ordinary villagers/traveler, no royalty or magic. PURE WHITE for clean extraction.",
+  "reference_sha256": [
+    "bf3a8db8188a4674bfc887c333c945c70a8f673e9e592cb5635788c7aa5bdd1c"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "c57d9309afd757fb123dbe5a71e76894872e5e1954983bb72f094b047f245620",
+  "elapsed_seconds": 26.58,
+  "review_disposition": "superseded_or_rejected_retained",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/bf3a8db8188a4674bfc887c333c945c70a8f673e9e592cb5635788c7aa5bdd1c.png"
+  ]
+}

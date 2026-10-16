@@ -1,0 +1,114 @@
+[
+  {
+    "output": "assets/portraits/portrait_kai_travel_nomark.png",
+    "source": "kai_portrait_style_nomark_v1",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "1d9dd2abf23585daa369e677c4bfef0233ac74b2c32f31ec97932ca6f52b7f7b"
+  },
+  {
+    "output": "assets/portraits/portrait_kai_travel.png",
+    "source": "kai_portrait_style_marked_v1",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "94c3503aab18c2cec5abf4bc4b3edb7c3e59f0d5290df3d5f44c8bfaceeb37b7"
+  },
+  {
+    "output": "assets/portraits/portrait_tam.png",
+    "source": "tam_portrait_style_v2",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "c3f3d47b9b7f953b4ab4fe803ac9bfb581530d150a15934fabd88a4d053ca4f6"
+  },
+  {
+    "output": "assets/portraits/portrait_essa.png",
+    "source": "essa_portrait_style_v2",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "000cbf285005e7246b97fcea36aa814f57b505280f45991f77050e0dc46c037b"
+  },
+  {
+    "output": "assets/portraits/portrait_hesta.png",
+    "source": "hesta_portrait_style_v2",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "db0b55c64ad9f0cf000f473e18cb136a1ab15cf4e0451856bc950b45ee4d1c64"
+  },
+  {
+    "output": "assets/portraits/portrait_road_child.png",
+    "source": "road_child_portrait_style_v2",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "e791a45057c1378dcd6b340573abba20bd1234b77c34fcaf1db04d119c46d0ec"
+  },
+  {
+    "output": "assets/portraits/portrait_road_warden.png",
+    "source": "road_warden_portrait_style_v2",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "5fa85d597e0460f013987dc4853ab81b4e2a249f86a0d9e1f4ac43301f5ed32e"
+  },
+  {
+    "output": "assets/portraits/portrait_kai_travel_happy.png",
+    "source": "kai_expression_happy_style_v3",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "50bd7d24efd95af8c3a6162c0505f3fde3b4add2c85fa0cf061fb114dd2f09cd"
+  },
+  {
+    "output": "assets/portraits/portrait_kai_travel_determined.png",
+    "source": "kai_expression_determined_style_v3",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "d2c6ebddd63f7ad1deb174f41e4a2e1f1109206f0381838d1b6f19a12c65006e"
+  },
+  {
+    "output": "assets/portraits/portrait_kai_travel_angry.png",
+    "source": "kai_expression_angry_style_v3",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "190aba74da0b3bd03a706340e0c9aaf21e94b8206aead1fddbabb5c840cb5968"
+  },
+  {
+    "output": "assets/portraits/portrait_kai_travel_sad.png",
+    "source": "kai_expression_sad_style_v3",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "47f52ba062d820d7ceb40e796e943b1de6c6a58f69b8969054107902b394c464"
+  },
+  {
+    "output": "assets/portraits/portrait_kai_travel_surprised.png",
+    "source": "kai_expression_surprised_style_v3",
+    "format": "established_square_portrait_no_matte",
+    "sha256": "9fd395ae19562e850d6262e4f81c932804a3bdbe80151bf00f9e6c47de5e51f8"
+  },
+  {
+    "output": "assets/art/vn/painted/oakstead_kitchen_morning.png",
+    "source": "kitchen_morning_v1",
+    "sha256": "368251ddae96ebf6960a2b3144501c5ac6b82670e91b5515f4a98a7aeae8118c"
+  },
+  {
+    "output": "assets/art/vn/painted/road_raid_well.png",
+    "source": "raid_environment_v2",
+    "sha256": "2b49fcbb48e642cc0aa6d95c97b2da85f38a8ad1ff76b30d64149c54d574e319"
+  },
+  {
+    "output": "assets/art/vn/painted/road_waystation_departure.png",
+    "source": "waystation_v2",
+    "sha256": "bb263cec835fa051bfa7112723a31159e977b672b7bd5fb0eefabf9a56b9d085"
+  },
+  {
+    "output": "assets/art/vn/painted/road_hamlet_approach.png",
+    "source": "approach_v1",
+    "sha256": "542f60ab18a3ad03d749b684e974192ce61859387849213989a889fc0c124cbe"
+  },
+  {
+    "output": "assets/art/vn/painted/road_kai_rush.png",
+    "source": "kai_rush_v3",
+    "sha256": "ac1e73b3968602640dc0a56e0aaf93d580d6c459a7a971ac606fea940cd70934"
+  },
+  {
+    "output": "assets/art/vn/painted/road_strangers_form.png",
+    "source": "strangers_v3",
+    "sha256": "434ea979cc51c9c135e1c93015754b183b18a1e7e00e7deee126c57ca0b38c6c"
+  },
+  {
+    "output": "assets/art/vn/painted/road_bread_gift.png",
+    "source": "bread_v3",
+    "sha256": "8c4929944d9402f7e56a1e2b46ed46bf8926c9c41b56482e2108ba0213592d39"
+  },
+  {
+    "output": "assets/art/vn/painted/road_aftermath_square.png",
+    "source": "aftermath_v3",
+    "sha256": "3bb22f6f0a1d450649c8013856431e0e464b723fd7cd7fc08044139948114c38"
+  }
+]

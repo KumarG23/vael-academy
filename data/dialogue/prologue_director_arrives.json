@@ -6,6 +6,7 @@
  },
  {
   "speaker": "Hesta",
+  "portrait": "hesta",
   "side": "right",
   "text": "Kai of Oakstead. Found sixteen years ago. Woke yesterday's light. I am Hesta, Director of the Vael Academy."
  },
@@ -15,21 +16,25 @@
  },
  {
   "speaker": "Essa",
+  "portrait": "essa",
   "side": "right",
   "text": "He's a boy. He's OUR boy—"
  },
  {
   "speaker": "Hesta",
+  "portrait": "hesta",
   "side": "right",
   "text": "He is. That is not in dispute. And it changes nothing. Every awakened talent in Aldreth belongs to Vael for the training of it. The law is older than the crown, and it does not knock twice."
  },
  {
   "speaker": "Tam",
+  "portrait": "tam",
   "side": "right",
   "text": "And if we refuse?"
  },
  {
   "speaker": "Hesta",
+  "portrait": "hesta",
   "side": "right",
   "text": "Then next week the law arrives with a warrant and forty soldiers instead of an old woman and two tired riders. I came myself so that it would arrive with a face. This one. Not theirs."
  },
@@ -39,7 +44,7 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai",
+  "portrait": "kai_travel",
   "text": "It's alright, Ma. …I'll go."
  },
  {
@@ -48,6 +53,7 @@
  },
  {
   "speaker": "Hesta",
+  "portrait": "hesta",
   "side": "right",
   "text": "Be ready at first light. Pack for four days. The Academy provides the rest."
  },
@@ -57,6 +63,7 @@
  },
  {
   "speaker": "Hesta",
+  "portrait": "hesta",
   "side": "right",
   "text": "Bring the sword."
  },
@@ -66,12 +73,13 @@
  },
  {
   "speaker": "Kai",
-  "portrait": "kai",
+  "portrait": "kai_travel",
   "expression": "surprised",
   "text": "How do you know about—"
  },
  {
   "speaker": "Hesta",
+  "portrait": "hesta",
   "side": "right",
   "text": "Be ready at first light."
  },
@@ -90,12 +98,13 @@
  },
  {
   "speaker": "Essa",
+  "portrait": "essa",
   "side": "right",
   "text": "You come home. Whatever they make of you in that place — you COME HOME."
  },
  {
   "speaker": "Kai",
-  "portrait": "kai",
+  "portrait": "kai_travel",
   "expression": "happy",
   "text": "I will. …I promise."
  },

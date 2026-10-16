@@ -1,0 +1,18 @@
+{
+  "job": "aftermath_v3",
+  "model": "gemini-3.1-flash-image",
+  "references": [
+    "assets/source/vs1b_story_art/raid_environment_v2.png"
+  ],
+  "prompt": "Paint the SAME hamlet square AFTER the raid. Use exact composition, same well, overturned cart, cottage and fence lane as reference, same warm painterly storybook style. Extinguish the fire: scorched thatch and thin gray smoke, no orange flame. Add only THREE ORDINARY ADULT VILLAGERS mid-small in the upper-middle: one gray-haired woman lifting a water bucket at well, a plain brown-clothed man carrying water to the scorched doorway, an older shopkeeper inspecting damage beside that doorway. Ordinary adults in simple muted clothes, natural different faces, no uniformed teenagers, nobles, heroes, armor or weapons. Leave center foreground, outerquarters and lowerthird empty quiet ground for foreground dialogue portraits. Signs of small repair and continuing water work, exhaustion and practical relief, no celebration or tears-for-camera. Keep only ONE existing overturned cart, no extra carts or beams laid across it. No text, interface, frames, panels or magic. Full coherent 16:9 painted environment tableau, not a collage.",
+  "reference_sha256": [
+    "cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381"
+  ],
+  "status": "generated_pending_review",
+  "output_sha256": "33fddbef09da32deedbd577aa79971c07de7526dd759a7d543b4ac8e702c7388",
+  "elapsed_seconds": 31.15,
+  "review_disposition": "selected_for_native_review",
+  "reference_snapshots": [
+    "assets/source/vs1b_story_art/references/cf56453b613a56dcc4d57df6ee0e0aacbcdaa371c7818d5112b967d7d095c381.png"
+  ]
+}

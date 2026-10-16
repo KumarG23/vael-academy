@@ -1,0 +1,153 @@
+[
+  {
+    "speaker": "",
+    "text": "The last raider retreats. For a moment, nobody celebrates. The hamlet is still standing; some of it is still burning.",
+    "backdrop": "res://assets/art/vn/painted/road_aftermath_square.png"
+  },
+  {
+    "speaker": "Serra",
+    "text": "Count the injured. The well is clear—keep a path open for water.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "Road Warden",
+    "text": "The families made it out. That child is with her mother now.",
+    "side": "right"
+  },
+  {
+    "speaker": "",
+    "text": "Perrin helps a shopkeeper drag a beam off the doorway. Rina checks the lanes for anyone left behind."
+  },
+  {
+    "speaker": "",
+    "text": "At the edge of the square, the child sits against her mother’s shoulder, quiet and shaking."
+  },
+  {
+    "speaker": "Kai",
+    "text": "Are you hungry?",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Child",
+    "text": "I don’t think so.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Fair. I’m not sure I am, either.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "",
+    "text": "He opens the cloth bundle Essa pressed into his hands. The last of the bread is a little dry, but the smell still takes him home.",
+    "backdrop": "res://assets/art/vn/painted/road_bread_gift.png"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Here.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Child",
+    "text": "But that’s yours.",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "My mother would be furious if I didn’t offer. She’d somehow hear about it all the way from Oakstead.",
+    "portrait": "kai",
+    "expression": "happy"
+  },
+  {
+    "speaker": "Child",
+    "text": "Is she really that scary?",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Only if you’re someone she loves.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "",
+    "text": "The child takes the bread. Kai waits until her hands stop trembling before he stands."
+  },
+  {
+    "speaker": "Serra",
+    "text": "You ran at an armed man without a plan.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "I noticed.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Serra",
+    "text": "Next time, give me half a breath to make one.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "Half a breath. I can try.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Serra",
+    "text": "Try harder than you sound.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "",
+    "text": "Perrin returns, sleeves dusty, wearing a grin he has not entirely earned."
+  },
+  {
+    "speaker": "Perrin",
+    "text": "For the record, I meant to arrive with more dignity than that.",
+    "portrait": "perrin",
+    "side": "right"
+  },
+  {
+    "speaker": "Rina",
+    "text": "And yet we all survived the disappointment.",
+    "portrait": "rina",
+    "side": "right"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "That’s a very generous account of events.",
+    "portrait": "perrin",
+    "side": "right"
+  },
+  {
+    "speaker": "Kai",
+    "text": "You can argue while we walk. I’m Kai.",
+    "portrait": "kai"
+  },
+  {
+    "speaker": "Perrin",
+    "text": "Perrin. And I promise the horse is usually better behaved.",
+    "portrait": "perrin",
+    "side": "right"
+  },
+  {
+    "speaker": "Serra",
+    "text": "Serra.",
+    "portrait": "serra",
+    "side": "right"
+  },
+  {
+    "speaker": "Rina",
+    "text": "Rina. We should leave before the smoke settles over the road.",
+    "portrait": "rina",
+    "side": "right"
+  },
+  {
+    "speaker": "",
+    "text": "They have a road in common for the moment. None of them knows what that will mean."
+  }
+]
