@@ -1,0 +1,38 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M2 (Apple8)
+
+CAPTURE 01-title
+CAPTURE 02-forest
+CAPTURE 03-long-narration
+CAPTURE 04-waking
+CAPTURE 05-tam-sword
+CAPTURE 06-family
+CAPTURE 07-hesta
+CAPTURE 08-goodbye
+CAPTURE 09-road-start
+ACTION kai (1, 5) -> (6, 4) target=wait
+ACTION perrin (2, 6) -> (6, 3) target=bandit_a
+CAPTURE 10-road-forecast
+ACTION serra (3, 4) -> (7, 4) target=wait
+ACTION rina (2, 3) -> (3, 2) target=wait
+ACTION kai (6, 4) -> (7, 6) target=bandit_b
+ACTION perrin (6, 3) -> (9, 4) target=bandit_c
+ACTION serra (7, 4) -> (11, 4) target=wait
+ACTION rina (3, 2) -> (4, 4) target=wait
+ACTION kai (7, 6) -> (12, 5) target=bandit_boss
+ACTION perrin (9, 4) -> (13, 4) target=bandit_boss
+ROAD WON rounds=5 flags={ "opening_started": true, "kai_awakened": true, "opening_complete": true }
+CAPTURE 11-road-victory
+CAPTURE 12-oath
+CAPTURE 13-house-pitch
+CAPTURE 14-campus-arrival
+CAPTURE rite-prep-emberwing
+PASS mission continuation emberwing -> mock_battle
+CAPTURE arrival-tidemark
+CAPTURE rite-prep-tidemark
+PASS mission continuation tidemark -> mock_battle_vs_thornrook
+CAPTURE arrival-thornrook
+CAPTURE rite-prep-thornrook
+PASS mission continuation thornrook -> mock_battle_vs_emberwing
+PASS all three real pitches, locked houses, campus arrivals and rival-specific Opening Rite preparations
+PASS New Game input → five VN scenes → native road victory → result input → pitch → locked oath → movable Week 1 campus. No saves written.

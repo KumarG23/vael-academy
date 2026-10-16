@@ -316,14 +316,18 @@ func _draw_narration(vp: Vector2) -> void:
 	var shown := _current.text.substr(0, int(_revealed))
 	var band_w := minf(vp.x * 0.72, 900.0)
 	var x := (vp.x - band_w) * 0.5
-	var y := vp.y * 0.68
+	# Size for the FULL line so the typewriter does not move the frame. Several
+	# authored opening paragraphs exceed the old three-line clipping limit.
+	var text_height := font.get_multiline_string_size(_current.text,
+		HORIZONTAL_ALIGNMENT_CENTER, band_w - 20, 22).y
+	var y := minf(vp.y * 0.68, vp.y - text_height - 76.0)
 	var rule := Color(0.86, 0.72, 0.42, 0.55)
 	draw_rect(Rect2(x, y - 34, band_w, 1.5), rule, true)
-	draw_rect(Rect2(x, y + 86, band_w, 1.5), rule, true)
+	draw_rect(Rect2(x, y + text_height + 12, band_w, 1.5), rule, true)
 	draw_multiline_string(font, Vector2(x + 10, y), shown,
-		HORIZONTAL_ALIGNMENT_CENTER, band_w - 20, 22, 3, Color(0.93, 0.89, 0.78))
+		HORIZONTAL_ALIGNMENT_CENTER, band_w - 20, 22, -1, Color(0.93, 0.89, 0.78))
 	if not is_revealing() and _choice == null:
-		draw_string(font, Vector2(vp.x * 0.5 - 8, y + 118), "▼",
+		draw_string(font, Vector2(vp.x * 0.5 - 8, y + text_height + 44), "▼",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.8, 0.82, 0.88, 0.7))
 
 

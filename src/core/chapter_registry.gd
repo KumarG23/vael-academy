@@ -25,6 +25,7 @@ const SCENES := {
 ## AW-75: chapter ids as saved in battle snapshots → their host scenes (flat —
 ## every variant .tres carries its own distinct id, so no house routing needed).
 const RESUME_SCENES := {
+	"prologue": "res://scenes/battle/prologue.tscn",
 	"mock_battle": "res://scenes/battle/mock_battle.tscn",
 	"mock_battle_vs_thornrook": "res://scenes/battle/mock_battle_vs_thornrook.tscn",
 	"mock_battle_vs_emberwing": "res://scenes/battle/mock_battle_vs_emberwing.tscn",

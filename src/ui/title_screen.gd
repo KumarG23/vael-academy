@@ -6,6 +6,7 @@ extends Control
 ## the three house stripes reflect that all three houses are equal now (§4).
 
 const HUB_SCENE := "res://scenes/castle/castle.tscn"  # WO-6.2a: the castle IS the home now
+const OPENING_SCENE := "res://scenes/flow/opening.tscn"  # VS-1A: Awakening → road
 const PROLOGUE_SCENE := "res://scenes/battle/prologue.tscn"       # AW-38: the game opens on the raid
 const HOUSE_CHOICE_SCENE := "res://scenes/flow/house_choice.tscn"  # AW-38: then the oath
 const MAX_SLOTS := 3
@@ -119,7 +120,7 @@ func _dev_jump(kind: String) -> void:
 			Campaign.active = true
 			get_tree().change_scene_to_file.call_deferred("res://scenes/battle/prologue.tscn")
 		"awakening":
-			# AW-78: the co-write's forest→cave VN, narrated (scenes 1–2 wired)
+			# VS-1A: all five authored scenes, preview only; no campaign writes
 			get_tree().change_scene_to_file.call_deferred("res://scenes/flow/prologue_vn.tscn")
 		_:
 			_open_main()
@@ -201,6 +202,11 @@ func _choose_slot(index: int) -> void:
 ## exercise the flow headless.
 func prepare_new_game(casual: bool) -> void:
 	Campaign.reset_new_game(casual, int(Time.get_ticks_usec()))
+	Campaign.flags["opening_started"] = true
+	CastleScene.next_room = ""
+	CastleScene.next_spawn = Vector2i(-1, -1)
+	BattleView.next_resume = {}
+	BattleView.next_prep = false
 	Campaign.active = true  # AW-38: the campaign is live from the prologue on, so
 	# the prologue battle routes through the campaign flow (→ house choice), not
 	# the standalone "reload the scene" path. The castle resets this per visit.
@@ -208,12 +214,16 @@ func prepare_new_game(casual: bool) -> void:
 
 ## Load a campaign save into the Campaign autoload. Returns success.
 func prepare_load(slot: int, save_system: SaveSystem = null) -> bool:
-	return Campaign.load_from_slot(slot, save_system if save_system != null else _save_system)
+	if not Campaign.load_from_slot(slot, save_system if save_system != null else _save_system):
+		return false
+	# Campaign-only pre-oath saves must retain campaign battle routing too.
+	Campaign.active = true
+	return true
 
 
-## AW-38: the campaign now opens with the prologue raid, then the house-choice
-## oath, then the castle year — routed by how far the save has come. A locked
-## house means the year's underway (the usual Load-into-castle case).
+## VS-1A: new runs open with Awakening → raid → oath → castle. Only runs
+## explicitly started with this opening opt in; older saves retain their route.
+## Completed raid / sworn house take priority over any partial opening flags.
 func _enter_campaign() -> void:
 	get_tree().change_scene_to_file.call_deferred(next_campaign_scene())
 
@@ -223,6 +233,8 @@ func next_campaign_scene() -> String:
 		return HUB_SCENE
 	if bool(Campaign.flags.get("prologue_done", false)):
 		return HOUSE_CHOICE_SCENE
+	if bool(Campaign.flags.get("opening_started", false)) and not bool(Campaign.flags.get("opening_complete", false)):
+		return OPENING_SCENE
 	return PROLOGUE_SCENE
 
 

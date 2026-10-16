@@ -243,6 +243,10 @@ Vael Academy sits in the town of **Vael**: bustling merchants, streets and shops
 
 ---
 
+### VS-1 — Story-led opening (Neal, 2026-10-16)
+
+- **VS-1A — The Hook & Opening Experience (this session only).** Inspect canon and actual player flow; deliver `OPENING_STORY_REVIEW.md` with beat/emotion inventory, criticism, alternatives and a proposed first 30–45 minutes. Connect existing authored Awakening scenes to New Game where no new story decision is required. Preserve road tutorial/oath/three-house campaign, saves, calendar, progression, RNG and §3. *Accept: canonical five-scene order, flags at their actual beats, preview isolation, legacy save compatibility and road save resumption; full GUT; graphical New Game→road victory→first campus, three-house continuation checks; missing content/assets and creative blockers explicit; §10/HANDOFF/AUDITS and one WO commit. Stop for Neal's narrative review. No new art/audio generation or spending.*
+
 ## 7. How Neal runs Fable against this plan
 
 **Setup (one time):** repo at root; this file + the eight bibles present; `CLAUDE.md` routing every session here; Godot MCP Pro enabled (`.mcp.json`, `addons/godot_mcp`, autoloads registered). Smoke-check before editor work: `get_project_info` → `Vael Academy`, `get_filesystem_tree` sees `res://src`. **Restart the Godot editor after any WO that adds new `class_name` scripts** (a stale editor rewrites the class cache from its old view and breaks launched games).
@@ -324,6 +328,7 @@ Reference triangle: **Dark Deity** (painted busts + pixel unit sprites) × **War
 
 | WO | Status | Notes |
 |---|---|---|
+| VS-1A | ✅ safe opening flow + review delivered; ⏳ narrative review | Based on green 480e783a (CP-9). New Game → five unchanged authored Awakening scripts → existing road battle → existing pitch/oath → Week 1 campus. Campaign-only flag handler (touch vs full goodbye), fail-closed sequence validation, preview plays all five without Campaign writes. Legacy saves retain routing; pre-oath loads remain active; missing prologue resume mapping fixed; New Game clears staged scene handoffs. Full narration fits beyond three lines. Review: OPENING_STORY_REVIEW.md (inventory, criticism, 3 hook treatments, 30–45-minute proposal, next 3 co-write decisions). Full GUT 568/568, 3,883 assertions; focused 29/29. Native graphical input smoke wins unchanged road in round 5, all three real pitches/campus/rival Opening Rite continuations; evidence in assets/art_review/vs1a_opening/. Road intro stays disconnected pending Envoy/Hesta/party continuity; no arrival/aftermath/heir chats invented. Crownspark's existing starting-kit/innate-backfill contradiction recorded, progression unchanged. Missing portraits/commoner outfit/score/later VO explicit; no art generation/spend. Next proposal VS-1B: co-write then wire road rescue + brief aftermath only. |
 | MCP-Pro | ✅ enabled | Godot MCP Pro 1.15.0 under `addons/godot_mcp`; `.mcp.json` → local server build; editor plugin + MCP autoloads enabled. Verified 2026-07-03: stdio server exposed 175 tools (build reports 1.14.1), WebSocket bridge connected, `get_project_info` returned `Vael Academy`. Suite green: 194/194 at time of check (245/245 as of 2026-07-04). |
 | 0.1 | ✅ done | Godot 4.7 project; §2 folder layout; EventBus autoload; GUT 9.7.0; 3 dummy tests green; git init. Test cmd: `godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit` |
 | 0.2 | ✅ done | `Grid` (128px cell↔world), `Terrain`/`TerrainInfo`/`TerrainDB` (§3 exact), `ChapterDef` (logical terrain + backdrop). Battle scene: flat backdrop, per-terrain debug tints, grid overlay, fitted camera, cursor terrain readout. 20×15 `test_map.tres`. 25 tests green. |

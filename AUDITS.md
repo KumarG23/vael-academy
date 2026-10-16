@@ -359,3 +359,43 @@ pixel world/tactics, Gemini still art and shared Godot timing/HD FX; retain
 PixelLab as the world pipeline and battle reference/fallback. Stop at this
 slice for review. No combat formulas, RNG roll order, progression, saves or
 canon changed. Inherited 13 deprecations and exit cleanup reports remain.
+
+
+## VS-1A implementation / opening story review — 2026-10-16
+
+Baseline named green commit: **480e783a (CP-9)**. Implementer's inspection and
+repair record, not an independent audit of this uncommitted implementation.
+Story/canon decisions remain Neal's; proposals are in `OPENING_STORY_REVIEW.md`.
+
+### Mechanical findings and disposition
+
+| ID | Commit inspected | Site at baseline | Failure scenario | Outcome |
+|---|---|---|---|---|
+| VS1-1 | 480e783a | `src/ui/title_screen.gd:220`, `src/flow/prologue_vn.gd:8` | New Game omits Awakening; Dev Jump plays only forest/cave then Title. | ✅ VS-1A — normal campaign entry inherits five-script VN, then road; separate standalone preview mode. No new prose. |
+| VS1-2 | 480e783a | `src/flow/prologue_vn.gd:25`, `data/dialogue/prologue_cave_awakening.json` | VN emits set_flag but has no handler; awakening never enters Campaign. | ✅ VS-1A — campaign-only receiver, full-sequence completion distinct from touch and road victory; preview cannot contaminate saves. |
+| VS1-3 | 480e783a | `src/core/chapter_registry.gd:27` | Actual mid-battle chapter id prologue has no resume mapping, only hamlet_cottage alias. | ✅ VS-1A — mapping added; staged real snapshot restores HP/action/RNG/flags and active campaign. |
+| VS1-4 | 480e783a | `src/ui/title_screen.gd:210` | Loading an unlocked campaign-only checkpoint leaves Campaign inactive, so a subsequent road win can take standalone routing. | ✅ VS-1A — successful Title campaign load restores active routing; campus still owns begin_hub_visit. |
+| VS1-5 | 480e783a | `src/flow/prologue_vn.gd:43` | Invalid script is silently skipped, allowing accidental missing story. | ✅ VS-1A — preflight whole sequence, visible load failure, no playback/progress on invalid/missing/empty script. |
+| VS1-6 | 480e783a | `src/ui/dialogue_scene.gd:326` | Long narration is capped at three wrapped lines, hiding authored text. | ✅ VS-1A — full paragraph sizing/rendering; native four-line cave capture inspected. |
+
+### Deferred — co-write / Neal owns decisions
+
+| ID | Site | Finding / recommended next action |
+|---|---|---|
+| VS1-D1 | `data/chapters/prologue.tres`, `data/dialogue/road_bandit_intro.json` | Intro exists but is not assigned. Envoy versus personal Hesta collection, extra implied troops and early house naming require co-write. Proposed VS-1B: rescue + brief aftermath on the existing map. No placeholder integration. |
+| VS1-D2 | `src/flow/house_choice_scene.gd` | No arrival/heir-status reveal; choice precedes hearing a pitch, which then binds automatically. Recommend authored arrival + reconsiderable invitations in a later WO. |
+| VS1-D3 | `data/units/kai.tres`, `src/units/unit.gd:524`, `:676` | Crownspark remains player-usable from the starting kit and auto-backfilled into saved inventory, contrary to July R2. Keep progression intact in VS-1A; plan an explicit save/dev/starting-kit migration with the Vision gate. |
+| VS1-D4 | `assets/portraits/`, five prologue scripts | Parent/Hesta portraits absent; unmarked Kai still wears academy uniform; no later VO/opening score. Missing assets logged, zero generation/spend. |
+| VS1-D5 | `COWRITE_SESSION_2026-07-10.md` §4 | Hesta's sword knowledge has two unresolved literal answers. Keep the existing line; decide privately before adding new related clues. |
+| VS1-D6 | Opening Rite variant intro/outro | Earlier route-voice audit still applies: Tidemark/Thornrook see Emberwing/Kael dialogue. Graphical continuation confirms; not silently rewritten here. |
+
+Validation: **568/568 tests, 3,883 assertions, 85 scripts, 149.195s**; focused
+**29/29, 149 assertions**. Eight additional regression cases plus revised normal
+New Game expectation. GPU smoke drives real New Game inputs, five-scene order,
+original road battle to native round-five victory, result dismissal/pitch/oath,
+movable Week 1 campus, and all three house mission continuations. No save-slot
+writes in graphical smoke; regression IO is isolated in test directories.
+Evidence and limitations: `assets/art_review/vs1a_opening/README.md` and logs.
+Existing13 deprecations/two ObjectDB/one resource exit reports remain. Existing
+canon/dialogue and unrelated work preserved. Story review delivered for Neal's
+edit; no major creative proposal finalized.
