@@ -1,0 +1,58 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M2 (Apple8)
+
+INTRO 0 On the third morning, Hesta finds Kai a place with the academy's supply wagons. She checks his name with the driver. One of her riders stays beside him; the other brings her horse.
+INTRO 1 He travels with you. If he is unwell, stop at the next post and send word.
+INTRO 2 You're not coming?
+INTRO 3 I must reach Vael today. Stay with the wagons. Your escort will see you through the gates.
+CAPTURE 01-hesta-handoff
+INTRO 4 She waits for the rider to repeat the instructions. Then she mounts. By the time the wagons start moving, she is already out of sight.
+INTRO 5 A day from Vael, the wagons slow at a village. A cart lies across the road. Smoke climbs above the roofs.
+INTRO 6 By the well, a woman tries to pull a small boy behind the stone rim. Her leg gives way. A man with an axe steps toward them.
+CAPTURE 02-endangered-family
+INTRO 7 Leave them alone!
+INTRO 8 Kai is across the road before his escort can catch his arm. The boy stares up at him. Green light flickers at Kai's brow — and is gone.
+CAPTURE 03-involuntary-mark
+INTRO 9 Head down. Stay behind me.
+INTRO 10 A stranger with an axe to his head. Right. That's my sort of terrible idea.
+INTRO 11 Perrin's blade bars the axeman's path. He presses forward, already a step too far.
+INTRO 12 You can't hold the road alone. Back a pace. Give me room. Keep the boy low — I'll help his mother.
+CAPTURE 04-serra-organizes
+INTRO 13 Kai's escort gets an arm under the woman. Serra turns her lance across the road, buying them space to get the two villagers to shelter.
+INTRO 14 The one at the camp. They keep looking back at him. Drive him off and this may end quickly.
+CAPTURE 05-rina-observes
+INTRO 15 Your forehead just lit up. Did you mean to do that?
+INTRO 16 No.
+INTRO 17 Then use the sword. We'll cover you.
+INTRO 18 And me. Perrin. In case we're doing introductions before the bad decisions.
+INTRO 19 Kai. Less talking, Perrin.
+CAPTURE 06-road-playable
+CAPTURE 07-kai-no-controlled-magic
+CAPTURE 08-native-forecast
+ROAD WON round=5
+AFTERMATH 0 With their chief driven off, the raiders scatter. By the well, the boy still has both hands wound in his mother's sleeve.
+AFTERMATH 1 Is that all of them?
+AFTERMATH 2 They've gone. Your mum's here.
+AFTERMATH 3 Kai kneels. He finds Essa's cloth bundle under his coat and works the knot loose. The bread is a little crushed. It still smells of her kitchen.
+CAPTURE 09-bread-bundle
+AFTERMATH 4 He breaks off a piece and holds it out. The boy looks to his mother before taking it.
+CAPTURE 10-bread-offer
+AFTERMATH 5 You'll need that for the road.
+AFTERMATH 6 Ma packed too much. She usually does.
+AFTERMATH 7 The boy takes a bite. His grip on his mother's sleeve loosens enough for her to shift her leg.
+AFTERMATH 8 Perrin offers his cloak. The boy shrinks from the sudden movement; Perrin stops, then lays it within the mother's reach.
+AFTERMATH 9 For both of you. If you want it.
+CAPTURE 11-perrin-cloak
+AFTERMATH 10 Could you hold this a moment?
+AFTERMATH 11 Serra kneels to steady the binding on the woman's leg. Rina sets a waterskin beside the bread.
+AFTERMATH 12 Does it hurt? Your brow.
+AFTERMATH 13 Not now. I don't know what it is.
+AFTERMATH 14 I was going to ask.
+AFTERMATH 15 I noticed.
+AFTERMATH 16 A beat. Then Perrin laughs, quietly this time. Kai saves the heel of the loaf and wraps it again.
+AFTERMATH 17 We're going to Vael too. Walk with us when you're ready.
+CAPTURE 12-walk-with-us
+AFTERMATH 18 Serra. Rina. Perrin. Just names, for now. Kai tucks the bundle away and waits until the boy has finished eating.
+CAPTURE 13-victory-after-bread
+CAPTURE 14-tidemark-campus
+PASS New Game/five scenes → Hesta handoff/rescue → original native battle/sword-only Kai → bread aftermath before victory → Tidemark oath → Week 1 campus. No saves or art generated.

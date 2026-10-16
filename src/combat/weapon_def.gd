@@ -29,8 +29,13 @@ enum WeaponType { SWORD, AXE, LANCE, BOW, TOME, STAFF }
 @export var magical: bool = false
 
 
+## VS-1B: explicit story permission, separate from innate ownership / schools.
+## Empty preserves other weapons. Crownspark waits for the later Vision.
+@export var required_story_flag: String = ""
+
+
 ## AW-53: part of its bearer's BEING, not their baggage (Kai's Crownspark — his
-## awakened royal magic). An innate weapon bypasses the story school-gate for
+## awakened royal magic). An innate weapon bypasses the school-gate (but not required_story_flag) for
 ## the unit whose kit lists it, is merged back into any saved inventory that
 ## predates it (stale-save migration), and can never be traded away.
 @export var innate: bool = false

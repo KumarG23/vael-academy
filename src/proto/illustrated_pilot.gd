@@ -67,6 +67,14 @@ func _ready() -> void:
 
 func _make_unit(id: String, cell: Vector2i, team: int) -> Unit:
 	var definition: UnitDef = (load("res://data/units/%s.tres" % id) as UnitDef).duplicate()
+	# External resources remain shared even through UnitDef.duplicate(true).
+	# Copy each spell and replace the array; never weaken the campaign asset.
+	var preview_spells: Array[WeaponDef] = []
+	for spell: WeaponDef in definition.extra_weapons:
+		var local_spell := spell.duplicate() as WeaponDef
+		local_spell.required_story_flag = ""
+		preview_spells.append(local_spell)
+	definition.extra_weapons = preview_spells
 	definition.team = team
 	var actor := Unit.new()
 	actor.setup(definition, grid, cell)
@@ -253,7 +261,7 @@ func _act(action: String) -> void:
 		strike.defender_hp_after = maxi(0, serra.current_hp - strike.damage) if strike.connected else serra.current_hp
 		var original_weapon := kai.weapon()
 		if action == "cast":
-			kai.equip_weapon(load("res://data/weapons/crownspark.tres"))
+			kai.equip_weapon(kai.unit_def.extra_weapons[0])
 		await juice.play_strike(kai, serra, strike, action == "kill")
 		if action == "cast":
 			kai.equip_weapon(original_weapon)

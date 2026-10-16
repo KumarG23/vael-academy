@@ -16,9 +16,11 @@ var side: String = "left"          # "left" or "right"
 var portrait: String = ""          # portrait id (art swaps in at AW-6)
 var expression: String = "neutral"
 # AW-78 (VN prologue): optional per-line narration voice clip and backdrop.
-# `backdrop` is a res:// image path, or the specials "black" / "white".
+# `backdrop` is a res:// image path, or the specials "black" / "white" / "clear" (reveal the scene beneath).
 var voice: String = ""
 var backdrop: String = ""
+## VS-1B: optional painted targets may be absent; use an intentional stage.
+var backdrop_fallback: String = "black"
 var music: String = ""   # AW-79: music change on this line ("" = no change, "stop" = silence)
 
 # EVENT fields.
@@ -52,6 +54,7 @@ static func make_line_full(entry: Dictionary) -> DialogueStep:
 		str(entry.get("side", "left")), str(entry.get("portrait", "")),
 		str(entry.get("expression", "neutral")), str(entry.get("voice", "")),
 		str(entry.get("backdrop", "")))
+	s.backdrop_fallback = str(entry.get("backdrop_fallback", "black"))
 	s.music = str(entry.get("music", ""))
 	return s
 

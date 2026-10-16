@@ -1,5 +1,9 @@
 # Opening story review — VS-1A
 
+VS-1B follow-up: road rescue/aftermath and controlled Crownspark gating are
+now implemented as a playable draft; current notes: `VS1B_STORY_NOTES.md`.
+The baseline assessment below is retained; arrival proposals still await review.
+
 2026-10-16. Implementation baseline: **480e783a (CP-9, 560 tests green)**.
 This is a creative assessment and proposal document, not new canon or approved
 replacement dialogue. The user-authorized scope is one opening-flow WO. Existing
@@ -84,9 +88,9 @@ never experienced the normal family that is being lost. We ask for grief before
 we supply a memory. A small shared chore, an affectionate irritation, or an
 unfinished argument would do more than an extra origin paragraph. Keep Kai angry
 after the handclasp. A later letter can contain both missing home and refusing
-to say everything is fine. The bible's younger sibling is currently absent;
-either introduce them deliberately in a later co-write or explicitly resolve
-that stale detail. Do not invent a sibling merely to patch a checklist.
+to say everything is fine. VS-1B clarification: the older bible explicitly mentions a younger sibling,
+so that statement is preserved outside this opening work. The opening plan
+assumes only Tam and Essa; a sibling is not a writing dependency.
 
 **Mystery.** The playable VN wisely does not name First Crown, Morvane, royal
 blood, the Claim, or the Academy sanctum. Preserve that restraint. Recognition,
@@ -232,7 +236,8 @@ quest objects. Ordinary environmental detail need not all be plot foreshadowing.
 
 1. **Whose ordinary day opens the game?** Recommend home-first with one compact
    family interaction and an imperfect Kai; keep approved linear chronology.
-   Decide the sibling's status and the one domestic detail that can recur later.
+   Choose the one domestic detail that can recur later; the opening remains
+   centered on Tam and Essa (VS-1B lock).
 2. **Who is on the road, and why must these four act?** Recommend Hesta's personal
    collection remains true, but decide explicitly whether she travels separately
    after a documented handoff or is occupied protecting others out of this fight.

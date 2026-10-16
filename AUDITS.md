@@ -382,9 +382,9 @@ Story/canon decisions remain Neal's; proposals are in `OPENING_STORY_REVIEW.md`.
 
 | ID | Site | Finding / recommended next action |
 |---|---|---|
-| VS1-D1 | `data/chapters/prologue.tres`, `data/dialogue/road_bandit_intro.json` | Intro exists but is not assigned. Envoy versus personal Hesta collection, extra implied troops and early house naming require co-write. Proposed VS-1B: rescue + brief aftermath on the existing map. No placeholder integration. |
+| VS1-D1 | `data/chapters/prologue.tres`, `data/dialogue/road_bandit_intro.json` | Intro exists but is not assigned. Envoy versus personal Hesta collection, extra implied troops and early house naming require co-write. Proposed VS-1B: rescue + brief aftermath on the existing map. No placeholder integration. **✅ VS-1B: Neal locked the handoff; revised rescue + bread aftermath connected as a playable draft.** |
 | VS1-D2 | `src/flow/house_choice_scene.gd` | No arrival/heir-status reveal; choice precedes hearing a pitch, which then binds automatically. Recommend authored arrival + reconsiderable invitations in a later WO. |
-| VS1-D3 | `data/units/kai.tres`, `src/units/unit.gd:524`, `:676` | Crownspark remains player-usable from the starting kit and auto-backfilled into saved inventory, contrary to July R2. Keep progression intact in VS-1A; plan an explicit save/dev/starting-kit migration with the Vision gate. |
+| VS1-D3 | `data/units/kai.tres`, `src/units/unit.gd:524`, `:676` | Crownspark remains player-usable from the starting kit and auto-backfilled into saved inventory, contrary to July R2. Keep progression intact in VS-1A; plan an explicit save/dev/starting-kit migration with the Vision gate. **✅ VS-1B: explicit controlled-use gate, old equipment/native-counter coverage, isolated demo copies; Vision scene itself remains unbuilt.** |
 | VS1-D4 | `assets/portraits/`, five prologue scripts | Parent/Hesta portraits absent; unmarked Kai still wears academy uniform; no later VO/opening score. Missing assets logged, zero generation/spend. |
 | VS1-D5 | `COWRITE_SESSION_2026-07-10.md` §4 | Hesta's sword knowledge has two unresolved literal answers. Keep the existing line; decide privately before adding new related clues. |
 | VS1-D6 | Opening Rite variant intro/outro | Earlier route-voice audit still applies: Tidemark/Thornrook see Emberwing/Kael dialogue. Graphical continuation confirms; not silently rewritten here. |
@@ -399,3 +399,36 @@ Evidence and limitations: `assets/art_review/vs1a_opening/README.md` and logs.
 Existing13 deprecations/two ObjectDB/one resource exit reports remain. Existing
 canon/dialogue and unrelated work preserved. Story review delivered for Neal's
 edit; no major creative proposal finalized.
+
+
+## VS-1B implementation / road story and controlled magic — 2026-10-16
+
+Baseline named green commit: **f0c43294 (VS-1A)**. Implementer's record, not an
+independent audit of its own changes. Neal locked the handoff/family/mark/control
+and bread beats. Exact new prose remains a playable draft for his edit.
+
+| ID | Baseline site | Finding / disposition |
+|---|---|---|
+| VS1B-1 | `data/chapters/prologue.tres`, disconnected road intro | ✅ Intro/outro assigned: Hesta hands Kai to academy wagons with a rider, goes ahead; specific endangered mother/boy, four distinct student contributions, victory-only bread aftermath. Original forces/map/tutorial/combat kept. No unnamed Envoy conflict or implied extra combat force. |
+| VS1B-2 | `src/units/unit.gd:355`, `:524`, `:676`; `crownspark.tres` | ✅ Required story permission on controlled Crownspark, including old inventories/native snapshots/counters; no unlock from mark/week/oath. Old equipped spell selects eligible carried weapon without gear/uses/HP/XP loss. Inert entry/backfill retained; no-sword old snapshot stays unarmed rather than receiving invented gear. Vision not authored here. |
+| VS1B-3 | `src/ui/title_screen.gd` completed-road campaign routing | ✅ Completed-result save previously lacked prologue_done until dismissal and could replay road on load. Actual completed-outro marker routes to oath; mid-battle resume still skips intro; defeat grants no success flag. No mid-dialogue save support claimed. |
+| VS1B-4 | `src/ui/dialogue_scene.gd`, new road still targets | ✅ Optional per-line backdrop_fallback plus clear stage; absent art is intentional black/live map, no missing-resource loads. Three exact targets/briefs documented; no generated assets or spend. |
+| VS1B-5 | Isolated CP-2 / A-B visual fixtures | ✅ Explicit per-spell private duplicates, never a Campaign unlock. Added isolation assertion caught the initial UnitDef deep-copy approach still aliasing external resources; corrected and reran final suite. Separate held-resource check proves both pilots preserve the shared gate and Campaign before/after local magic and destruction. |
+| VS1B-6 | `house_pitch_thornrook.json` | ✅ One chronology clause: turning it over since the raid replaces multiple nights in the stacks. No ceremony/choice or broad pitch rewrite. |
+
+**Validation:** full **576/576 tests,3,967 assertions,86 scripts,148.688s**;
+focused story/gating/campaign/VN **35/35,226 assertions,1.034s**. Eight added
+regressions and strengthened existing gate/preview tests. Native graphical
+NewGame→five-scene Awakening→handoff/rescue→unchanged round5 road victory with
+sword-only Kai→bread before result→Tidemark oath→Week1 campus. No real save IO;
+test IO isolated. Evidence: `assets/art_review/vs1b_road/README.md`, final logs and
+native captures. Existing13 deprecations/two ObjectDB/one resource exit reports
+remain; no new runtime errors in final runs. Formulas, RNG, other schools,
+academy-arrival structure and unrelated work preserved.
+
+**Deferred / owner Neal:** exact prose edit and three missing painted stills;
+arrival/heir-status reveal, fair preview/reconsideration before oath, and one
+personal campus intention (proposed VS-1C). Earlier VS1-D2/D4/D5/D6 remain open
+where not explicitly addressed. Hesta's urgency is purposeful but its private
+answer is not invented; no added Morvane/royal clue. Younger sibling is not an
+opening-planning dependency; existing explicit bible statement preserved.

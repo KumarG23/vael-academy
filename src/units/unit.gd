@@ -88,6 +88,7 @@ func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 		var weapons: Array = [def.weapon]
 		weapons.append_array(def.extra_weapons)
 		inventory = Inventory.from_starting(weapons, def.starting_items)
+		_repair_story_locked_equipment()
 		ai_awake = def.ai_behavior != AIBrain.Behavior.SENTINEL
 	_grid = grid
 	cell = start_cell
@@ -353,12 +354,19 @@ func is_moving() -> bool:
 
 ## The equipped weapon (first weapon in the inventory).
 func weapon() -> WeaponDef:
-	return inventory.equipped_weapon()
+	var w := inventory.equipped_weapon()
+	# Even direct equip / old snapshots cannot put locked magic into a counter
+	# or Combatant. Ordinary weapon/school behavior is unchanged.
+	if w != null and w.required_story_flag != "" and not can_use_weapon(w):
+		return null
+	return w
 
 
 ## Spend one use of the equipped weapon after an attack. Returns the item that
 ## broke (removed from inventory), or null.
 func spend_weapon_use() -> InventoryItem:
+	if weapon() == null:
+		return null
 	return inventory.use_equipped_weapon()
 
 
@@ -519,9 +527,11 @@ func aura_combat_bonus() -> Dictionary:
 ## open through story beats (broader than any house lane, §4/M8); everyone
 ## else is already locked to their lane by their kit.
 func can_use_weapon(w: WeaponDef) -> bool:
+	if w != null and w.required_story_flag != "" and not bool(Campaign.flags.get(w.required_story_flag, false)):
+		return false
 	if w == null or w.school == "":
 		return true
-	# AW-53: innate magic (Crownspark) is its bearer's OWN — no story gate; but
+	# AW-53: innate magic (Crownspark) is its bearer's OWN — no school gate; but
 	# only for the unit whose character sheet actually lists it.
 	if w.innate:
 		return _kit_lists_weapon(w.id)
@@ -638,6 +648,7 @@ func apply_save_state(state: Dictionary) -> void:
 	_move_bonus = int(state.get("move_bonus", _move_bonus))
 	_apply_class_override(str(state.get("class_override", "")))
 	_apply_inventory_state(state.get("inventory", []))
+	_repair_story_locked_equipment()
 	current_hp = clampi(int(state.get("current_hp", current_hp)), 0, max_hp())
 	queue_redraw()
 
@@ -664,9 +675,23 @@ func apply_progression_state(state: Dictionary) -> void:
 	_move_bonus = int(state.get("move_bonus", _move_bonus))
 	_apply_class_override(str(state.get("class_override", "")))
 	_apply_inventory_state(state.get("inventory", []))
+	_repair_story_locked_equipment()
 	_ensure_innate_weapons()  # AW-53: saves that predate an innate weapon gain it
 	current_hp = max_hp()  # full HP for a fresh deployment
 	queue_redraw()
+
+
+## VS-1B: older saves may have Crownspark equipped. Keep every item/use, but
+## select an eligible carried weapon so loading does not strand Kai unarmed.
+## No week/house inference: only the explicit Vision flag permits the spell.
+func _repair_story_locked_equipment() -> void:
+	var equipped := inventory.equipped_weapon()
+	if equipped == null or equipped.required_story_flag == "" or can_use_weapon(equipped):
+		return
+	for item: InventoryItem in inventory.items:
+		if item.is_weapon() and can_use_weapon(item.weapon()):
+			inventory.equip(item)
+			return
 
 
 ## AW-53: a saved inventory REPLACES the character sheet's kit — so a save from

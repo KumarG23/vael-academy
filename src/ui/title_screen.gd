@@ -231,7 +231,7 @@ func _enter_campaign() -> void:
 func next_campaign_scene() -> String:
 	if Campaign.house_locked:
 		return HUB_SCENE
-	if bool(Campaign.flags.get("prologue_done", false)):
+	if bool(Campaign.flags.get("prologue_done", false)) or bool(Campaign.flags.get("road_aftermath_seen", false)):
 		return HOUSE_CHOICE_SCENE
 	if bool(Campaign.flags.get("opening_started", false)) and not bool(Campaign.flags.get("opening_complete", false)):
 		return OPENING_SCENE

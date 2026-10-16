@@ -8,6 +8,8 @@ func after_each() -> void:
 
 
 func _view() -> BattleView:
+	# This production presentation fixture represents post-Vision magic.
+	Campaign.flags["crownspark_unlocked"] = true
 	var view: BattleView = load("res://scenes/battle/mock_battle.tscn").instantiate()
 	view.dialogue_enabled = false
 	view.combat_seed = 1

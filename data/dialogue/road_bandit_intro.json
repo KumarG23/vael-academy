@@ -1,11 +1,108 @@
 [
- {"speaker": "", "text": "A day out from Vael. A town on the road in — market stalls, a well, ordinary people. And then the shouting starts, and the smoke, and the men with axes who did not come to trade."},
- {"speaker": "Kai", "portrait": "kai", "text": "Those are villagers. That's a kid. That's a kid and there is a man with an axe walking at the kid."},
- {"speaker": "Envoy", "side": "right", "text": "Kai. We do not have the numbers. The plan is the road, not the—"},
- {"speaker": "", "text": "Kai is already moving. The plan was never going to survive the kid."},
- {"speaker": "Perrin", "side": "right", "portrait": "perrin", "text": "HA! You see that? Stranger just charged a raiding line by himself. That's either the bravest thing I've seen all year or the stupidest, and I have GOT to know which."},
- {"speaker": "Serra", "side": "right", "portrait": "serra", "text": "It's both. It's always both. Form on him before both gets him killed — lances, with me. Cover the well."},
- {"speaker": "Rina", "side": "right", "portrait": "rina", "text": "The one who charged — his brow. Did anyone else see his brow light up? ...No. Of course no one else saw. Fine. Later."},
- {"speaker": "Kai", "portrait": "kai", "text": "I don't know who any of you are, but if you're helping, help. If you're narrating, do it quieter."},
- {"speaker": "Perrin", "side": "right", "portrait": "perrin", "text": "Oh, I like him. Emberwing, on me! Let's earn our dinner!"}
+ {
+  "speaker": "",
+  "text": "On the third morning, Hesta finds Kai a place with the academy's supply wagons. She checks his name with the driver. One of her riders stays beside him; the other brings her horse.",
+  "backdrop": "res://assets/art/vn/painted/road_handoff.png",
+  "music": "stop",
+  "backdrop_fallback": "black"
+ },
+ {
+  "speaker": "Hesta",
+  "text": "He travels with you. If he is unwell, stop at the next post and send word.",
+  "side": "right"
+ },
+ {
+  "speaker": "Kai",
+  "text": "You're not coming?",
+  "portrait": "kai"
+ },
+ {
+  "speaker": "Hesta",
+  "text": "I must reach Vael today. Stay with the wagons. Your escort will see you through the gates.",
+  "side": "right"
+ },
+ {
+  "speaker": "",
+  "text": "She waits for the rider to repeat the instructions. Then she mounts. By the time the wagons start moving, she is already out of sight."
+ },
+ {
+  "speaker": "",
+  "text": "A day from Vael, the wagons slow at a village. A cart lies across the road. Smoke climbs above the roofs.",
+  "backdrop": "clear"
+ },
+ {
+  "speaker": "",
+  "text": "By the well, a woman tries to pull a small boy behind the stone rim. Her leg gives way. A man with an axe steps toward them."
+ },
+ {
+  "speaker": "Kai",
+  "text": "Leave them alone!",
+  "portrait": "kai",
+  "expression": "angry"
+ },
+ {
+  "speaker": "",
+  "text": "Kai is across the road before his escort can catch his arm. The boy stares up at him. Green light flickers at Kai's brow — and is gone."
+ },
+ {
+  "speaker": "Kai",
+  "text": "Head down. Stay behind me.",
+  "portrait": "kai"
+ },
+ {
+  "speaker": "Perrin",
+  "text": "A stranger with an axe to his head. Right. That's my sort of terrible idea.",
+  "portrait": "perrin",
+  "side": "right"
+ },
+ {
+  "speaker": "",
+  "text": "Perrin's blade bars the axeman's path. He presses forward, already a step too far."
+ },
+ {
+  "speaker": "Serra",
+  "text": "You can't hold the road alone. Back a pace. Give me room. Keep the boy low — I'll help his mother.",
+  "portrait": "serra",
+  "side": "right"
+ },
+ {
+  "speaker": "",
+  "text": "Kai's escort gets an arm under the woman. Serra turns her lance across the road, buying them space to get the two villagers to shelter."
+ },
+ {
+  "speaker": "Rina",
+  "text": "The one at the camp. They keep looking back at him. Drive him off and this may end quickly.",
+  "portrait": "rina",
+  "side": "right"
+ },
+ {
+  "speaker": "Rina",
+  "text": "Your forehead just lit up. Did you mean to do that?",
+  "portrait": "rina",
+  "side": "right"
+ },
+ {
+  "speaker": "Kai",
+  "text": "No.",
+  "portrait": "kai",
+  "expression": "worried"
+ },
+ {
+  "speaker": "Serra",
+  "text": "Then use the sword. We'll cover you.",
+  "portrait": "serra",
+  "side": "right"
+ },
+ {
+  "speaker": "Perrin",
+  "text": "And me. Perrin. In case we're doing introductions before the bad decisions.",
+  "portrait": "perrin",
+  "side": "right"
+ },
+ {
+  "speaker": "Kai",
+  "text": "Kai. Less talking, Perrin.",
+  "portrait": "kai",
+  "music": "res://assets/audio/music/battle_theme.wav"
+ }
 ]

@@ -6,6 +6,7 @@ func _pilot() -> HybridCombatPilot:
 	var pilot: HybridCombatPilot = load("res://scenes/proto/hybrid_combat_pilot.tscn").instantiate()
 	add_child_autofree(pilot)
 	pilot._cursor.set_process(false)
+	assert_eq((load("res://data/weapons/crownspark.tres") as WeaponDef).required_story_flag, "crownspark_unlocked", "preview leaves the campaign spell resource locked")
 	return pilot
 
 

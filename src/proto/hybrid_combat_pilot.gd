@@ -41,6 +41,14 @@ func _spawn_units() -> void:
 	# Fresh chapter actors, even if a campaign was active before opening the pilot.
 	for spawn: UnitSpawn in chapter.player_spawns + chapter.enemy_spawns:
 		var definition := spawn.unit.duplicate() as UnitDef
+		# External resources remain shared even through UnitDef.duplicate(true).
+		# Copy each spell and replace the array; never weaken the campaign asset.
+		var preview_spells: Array[WeaponDef] = []
+		for spell: WeaponDef in definition.extra_weapons:
+			var local_spell := spell.duplicate() as WeaponDef
+			local_spell.required_story_flag = ""
+			preview_spells.append(local_spell)
+		definition.extra_weapons = preview_spells
 		if spawn.team_override >= 0:
 			definition.team = spawn.team_override
 		var actor := add_unit(definition, spawn.cell)
@@ -129,7 +137,7 @@ func reset_field() -> void:
 func prepare_review(kind: String) -> CombatResult:
 	reset_field()
 	if kind == "magic":
-		kai.equip_weapon(load("res://data/weapons/crownspark.tres"))
+		kai.equip_weapon(kai.unit_def.extra_weapons[0])
 		kai.cell = Vector2i(5, 4)
 		kai.position = _grid.cell_center(kai.cell)
 	if kind == "defeat":

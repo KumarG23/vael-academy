@@ -8,7 +8,12 @@ the spellbook economy lands with merchants / the Town of Vael (M10).*
 Kai's magic **awakened** — that's why he was sent to Vael Academy. His innate
 spell is **Crownspark** (First Crown royal magic, school `"crown"`, outside the
 anima triangle): a spinning emerald circlet that crowns whatever it strikes.
-It's not from a book and never runs out (999 uses).
+It's not from a book and never runs out (999 uses). **Control is not immediate:**
+the cave gives his mark and involuntary flares; player-usable Crownspark waits
+for the later Vision (July 10 lock, reaffirmed VS-1B). The runtime requires
+`crownspark_unlocked`, including for older saved inventories. A bound inventory
+entry or the `kai_awakened` flag alone never grants control. The Vision scene
+itself remains to be authored and wired.
 
 Unlike the mage heirs (who learn by class/level), **Kai learns magic the hard
 way: spellbooks.** Each spellbook is a rare, physical item that permanently

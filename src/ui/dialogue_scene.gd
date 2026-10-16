@@ -182,7 +182,7 @@ func _advance_logical() -> void:
 			continue  # non-terminal event: keep going to the next step
 		_current = step
 		if step.backdrop != "":  # AW-78: this line changes the stage
-			_set_backdrop(step.backdrop)
+			_set_backdrop(step.backdrop, step.backdrop_fallback)
 		if step.music == "stop":  # AW-79: scripts can score themselves
 			AudioManager.stop_music()
 		elif step.music != "":
@@ -202,8 +202,11 @@ func _advance_logical() -> void:
 		return
 
 
-func _set_backdrop(spec: String) -> void:
+func _set_backdrop(spec: String, fallback: String = "black") -> void:
 	match spec:
+		"clear":  # VS-1B: return from a story still to the live tactical map
+			_backdrop_tex = null
+			_backdrop_flat = Color(0, 0, 0, 0)
 		"black":
 			_backdrop_tex = null
 			_backdrop_flat = Color(0.02, 0.02, 0.03, 1.0)
@@ -211,8 +214,11 @@ func _set_backdrop(spec: String) -> void:
 			_backdrop_tex = null
 			_backdrop_flat = Color(0.98, 0.97, 0.92, 1.0)
 		_:
-			_backdrop_tex = load(spec) if ResourceLoader.exists(spec) else null
-			_backdrop_flat = Color(0.02, 0.02, 0.03, 1.0) if _backdrop_tex == null else Color(0, 0, 0, 0)
+			if not ResourceLoader.exists(spec):
+				_set_backdrop(fallback if fallback in ["black", "white", "clear"] else "black")
+				return
+			_backdrop_tex = load(spec)
+			_backdrop_flat = Color(0, 0, 0, 0)
 
 
 func _finish() -> void:

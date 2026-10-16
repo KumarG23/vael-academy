@@ -198,7 +198,9 @@ func _focus_player_start() -> void:
 ## Chapter opening: play the intro dialogue (if any), then start the player phase.
 func _begin_battle() -> void:
 	if chapter.intro_dialogue != "":
-		await _play_dialogue(chapter.intro_dialogue)
+		var played := await _play_dialogue(chapter.intro_dialogue)
+		if played and Campaign.active and chapter.id == "prologue":
+			Campaign.flags["road_intro_seen"] = true
 	# AW-71: the opening card — what this battle is, and what winning means. The
 	# arena keeps its wave banner; the card fades on its own (non-blocking).
 	if not chapter.is_arena:
@@ -985,7 +987,9 @@ func _end_battle(victory: bool) -> void:
 		# Boss yield + chapter outro (WO-4.1) play before the result screen.
 		if not _boss_alive:
 			await _play_dialogue(chapter.boss_yield_dialogue)
-		await _play_dialogue(chapter.outro_dialogue)
+		var played := await _play_dialogue(chapter.outro_dialogue)
+		if played and Campaign.active and chapter.id == "prologue":
+			Campaign.flags["road_aftermath_seen"] = true
 		_result_screen.show_victory()
 	else:
 		_result_screen.show_defeat()
@@ -1251,13 +1255,13 @@ func _is_player_unit_id(id: String) -> bool:
 
 ## Play a JSON dialogue script as a VN overlay and await its end. No-ops when
 ## dialogue is disabled (tests), the path is empty, or the script fails to parse.
-func _play_dialogue(path: String) -> void:
+func _play_dialogue(path: String) -> bool:
 	if not dialogue_enabled or path == "":
-		return
+		return false
 	var script := DialogueScript.from_file(path)
 	if not script.ok():
 		push_warning("battle dialogue skipped (%s): %s" % [path, script.error])
-		return
+		return false
 	_dialogue_playing = true
 	if _cursor != null:
 		_cursor.active = false
@@ -1274,6 +1278,7 @@ func _play_dialogue(path: String) -> void:
 	_dialogue_playing = false
 	if _cursor != null and not _battle_over:
 		_cursor.active = true
+	return true
 
 
 func _pop_text(world_pos: Vector2, text: String, color: Color) -> void:

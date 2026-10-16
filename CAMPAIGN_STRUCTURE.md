@@ -94,3 +94,18 @@ The whole point of un-parking house choice (`MASTER_PLAN.md` §11 → now a real
   played by scenes/flow/prologue_vn.tscn (scenes 1–2 fully wired: backdrops +
   the hearth narrator's voice).
 
+
+
+## VS-1B locked road direction — Neal, 2026-10-16
+
+Hesta personally collects Kai, then intentionally transfers him to an
+academy-associated escort/travel arrangement and rides ahead on urgent business.
+She is already away when the raid occurs. Kai's immediate protection of an
+endangered family introduces Perrin's warmth/overeagerness, Serra's protective
+organization and Rina's useful observation. Afterward he shares Essa's packed
+bread with a recovering survivor. The opening remains centered on Tam and Essa;
+no sibling assumption drives this sequence. The cave gives the mark and
+involuntary flares, never controlled Crownspark; the later Vision remains its
+unlock. Hesta and Morvane sense a major ancient-magic event, not automatically
+Kai's identity or origin. Exact new road prose is a playable draft for Neal's
+edit (`VS1B_STORY_NOTES.md`); arrival/oath restructuring is not part of VS-1B.

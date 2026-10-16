@@ -1,0 +1,98 @@
+[
+ {
+  "speaker": "",
+  "text": "With their chief driven off, the raiders scatter. By the well, the boy still has both hands wound in his mother's sleeve.",
+  "backdrop": "res://assets/art/vn/painted/road_aftermath.png",
+  "music": "stop",
+  "backdrop_fallback": "clear"
+ },
+ {
+  "speaker": "Boy",
+  "text": "Is that all of them?",
+  "side": "right"
+ },
+ {
+  "speaker": "Kai",
+  "text": "They've gone. Your mum's here.",
+  "portrait": "kai"
+ },
+ {
+  "speaker": "",
+  "text": "Kai kneels. He finds Essa's cloth bundle under his coat and works the knot loose. The bread is a little crushed. It still smells of her kitchen.",
+  "backdrop": "res://assets/art/vn/painted/road_bread.png",
+  "backdrop_fallback": "black"
+ },
+ {
+  "speaker": "",
+  "text": "He breaks off a piece and holds it out. The boy looks to his mother before taking it."
+ },
+ {
+  "speaker": "Mother",
+  "text": "You'll need that for the road.",
+  "side": "right"
+ },
+ {
+  "speaker": "Kai",
+  "text": "Ma packed too much. She usually does.",
+  "portrait": "kai"
+ },
+ {
+  "speaker": "",
+  "text": "The boy takes a bite. His grip on his mother's sleeve loosens enough for her to shift her leg."
+ },
+ {
+  "speaker": "",
+  "text": "Perrin offers his cloak. The boy shrinks from the sudden movement; Perrin stops, then lays it within the mother's reach."
+ },
+ {
+  "speaker": "Perrin",
+  "text": "For both of you. If you want it.",
+  "portrait": "perrin",
+  "side": "right"
+ },
+ {
+  "speaker": "Mother",
+  "text": "Could you hold this a moment?",
+  "side": "right"
+ },
+ {
+  "speaker": "",
+  "text": "Serra kneels to steady the binding on the woman's leg. Rina sets a waterskin beside the bread."
+ },
+ {
+  "speaker": "Rina",
+  "text": "Does it hurt? Your brow.",
+  "portrait": "rina",
+  "side": "right"
+ },
+ {
+  "speaker": "Kai",
+  "text": "Not now. I don't know what it is.",
+  "portrait": "kai"
+ },
+ {
+  "speaker": "Rina",
+  "text": "I was going to ask.",
+  "portrait": "rina",
+  "side": "right"
+ },
+ {
+  "speaker": "Kai",
+  "text": "I noticed.",
+  "portrait": "kai"
+ },
+ {
+  "speaker": "",
+  "text": "A beat. Then Perrin laughs, quietly this time. Kai saves the heel of the loaf and wraps it again."
+ },
+ {
+  "speaker": "Serra",
+  "text": "We're going to Vael too. Walk with us when you're ready.",
+  "portrait": "serra",
+  "side": "right"
+ },
+ {
+  "speaker": "",
+  "text": "Serra. Rina. Perrin. Just names, for now. Kai tucks the bundle away and waits until the boy has finished eating."
+ }
+]
