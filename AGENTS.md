@@ -1,5 +1,7 @@
 # AGENTS.md
 
+Current delivery workflow: read `docs/TEAM_WORKFLOW.md`. GitHub issues → branches → PRs → checks → lead review → merge replaces the former Forgejo/Studio task orchestration. Ordinary development uses full native tools and self-repair; no exact-file permission cages or arbitrary turn caps. A lead-assigned issue takes precedence over automatically choosing the lowest-numbered work order, but never silently overrides game scope or canon.
+
 Start with `HANDOFF.md` (project state, commands, tooling notes, gotchas), then `MASTER_PLAN.md` — the single source of truth; its §10 STATUS table says what's done and what's next.
 
 Work contract (same as CLAUDE.md, which Claude-family agents use):
@@ -21,7 +23,7 @@ Two agents, two modes — pick one per session:
    that file). The implementer triages findings into WOs. Roles can swap
    between sessions (e.g., when one model's usage resets).
 2. **Parallel work.** Only in separate `git worktree`s on separate branches,
-   synced through the Forgejo remote. Never two agents editing one checkout —
+   synced through the GitHub remote. Never two agents editing one checkout —
    a mid-WO tree doesn't even parse, and an audit of it reports phantoms.
 
 Hard rules either way:
@@ -29,8 +31,9 @@ Hard rules either way:
   editor MCP bridge — one agent connected at a time.
 - **Base off the last green commit** (suite passing, §10/HANDOFF updated).
   Commit-per-WO is the handoff unit; don't hand over a red tree.
-- `MASTER_PLAN.md` §10 + `HANDOFF.md` are the shared brain; `AUDITS.md` is the
-  cross-agent inbox. All three are updated in the same commit as the work.
+- `MASTER_PLAN.md` §10 + `HANDOFF.md` are the shared product brain. GitHub PR
+  comments carry current review findings; `AUDITS.md` preserves durable findings.
+  Update the documents affected by the actual work, not all three by ritual.
 - Story/design calls are Neal's. An audit may PROPOSE (in AUDITS.md); it never
   rewrites bibles or canon.
 

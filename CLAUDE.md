@@ -1,3 +1,5 @@
+Current delivery workflow: follow `AGENTS.md` and `docs/TEAM_WORKFLOW.md`. GitHub is the sole active host/task/PR system; assigned issues supersede automatic lowest-WO selection, not game canon. Use native tools, tests, Git and ordinary self-repair without exact-file cages or arbitrary turn caps.
+
 Read MASTER_PLAN.md first — it is the single source of truth for *how this is built*.
 
 **Reference the owning document for whatever you're working on; don't work from memory of it.** Story/character/world content → the bibles (WORLD_BIBLE, ACADEMY_BIBLE, CAMPAIGN_STRUCTURE, CHARACTER_BIBLE_*). Direction rationale / what was kept vs. replaced → PLAN_REWRITE_AUDIT.md. Project state, tooling, and gotchas → HANDOFF.md. System details → the relevant §10 STATUS notes and the code itself.
