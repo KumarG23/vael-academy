@@ -21,7 +21,15 @@ var sfx_volume := 0.85:
 	set(v):
 		sfx_volume = v
 		_apply_volumes()
-var muted := false
+# Issue #10: one mute policy for both the field and set_muted(). Muting silences
+# what is already sounding (music, narrator, every pooled SFX voice); unmuting
+# brings back only the requested looping track — stale one-shots stay gone.
+var muted := false:
+	set(v):
+		if v == muted:
+			return
+		muted = v
+		_apply_mute()
 
 var _sfx_cache := {}
 var _voices: Array[AudioStreamPlayer] = []
@@ -75,19 +83,26 @@ func _load_sfx(sfx_name: String) -> AudioStream:
 
 ## Start (or switch to) a looping music track by resource path. Re-calling with
 ## the currently-playing track is a no-op, so scene setups can call it freely.
+## While muted the request is remembered and starts on unmute.
 func play_music(path: String) -> void:
-	if path == _music_path and _music.playing:
+	if path == _music_path and (muted or _music.playing):
 		return
 	_music_path = path
-	var s: AudioStream = load(path) if ResourceLoader.exists(path) else null
+	_start_music()
+
+
+## (Re)start the requested track from the top; silence if muted or it's missing.
+func _start_music() -> void:
+	_music.stop()
+	if muted or _music_path == "":
+		return
+	var s: AudioStream = load(_music_path) if ResourceLoader.exists(_music_path) else null
 	if s == null:
-		_music.stop()
 		return
 	_set_loop(s)
 	_music.stream = s
 	_music.volume_db = _music_db()
-	if not muted:
-		_music.play()
+	_music.play()
 
 
 ## AW-78: play a narration clip by res:// path (the hearth narrator). One voice
@@ -149,9 +164,16 @@ func _apply_volumes() -> void:
 
 func set_muted(on: bool) -> void:
 	muted = on
-	if on:
+
+
+## Null-safe before _ready builds the players (nothing is sounding yet then).
+func _apply_mute() -> void:
+	if _music == null:
+		return
+	if muted:
 		_music.stop()
-	elif _music_path != "":
-		var path := _music_path
-		_music_path = ""  # force a fresh start
-		play_music(path)
+		_voice.stop()
+		for p in _voices:
+			p.stop()
+	elif _music_path != "" and not _music.playing:
+		_start_music()
