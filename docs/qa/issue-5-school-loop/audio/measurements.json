@@ -1,0 +1,68 @@
+[
+  {
+    "case": "audio-music-before",
+    "samples": 95734,
+    "peak": 16042,
+    "rms": 3180.81
+  },
+  {
+    "case": "audio-music-muted",
+    "samples": 96100,
+    "peak": 0,
+    "rms": 0.0
+  },
+  {
+    "case": "audio-new-track-while-muted",
+    "samples": 95826,
+    "peak": 0,
+    "rms": 0.0
+  },
+  {
+    "case": "audio-latest-track-resumed",
+    "samples": 95900,
+    "peak": 21885,
+    "rms": 4743.857
+  },
+  {
+    "case": "audio-voice-before",
+    "samples": 57592,
+    "peak": 8409,
+    "rms": 1816.464
+  },
+  {
+    "case": "audio-voice-muted",
+    "samples": 95234,
+    "peak": 0,
+    "rms": 0.0
+  },
+  {
+    "case": "audio-voice-not-replayed",
+    "samples": 95738,
+    "peak": 0,
+    "rms": 0.0
+  },
+  {
+    "case": "audio-sfx-before",
+    "samples": 47808,
+    "peak": 18170,
+    "rms": 12220.177
+  },
+  {
+    "case": "audio-sfx-muted",
+    "samples": 95458,
+    "peak": 0,
+    "rms": 0.0
+  },
+  {
+    "case": "audio-new-oneshots-muted",
+    "samples": 95988,
+    "peak": 0,
+    "rms": 0.0
+  },
+  {
+    "case": "audio-oneshots-not-replayed",
+    "samples": 95672,
+    "peak": 0,
+    "rms": 0.0
+  }
+]

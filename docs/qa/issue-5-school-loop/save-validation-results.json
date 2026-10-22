@@ -1,0 +1,43 @@
+{
+  "accepted_game_source": "883ff334e26ee3429c84b26657e0237065242d76",
+  "input": "real desktop keyboard; state inspection read-only",
+  "invalid_fixture": "native Tidemark return copied; week set to 6; flags=[] or report_cards={}; separate disposable JSON slots",
+  "results": [
+    {
+      "flow": "Title",
+      "malformed_field": "flags",
+      "unchanged_campaign_and_staging": true,
+      "same_scene": true,
+      "slot_unchanged": true
+    },
+    {
+      "flow": "Title",
+      "malformed_field": "report_cards",
+      "unchanged_campaign_and_staging": true,
+      "same_scene": true,
+      "slot_unchanged": true
+    },
+    {
+      "flow": "Journal",
+      "malformed_field": "flags",
+      "unchanged_campaign_and_staging": true,
+      "same_scene_and_open_book": true,
+      "slot_unchanged": true
+    },
+    {
+      "flow": "Journal",
+      "malformed_field": "report_cards",
+      "unchanged_campaign_and_staging": true,
+      "same_scene_and_open_book": true,
+      "slot_unchanged": true
+    },
+    {
+      "flow": "Journal valid native load",
+      "house": "thornrook",
+      "week": 1,
+      "training_used": true,
+      "rina_xp": 37.0,
+      "native_save_sha256": "ea3b33faabc50df45a55b0cb234ad666bb9fd47ae96fe542fb676e1b5202f833"
+    }
+  ]
+}
