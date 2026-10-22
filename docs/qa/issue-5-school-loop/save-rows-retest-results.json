@@ -1,0 +1,156 @@
+{
+  "accepted_game_source": "19cad888161230bbc6c17b377bde4f496a4f63fc",
+  "entry": "real Title Dev Jump Mock Battle and Arena; isolated occupancy fixture",
+  "results": [
+    {
+      "path": "prep",
+      "case": "only third occupied; cancellation",
+      "labels": [
+        "Slot 1 \u2014 empty",
+        "Slot 2 \u2014 empty",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "files_unchanged": true,
+      "phase_after_cancel": 4
+    },
+    {
+      "path": "prep",
+      "case": "write physical slot",
+      "displayed_row": 1,
+      "labels": [
+        "Slot 1 \u2014 empty",
+        "Slot 2 \u2014 empty",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "written_file": "slot_0.json",
+      "other_slot_bytes_unchanged": true,
+      "new_payload_has_battle": true
+    },
+    {
+      "path": "prep",
+      "case": "write physical slot",
+      "displayed_row": 2,
+      "labels": [
+        "Slot 1 \u2014 mock_battle",
+        "Slot 2 \u2014 empty",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "written_file": "slot_1.json",
+      "other_slot_bytes_unchanged": true,
+      "new_payload_has_battle": true
+    },
+    {
+      "path": "prep",
+      "case": "write physical slot",
+      "displayed_row": 3,
+      "labels": [
+        "Slot 1 \u2014 mock_battle",
+        "Slot 2 \u2014 mock_battle",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "written_file": "slot_2.json",
+      "other_slot_bytes_unchanged": true,
+      "new_payload_has_battle": true
+    },
+    {
+      "path": "field",
+      "case": "only third occupied; cancellation",
+      "labels": [
+        "Slot 1 \u2014 empty",
+        "Slot 2 \u2014 empty",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "files_unchanged": true,
+      "phase_after_cancel": 0
+    },
+    {
+      "path": "field",
+      "case": "write physical slot",
+      "displayed_row": 1,
+      "labels": [
+        "Slot 1 \u2014 empty",
+        "Slot 2 \u2014 empty",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "written_file": "slot_0.json",
+      "other_slot_bytes_unchanged": true,
+      "new_payload_has_battle": true
+    },
+    {
+      "path": "field",
+      "case": "write physical slot",
+      "displayed_row": 2,
+      "labels": [
+        "Slot 1 \u2014 mock_battle",
+        "Slot 2 \u2014 empty",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "written_file": "slot_1.json",
+      "other_slot_bytes_unchanged": true,
+      "new_payload_has_battle": true
+    },
+    {
+      "path": "field",
+      "case": "write physical slot",
+      "displayed_row": 3,
+      "labels": [
+        "Slot 1 \u2014 mock_battle",
+        "Slot 2 \u2014 mock_battle",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "written_file": "slot_2.json",
+      "other_slot_bytes_unchanged": true,
+      "new_payload_has_battle": true
+    },
+    {
+      "path": "arena",
+      "case": "only third occupied; cancellation",
+      "labels": [
+        "Slot 1 \u2014 empty",
+        "Slot 2 \u2014 empty",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "files_unchanged": true,
+      "phase_after_cancel": 0
+    },
+    {
+      "path": "arena",
+      "case": "write physical slot",
+      "displayed_row": 1,
+      "labels": [
+        "Slot 1 \u2014 empty",
+        "Slot 2 \u2014 empty",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "written_file": "slot_0.json",
+      "other_slot_bytes_unchanged": true,
+      "new_payload_has_battle": true
+    },
+    {
+      "path": "arena",
+      "case": "write physical slot",
+      "displayed_row": 2,
+      "labels": [
+        "Slot 1 \u2014 arena",
+        "Slot 2 \u2014 empty",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "written_file": "slot_1.json",
+      "other_slot_bytes_unchanged": true,
+      "new_payload_has_battle": true
+    },
+    {
+      "path": "arena",
+      "case": "write physical slot",
+      "displayed_row": 3,
+      "labels": [
+        "Slot 1 \u2014 arena",
+        "Slot 2 \u2014 arena",
+        "Slot 3 \u2014 mock_battle"
+      ],
+      "written_file": "slot_2.json",
+      "other_slot_bytes_unchanged": true,
+      "new_payload_has_battle": true
+    }
+  ]
+}
