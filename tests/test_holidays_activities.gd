@@ -21,6 +21,8 @@ func test_festival_fires_once_and_unlocks_cooking():
 	Campaign.week = 4  # the Founding Festival
 	_castle._refresh_date()
 	assert_not_null(_castle._dialogue, "the festival set-piece is playing")
+	assert_false(bool(Campaign.flags.get("festival_seen", false)), "unfinished festival remains pending")
+	_castle._dialogue._finish()
 	assert_true(bool(Campaign.flags.get("festival_seen", false)))
 	assert_true(bool(Campaign.flags.get("cooking_unlocked", false)), "cooking unlocked diegetically")
 
@@ -61,6 +63,8 @@ func test_victory_feast_plays_when_the_year_ends():
 	Campaign.last_result = "victory"
 	_castle._refresh_date()
 	assert_not_null(_castle._dialogue, "the feast is playing")
+	assert_false(bool(Campaign.flags.get("feast_seen", false)), "unfinished feast remains pending")
+	_castle._dialogue._finish()
 	assert_true(bool(Campaign.flags.get("feast_seen", false)))
 	_castle._refresh_date()  # doesn't replay
 

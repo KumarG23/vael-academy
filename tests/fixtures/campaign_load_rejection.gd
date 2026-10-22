@@ -15,7 +15,7 @@ func _run() -> void:
 	var roster_script: Script = load("res://src/core/roster.gd")
 	var route: String = OS.get_cmdline_user_args()[0]
 	var saves: SaveSystem = SaveSystem.new("user://test_campaign_ui_rejection_%s" % route)
-	for field: String in ["flags", "report_cards"]:
+	for field: String in ["flags", "report_cards", "report_card_deliveries"]:
 		campaign.reset_new_game(true, 17)
 		campaign.set_house("tidemark")
 		campaign.week = 3
