@@ -1,0 +1,37 @@
+name: Verify
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.7.2
+          use-dotnet: false
+          include-templates: false
+      - name: Team helper tests
+        run: python3 -m unittest discover -s tools/team_tests -v
+      - name: Import clean project
+        run: |
+          set -o pipefail
+          godot --headless --editor --import --path . 2>&1 | tee import.log
+          if grep -E 'SCRIPT ERROR:|Failed to load script' import.log; then exit 1; fi
+      - name: Game tests
+        run: |
+          set -o pipefail
+          godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit 2>&1 | tee tests.log
+          if grep -E 'SCRIPT ERROR:|Failed to load script' tests.log; then exit 1; fi
+      - name: Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-logs
+          path: |
+            import.log
+            tests.log

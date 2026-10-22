@@ -1,0 +1,12 @@
+[Unit]
+Description=Vael GitHub engineering lead
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/projects/vael-academy
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 tools/team.py lead
+TimeoutStartSec=infinity
+Nice=5

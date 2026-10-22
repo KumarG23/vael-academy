@@ -2,7 +2,7 @@
 
 **A Fire Emblem–style tactics RPG in Godot 4.x, built by Fable (Claude) working milestone by milestone.**
 
-This document is the single source of truth. Every work session starts by reading this file. Fable implements one work order at a time, verifies acceptance criteria, updates the STATUS section, and stops. Nothing outside the current work order gets built "while we're in there."
+This document is the single source of truth for game scope, formulas and status. Current development-team delivery mechanics are defined in `docs/TEAM_WORKFLOW.md`: GitHub issues, native developer sessions, PRs, checks and lead review. Lead-assigned issues may select approved work out of numeric order without changing canon or acceptance criteria. Every work session starts by reading this file. Fable implements one work order at a time, verifies acceptance criteria, updates the STATUS section, and stops. Nothing outside the current work order gets built "while we're in there."
 
 **Companion story bibles (canonical narrative source of truth — read alongside this plan for any content WO):** `WORLD_BIBLE.md`, `ACADEMY_BIBLE.md`, `CAMPAIGN_STRUCTURE.md`, `CHARACTER_BIBLE_KAI.md`, `CHARACTER_BIBLE_HEADS.md`, `CHARACTER_BIBLE_EMBERWING.md`, `CHARACTER_BIBLE_TIDEMARK.md`, `CHARACTER_BIBLE_THORNROOK.md`. This plan owns *how it's built*; the bibles own *what it is*. (`PLAN_REWRITE_AUDIT.md` is the decision record for this revision; `FABLE_PROMPTS.md` holds the session prompts.)
 
