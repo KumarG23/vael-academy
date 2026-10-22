@@ -662,8 +662,7 @@ func _open_function(fn: String) -> void:
 		"fn_supports":
 			_open_hall_archive()
 		"fn_save":
-			Campaign.save_to_slot(0)
-			_toast("Game saved.")
+			_toast_save_result(Campaign.save_to_slot(0))
 		"fn_roster":
 			_open_quartermaster()
 		"fn_house":
@@ -695,6 +694,10 @@ func _toast(text: String) -> void:
 	_toast_label.offset_bottom = TOAST_TOP  # re-fit height to this text's wrapped lines
 	_toast_label.visible = true
 	_toast_left = 2.6
+
+
+func _toast_save_result(saved: bool) -> void:
+	_toast("Game saved." if saved else "Save failed. Please try again.")
 
 
 func _level_xp_text(id: String) -> String:
@@ -1164,8 +1167,7 @@ func _do_system(index: int) -> void:
 	_close_menu()
 	match index:
 		0:
-			Campaign.save_to_slot(0)
-			_toast("Game saved.")
+			_toast_save_result(Campaign.save_to_slot(0))
 		1:
 			get_tree().change_scene_to_file.call_deferred("res://scenes/title/title.tscn")
 
