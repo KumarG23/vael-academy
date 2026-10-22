@@ -514,6 +514,14 @@ def pending_events_snapshot():
         return []
 
 
+def automated_comment(body):
+    """Launcher-authored GitHub posts start with the shared marker exactly once."""
+    text = body.lstrip()
+    if text.startswith(lead_observation.AUTO_MARKER):
+        return text
+    return f'{lead_observation.AUTO_MARKER}\n{body}'
+
+
 def block_issue(number, profile, rc, failure_kind=None, blocked_reason=None, reset_info=None):
     (STATE / f'issue-{number}.exit').write_text(str(rc))
     if failure_kind == 'quota_exhausted' and blocked_reason:
@@ -534,7 +542,8 @@ def block_issue(number, profile, rc, failure_kind=None, blocked_reason=None, res
         subprocess.run(['gh', 'issue', 'edit', str(number), '--repo', SLUG,
                         '--add-label', 'team:blocked', '--remove-label', 'team:ready'],
                        env=environment(), check=True)
-        subprocess.run(['gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body', body],
+        subprocess.run(['gh', 'issue', 'comment', str(number), '--repo', SLUG,
+                        '--body', automated_comment(body)],
                        env=environment(), check=True)
     except (OSError, subprocess.SubprocessError):
         (STATE / 'paused').write_text('Cannot record blocked issue on GitHub; inspect reporting before dispatch.\n')
@@ -754,9 +763,10 @@ def decide_quota(number, decision, to_profile=None, now_ts=None):
         try:
             subprocess.run([
                 'gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
-                f'Lead quota escalation on issue #{number}: `{prof}` is quota-blocked and no eligible '
-                'peer lane is currently available. Preserved worktree and session lineage remain intact; '
-                'awaiting cooldown reset or operator direction.'
+                automated_comment(
+                    f'Lead quota escalation on issue #{number}: `{prof}` is quota-blocked and no eligible '
+                    'peer lane is currently available. Preserved worktree and session lineage remain intact; '
+                    'awaiting cooldown reset or operator direction.')
             ], env=environment(), check=True)
         except (OSError, subprocess.SubprocessError):
             pass
@@ -887,8 +897,9 @@ def start(number, profile):
     assignment.write_text(json.dumps(record, indent=2))
     try:
         run('gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
-            f'Engineering assignment: `{profile}` owns implementation and PR revisions on `{branch}`. '
-            'Plan/bible alignment, tests, and lead review are required before merge.')
+            automated_comment(
+                f'Engineering assignment: `{profile}` owns implementation and PR revisions on `{branch}`. '
+                'Plan/bible alignment, tests, and lead review are required before merge.'))
         launch_worker(number, worktree)
     except (OSError, subprocess.SubprocessError):
         block_issue(number, profile, 1)
@@ -1025,8 +1036,9 @@ def handoff(number, to_profile, now_ts=None):
                         '--remove-label', 'team:blocked', '--add-label', 'team:ready'],
                        env=environment(), check=True)
         run('gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
-            f'Lead quota handoff: reassigning issue #{number} from `{old_profile}` to `{to_profile}` '
-            f'on preserved branch `{branch}` ({handoff_kind}). Existing worktree and lineage preserved.')
+            automated_comment(
+                f'Lead quota handoff: reassigning issue #{number} from `{old_profile}` to `{to_profile}` '
+                f'on preserved branch `{branch}` ({handoff_kind}). Existing worktree and lineage preserved.'))
         launch_worker(number, worktree)
     except (OSError, subprocess.SubprocessError):
         block_issue(number, to_profile, 1)
