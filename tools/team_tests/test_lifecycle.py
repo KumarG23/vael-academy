@@ -110,6 +110,11 @@ import json,sys
 if sys.argv[-2:]!=['auth','status']: sys.exit(99)
 print(json.dumps({'loggedIn':True,'authMethod':'claude.ai','apiProvider':'firstParty','subscriptionType':'max'}))
 ''')
+        self.executable('codex', '''#!/usr/bin/python3
+import sys
+if sys.argv[1:3]!=['login','status']: sys.exit(99)
+print('Logged in using ChatGPT')
+''')
         (self.root / 'provider.py').write_text('''import json,os,pathlib,re,subprocess,sys,time
 state=pathlib.Path(os.environ['VAEL_TEAM_STATE']); prompt=sys.stdin.read()
 def wait(path):
@@ -125,6 +130,7 @@ if prompt.startswith('You are Vael'):
     if not socket.exists(): socket=state/'legacy.sock'
     pid=subprocess.check_output(['tmux','-S',str(socket),'display-message','-p','#{pid}'],text=True).strip()
     (state/'server.json').write_text(json.dumps({'pid':int(pid),'cgroup':pathlib.Path('/proc/'+pid+'/cgroup').read_text()}))
+    print(json.dumps({'type':'turn.completed'}),flush=True)
     print(json.dumps({'type':'result','subtype':'success','is_error':False}),flush=True)
 else:
     number=int(re.search(r'issue #(\\d+)',prompt)[1])
