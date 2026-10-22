@@ -1,0 +1,22 @@
+name: Work order
+description: A useful feature or fix grounded in the game plan
+title: ""
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome and plan reference
+      description: Player benefit, owning plan/bible section, and relevant current state
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Observable behavior and useful tests; not an exact-file permission list
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies or decisions needed

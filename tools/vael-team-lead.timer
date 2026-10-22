@@ -1,0 +1,10 @@
+[Unit]
+Description=Check Vael GitHub work queue
+
+[Timer]
+OnStartupSec=2min
+OnUnitInactiveSec=10min
+Unit=vael-team-lead.service
+
+[Install]
+WantedBy=timers.target

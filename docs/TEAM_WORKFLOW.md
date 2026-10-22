@@ -1,0 +1,31 @@
+# Vael development team
+
+GitHub `KumarG23/vael-academy` is the sole active repository host, issue tracker and PR queue. One project per repo. Preserve old Studio history and unfinished work; never treat an old failed delivery as approved source.
+
+## Product ownership
+
+Read HANDOFF.md's current state, MASTER_PLAN.md's relevant scope/status and the owning bibles before implementation. Cite specific plan/bible sections in the issue or PR. MASTER_PLAN defines scope/formulas; WORLD_BIBLE, ACADEMY_BIBLE, CAMPAIGN_STRUCTURE and CHARACTER_BIBLE_* define canon; STYLE_BIBLE and current presentation decisions govern visuals. HANDOFF records what actually works. A task ticket does not silently override those documents. Surface contradictions to Neal; narrative/design drafts and visual candidates are not approval.
+
+## Roles and delivery
+
+- Neal owns product direction, canon and taste approval. Jarvis handles infrastructure and project-level clarification.
+- Engineering lead: Codex GPT-6.1 Sol/high. Prioritize approved work, assign meaningful issues, answer questions, inspect final PRs and CI, return concrete findings to the same developer, merge accepted changes.
+- Specialists: Astra and Claude Fable for difficult work; Sol, Opus and Gemini Argon for senior work. Free-model developers get well-described suitable work, not invented busywork. Capability/availability must be proven before enrollment; a configured model name is not readiness. Do not silently substitute models or paid APIs on failure.
+- Each issue has one implementation owner, its own branch/worktree and a native resumable CLI session. Developers can read the whole project, edit what their task needs, use the shell, tests and ordinary dependencies, self-repair, commit, push and open/update PRs. No exact-file fences or arbitrary turn caps.
+- Review fixes return to that branch/developer. Useful development mistakes are repaired, not a reason to reset the project. New independent issues may run in parallel; begin with two writers because imports/tests and retained worktrees consume real host resources.
+- Tests match the change. CI runs a clean import and GUT suite for game changes, plus helper tests. For player-facing behavior, exercise the real game; a test pass is not Neal's visual approval. A lead review must state plan alignment, findings and checks rather than rubber-stamp a worker summary.
+- Merge only the reviewed current PR head with passing checks. No direct main pushes, force-pushes or blanket promotion of old branches. GitHub uses a single human account today: a lead review is a traceable comment, not a fake independent GitHub approval from the PR author. GitHub reviews and native model identities must be reported honestly.
+
+## Minimal runtime
+
+`python3 tools/team.py start ISSUE PROFILE` starts a native developer in tmux (`sol`, `astra`, `opus`, `fable`, `argon`, `deepseek`, `minimax`, `nemotron`, `cohere`); disabled profiles fail with an explicit reason. Repeating the command after a session finishes resumes that issue's existing checkout and native conversation. `status` shows live sessions. `pause` stops new assignments without killing workers; `resume` reopens assignment. `lead` runs one lead pass, returns without waiting for workers, and does not invoke a model if there are no ready issues or PRs.
+
+GitHub issue label `team:ready` means approved/assignable. `team:blocked` means a real dependency, model quota, or decision needs attention; remove ready while blocked. The lead must not repeatedly retry blocked work. Native JSON terminal status is checked as well as process exit; recoverable intermediate tool errors do not reject a successfully repaired turn. Resumed directories must still be the correct repository/worktree and issue branch. Accepted milestones become normal plan/status updates, not a second task database. Claude inference settings are ignored for the subscription-only launch, its route is pinned and checked before inference, and inherited cloud/API selectors are removed; CLAUDE.md and native tools remain available. Native session IDs are saved per issue; a checkout without a confirmed session starts a fresh conversation on the preserved branch. Local runtime files contain only launch/session/log data and are private, not product truth.
+
+Runtime assumes an existing non-root development account owns the checkouts, installed native CLIs and supported subscription logins. It has no sudo, no shared-workspace ACL handoff, no credential broker and no in-repo credentials. Ordinary local tools do not require per-turn approval. Existing credential protection, spend limits, destructive-operation boundaries and GitHub authorization still apply. Do not print auth state containing secrets or upload private host paths/model logs. GitHub-hosted CI has read-only repository permissions and no access to the development VM or provider credentials.
+
+A user-level timer may run the lead at intervals; a lock prevents overlapping lead passes. Workers persist in tmux across SSH disconnects; after a VM restart their branches/native sessions remain and the lead resumes them. Do not claim an interrupted model process survived a reboot. Deployment and infrastructure changes are separate from feature development.
+
+## Issue brief
+
+State outcome, owning plan/bible section, acceptance behavior, dependencies and useful tests. Scope describes the feature, not an exact-file permission list. Developers may adjust implementation details and tests to deliver the outcome. A PR includes `Closes #N`, plan references, actual checks, screenshots/runtime proof when useful, and remaining taste/design decisions.
