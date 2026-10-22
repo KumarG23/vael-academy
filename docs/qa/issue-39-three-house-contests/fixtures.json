@@ -1,0 +1,97 @@
+[
+  {
+    "fixture": "emberwing-close-casual.json",
+    "base": "../issue-5-school-loop/emberwing-return-save.json",
+    "changes": [
+      {
+        "field": "/campaign/week",
+        "before": 2,
+        "after": 6
+      }
+    ],
+    "contains_battle_snapshot": false
+  },
+  {
+    "fixture": "emberwing-open-casual.json",
+    "base": "../issue-5-school-loop/emberwing-return-save.json",
+    "changes": [
+      {
+        "field": "/campaign/week",
+        "before": 2,
+        "after": 1
+      }
+    ],
+    "contains_battle_snapshot": false
+  },
+  {
+    "fixture": "thornrook-open-classic.json",
+    "base": "../issue-5-school-loop/thornrook-return-save.json",
+    "changes": [
+      {
+        "field": "/campaign/casual",
+        "before": true,
+        "after": false
+      },
+      {
+        "field": "/campaign/week",
+        "before": 2,
+        "after": 1
+      }
+    ],
+    "contains_battle_snapshot": false
+  },
+  {
+    "fixture": "thornrook-open-native.json",
+    "base": "../issue-5-school-loop/thornrook-campus-save.json",
+    "changes": [],
+    "contains_battle_snapshot": false
+  },
+  {
+    "fixture": "tidemark-close-casual.json",
+    "base": "../issue-5-school-loop/tidemark-return-save.json",
+    "changes": [
+      {
+        "field": "/campaign/week",
+        "before": 2,
+        "after": 6
+      }
+    ],
+    "contains_battle_snapshot": false
+  },
+  {
+    "fixture": "tidemark-open-casual.json",
+    "base": "../issue-5-school-loop/tidemark-return-save.json",
+    "changes": [
+      {
+        "field": "/campaign/week",
+        "before": 2,
+        "after": 1
+      }
+    ],
+    "contains_battle_snapshot": false
+  },
+  {
+    "fixture": "tr-open-casual-earned-closing.json",
+    "base": "saves/thornrook-casual-campus-return.json",
+    "changes": [
+      {
+        "field": "/campaign/week",
+        "before": 2,
+        "after": 6
+      }
+    ],
+    "contains_battle_snapshot": false
+  },
+  {
+    "fixture": "tr-classic-earned-closing.json",
+    "base": "saves/thornrook-classic-campus-return.json",
+    "changes": [
+      {
+        "field": "/campaign/week",
+        "before": 2,
+        "after": 6
+      }
+    ],
+    "contains_battle_snapshot": false
+  }
+]

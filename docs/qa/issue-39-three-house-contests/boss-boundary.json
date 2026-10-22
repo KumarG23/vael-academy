@@ -1,0 +1,27 @@
+{
+  "scene": "res://scenes/battle/mock_battle.tscn",
+  "round": 3,
+  "quoted_boss": "serra",
+  "boss_alive": false,
+  "quote_played": true,
+  "defeated_ids": [
+    "elowen",
+    "fenn",
+    "serra",
+    "corvin",
+    "bertram",
+    "osric",
+    "isolde"
+  ],
+  "remaining_rivals": [
+    "rina",
+    "thessaly",
+    "marlow",
+    "vesper",
+    "rurik",
+    "nilu"
+  ],
+  "battle_over": false,
+  "battle_victory": false,
+  "image": "images/quoted-boss-cleared-continues.png"
+}
