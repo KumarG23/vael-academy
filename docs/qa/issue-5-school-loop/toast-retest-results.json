@@ -1,0 +1,255 @@
+{
+  "tested_source": "eecc29f3b23bcd3591a9772f87b2cb9f464c32f5",
+  "cases": [
+    {
+      "capture": "toast-fish-default",
+      "fish": {
+        "Lakeperch": 1,
+        "Warded Coin": 1.0
+      },
+      "lines": 1,
+      "menu": [],
+      "menu_visible": false,
+      "phase": -1,
+      "rect": [
+        40.0,
+        60.0,
+        1200.0,
+        34.0
+      ],
+      "room": "waterside",
+      "text": "Caught a Lakeperch! (x1)",
+      "viewed": {},
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "visible": true,
+      "visible_lines": 1,
+      "provenance": "native Emberwing return copy; no fish or support injection",
+      "visual_result": "Target toast or archive row readable; calendar resize defect #40 is separate"
+    },
+    {
+      "capture": "toast-fish-800",
+      "fish": {
+        "Lakeperch": 2,
+        "Silver Dace": 1,
+        "Warded Coin": 1.0
+      },
+      "lines": 1,
+      "menu": [],
+      "menu_visible": false,
+      "phase": -1,
+      "rect": [
+        40.0,
+        60.0,
+        720.0,
+        34.0
+      ],
+      "room": "waterside",
+      "text": "Caught a Silver Dace! (x1)",
+      "viewed": {},
+      "viewport": [
+        800.0,
+        450.0
+      ],
+      "visible": true,
+      "visible_lines": 1,
+      "provenance": "native Emberwing return copy; no fish or support injection",
+      "visual_result": "Target toast or archive row readable; calendar resize defect #40 is separate"
+    },
+    {
+      "capture": "toast-empty-800",
+      "fish": {
+        "Lakeperch": 2,
+        "Silver Dace": 1,
+        "Warded Coin": 1.0
+      },
+      "lines": 1,
+      "menu": [],
+      "menu_visible": false,
+      "phase": -1,
+      "rect": [
+        40.0,
+        60.0,
+        720.0,
+        34.0
+      ],
+      "room": "common_hall",
+      "text": "No bonds strong enough yet \u2014 fight beside your housemates.",
+      "viewed": {},
+      "viewport": [
+        800.0,
+        450.0
+      ],
+      "visible": true,
+      "visible_lines": 1,
+      "provenance": "native Emberwing return copy; no fish or support injection",
+      "visual_result": "Target toast or archive row readable; calendar resize defect #40 is separate"
+    },
+    {
+      "capture": "toast-empty-640",
+      "fish": {
+        "Lakeperch": 2,
+        "Silver Dace": 1,
+        "Warded Coin": 1.0
+      },
+      "lines": 2,
+      "menu": [],
+      "menu_visible": false,
+      "phase": -1,
+      "rect": [
+        40.0,
+        60.0,
+        560.0,
+        71.0
+      ],
+      "room": "common_hall",
+      "text": "No bonds strong enough yet \u2014 fight beside your housemates.",
+      "viewed": {},
+      "viewport": [
+        640.0,
+        360.0
+      ],
+      "visible": true,
+      "visible_lines": 2,
+      "provenance": "native Emberwing return copy; no fish or support injection",
+      "visual_result": "Wrapped toast overlaps interaction prompt; issue #42"
+    },
+    {
+      "capture": "toast-empty-restored",
+      "fish": {
+        "Lakeperch": 2,
+        "Silver Dace": 1,
+        "Warded Coin": 1.0
+      },
+      "lines": 1,
+      "menu": [],
+      "menu_visible": false,
+      "phase": -1,
+      "rect": [
+        40.0,
+        60.0,
+        1200.0,
+        34.0
+      ],
+      "room": "common_hall",
+      "text": "No bonds strong enough yet \u2014 fight beside your housemates.",
+      "viewed": {},
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "visible": true,
+      "visible_lines": 1,
+      "provenance": "native Emberwing return copy; no fish or support injection",
+      "visual_result": "Target toast or archive row readable; calendar resize defect #40 is separate"
+    },
+    {
+      "capture": "support-available-default",
+      "fish": {
+        "Warded Coin": 1.0
+      },
+      "lines": 1,
+      "menu": [
+        "Kai + Kael C"
+      ],
+      "menu_visible": true,
+      "phase": -1,
+      "rect": [
+        40.0,
+        60.0,
+        1200.0,
+        34.0
+      ],
+      "room": "common_hall",
+      "text": "",
+      "viewed": {},
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "visible": false,
+      "visible_lines": 1,
+      "provenance": "seeded Kai\u2013Kael C eligibility on native Emberwing return copy",
+      "visual_result": "Target toast or archive row readable; calendar resize defect #40 is separate"
+    },
+    {
+      "capture": "support-completed-default",
+      "fish": {
+        "Warded Coin": 1.0
+      },
+      "lines": 1,
+      "menu": [
+        "Kai + Kael C   \u2713"
+      ],
+      "menu_visible": true,
+      "phase": -1,
+      "rect": [
+        40.0,
+        60.0,
+        1200.0,
+        34.0
+      ],
+      "room": "common_hall",
+      "text": "",
+      "viewed": {
+        "kai_kael:C": true
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "visible": false,
+      "visible_lines": 1,
+      "provenance": "seeded Kai\u2013Kael C eligibility on native Emberwing return copy",
+      "visual_result": "Target toast or archive row readable; calendar resize defect #40 is separate"
+    },
+    {
+      "capture": "support-replayed-800",
+      "fish": {
+        "Warded Coin": 1.0
+      },
+      "lines": 1,
+      "menu": [
+        "Kai + Kael C   \u2713"
+      ],
+      "menu_visible": true,
+      "phase": -1,
+      "rect": [
+        40.0,
+        60.0,
+        720.0,
+        34.0
+      ],
+      "room": "common_hall",
+      "text": "",
+      "viewed": {
+        "kai_kael:C": true
+      },
+      "viewport": [
+        800.0,
+        450.0
+      ],
+      "visible": false,
+      "visible_lines": 1,
+      "provenance": "seeded Kai\u2013Kael C eligibility on native Emberwing return copy",
+      "visual_result": "Target toast or archive row readable; calendar resize defect #40 is separate"
+    }
+  ],
+  "calendar_resize_defect": {
+    "position": [
+      850.0,
+      12.0
+    ],
+    "size": [
+      198.0,
+      26.0
+    ],
+    "text": "Week 2 \u2014 Term begins",
+    "viewport": [
+      800.0,
+      450.0
+    ]
+  }
+}
