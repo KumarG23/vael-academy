@@ -1,0 +1,301 @@
+{
+  "graphical_sha": "2e96594e303d811a9d35dcfd7f7309069bdedc68",
+  "integration_game_sha": "11e08763abfd33b963b4c8e73732225b68b37fc8",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 13704,
+      "sha256": "69e13110645765863d9a7fe582092afe7fb049de4d6ea84bdcabad182e50a1da"
+    },
+    {
+      "path": "actions.md",
+      "bytes": 10687,
+      "sha256": "97c4b780cb956098100dec2874d9e9163a04bbdd84523ae76fb3fa2a74d3871e"
+    },
+    {
+      "path": "boss-boundary.json",
+      "bytes": 475,
+      "sha256": "534c265812d27cb9b8224689e0e5453ed6a5bffc8ad240f19690210ee0017cc8"
+    },
+    {
+      "path": "casual-recovery.json",
+      "bytes": 14820,
+      "sha256": "b70df2d6f1e4b7bd1a82bfb065bb1128b777583f8a630e1add12e0af2471fd4d"
+    },
+    {
+      "path": "classic-recovery.json",
+      "bytes": 1711,
+      "sha256": "2c3800efbda9dd7ff7483693f1da6e0c569242ee508e707e09c7c4327b90ddf0"
+    },
+    {
+      "path": "fixtures.json",
+      "bytes": 2180,
+      "sha256": "ed212c77807be7e9c77c7faef13d9fcfd604a108848788990838bc1c7d97022c"
+    },
+    {
+      "path": "images/casual-next-deployment.png",
+      "bytes": 232850,
+      "sha256": "11b3c01dc4dac0b61ab89263928f20333fccd569b3bc6a0fca547e1e54ccc75d"
+    },
+    {
+      "path": "images/casual-yields-continued.png",
+      "bytes": 234004,
+      "sha256": "96fcfd878da48cb904a37963eff3d079d9d9bb73c06ca1e824eba0cee27816ca"
+    },
+    {
+      "path": "images/classic-next-deployment.png",
+      "bytes": 232376,
+      "sha256": "5a7c4dd196fd4d9391d7ae2310c6dfbdac9f3acf0aa95f341d572cfe0d4330f9"
+    },
+    {
+      "path": "images/classic-victory.png",
+      "bytes": 184327,
+      "sha256": "b15852c13c031c133c8ac85eaa4de815fa41bc8e35a93aaba72f1c2b5951a878"
+    },
+    {
+      "path": "images/emberwing-closing-entry.png",
+      "bytes": 232845,
+      "sha256": "1e0d6ad49bb7e8f081f43a1f183e19c54e07e9f617d0a1b463c260b999fd4c79"
+    },
+    {
+      "path": "images/emberwing-closing-player-forecast.png",
+      "bytes": 229252,
+      "sha256": "7b297c734dbeecdf960ba9ab2359b92accae0b8d098b40adb3266c708c0ab463"
+    },
+    {
+      "path": "images/emberwing-closing-resumed.png",
+      "bytes": 208631,
+      "sha256": "7eedc7a671c158b23468b12213eb65a231ede9be3505a2cfa2a7aec2144584a5"
+    },
+    {
+      "path": "images/emberwing-closing-rival-combat.png",
+      "bytes": 130783,
+      "sha256": "532444ef5f4d92836126025778ecf5be6563db868d50143073c701c477c1c2f6"
+    },
+    {
+      "path": "images/emberwing-closing-victory.png",
+      "bytes": 183304,
+      "sha256": "b58de51e044204b8fabf1d3f4a491066ba5467daea66a77e316f80c6beba535c"
+    },
+    {
+      "path": "images/emberwing-opening-entry.png",
+      "bytes": 238464,
+      "sha256": "b00ea806c8472227d2e05755594815452e3c645a58631848ed0dd32414031fe6"
+    },
+    {
+      "path": "images/emberwing-opening-player-forecast.png",
+      "bytes": 235857,
+      "sha256": "050399152d6a6282db5e8115a37b33457a0201f95a34f25f457b5e58a8abc827"
+    },
+    {
+      "path": "images/emberwing-opening-resumed.png",
+      "bytes": 215846,
+      "sha256": "a0b2cd712e1fe8df47eaf0fe5958a03491a3432e3074251e60be6add88d22aa7"
+    },
+    {
+      "path": "images/emberwing-opening-rival-combat.png",
+      "bytes": 123475,
+      "sha256": "5d6b3fc2311d318ed2c08c4c47fc7d57ded804b7f6e42c72cfa0bfdecc966162"
+    },
+    {
+      "path": "images/emberwing-opening-victory.png",
+      "bytes": 179664,
+      "sha256": "c67929e526600c84a4048b036394d944b93b4911e49ac87f2d0e47120351f89f"
+    },
+    {
+      "path": "images/lord-defeat.png",
+      "bytes": 178489,
+      "sha256": "c790065cf40308685caefc448fb72338ade4d6c5b66451e9cb86fc839109b762"
+    },
+    {
+      "path": "images/lord-preloss-save-ui.png",
+      "bytes": 215590,
+      "sha256": "dfac0f48ff67512f2d42c48398601d97d68efc4a5848683b2000b38746a69a5c"
+    },
+    {
+      "path": "images/lord-resumed-defeat.png",
+      "bytes": 180890,
+      "sha256": "4ed9694f0ea5c7d1c0577e4a9491431cb7858a3833cd7de0600370d6308ef342"
+    },
+    {
+      "path": "images/lord-title-after-defeat.png",
+      "bytes": 54387,
+      "sha256": "77e9ad6865cb2b5fab37d9f8ef730eec2e03b07158e925065d72803891c16e17"
+    },
+    {
+      "path": "images/quoted-boss-cleared-continues.png",
+      "bytes": 214468,
+      "sha256": "8ef51326da2f69fa0ce0136e7d2a824e01937cb5386d17291da7bfd30b04d54e"
+    },
+    {
+      "path": "images/thornrook-closing-entry.png",
+      "bytes": 232850,
+      "sha256": "11b3c01dc4dac0b61ab89263928f20333fccd569b3bc6a0fca547e1e54ccc75d"
+    },
+    {
+      "path": "images/thornrook-closing-player-forecast.png",
+      "bytes": 227461,
+      "sha256": "069c6651ff01783e151596fd69b834cc4232c491a7ac1959927f7b93dbcc0f18"
+    },
+    {
+      "path": "images/thornrook-closing-resumed.png",
+      "bytes": 205447,
+      "sha256": "4cec546e70d01b883fca34b873ee8187bc1bdb0b7e193636f8609a3ee15ea73e"
+    },
+    {
+      "path": "images/thornrook-closing-rival-combat.png",
+      "bytes": 121201,
+      "sha256": "018dda2328bb01a1fd3d493bd22d6b6304df5d05680763aca8219799706820db"
+    },
+    {
+      "path": "images/thornrook-closing-victory.png",
+      "bytes": 174963,
+      "sha256": "2ffc23df887c21f6a499ae094824b10fc3f43c65583638a376cbe3d59edf9ed0"
+    },
+    {
+      "path": "images/thornrook-opening-entry.png",
+      "bytes": 232914,
+      "sha256": "f71b41f3fbedbb59f5af6ce1eb9c8dafa964bc3de4a752231251f038aaf0a070"
+    },
+    {
+      "path": "images/thornrook-opening-player-forecast.png",
+      "bytes": 258635,
+      "sha256": "c0955bca78a3ba98cf27973857377279f4674412694b9b4ef8c9b914c049f45b"
+    },
+    {
+      "path": "images/thornrook-opening-resumed.png",
+      "bytes": 213551,
+      "sha256": "779520266d0012a765b443245c96774d74c1c4b075ae280c68df0b3f9bf7617c"
+    },
+    {
+      "path": "images/thornrook-opening-rival-combat.png",
+      "bytes": 124417,
+      "sha256": "277282d7ba8d088b4916a023ac63e0259e2ee237596b56e55c1690fe9f8cf876"
+    },
+    {
+      "path": "images/thornrook-opening-victory.png",
+      "bytes": 189463,
+      "sha256": "30bc8302f59b9c80c19fb808ab7b3ff3416a80fa82c7fdeef7cc843da03b2656"
+    },
+    {
+      "path": "images/tidemark-closing-entry.png",
+      "bytes": 234352,
+      "sha256": "e25f66c9f57abc50e52dab12acc00a76e384798c12953e8713f53d294a1c0d43"
+    },
+    {
+      "path": "images/tidemark-closing-player-forecast.png",
+      "bytes": 232820,
+      "sha256": "23f582640b7e29f8b503a9ca73b39cb11c039e9e7f55c3b5f6275e44b34bd739"
+    },
+    {
+      "path": "images/tidemark-closing-resumed.png",
+      "bytes": 210623,
+      "sha256": "7a50ee944e10dd85faa4f41c2a20ed814d977eea61e02e519069d7947ab6453c"
+    },
+    {
+      "path": "images/tidemark-closing-rival-combat.png",
+      "bytes": 129681,
+      "sha256": "895a4974fe54a1ed02a1be512f15b348a15fa53d111ac8109ac39b3eca7ad138"
+    },
+    {
+      "path": "images/tidemark-closing-victory.png",
+      "bytes": 178912,
+      "sha256": "601f425f99ec813bc2855b9ac19a52a84ebc2772af30b1c17dcddaa352e0b8f0"
+    },
+    {
+      "path": "images/tidemark-opening-entry.png",
+      "bytes": 234377,
+      "sha256": "cf544e1ac82f83460bb9f4ae6b7c00dd9a6aa6360113b5344b03c1ca8774bdc2"
+    },
+    {
+      "path": "images/tidemark-opening-player-forecast.png",
+      "bytes": 231420,
+      "sha256": "c61030020f3366b2c4a029d4ca9d6afc28d4463dbc07833c136bca5efb5e447a"
+    },
+    {
+      "path": "images/tidemark-opening-resumed.png",
+      "bytes": 209137,
+      "sha256": "32e6dfae29b33bb3f9cbd404fe0001872a9312c9b946140edfc5fa76b93ffd76"
+    },
+    {
+      "path": "images/tidemark-opening-rival-combat.png",
+      "bytes": 145076,
+      "sha256": "68c07d2c47701372c99ff1accfec1c41f9aee58772c91d67a9b73ba40642e12c"
+    },
+    {
+      "path": "images/tidemark-opening-victory.png",
+      "bytes": 176377,
+      "sha256": "c89b193b2ac10753167b07b3e9d374dfb01338c8f79d85c0d6ce4663ad796ba8"
+    },
+    {
+      "path": "lord-loss-resume.mp4",
+      "bytes": 2119832,
+      "sha256": "678fb17e35b9fceedc3ca0835604c9f0abf4b8ace9cca3ebb212acde201a54ef"
+    },
+    {
+      "path": "lord-loss.json",
+      "bytes": 2266,
+      "sha256": "1d756a1e3379683cfc6c063660deffbb4fe4e95a05c7bd8e17c5a346f8a2f35f"
+    },
+    {
+      "path": "results.json",
+      "bytes": 72067,
+      "sha256": "8a00938c7ba980bb8844185735b90b2e81db247ea85cfb5770036b9a94bcc7b2"
+    },
+    {
+      "path": "saves/emberwing-closing.json",
+      "bytes": 14410,
+      "sha256": "06243495d8a64f81b74b444ab28e23b176fe14a9a29b8268b0e7a91d47a54211"
+    },
+    {
+      "path": "saves/emberwing-opening.json",
+      "bytes": 13772,
+      "sha256": "c156c62b43e6d6f48002d50f787751e708ec03cdef3378ceadddcd806e99a4d3"
+    },
+    {
+      "path": "saves/lord-preloss.json",
+      "bytes": 11210,
+      "sha256": "98fbef4535656448f164ca95660959ccfd45dc156141f6d3a13daf1c6db5a3c0"
+    },
+    {
+      "path": "saves/thornrook-casual-campus-return.json",
+      "bytes": 4528,
+      "sha256": "4f8158de6ef2ee327ccb82b5d86e09919f3956cda7138997f3fccd0ba3b1747a"
+    },
+    {
+      "path": "saves/thornrook-classic-campus-return.json",
+      "bytes": 6244,
+      "sha256": "92ca9cc6e7a3f0e62f59f7f4fc0d1c2742469996056baefb613c957d5dc29112"
+    },
+    {
+      "path": "saves/thornrook-classic-opening.json",
+      "bytes": 20107,
+      "sha256": "c47f8e03b947d9b4b06f209500b93a4538e7b499f54632bc7d66a5a84ac9b52b"
+    },
+    {
+      "path": "saves/thornrook-closing.json",
+      "bytes": 14724,
+      "sha256": "f103dd3419bbb3de843be78bd6d3dd66752e7632b5d161afe109355f36952d97"
+    },
+    {
+      "path": "saves/thornrook-opening.json",
+      "bytes": 17287,
+      "sha256": "1efa6a1afd2eae272f654cdee23d15ea429b80e96c56256b27d90a18fd1b097f"
+    },
+    {
+      "path": "saves/tidemark-closing.json",
+      "bytes": 16510,
+      "sha256": "c00c9912e5a4cedc314c4f006fcf026fb6bcb105471cddb5f21538821bd021c9"
+    },
+    {
+      "path": "saves/tidemark-opening.json",
+      "bytes": 16047,
+      "sha256": "4d031e383a9111d7765c6451b1d05d23af43d02dc2fc3ca63de1ed99bcba5121"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 1315,
+      "sha256": "84e616de37e6478c673b7de684fadc8448ea4312b9007dbc497afc0bf1bc38e8"
+    }
+  ]
+}
