@@ -3,7 +3,7 @@
 > **THEME (locked 2026-07-09):** *Belonging isn't given by blood — it's built by what you protect.*
 
 
-Companion to `MASTER_PLAN.md`, `WORLD_BIBLE.md`, `ACADEMY_BIBLE.md`. This is a **draft skeleton to react to**, not locked canon — the shape of the campaign so the bibles have something to hang on. Names and beats past the prologue are all open. What's already *built and tested* is noted inline so nothing here implies throwing away working code.
+Companion to `MASTER_PLAN.md`, `WORLD_BIBLE.md`, `ACADEMY_BIBLE.md`. This is a **draft skeleton for Neal’s edit**, with explicit approved structural/canon updates below taking precedence over earlier proposals. Unwritten scenes and exact calendar mapping remain open; the approved first-year sequence is not an open structural question. What's already *built and tested* is noted inline so nothing here implies throwing away working code.
 
 ---
 
@@ -41,10 +41,12 @@ The prologue now opens **before** Vael, with Kai's awakening, and only *then* mo
 
 1. **Prologue** — the awakening (forest → cave → sanctum → wake → parent reveal, VN), then the road, the raid, meet the three heirs. → arrive at Vael.
 2. **Arrival & house choice** — the mark gets noticed, the Academy reacts to a commoner in its halls, each house makes its case (now with faces the player already knows), Kai chooses. This is the full house-choice feature — the fork that changes roster, tactics, conversations, and playthrough.
-3. **Opening Clash of Three Banners** — each semester opens with the chosen house and both other houses competing as three independent factions. It is friendly and nonlethal in fiction, with normal tactical combat and defeat handling. The approved name/contract are in Neal's [#22 comments 6340423944 and 6340542559](https://github.com/KumarG23/vael-academy/issues/22#issuecomment-6340423944) (Discord decisions 1562800434702196807 and 1562802189938982935). *Historical delivery:* the current six-week sample opens with the Mock Battle at week 1, but before #29 its routed opening chapters lacked three-house parity on every route; see implementation/qualification status in MASTER_PLAN §10 GH-29 and [#29](https://github.com/KumarG23/vael-academy/issues/29). The sample's semester mapping is unresolved in [#30](https://github.com/KumarG23/vael-academy/issues/30).
-4. **The school year** — the living-castle core (`ACADEMY_BIBLE.md` §3): exploration, conversations, fishing/cooking/study, smaller missions off the War Room board, holidays and parties, exams. The kingdom mystery escalates quietly underneath the warmth.
-5. **Closing Clash of Three Banners** — each semester closes with the same three independent houses competing. Friendly/nonlethal fiction does not prevent ordinary tactical defeat. *Historical delivery:* before #29, closing chapters included both rival student rosters on a shared team. #29 separates their factions and completes the shipped rosters; engineering/graphical qualification remains tracked in MASTER_PLAN §10 GH-29. The source of the cadence and the unresolved year-end sabotage boundary are maintained in [#30](https://github.com/KumarG23/vael-academy/issues/30).
-6. **Beyond year one** — where the First Crown mystery stops being quiet and the **dead prince** steps out of the shadows (`WORLD_BIBLE.md` §3b, `VILLAIN_BIBLE.md`). Deliberately unbuilt; the slice proves the loop first, then the plan extends.
+3. **Semester 1** — opening Clash of Three Banners → slow school/relationship/mystery build including the Tremor → closing Clash and Vision at the semester-1 finale. The Vision grants usable Crownspark; exact scene ordering within that finale remains for Neal’s edit.
+4. **Between semesters** — cozy unnamed winter/holiday break: relationships, meals/traditions and personal scenes. Name and actual scenes remain unwritten.
+5. **Semester 2** — opening Clash → school and escalating mystery, with the Agent around the semester’s middle → final year-end closing Clash. Every ordinary Clash is three independent houses, friendly/nonlethal with normal tactical defeat. The final Clash has approximately 2–3 friendly rounds before a distinct hostile sabotage emergency: bonded rival students join command, unbonded rivals remain AI protect-targets.
+6. **Epilogue → next-act direction** — preserve Alaric’s half-truth and the epilogue’s royal reveal; Morvane stays an off-screen threat through the school year, not a personally attacking school boss. Kai and companions choose to pursue Morvane, motivated by the finale and a concrete lead. Exact lead, destination, timing and next-act content remain UNWRITTEN/TBD.
+
+Across school weeks: school/classes, activities, relationship development and discoveries → end-of-week tactical mission → consequences/reactions back at school. Each week advances a relationship, mystery or story element; not every week needs a major revelation. Named structural slots and open authoring work are in the [draft handoff](docs/FIRST_YEAR_AUTHORING_HANDOFF.md). These are approved structural directions from [#30 decision 6348790766](https://github.com/KumarG23/vael-academy/issues/30#issuecomment-6348790766), not new missions or adopted dialogue. #29 delivered six routed sample contests; #39 graphical acceptance remains pending. No full-year progression, break or sabotage is implemented by this document.
 
 ---
 
@@ -61,17 +63,15 @@ The whole point of un-parking house choice (`MASTER_PLAN.md` §11 → now a real
 
 ---
 
-## Approved event direction and unresolved authored boundary
+## Approved event direction and remaining authoring
 
 Neal approved the recurring, semester-opening and semester-closing **Clash of Three Banners**, three mutually competing houses, and friendly nonlethal competition with normal tactical defeat in [#22 comment 6340423944](https://github.com/KumarG23/vael-academy/issues/22#issuecomment-6340423944) (Discord decision 1562800434702196807). The name was approved in [#22 comment 6340542559](https://github.com/KumarG23/vael-academy/issues/22#issuecomment-6340542559) (Discord decision 1562802189938982935). Approved campus anticipation/reaction is direction only; new dialogue remains Neal co-write material.
 
-The 2026-07-10 co-write notes below still place the Vision at the semester-1 finale and describe the year-end rite being interrupted by sabotage, with bonded rivals joining the player's command. They are preserved as authored material. #22 did not decide whether that final sabotage is a distinct interruption of an ordinary Clash or changes its boundary, so [#30](https://github.com/KumarG23/vael-academy/issues/30) owns that clarification. The shipped six-week sample has week-1 opening / week-6 closing positions and is not yet mapped to the approved repeating semester cadence; no count, dates, or replacement week positions are inferred here. Route/objective implementation and qualification are tracked in [#29](https://github.com/KumarG23/vael-academy/issues/29).
+Neal’s [#30 decision 6348790766](https://github.com/KumarG23/vael-academy/issues/30#issuecomment-6348790766) (Discord 1562902264115494963, following 1562899716633534615) confirms two semesters, a cozy break between them, the weekly school → mission → reactions rhythm, the existing milestone order, and a distinct final sabotage after approximately 2–3 friendly rounds. The 2026-07-10 co-write remains the story basis; Claim/belonging/bonds and the off-screen threat/epilogue reveal remain intact. Morvane personally attacking students is not approved. The six-week sample is **development scaffolding**, not a definitive year or implicit semester map; fixed week numbers do not own the structural beats.
 
 ## Open / Placeholder List
-- Everything past the closing battle (intentionally blank)
-- Whether the prologue is one battle or a short prologue chapter with travel scenes around it
-- Number of "school year" missions between the two inter-house battles
-- How the mystery's escalation is paced against the calendar (a beat per term? per holiday?)
+
+See [#30](https://github.com/KumarG23/vael-academy/issues/30) and the [draft calendar authoring handoff](docs/FIRST_YEAR_AUTHORING_HANDOFF.md) for remaining decisions: exact lengths/dates and event/beat placement, weekly relationship/mystery/mission/reaction content, break name/scenes, sabotage details, concrete pursuit lead/destination/timing, and treatment of legacy saved positions. Do not ask again whether there are two semesters, whether the six weeks are scaffolding, or whether sabotage is a separate interruption. No new authored content is finalized here.
 
 
 ## ⚖ CANON UPDATE — co-write session 2026-07-10 (record: COWRITE_SESSION_2026-07-10.md)
@@ -84,13 +84,15 @@ The 2026-07-10 co-write notes below still place the Vision at the semester-1 fin
   (and grants usable Crownspark). **The Agent** lands mid-semester 2; **the
   Closing Rite** ends the year; the epilogue carries Alaric's half-truth and
   the only spoken "prince".
+**Historical W5/W6 labels below are beat identifiers from the co-write, not binding calendar indices.** The approved two-semester order above governs the later authored map.
+
 - **W5 The Agent (locked shape):** a mid-battle forced choice — chase the
   fleeing agent or save the endangered; the Patron learns of Kai either way
   (signal already sent); the branch decides cost + which clue you take. The
   agent is later recognized as one of the missing.
 - **W6 Closing Rite (locked shape):** opens house-vs-house (2–3 rounds), the
   rite is sabotaged, and **bonded rivals join the player's command** while
-  unbonded ones become protect-targets — the year's friendships literally
+  unbonded ones become AI protect-targets — the year's friendships literally
   become the army. The employer glimpse moves to the epilogue.
 - **The Returned:** freed claimed choose — join the army (roster growth
   across the campaign) or go home (visitable town NPCs, families, lit
