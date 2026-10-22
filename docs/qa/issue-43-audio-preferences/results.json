@@ -1,0 +1,378 @@
+{
+  "tested_sha": "2c3b71afd39c584ddb3079b4e81a9038b600b0d3",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Forward+ / Vulkan llvmpipe (LLVM 20.1.2, 256 bits)",
+  "entry": "Title -> Dev Jump -> Campus (existing shipped preview), then real Journal keyboard input; native campaign saves produced by this preview, not an earned school-year playthrough",
+  "observer": "External SceneTree starts the unchanged production title scene and samples live scene/audio/campaign/Journal fields every 0.2 s. All interactions use real X11 keyboard input; no volume setter, save/load handler or campaign mutator is called by the observer. Two acceptance processes use the same disposable XDG_DATA_HOME.",
+  "process_restart": "First acceptance process closed normally via Alt+F4 during New Classic Game opening; verified exit 0, then launched a different process. Second acceptance process quit via Journal Return to Title -> Quit, exit 0.",
+  "settings_sha256_after_changes_and_after_restart": "7d31194070cd912761245710c09a5f772a46c8532fd0bf29227779a21bd48789",
+  "settings_bytes_unchanged_across_three_loads_new_game_and_restart": true,
+  "observations": [
+    {
+      "label": "title-defaults",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 1.0,
+        "music": 0.7,
+        "sfx": 0.85
+      },
+      "music_db": -3.09803915023804,
+      "music_playing": false,
+      "scene": "res://scenes/title/title.tscn",
+      "voice_db": -1.41162145137787,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "campus-defaults",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 1.0,
+        "music": 0.7,
+        "sfx": 0.85
+      },
+      "music_db": -3.09803915023804,
+      "music_playing": true,
+      "scene": "res://scenes/castle/castle.tscn",
+      "voice_db": -1.41162145137787,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "journal-defaults",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": true,
+      "levels": {
+        "master": 1.0,
+        "music": 0.7,
+        "sfx": 0.85
+      },
+      "music_db": -3.09803915023804,
+      "music_playing": true,
+      "row": 6,
+      "scene": "res://scenes/castle/castle.tscn",
+      "tab": 4,
+      "voice_db": -1.41162145137787,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "journal-chosen",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": true,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "row": 8,
+      "scene": "res://scenes/castle/castle.tscn",
+      "tab": 4,
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "journal-zero-master",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": true,
+      "levels": {
+        "master": 1.38777878078145e-16,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -80.0,
+      "music_playing": true,
+      "row": 8,
+      "scene": "res://scenes/castle/castle.tscn",
+      "tab": 4,
+      "voice_db": -80.0,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "journal-restored-chosen",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": true,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "row": 8,
+      "scene": "res://scenes/castle/castle.tscn",
+      "tab": 4,
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "saved-three-campaign-slots",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": true,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "row": 2,
+      "scene": "res://scenes/castle/castle.tscn",
+      "tab": 4,
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "loaded-campaign-slot-1",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "scene": "res://scenes/castle/castle.tscn",
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "loaded-campaign-slot-2",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "scene": "res://scenes/castle/castle.tscn",
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "loaded-campaign-slot-3",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "scene": "res://scenes/castle/castle.tscn",
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "journal-after-three-loads",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": true,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "row": 0,
+      "scene": "res://scenes/castle/castle.tscn",
+      "tab": 4,
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "returned-to-title",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "scene": "res://scenes/title/title.tscn",
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "new-classic-opening",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": false,
+      "scene": "res://scenes/flow/opening.tscn",
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "fresh-process-title-restored",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": false,
+      "scene": "res://scenes/title/title.tscn",
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "fresh-title-first-input",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": false,
+      "scene": "res://scenes/title/title.tscn",
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "fresh-process-first-music",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": false,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "scene": "res://scenes/castle/castle.tscn",
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    },
+    {
+      "label": "fresh-process-journal-restored",
+      "casual": false,
+      "house": "emberwing",
+      "journal_open": true,
+      "levels": {
+        "master": 0.6,
+        "music": 0.4,
+        "sfx": 0.55
+      },
+      "music_db": -12.3957748413086,
+      "music_playing": true,
+      "row": 0,
+      "scene": "res://scenes/castle/castle.tscn",
+      "tab": 4,
+      "voice_db": -9.62972164154053,
+      "voice_playing": false,
+      "week": 1
+    }
+  ],
+  "campaign_saves": [
+    {
+      "file": "slot_0.json",
+      "sha256": "c0150c5b7e599f3a294e4eb9372f0daba9a060f9d77f7f2e23f8170f7cf2967b",
+      "contains_audio_preferences": false
+    },
+    {
+      "file": "slot_1.json",
+      "sha256": "61c6bf50c9b29078b795e00419aa4682061cc0de35220f622f46e47530467148",
+      "contains_audio_preferences": false
+    },
+    {
+      "file": "slot_2.json",
+      "sha256": "6c06d8eac4228e251ad60607e868332eeca5019808e8dd5a639a1b2b49486f0b",
+      "contains_audio_preferences": false
+    }
+  ],
+  "output_monitor": {
+    "format": "signed 16-bit PCM, stereo, 48000 Hz; existing PulseAudio virtual sink monitor",
+    "measurements": {
+      "music-default": {
+        "peak": 15049,
+        "rms": 2607.8003,
+        "frames": 47615,
+        "rate": 48000
+      },
+      "music-chosen": {
+        "peak": 5625,
+        "rms": 1082.3639,
+        "frames": 47662,
+        "rate": 48000
+      },
+      "music-zero-master": {
+        "peak": 2,
+        "rms": 0.6974,
+        "frames": 48001,
+        "rate": 48000
+      },
+      "first-title-sfx": {
+        "peak": 3703,
+        "rms": 396.4208,
+        "frames": 95986,
+        "rate": 48000
+      },
+      "music-after-relaunch": {
+        "peak": 3817,
+        "rms": 848.612,
+        "frames": 47976,
+        "rate": 48000
+      }
+    },
+    "limitations": "Different music positions; RMS values establish functional attenuation, not a calibrated gain ratio. Displayed zero has a 1.39e-16 float residual and uses the existing -80 dB floor. No speaker/headphone listening or taste approval. New Classic Game public opening showed Oakstead with no active narration in sampled frames; narration startup restoration remains covered by the fresh-process headless production fixture, not a claimed graphical voice playback."
+  },
+  "captures_inspected": [
+    "02-journal-defaults.png",
+    "03-journal-chosen.png",
+    "04-zero-master.png",
+    "06-after-slot-loads.png",
+    "08-new-game-opening.png",
+    "10-fresh-journal-restored.png"
+  ],
+  "accepted_run_logs": "Both graphical acceptance processes report Forward+ and no script/runtime errors. Preparatory observer setup is not counted as an acceptance process.",
+  "gui_released": true
+}
