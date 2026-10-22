@@ -1266,14 +1266,16 @@ func _is_player_unit_id(id: String) -> bool:
 
 # --- chapter dialogue (WO-4.1) ---------------------------------------------------
 
-## Play a JSON dialogue script as a VN overlay and await its end. No-ops when
-## dialogue is disabled (tests), the path is empty, or the script fails to parse.
+## Play a JSON dialogue script as a VN overlay and await its end. Returns false
+## without playing when dialogue is disabled (tests), the path is empty, or the
+## script is missing/malformed/empty — callers must not record those as watched.
 func _play_dialogue(path: String) -> bool:
 	if not dialogue_enabled or path == "":
 		return false
 	var script := DialogueScript.from_file(path)
-	if not script.ok():
-		push_warning("battle dialogue skipped (%s): %s" % [path, script.error])
+	if not script.is_playable():
+		var why := script.error if script.error != "" else "empty script"
+		push_warning("battle dialogue skipped (%s): %s" % [path, why])
 		return false
 	_dialogue_playing = true
 	if _cursor != null:

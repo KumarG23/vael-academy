@@ -162,7 +162,7 @@ func _play_support_entry(index: int) -> void:
 		return
 	var path: String = str(_hall_entries[index].get("path", ""))
 	var dialogue := DialogueScript.from_file(path)
-	if not dialogue.ok() or dialogue.size() == 0:
+	if not dialogue.is_playable():
 		_info.append("(that conversation isn't written yet)")
 		queue_redraw()
 		return

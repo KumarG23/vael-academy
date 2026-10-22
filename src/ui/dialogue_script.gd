@@ -129,6 +129,13 @@ func ok() -> bool:
 	return error == ""
 
 
+## A script can be shown only when it parsed cleanly and has at least one step.
+## Callers that record a scene as consumed (the support archives) must not treat
+## a missing, malformed or empty file as a watched conversation.
+func is_playable() -> bool:
+	return ok() and not steps.is_empty()
+
+
 func size() -> int:
 	return steps.size()
 
