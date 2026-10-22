@@ -139,6 +139,7 @@ func _ready() -> void:
 	_prompt.add_theme_color_override("font_color", Color(0.98, 0.9, 0.55))
 	_prompt.add_theme_color_override("font_outline_color", Color(0.1, 0.08, 0.05))
 	_prompt.add_theme_constant_override("outline_size", 6)
+	_prompt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_prompt.visible = false
 	_ui.add_child(_prompt)
 	_date_label = Label.new()
@@ -193,6 +194,7 @@ func _ready() -> void:
 	next_spawn = Vector2i(-1, -1)
 	enter_room(target, spawn)
 	_refresh_date()
+	get_viewport().size_changed.connect(_queue_prompt_relayout)
 
 
 ## WO-9.3 (first slice): campus background music — one looping bed for the
@@ -369,7 +371,14 @@ func _process(delta: float) -> void:
 	queue_redraw()  # door markers pulse
 	if _occluder != null:
 		_occluder.queue_redraw()  # AW-47: keep occlusion in step with the avatar
-	if room == null or busy():
+	if room == null:
+		return
+	if busy():
+		# The menu pauses world movement, but the HUD still follows the camera
+		# when the native window is resized underneath an open overlay.
+		if _nearest_point != null and _prompt.visible:
+			var screen := get_viewport().get_canvas_transform() * _avatar.position
+			_layout_prompt(screen + Vector2(-60, -120))
 		return
 	var move := Vector2(Input.get_axis("ui_left", "ui_right"),
 		Input.get_axis("ui_up", "ui_down"))
@@ -443,8 +452,46 @@ func _update_prompt() -> void:
 		return
 	_prompt.text = "▶ " + _nearest_point.label
 	var screen := (get_viewport().get_canvas_transform() * _avatar.position)
-	_prompt.position = screen + Vector2(-60, -120)
 	_prompt.visible = true
+	_layout_prompt(screen + Vector2(-60, -120))
+
+
+func _queue_prompt_relayout() -> void:
+	# Let anchored controls (including the toast's wrapped height) finish their
+	# viewport layout before checking the label rectangles.
+	call_deferred("_on_viewport_size_changed")
+
+
+func _on_viewport_size_changed() -> void:
+	# The prompt is a CanvasLayer control, so it needs a fresh screen position
+	# even while an archive/menu is open and _process() is paused by busy().
+	if _nearest_point != null and is_instance_valid(_avatar):
+		var screen := get_viewport().get_canvas_transform() * _avatar.position
+		_layout_prompt(screen + Vector2(-60, -120))
+
+
+func _layout_prompt(preferred: Vector2) -> void:
+	var view_size := get_viewport_rect().size
+	var margin := 12.0
+	var max_width := maxf(0.0, view_size.x - margin * 2.0)
+	var font := _prompt.get_theme_font("font")
+	var font_size := _prompt.get_theme_font_size("font_size")
+	var text_width := font.get_string_size(_prompt.text, HORIZONTAL_ALIGNMENT_LEFT,
+		-1.0, font_size).x
+	var width := minf(max_width, text_width + 8.0)
+	var text_size := font.get_multiline_string_size(_prompt.text,
+		HORIZONTAL_ALIGNMENT_LEFT, maxf(1.0, width - 8.0), font_size)
+	_prompt.size = Vector2(width, text_size.y + 12.0)
+	var x := clampf(preferred.x, margin, maxf(margin, view_size.x - margin - _prompt.size.x))
+	var y := clampf(preferred.y, margin, maxf(margin, view_size.y - margin - _prompt.size.y))
+	var prompt_rect := Rect2(Vector2(x, y), _prompt.size)
+	if _toast_label.visible and prompt_rect.intersects(_toast_label.get_global_rect()):
+		# Keep both labels readable at compact sizes. Place the affordance just
+		# below wrapped feedback, then clamp it to the viewport if needed.
+		y = _toast_label.get_global_rect().end.y + 8.0
+		if y + _prompt.size.y > view_size.y - margin:
+			y = maxf(margin, _toast_label.get_global_rect().position.y - _prompt.size.y - 8.0)
+	_prompt.position = Vector2(x, y)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -695,6 +742,9 @@ func _toast(text: String) -> void:
 	_toast_label.offset_bottom = TOAST_TOP  # re-fit height to this text's wrapped lines
 	_toast_label.visible = true
 	_toast_left = 2.6
+	if _nearest_point != null and _prompt.visible:
+		var screen := get_viewport().get_canvas_transform() * _avatar.position
+		_layout_prompt(screen + Vector2(-60, -120))
 
 
 func _level_xp_text(id: String) -> String:
