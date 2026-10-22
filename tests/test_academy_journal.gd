@@ -6,9 +6,14 @@ extends GutTest
 const TEST_SLOT := 2  # keep clear of a player's slots 0/1 during the run
 
 var _journal
+var _prefs_path: String
+var _music_volume: float
 
 
 func before_each() -> void:
+	_prefs_path = AudioManager.prefs_path
+	_music_volume = AudioManager.music_volume
+	AudioManager.prefs_path = "user://test_journal_preferences_%d.cfg" % Time.get_ticks_usec()
 	Campaign.reset_new_game(false)
 	_journal = load("res://src/ui/academy_journal.gd").new()
 	# AW-76 (Codex finding #4): never touch the player's real user://saves
@@ -18,6 +23,9 @@ func before_each() -> void:
 
 
 func after_each() -> void:
+	DirAccess.remove_absolute(AudioManager.prefs_path)
+	AudioManager.prefs_path = _prefs_path
+	AudioManager.music_volume = _music_volume
 	Campaign.reset_new_game(false)
 
 
