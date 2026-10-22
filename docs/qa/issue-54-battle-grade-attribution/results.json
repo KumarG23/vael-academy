@@ -1,0 +1,99 @@
+{
+  "source": "3ea481805a22e1edc9eca04fab11863772537ebb",
+  "source_game_and_tests_identical_to": "62d2562e19abbe72d21283b647cb487fb604351f",
+  "engine": "Godot 4.7.2",
+  "renderer": "Vulkan Forward+ / llvmpipe",
+  "desktop": [
+    1280,
+    720
+  ],
+  "entry": "Title Load campus slot -> Mission Board -> fresh ChapterRegistry closing -> preparations Begin battle",
+  "native_checkpoint": "docs/qa/issue-5-school-loop/emberwing-return-save.json",
+  "native_checkpoint_sha256": "681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4",
+  "fixture_deltas": {
+    "grade_samples": {
+      "before": {
+        "arena_best_wave": 0.0,
+        "battle_scores": [
+          88.0,
+          40
+        ],
+        "conduct_points": 2.0,
+        "quiz_scores": []
+      },
+      "after": {
+        "quiz_scores": [],
+        "battle_scores": [],
+        "arena_best_wave": 0,
+        "conduct_points": 0
+      }
+    },
+    "semester": {
+      "before": 1,
+      "after": 2
+    },
+    "week": {
+      "before": 2,
+      "after": 6
+    }
+  },
+  "battle": {
+    "chapter_id": "closing_rite_emberwing",
+    "round": 6,
+    "fielded": 7,
+    "survivors": [
+      "kael",
+      "kai"
+    ],
+    "yielded": [
+      "perrin",
+      "brenna",
+      "wren",
+      "dain",
+      "liora"
+    ],
+    "permanent_losses": [],
+    "battle_score": 40,
+    "expected_locked_score": 53,
+    "actual_locked_cards": [
+      {
+        "rank": "C",
+        "rank_name": "Passing",
+        "score": 53,
+        "semester": 2
+      }
+    ],
+    "next_samples": {
+      "arena_best_wave": 0,
+      "battle_scores": [],
+      "conduct_points": 0,
+      "quiz_scores": []
+    },
+    "week": 7,
+    "semester": 3
+  },
+  "checks": {
+    "all_rivals_routed": true,
+    "victory": true,
+    "campaign_before_save_equals_after_fresh_load": true,
+    "real_ui_save_equals_real_ui_resave": true,
+    "no_script_errors": true
+  },
+  "limits": [
+    "Declared calendar/neutral-input fixture; no full-year playthrough",
+    "No injected HP, damage, combat result or progression",
+    "Existing year-end ceremony/reward omission is #56; authored mapping remains #30",
+    "Semester 3 / next-report Week 6 display is unchanged scaffold arithmetic, not canon",
+    "Screenshots are unaltered and visually inspected; no Neal creative approval"
+  ],
+  "accepted_main_integration": {
+    "main": "f64d2522",
+    "integration": "410d93c3",
+    "delta": "accepted #42 castle prompt layout, tests and evidence; no completion/grading/Journal/save boundary change",
+    "focused_tests": 15,
+    "focused_assertions": 299,
+    "exit_code": 0,
+    "script_errors": false,
+    "isolated_resource_exit_diagnostics": true
+  }
+}
