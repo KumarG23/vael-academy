@@ -77,13 +77,13 @@ BLOCKED_REASONS = ('session_limit', 'usage_limit', 'rate_limit', 'quota_exceeded
 RESET_PROVENANCES = ('provider_error_text', 'provider_error_field', 'provider_retry_after', 'unknown')
 HANDOFF_KINDS = ('cross_provider_reassign', 'same_provider_reassign', 'same_owner_resume_after_cooldown')
 QUOTA_DECISIONS = ('pending', 'wait', 'reassign', 'escalate', 'resumed')
-POLL_OUTCOMES = ('paused', 'locked', 'lock_contention', 'deferred_workers_running',
+POLL_OUTCOMES = ('outside_work_hours', 'paused', 'locked', 'lock_contention', 'deferred_workers_running',
                  'no_work_workers_running', 'dirty_checkout', 'no_wake_reason', 'unchanged',
                  'exhausted_empty_queue', 'quota_cooldown', 'error', 'observation_unavailable', 'preflight_failed',
                  'inference_success', 'inference_failed', 'unmatched_activation_unknown',
                  'no_inference_unrecorded', 'service_failed_unrecorded')
 VERIFIED_ZERO_MODEL_OUTCOMES = (
-    'paused', 'locked', 'lock_contention', 'deferred_workers_running',
+    'outside_work_hours', 'paused', 'locked', 'lock_contention', 'deferred_workers_running',
     'no_work_workers_running', 'no_wake_reason', 'unchanged',
     'exhausted_empty_queue', 'quota_cooldown', 'observation_unavailable',
 )

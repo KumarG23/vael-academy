@@ -31,6 +31,13 @@ var muted := false:
 		muted = v
 		_apply_mute()
 
+# Issue #43 (M9.6): the three levels are player-installation preferences, kept
+# in their own ConfigFile beside — never inside — campaign/battle saves.
+const PREFS_PATH := "user://settings.cfg"
+const PREFS_SECTION := "audio"
+const DEFAULT_LEVELS := {"master_volume": 1.0, "music_volume": 0.7, "sfx_volume": 0.85}
+var prefs_path := PREFS_PATH  # tests point this at a disposable file
+
 var _sfx_cache := {}
 var _voices: Array[AudioStreamPlayer] = []
 var _next := 0
@@ -40,6 +47,9 @@ var _voice: AudioStreamPlayer  # AW-78: the narrator's own channel (VN scenes)
 
 
 func _ready() -> void:
+	# Autoloads are ready before the main scene, so the first title/dialogue
+	# sound already plays at the player's saved levels.
+	load_preferences()
 	process_mode = Node.PROCESS_MODE_ALWAYS  # audio keeps going through pauses
 	for i in range(VOICES):
 		var p := AudioStreamPlayer.new()
@@ -49,6 +59,7 @@ func _ready() -> void:
 	add_child(_music)
 	_voice = AudioStreamPlayer.new()
 	add_child(_voice)
+	_apply_volumes()
 	# AW-36: global game beats chime through here, wherever they fire from.
 	EventBus.support_rank_up.connect(func(_pair: String, _rank: String) -> void: play_sfx("rank_up"))
 	EventBus.battle_won.connect(func() -> void: play_sfx("victory"))
@@ -160,6 +171,53 @@ func _apply_volumes() -> void:
 		_voice.volume_db = _sfx_db()
 	for p in _voices:
 		p.volume_db = _sfx_db()
+
+
+## Issue #43: restore the saved levels from `prefs_path`. Read-only — the file is
+## never rewritten here. A missing or unparseable file keeps today's defaults;
+## each level is validated on its own, so one bad entry can't cost the others:
+## an absent, non-numeric (string/bool/…) or non-finite value uses that level's
+## default, and a finite number outside 0..1 is clamped into range (the same
+## bounds the Journal steps within).
+func load_preferences() -> Error:
+	var cfg := ConfigFile.new()
+	var err := ERR_FILE_NOT_FOUND
+	if FileAccess.file_exists(prefs_path):
+		err = cfg.load(prefs_path)
+		if err != OK:
+			push_warning("Audio preferences unreadable (%s): %s — using defaults" % [error_string(err), prefs_path])
+	for key: String in DEFAULT_LEVELS:
+		var level: float = DEFAULT_LEVELS[key]
+		if err == OK and cfg.has_section_key(PREFS_SECTION, key):
+			var v: Variant = cfg.get_value(PREFS_SECTION, key)
+			if (v is float or v is int) and is_finite(float(v)):
+				level = clampf(float(v), 0.0, 1.0)
+			else:
+				push_warning("Audio preference %s=%s is not a finite number — using %s" % [key, var_to_str(v), level])
+		set(key, level)
+	return err
+
+
+## Issue #43: write the current levels to `prefs_path`. Other sections/keys in a
+## readable file are kept; an unreadable one is replaced, since there is nothing
+## coherent left to keep. Written to a temp file and renamed over the old one so
+## a failed write never truncates the player's settings. Failure is reported,
+## never fatal — the live levels keep applying for this session.
+func save_preferences() -> Error:
+	var cfg := ConfigFile.new()
+	if FileAccess.file_exists(prefs_path) and cfg.load(prefs_path) != OK:
+		cfg = ConfigFile.new()
+	for key: String in DEFAULT_LEVELS:
+		cfg.set_value(PREFS_SECTION, key, get(key))
+	var tmp := prefs_path + ".tmp"
+	var err := cfg.save(tmp)
+	if err == OK:
+		err = DirAccess.rename_absolute(tmp, prefs_path)
+	if err != OK:
+		if FileAccess.file_exists(tmp):
+			DirAccess.remove_absolute(tmp)
+		push_warning("Audio preferences not saved (%s): %s" % [error_string(err), prefs_path])
+	return err
 
 
 func set_muted(on: bool) -> void:
