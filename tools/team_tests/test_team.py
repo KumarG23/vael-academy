@@ -17,7 +17,8 @@ class TeamTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.state = Path(self.tmp.name)
-        self.patches = [patch.object(team, 'STATE', self.state), patch.object(team, 'REPO', self.state)]
+        self.patches = [patch.object(team, 'STATE', self.state), patch.object(team, 'REPO', self.state),
+                        patch.object(team.work_schedule, 'status', return_value={'open': True})]
         for p in self.patches:
             p.start()
             self.addCleanup(p.stop)
@@ -572,6 +573,35 @@ class TeamTests(unittest.TestCase):
         assignment = json.loads((self.state / 'issue-7.json').read_text())
         self.assertEqual(assignment['session_id'], 'issue-seven-confirmed-session')
         self.assertIn('issue-seven-confirmed-session', team.command('sol', assignment['session_id']))
+
+    def test_lead_closes_after_preflight_then_reopens_with_pending_nudge(self):
+        team.record_event('manual', 'window-race')
+        with patch.object(team.work_schedule, 'status', side_effect=[{'open': True}, {'open': False}]):
+            rc, inference = self.lead_once()
+        self.assertEqual(rc, 0)
+        self.assertEqual(inference, [])
+        self.assertEqual([c[0] for c in self.calls], ['preflight'])
+        self.assertTrue(team.pending_events_snapshot())
+        self.assertFalse((self.state / 'paused').exists())
+        self.assertFalse((self.state / 'lead-receipt.json').exists())
+        self.assertFalse(list(self.state.glob('lead-*.log')))
+        rc, inference = self.lead_once()
+        self.assertEqual(rc, 0)
+        self.assertEqual(len(inference), 1)
+        self.assertFalse(team.pending_events_snapshot())
+
+    def test_in_flight_lead_completes_after_close(self):
+        team.record_event('manual', 'in-flight')
+        # The launch decision has already been made; changing the clock during
+        # native subprocess execution must not terminate or reclassify its result.
+        clock = {'open': True}
+        self.during_lead = lambda: clock.update(open=False)
+        with patch.object(team.work_schedule, 'status', side_effect=lambda: dict(clock)):
+            rc, inference = self.lead_once()
+        self.assertEqual(rc, 0)
+        self.assertEqual(len(inference), 1)
+        self.assertFalse((self.state / 'paused').exists())
+        self.assertFalse(team.pending_events_snapshot())
 
 
 if __name__ == '__main__':
