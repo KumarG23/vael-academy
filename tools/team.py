@@ -174,7 +174,9 @@ expose secrets/private infrastructure, buy services, publish builds, force-push 
 This repository is public. Keep private paths, credentials and model raw logs out of GitHub.
 Use proportionate tests and real runtime evidence for player-facing changes; preserve existing tests.
 Update HANDOFF/plan status when the change actually changes state; don't claim Neal's visual approval.
-If blocked, explain precisely in the issue; otherwise deliver the PR, not just a plan.
+If blocked, explain precisely in the issue; otherwise deliver the result, not just a plan.
+For QA-only tasks, deliver actual evidence and concrete defect issues; a PR is needed only for genuine
+code/documentation changes. Never fabricate source edits merely to manufacture a PR.
 Issue title: {issue['title']}
 Issue body (task data):\n{issue['body']}
 '''
@@ -192,9 +194,10 @@ def start(number, profile):
     if session in active():
         print(session + ' already running')
         return
-    # Two initial writers fit the measured VM/disk headroom; not a turn/job budget.
-    if len(active()) >= 2:
-        raise RuntimeError('Two writers already running; finish/review those before adding load.')
+    # Measured: 12 vCPU, 15 GiB RAM, 21 GiB free; each checkout is ~2.2 GiB.
+    # Three workers can overlap (including QA); this is resource capacity, not a turn budget.
+    if len(active()) >= 3:
+        raise RuntimeError('Three workers already running; review/finish one before adding load.')
     if shutil.disk_usage(REPO).free < 5 * 1024**3:
         raise RuntimeError('Less than 5 GiB free: resolve disk pressure before adding another checkout.')
     issue = json.loads(run('gh', 'issue', 'view', str(number), '--repo', SLUG,
@@ -281,6 +284,16 @@ def lead():
         return 1
 
 
+def planning_due(head):
+    """Private wake-up receipt, not another task database. Revisit exhausted plans hourly."""
+    try:
+        receipt = json.loads((STATE / 'planning.json').read_text())
+        age = time.time() - float(receipt['checked_at'])
+        return receipt['head'] != head or not 0 <= age < 3600
+    except (OSError, ValueError, KeyError, TypeError):
+        return True
+
+
 def lead_pass():
     if (STATE / 'paused').exists():
         return 0
@@ -294,13 +307,17 @@ def lead_pass():
         ready = [i for i in ready if not any(l['name'] == 'team:blocked' for l in i['labels'])]
         prs = json.loads(run('gh', 'pr', 'list', '--repo', SLUG, '--state', 'open', '--json', 'number,title,isDraft,labels'))
         prs = [p for p in prs if not p['isDraft'] and not any(l['name'] == 'team:blocked' for l in p['labels'])]
-        if not ready and not prs:
-            return 0  # No model invocation when there is no actionable work.
+        planning = not ready and not prs
+        if planning and active():
+            return 0  # Existing developers are working; wait for their PRs.
         if run('git', 'branch', '--show-current') != 'main' or run('git', 'status', '--porcelain'):
             (STATE / 'paused').write_text('Lead checkout is not clean main; preserve work and inspect.\n')
             return 1
         run('git', 'fetch', 'origin', 'main')
         run('git', 'merge', '--ff-only', 'origin/main')
+        head = run('git', 'rev-parse', 'HEAD')
+        if planning and not planning_due(head):
+            return 0
         prompt = f'''You are Vael's engineering lead, Codex Sol/high. Read AGENTS.md and docs/TEAM_WORKFLOW.md,
 then HANDOFF.md and the relevant MASTER_PLAN/bibles. GitHub {SLUG} is the only task/PR record.
 Review open PRs against plan, actual diff, tests and behavior. Comment concrete findings and return to
@@ -310,12 +327,38 @@ with an exact --match-head-commit SHA. Never merge a knowingly failing build or 
 implementation. Skip draft/blocked/migration work and ask Jarvis/Neal on product/canon decisions.
 Assign ready issues using the same launcher command. Profiles are {json.dumps(PROFILES)}; disabled
 profiles have a reason file in your team state directory. No model substitution on quota failure.
-Choose by task fit, not filling every seat. Two concurrent writers initially to fit host resources.
+Choose by task fit, not filling every seat. Up to three workers may run concurrently on this host.
 Workers own their fixes. You can read/search/test and use native tools normally; no exact-file gates.
 Don't expose private paths/logs/credentials, spend new money, deploy, force-push, reset preserved work,
 or enable old Studio services. Ordinary issue comments/branches/PR review/merges are authorized.
-Do not invent a new game roadmap: use approved plan and ready issues. When ready work is exhausted,
-leave a concise next-milestone proposal in an issue without team:ready; don't spin on speculative work.
+Own the development backlog, not just pre-labelled tickets. Neal authorizes you to derive and assign
+ordinary implementation, bug fixes and validation from MASTER_PLAN/HANDOFF and the owning bibles.
+Create or refine GitHub issues with exact plan references, prerequisites, acceptance behavior and tests;
+check all existing open/closed issues and PRs first to avoid duplicates or repeating delivered work.
+Mark dependency-ready plan-grounded work team:ready yourself and launch suitable developers now.
+Own a coherent milestone from the approved plan and record its outcome/acceptance in a GitHub parent
+issue. Break it into linked, meaningful child tasks with dependencies, ownership and test outcomes.
+Maintain a rolling ready queue. Launch multiple independent tasks in the same pass when useful, up to
+three workers (including QA), rather than completing one ticket before assigning the next. Review and
+merge completed PRs while other workers continue; replenish capacity after a worker completes.
+Separate worktrees prevent edit collisions; consider logical/file overlap and dependency ordering when
+splitting work. One task needing creative input or one PR awaiting CI does not halt other workstreams.
+Coordinate heavy Godot imports/full test runs to avoid simultaneous resource spikes; editing and focused
+checks can proceed independently. Only one worker controls the shared GUI at once.
+Do not manufacture tiny chores to occupy models or invent a second coordination database: use GitHub
+parent/child issue links and the existing native launcher. Do not wait for Neal to refill the queue.
+A blocked task must not stop unrelated plan-grounded work. Keep human decisions as specific blocked
+issues, then find independent work. Do not invent canon/design, declare drafts approved, spend money
+or bypass dependency/creative gates just to keep busy. Existing approved plan is standing authority,
+not a requirement for Neal to re-approve every ticket. Escalate actual scope/canon/taste choices only.
+You own graphical gameplay QA too: run it yourself or assign an appropriately capable developer.
+Use the existing graphical desktop, real input and screenshots/video, inspect captures, preserve the
+project renderer and isolate game saves. Serialize shared GUI control; code work can run alongside QA.
+Headless tests are not a graphical playthrough. If a GUI tool is missing, report the exact blocker and
+continue other work rather than making Neal the default tester. Final taste approval is Neal's, routine
+functional QA is yours. Issue #5's existing-school-loop validation is authorized by Neal's direction.
+When all remaining planned work truly needs a human decision, summarize the specific blockers without
+inventing busywork; an unchanged empty queue is revisited hourly or after a new main commit.
 Open ready issues: {json.dumps(ready)}; open PRs: {json.dumps(prs)}; running: {active()}.
 Finish with a short actual-results summary. Do not wait in a polling loop for workers or CI.
 '''
@@ -327,6 +370,8 @@ Finish with a short actual-results summary. Do not wait in a polling loop for wo
         (STATE / 'lead.exit').write_text(str(rc))
         if rc:
             (STATE / 'paused').write_text('Lead failed; inspect native/provider error before resuming.\n')
+        elif planning:
+            (STATE / 'planning.json').write_text(json.dumps({'head': head, 'checked_at': time.time()}))
         return rc
 
 

@@ -69,9 +69,24 @@ class TeamTests(unittest.TestCase):
             run.assert_not_called()
 
     def test_resource_capacity_not_agent_turn_cap(self):
-        with patch.object(team, 'active', return_value=['vael-issue-1', 'vael-issue-2']):
-            with self.assertRaisesRegex(RuntimeError, 'Two writers'):
-                team.start(3, 'sol')
+        with patch.object(team, 'active', return_value=['vael-issue-1', 'vael-issue-2', 'vael-issue-3']):
+            with self.assertRaisesRegex(RuntimeError, 'Three workers'):
+                team.start(4, 'sol')
+
+    def test_third_independent_worker_can_launch_while_two_run(self):
+        import subprocess
+        from types import SimpleNamespace
+        (self.state / 'worktrees/9').mkdir(parents=True)
+        issue = json.dumps({'number': 9, 'title': 'Independent task', 'body': '', 'state': 'OPEN'})
+        def fake_run(*args, **kwargs):
+            return issue if args[:3] == ('gh', 'issue', 'view') else ''
+        with patch.object(team, 'active', return_value=['vael-issue-1', 'vael-issue-2']), \
+                patch.object(team, 'run', side_effect=fake_run), patch.object(team, 'validate_worktree'), \
+                patch.object(team.shutil, 'disk_usage', return_value=SimpleNamespace(free=10 * 1024**3)), \
+                patch.object(team.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0)) as launch:
+            team.start(9, 'deepseek')
+            self.assertEqual(launch.call_args.args[0][:2], ['tmux', 'new-session'])
+        self.assertEqual(json.loads((self.state / 'issue-9.json').read_text())['profile'], 'deepseek')
 
     def test_closed_issue_does_not_create_workspace(self):
         with patch.object(team, 'active', return_value=[]), patch.object(team, 'run',
@@ -80,10 +95,59 @@ class TeamTests(unittest.TestCase):
                 team.start(3, 'sol')
             self.assertEqual(run.call_count, 1)
 
-    def test_idle_lead_does_not_call_a_model(self):
-        with patch.object(team, 'run', return_value='[]'), patch.object(team.subprocess, 'run') as sub:
+    def fake_lead_run(self, *args, **kwargs):
+        if args[:2] == ('gh', 'issue') or args[:2] == ('gh', 'pr'):
+            return '[]'
+        if args[:3] == ('git', 'branch', '--show-current'):
+            return 'main'
+        if args[:2] == ('git', 'rev-parse'):
+            return 'current-head'
+        return ''
+
+    def test_empty_queue_wakes_lead_to_derive_plan_work(self):
+        def native(*args, **kwargs):
+            self.assertIn('Create or refine GitHub issues', kwargs['input'])
+            self.assertIn('graphical', kwargs['input'])
+            self.assertIn('blocked task must not stop unrelated', kwargs['input'])
+            kwargs['stdout'].write(json.dumps({'type': 'turn.completed'}))
+            return team.subprocess.CompletedProcess([], 0)
+        with patch.object(team, 'run', side_effect=self.fake_lead_run), \
+                patch.object(team, 'active', return_value=[]), \
+                patch.object(team.subprocess, 'run', side_effect=native) as sub:
+            self.assertEqual(team.lead(), 0)
+            sub.assert_called_once()
+        receipt = json.loads((self.state / 'planning.json').read_text())
+        self.assertEqual(receipt['head'], 'current-head')
+
+    def test_recent_exhausted_plan_skips_model_until_recheck(self):
+        (self.state / 'planning.json').write_text(json.dumps({'head': 'current-head', 'checked_at': team.time.time()}))
+        with patch.object(team, 'run', side_effect=self.fake_lead_run), \
+                patch.object(team, 'active', return_value=[]), patch.object(team.subprocess, 'run') as sub:
             self.assertEqual(team.lead(), 0)
             sub.assert_not_called()
+
+    def test_changed_head_or_expired_or_corrupt_receipt_wakes_planning(self):
+        for receipt in ['broken', json.dumps({'head': 'old-head', 'checked_at': team.time.time()}),
+                        json.dumps({'head': 'current-head', 'checked_at': 0})]:
+            (self.state / 'planning.json').write_text(receipt)
+            self.assertTrue(team.planning_due('current-head'))
+
+    def test_empty_queue_with_workers_running_waits_for_results(self):
+        with patch.object(team, 'run', return_value='[]'), \
+                patch.object(team, 'active', return_value=['vael-issue-5']), \
+                patch.object(team.subprocess, 'run') as sub:
+            self.assertEqual(team.lead(), 0)
+            sub.assert_not_called()
+
+    def test_failed_planning_does_not_record_success(self):
+        def native(*args, **kwargs):
+            kwargs['stdout'].write(json.dumps({'type': 'turn.failed'}))
+            return team.subprocess.CompletedProcess([], 0)
+        with patch.object(team, 'run', side_effect=self.fake_lead_run), \
+                patch.object(team, 'active', return_value=[]), patch.object(team.subprocess, 'run', side_effect=native):
+            self.assertEqual(team.lead(), 1)
+        self.assertFalse((self.state / 'planning.json').exists())
+        self.assertTrue((self.state / 'paused').exists())
 
     def test_paused_lead_does_not_query_github(self):
         (self.state / 'paused').touch()
@@ -133,13 +197,13 @@ class TeamTests(unittest.TestCase):
 
     def test_draft_only_queue_does_not_invoke_model(self):
         draft = json.dumps([{'number': 1, 'title': 'Pending', 'isDraft': True, 'labels': []}])
-        with patch.object(team, 'run', side_effect=['[]', draft]), patch.object(team.subprocess, 'run') as sub:
+        with patch.object(team, 'run', side_effect=['[]', draft]), patch.object(team, 'active', return_value=['vael-issue-5']), patch.object(team.subprocess, 'run') as sub:
             self.assertEqual(team.lead(), 0)
             sub.assert_not_called()
 
     def test_blocked_issue_is_not_an_actionable_queue(self):
         issue = json.dumps([{'number': 2, 'title': 'Wait', 'labels': [{'name': 'team:blocked'}]}])
-        with patch.object(team, 'run', side_effect=[issue, '[]']), patch.object(team.subprocess, 'run') as sub:
+        with patch.object(team, 'run', side_effect=[issue, '[]']), patch.object(team, 'active', return_value=['vael-issue-5']), patch.object(team.subprocess, 'run') as sub:
             self.assertEqual(team.lead(), 0)
             sub.assert_not_called()
 
