@@ -68,6 +68,54 @@ func test_bandit_force_spawned():
 	assert_not_null(boss)
 	assert_eq(boss.cell, Vector2i(13, 5), "the chief holds the camp")
 	assert_eq(_view._boss_unit, boss, "wired as the objective boss")
+	assert_eq(_unit("bandit_b").cell, Vector2i(7, 7),
+		"southern bandit starts on the passable western shore rather than in water")
+
+
+func test_prologue_player_and_enemy_spawns_are_unique_in_bounds_and_traversable():
+	var c: ChapterDef = load("res://data/chapters/prologue.tres")
+	var db := TerrainDB.create_default()
+	var authored_spawns: Array = []
+	for spawn: UnitSpawn in c.player_spawns:
+		authored_spawns.append({"spawn": spawn, "team": 0})
+	for spawn: UnitSpawn in c.enemy_spawns:
+		var team := spawn.team_override if spawn.team_override >= 0 else spawn.unit.team
+		authored_spawns.append({"spawn": spawn, "team": team})
+	assert_eq(authored_spawns.size(), 9, "four allies + five foes")
+	var seen_cells := {}
+	for entry: Dictionary in authored_spawns:
+		var spawn: UnitSpawn = entry["spawn"]
+		var team: int = entry["team"]
+		assert_not_null(spawn)
+		assert_not_null(spawn.unit)
+		assert_not_null(spawn.unit.char_class)
+		var cell := spawn.cell
+		assert_true(c.in_bounds(cell.x, cell.y),
+			"%s spawn %s must be in bounds" % [spawn.unit.id, cell])
+		assert_false(seen_cells.has(cell),
+			"%s spawn %s must be unique" % [spawn.unit.id, cell])
+		seen_cells[cell] = spawn.unit.id
+		var mt := spawn.unit.char_class.movement_type
+		var ctx := BattleMoveContext.new(c, db, mt, {}, team)
+		var cost := ctx.enter_cost(cell)
+		assert_lt(cost, Pathfinder.INF_COST,
+			"%s (%s) spawn %s must be traversable under movement rules (terrain %d)" % [
+				spawn.unit.id, ClassDef.MovementType.keys()[mt], cell, c.get_terrain(cell.x, cell.y)
+			])
+		var live := _unit(spawn.unit.id)
+		assert_not_null(live, "%s spawned in live battle scene" % spawn.unit.id)
+		assert_eq(live.cell, cell, "%s runtime cell matches authored spawn" % spawn.unit.id)
+		var live_ctx := BattleMoveContext.new(c, _view._terrain_db, live.movement_type(), _view.occupancy(), live.team)
+		assert_lt(live_ctx.enter_cost(live.cell), Pathfinder.INF_COST,
+			"%s runtime cell %s must be traversable for its live movement_type()" % [live.unit_id(), live.cell])
+		var standable := MovementRange.standable_tiles(live.cell, live.move_points(), live_ctx)
+		assert_gt(standable.size(), 1,
+			"%s at %s can traverse onto adjacent tiles in round 1" % [live.unit_id(), live.cell])
+		_view._cursor.move_to(live.cell)
+		assert_false(_view._debug_label.text.contains("impassable"),
+			"%s HUD terrain readout at %s must not be impassable: %s" % [
+				live.unit_id(), live.cell, _view._debug_label.text
+			])
 
 
 func test_defeating_the_chief_wins():

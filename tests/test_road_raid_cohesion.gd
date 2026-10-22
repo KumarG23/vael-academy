@@ -15,8 +15,19 @@ func test_original_board_forces_objective_visits_and_dialogue_are_preserved():
 		for spawn: UnitSpawn in road.get(side):
 			actual.append([spawn.unit.id, spawn.cell.x, spawn.cell.y])
 		for spawn: Array in baseline[side]:
-			expected.append([spawn[0], int(spawn[1]), int(spawn[2])])
-		assert_eq(actual, expected, "same original units, positions and order")
+			var unit_id := str(spawn[0])
+			var x := int(spawn[1])
+			var y := int(spawn[2])
+			# Issue #20 (separately authorized under MASTER_PLAN §3 terrain rules and
+			# §6 WO-5.1a): the frozen VS-1B.5 baseline json is kept intact as the
+			# historical record; only the two impassable starts—Perrin on SITE (2,6)->(3,6)
+			# and bandit_b on WATER (8,7)->(7,7)—move one cell onto passable PLAINS.
+			if side == "player_spawns" and unit_id == "perrin" and x == 2 and y == 6:
+				x = 3
+			elif side == "enemy_spawns" and unit_id == "bandit_b" and x == 8 and y == 7:
+				x = 7
+			expected.append([unit_id, x, y])
+		assert_eq(actual, expected, "same original units, positions (with issue #20 passability correction) and order")
 	assert_eq(road.objective, ChapterDef.Objective.DEFEAT_BOSS)
 	assert_eq(road.boss_unit_id, "bandit_boss")
 	assert_true(road.non_lethal)
