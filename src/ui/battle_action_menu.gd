@@ -370,15 +370,20 @@ func open_support_menu() -> void:
 ## Play the chosen support conversation as a VN overlay (WO-4.2), then return to
 ## the command menu — viewing a conversation doesn't consume the unit's action.
 ## Once watched it stops appearing in battle (WO-4.4); the Common Hall keeps it.
+## Only completed playback consumes the scene; an unwritten/unreadable one stays
+## available and says so instead.
 func view_support_entry(index: int) -> void:
 	var entry: Dictionary = _v._support_menu_entries[index]
 	var path := str(entry.get("path", ""))
 	_v._menu.close()
-	if _v.dialogue_enabled and path != "" and FileAccess.file_exists(path):
-		await _v._play_dialogue(path)
+	var played := false
+	if path != "" and FileAccess.file_exists(path):
+		played = await _v._play_dialogue(path)
+	if played:
 		_v._support_state.mark_viewed(str(entry["pair_id"]), str(entry["rank"]))
 	else:
-		_v._pop_text(_v._selected.position, "%s ready" % entry["label"], Color(0.95, 0.75, 0.35))
+		_v._pop_text(_v._selected.position, "%s isn't ready to play" % entry["label"],
+			Color(0.95, 0.75, 0.35))
 	open_action_menu()
 
 

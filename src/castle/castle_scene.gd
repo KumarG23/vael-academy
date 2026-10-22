@@ -823,12 +823,18 @@ func _open_hall_archive() -> void:
 
 func _view_hall_entry(index: int) -> void:
 	var entry: Dictionary = _hall_entries[index]
-	_close_menu()
 	var path := str(entry.get("path", ""))
-	if path != "" and FileAccess.file_exists(path):
-		_play_dialogue(path)
+	var script := DialogueScript.from_file(path)
+	# WO-4.2: the archive lists authored slots, but an unwritten or malformed file
+	# is not a watched scene. Keep it available instead of silently consuming it.
+	if not script.is_playable():
+		_toast("That conversation isn't ready to play yet.")
+		return
+	_close_menu()
+	_play_script(script, func():
 		_support_state.mark_viewed(str(entry["pair_id"]), str(entry["rank"]))
 		Campaign.support_save = _support_state.save_state()
+		_open_hall_archive())
 
 
 func _open_quartermaster() -> void:
@@ -1146,24 +1152,32 @@ func _do_system(index: int) -> void:
 			get_tree().change_scene_to_file.call_deferred("res://scenes/title/title.tscn")
 
 
-func _play_dialogue(path: String) -> void:
-	_play_script(DialogueScript.from_file(path))
+func _play_dialogue(path: String, on_complete := Callable()) -> bool:
+	return _play_script(DialogueScript.from_file(path), on_complete)
 
 
 ## AW-54: play dialogue built at runtime (teacher reactions) — same plumbing.
-func _play_dialogue_json(json_text: String) -> void:
-	_play_script(DialogueScript.from_json(json_text))
+func _play_dialogue_json(json_text: String, on_complete := Callable()) -> bool:
+	return _play_script(DialogueScript.from_json(json_text), on_complete)
 
 
 ## Scripts started while another is on screen wait their turn (the term's report
 ## card and the Founding Festival can both land on one rest) — never stacked.
-var _dialogue_queue: Array[DialogueScript] = []
+var _dialogue_queue: Array[Dictionary] = []
 
 
-func _play_script(script: DialogueScript) -> void:
+## Start (or queue) a playable script. Returns false without starting when the
+## script is missing/malformed/empty, so bookkeeping callers never consume a
+## conversation that could not actually play. `on_complete` runs after this
+## script — not a queued neighbour — finishes.
+func _play_script(script: DialogueScript, on_complete := Callable()) -> bool:
+	if not script.is_playable():
+		var why := script.error if script.error != "" else "empty script"
+		push_warning("castle dialogue skipped: %s" % why)
+		return false
 	if _dialogue != null:
-		_dialogue_queue.append(script)
-		return
+		_dialogue_queue.append({"script": script, "on_complete": on_complete})
+		return true
 	var scene := DialogueScene.new()
 	_dialogue = scene
 	_ui.add_child(scene)
@@ -1174,9 +1188,13 @@ func _play_script(script: DialogueScript) -> void:
 		if _dialogue != scene:
 			return  # a late repeat signal never advances someone else's turn
 		_dialogue = null
+		if on_complete.is_valid():
+			on_complete.call()
 		if not _dialogue_queue.is_empty():
-			_play_script(_dialogue_queue.pop_front()))
+			var next: Dictionary = _dialogue_queue.pop_front()
+			_play_script(next["script"], next["on_complete"]))
 	scene.play(script)
+	return true
 
 
 ## AW-57: may a ♥ option for `uid` be offered to Kai right now? Needs an A-rank
