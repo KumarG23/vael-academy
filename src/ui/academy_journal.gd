@@ -125,6 +125,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			queue_redraw()
 			return
 		AudioManager.play_sfx("cancel")
+		# Issue #16: consume BEFORE closing — `closed` fires synchronously, the
+		# castle drops its book, and an unconsumed Esc/J would then reach its
+		# exploration input (system menu / a fresh Journal).
+		_handled()
 		_close()
 	elif event.is_action_pressed("cursor_left"):
 		if not _adjust_volume(-1):
