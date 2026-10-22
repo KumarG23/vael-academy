@@ -5,7 +5,7 @@ extends RefCounted
 ## Behaviors:
 ##  - AGGRESSOR: each phase, pick the reachable target maximizing expected
 ##    (damage dealt − damage received) via CombatForecast; prefer kills; if none is
-##    reachable, advance toward the nearest.
+##    reachable, advance toward the nearest by walking distance (around walls).
 ##  - SENTINEL: hold position until a player enters its threat range, then act as an
 ##    Aggressor (waking is tracked on the Unit by the battle scene).
 ##  - BOSS: never leaves its tile; only attacks what it can reach from where it stands.
@@ -14,6 +14,11 @@ extends RefCounted
 ## positional tiebreak so runs are reproducible.
 
 enum Behavior { AGGRESSOR, SENTINEL, BOSS }
+
+## Movement budget large enough to flood any chapter map (advance pathing).
+const UNBOUNDED_BUDGET := 1 << 20
+## Headroom over the actor's own walking distance: covers one tile's entry cost.
+const ADVANCE_FLOOD_SLACK := 16
 
 
 ## Evaluate one attack option from a forecast exchange. `atk_strikes`/`def_strikes`
@@ -28,8 +33,8 @@ static func evaluate(exchange: Dictionary, target_hp: int) -> Dictionary:
 	var received: float = 0.0
 	if exchange["defender_can_counter"]:
 		received = float(def["hit"]) / 100.0 * float(def["damage"]) * def_strikes
-	# A kill is credited when every attacker strike landing would drop the target.
-	var kills: bool = (int(atk["damage"]) * atk_strikes) >= target_hp
+	# Credit potential kills only when the strikes have a chance to land.
+	var kills: bool = int(atk["hit"]) > 0 and (int(atk["damage"]) * atk_strikes) >= target_hp
 	return {
 		"dealt": dealt,
 		"received": received,
@@ -63,7 +68,7 @@ static func decide(
 	# No target reachable. A boss holds; an aggressor advances on the nearest foe.
 	if behavior == Behavior.BOSS:
 		return AIDecision.wait_at(actor.cell)
-	return _advance_toward_nearest(actor, enemies, standable)
+	return _advance_toward_nearest(actor, enemies, standable, all_units, chapter, terrain_db)
 
 
 ## Tiles the actor could attack this turn (its threat range). BOSS-aware: a boss
@@ -157,7 +162,56 @@ static func _is_better(a: Dictionary, b: Dictionary) -> bool:
 	return _cell_key(a["tile"]) < _cell_key(b["tile"])
 
 
+## Advance along the terrain-aware path (walls, water, enemy bodies) rather than
+## straight-line distance, so a unit walks around an obstacle instead of pressing
+## into a dead end beside it. Falls back to Manhattan when no foe is reachable.
 static func _advance_toward_nearest(
+	actor: Unit, enemies: Array, standable: Array,
+	all_units: Array, chapter: ChapterDef, terrain_db: TerrainDB,
+) -> AIDecision:
+	var occ := _occupancy(all_units)
+	var ctx := BattleMoveContext.new(chapter, terrain_db, actor.movement_type(), occ, actor.team)
+	var from_actor := Pathfinder.reachable(actor.cell, UNBOUNDED_BUDGET, ctx)
+	var nearest: Unit = null
+	var best_d := Pathfinder.INF_COST
+	for e in enemies:
+		var d := _approach_cost(from_actor, e.cell)
+		if d < best_d or (d == best_d and nearest != null and _cell_key(e.cell) < _cell_key(nearest.cell)):
+			best_d = d
+			nearest = e
+	if nearest == null:
+		return _advance_by_manhattan(actor, enemies, standable)
+	# Distance field from the foe outward. Reverse costs count each tile's own entry
+	# cost rather than the foe's; subtracting it restores the true walking order.
+	# Only tiles at least as close as the actor's own matter, which bounds the flood.
+	var to_foe := Pathfinder.reachable(nearest.cell, best_d + ADVANCE_FLOOD_SLACK, ctx)
+	var goal := actor.cell
+	var goal_d := _path_cost_to(to_foe, ctx, actor.cell)
+	for tile in standable:
+		var d := _path_cost_to(to_foe, ctx, tile)
+		if d < goal_d or (d == goal_d and _cell_key(tile) < _cell_key(goal)):
+			goal_d = d
+			goal = tile
+	return AIDecision.wait_at(goal)
+
+
+## Cheapest flood cost to a tile adjacent to `cell` (a foe's body blocks the flood).
+static func _approach_cost(costs: Dictionary, cell: Vector2i) -> int:
+	var best := Pathfinder.INF_COST
+	for dir in Pathfinder.ORTHOGONAL:
+		var nb: Vector2i = cell + dir
+		if costs.has(nb):
+			best = mini(best, int(costs[nb]))
+	return best
+
+
+static func _path_cost_to(to_foe: Dictionary, ctx: BattleMoveContext, tile: Vector2i) -> int:
+	if not to_foe.has(tile):
+		return Pathfinder.INF_COST
+	return int(to_foe[tile]) - ctx.enter_cost(tile)
+
+
+static func _advance_by_manhattan(
 	actor: Unit, enemies: Array, standable: Array
 ) -> AIDecision:
 	var nearest: Unit = null

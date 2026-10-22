@@ -9,6 +9,9 @@ const SFX := ["cursor", "confirm", "cancel", "select", "hit", "crit", "miss",
 
 func after_each() -> void:
 	AudioManager.muted = false
+	AudioManager.master_volume = 1.0
+	AudioManager.music_volume = 0.7
+	AudioManager.sfx_volume = 0.85
 	AudioManager.stop_music()
 
 
@@ -53,6 +56,32 @@ func test_music_tracks_the_requested_path():
 func test_missing_music_is_silent():
 	AudioManager.play_music("res://assets/audio/music/nope.wav")
 	assert_false(AudioManager._music.playing, "no track, no crash")
+
+
+## The journal's volume sliders must reach the track already playing, not wait
+## for the next play_music call.
+func test_volume_changes_reach_the_current_track():
+	AudioManager.play_music("res://assets/audio/music/battle_theme.wav")
+	var before: float = AudioManager._music.volume_db
+	AudioManager.music_volume = 0.3
+	assert_lt(AudioManager._music.volume_db, before, "music slider lowers the live track")
+	var after_music: float = AudioManager._music.volume_db
+	AudioManager.master_volume = 0.5
+	assert_lt(AudioManager._music.volume_db, after_music, "master slider lowers it too")
+	assert_almost_eq(AudioManager._music.volume_db, linear_to_db(0.3 * 0.5), 0.01)
+
+
+func test_sfx_volume_reaches_voices_and_narrator():
+	AudioManager.sfx_volume = 0.4
+	var want := linear_to_db(0.4)
+	assert_almost_eq(AudioManager._voice.volume_db, want, 0.01, "narrator follows the SFX slider")
+	for p in AudioManager._voices:
+		assert_almost_eq(p.volume_db, want, 0.01, "every SFX voice follows the slider")
+
+
+func test_zero_volume_is_floored_not_infinite():
+	AudioManager.master_volume = 0.0
+	assert_almost_eq(AudioManager._music.volume_db, linear_to_db(0.0001), 0.01)
 
 
 ## AW-72: the quiz answers with its own voice — a chime and a buzz.

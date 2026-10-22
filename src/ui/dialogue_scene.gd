@@ -52,12 +52,25 @@ var _backdrop_flat := Color(0, 0, 0, 0)  # a=0 means "no flat backdrop"
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	# A Control parent can honor PRESET_FULL_RECT, but the CanvasLayers that own
+	# this scene (castle, battle, hub, house choice) leave a Control at its default
+	# zero rect, so size the overlay to the viewport explicitly. Top-left anchors
+	# keep that explicit size: unequal opposite anchors would override it after
+	# _ready().
+	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_fit_to_viewport()
+	get_viewport().size_changed.connect(_fit_to_viewport)
 	texture_filter = TEXTURE_FILTER_LINEAR  # painted art, not pixel art
 	if script_path != "":
 		var s := DialogueScript.from_file(script_path)
 		if s.ok():
 			play(s)
+
+
+## The overlay is a full-screen VN layer; make its clickable rect match the frame.
+func _fit_to_viewport() -> void:
+	position = Vector2.ZERO
+	size = get_viewport_rect().size
 
 
 ## Start playing a script from the top.
@@ -250,7 +263,20 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		accept_event()
 		if _choice != null:
-			choose(_shown[_choice_index])  # click confirms the highlighted option
+			var vp := get_viewport_rect().size
+			var row_h := 40.0
+			var title_h := 44.0 if _choice.text != "" else 8.0
+			var panel := Rect2(
+				Vector2(vp.x * 0.50, vp.y * 0.66 - title_h - row_h * _shown.size() - 24),
+				Vector2(vp.x * 0.36, title_h + row_h * _shown.size() + 12))
+			for i in range(_shown.size()):
+				var row := Rect2(panel.position + Vector2(10, title_h + row_h * i),
+					Vector2(panel.size.x - 20, row_h - 6))
+				if row.has_point(event.position):
+					choose(_shown[i])
+					return
+			# Click outside any row: confirm highlighted option (preserves keyboard flow)
+			choose(_shown[_choice_index])
 		else:
 			advance()
 

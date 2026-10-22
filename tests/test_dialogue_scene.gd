@@ -70,3 +70,28 @@ func test_typewriter_reveal_then_advance():
 	# Second advance moves on.
 	_scene.advance()
 	assert_eq(_scene.current_line().speaker, "Serra")
+
+
+## Click-to-advance is advertised, so a real viewport click must reach _gui_input.
+## The overlay's rect has to cover the viewport even without a Control parent.
+func test_viewport_click_advances_the_line():
+	var vp := SubViewport.new()
+	vp.size = Vector2i(640, 480)
+	add_child_autofree(vp)
+	var scene := DialogueScene.new()
+	scene.typewriter_speed = 0.0
+	var shown: Array = []
+	scene.line_shown.connect(func(step): shown.append(step.speaker))
+	vp.add_child(scene)
+	scene.play(_script('[{"speaker":"Kai","text":"One."},{"speaker":"Serra","text":"Two."}]'))
+	assert_eq(scene.size, scene.get_viewport_rect().size, "the overlay covers the viewport")
+	var center := scene.get_viewport_rect().get_center()
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = center
+	click.global_position = center
+	vp.push_input(click)
+	await wait_physics_frames(1)
+	assert_eq(shown, ["Kai", "Serra"], "the click advanced past Kai's line")
+	assert_eq(scene.current_line().speaker, "Serra")

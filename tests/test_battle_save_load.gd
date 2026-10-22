@@ -1,16 +1,32 @@
 extends GutTest
-## WO-3.3: battle snapshot/restore and permadeath save flags.
+## Battle snapshot/restore, campaign overlays, RNG streams, and permadeath flags.
 
 var _view: Node2D
+var _test_saves: Array[SaveSystem] = []
 
 
 func before_each() -> void:
+	Campaign.reset_new_game(false)
 	var scene: PackedScene = load("res://scenes/battle/battle.tscn")
 	_view = scene.instantiate()
 	_view.strike_delay = 0.0
 	_view.combat_seed = 13579
 	add_child_autofree(_view)
 	await wait_physics_frames(2)
+
+
+func after_each() -> void:
+	Campaign.reset_new_game(false)
+	for saves in _test_saves:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(saves.slot_path(0)))
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(saves.save_dir))
+	_test_saves.clear()
+
+
+func _new_save_system() -> SaveSystem:
+	var saves := SaveSystem.new("user://test_battle_saves_%d" % Time.get_ticks_usec())
+	_test_saves.append(saves)
+	return saves
 
 
 func _fresh_view() -> Node2D:
@@ -23,7 +39,7 @@ func _fresh_view() -> Node2D:
 
 
 func test_save_mid_battle_and_load_into_fresh_scene():
-	var saves := SaveSystem.new("user://test_battle_saves_%d" % Time.get_ticks_usec())
+	var saves := _new_save_system()
 	_view._save_system = saves
 	_view.casual_mode = true
 	_view._turn.round_number = 3
@@ -59,6 +75,69 @@ func test_save_mid_battle_and_load_into_fresh_scene():
 	assert_eq(loaded._rng.state_value(), _view._rng.state_value(), "RNG state round-trips")
 
 
+func test_active_campaign_load_keeps_battle_earned_supports_and_viewed_conversations():
+	# The campaign holds the older, pre-deployment copy. Respawning during load
+	# applies it again, so the battle snapshot must win after that rebuild.
+	_view._support_state.add_points("kai", "kael", 5)
+	Campaign.support_save = _view._support_state.save_state()
+	var before_deployment := Campaign.support_save.duplicate(true)
+	Campaign.deploy()
+	_view._support_state.add_points("kai", "kael", 20)
+	var chain: SupportChainDef = _view._support_state.chain_for_units("kai", "kael")
+	_view._support_state.mark_viewed(chain.pair_id(), "C")
+	var saves := _new_save_system()
+	_view._save_system = saves
+	assert_true(_view.save_to_slot(0), "active campaign battle saved")
+
+	var loaded: Node2D = await _fresh_view()
+	assert_eq(loaded._support_state.points_for_units("kai", "kael"), 5,
+		"fresh deployment starts from the older campaign copy")
+	loaded._save_system = saves
+	assert_true(loaded.load_from_slot(0), "active campaign battle loaded")
+	assert_eq(loaded._support_state.points_for_units("kai", "kael"), 25,
+		"points earned in battle survive the campaign overlay during rebuild")
+	assert_eq(loaded._support_state.rank_for_units("kai", "kael"), "C")
+	assert_true(loaded._support_state.is_viewed(chain.pair_id(), "C"),
+		"a watched conversation stays watched after loading")
+	assert_eq(Campaign.support_save, before_deployment,
+		"loading battle supports does not rewrite the campaign copy")
+
+
+func test_active_campaign_save_preserves_distinct_combat_and_training_rng_streams():
+	Campaign.reset_new_game(false, 24680)
+	Campaign._training_rng.roll()
+	Campaign.deploy()
+	_view._rng.roll()
+	_view._rng.roll()
+	var training_state: int = Campaign._training_rng.state_value()
+	var combat_state: int = _view._rng.state_value()
+	assert_ne(combat_state, training_state, "the saved streams are deliberately distinct")
+	var saves := _new_save_system()
+	_view._save_system = saves
+	assert_true(_view.save_to_slot(0))
+	var payload := saves.load_slot(0)
+	assert_eq(payload["campaign"]["rng_state"], str(training_state),
+		"campaign training state survives JSON without integer precision loss")
+	assert_eq(payload["battle"]["rng_state"], str(combat_state),
+		"combat state has its own JSON field")
+
+	# Match the resume order: restore the campaign, then load the battle.
+	Campaign.reset_new_game(false, 99)
+	Campaign.from_dict(payload["campaign"])
+	Campaign.deploy()
+	var loaded: Node2D = await _fresh_view()
+	loaded._save_system = saves
+	assert_true(loaded.load_from_slot(0))
+	assert_eq(loaded._rng.state_value(), combat_state)
+	assert_eq(Campaign._training_rng.state_value(), training_state,
+		"battle loading leaves the restored training stream alone")
+	for i in range(8):
+		assert_eq(loaded._rng.roll(), _view._rng.roll(),
+			"combat continues with the same next roll %d" % i)
+	assert_eq(Campaign._training_rng.state_value(), training_state,
+		"combat rolls never advance the training stream")
+
+
 func test_classic_permadeath_flags_dead_player_and_load_removes_them():
 	_view.casual_mode = false
 	var kai: Unit = _view.unit_by_id("kai")
@@ -73,3 +152,41 @@ func test_classic_permadeath_flags_dead_player_and_load_removes_them():
 	loaded.apply_save_payload(payload)
 	assert_null(loaded.unit_by_id("kai"), "dead classic unit is absent after load")
 	assert_true(loaded._permadead_unit_ids.has("kai"), "permadeath flag survives load")
+
+
+func _fresh_prologue() -> Node2D:
+	var scene: PackedScene = load("res://scenes/battle/prologue.tscn")
+	var view: Node2D = scene.instantiate()
+	view.strike_delay = 0.0
+	view.dialogue_enabled = false
+	add_child_autofree(view)
+	await wait_physics_frames(2)
+	return view
+
+
+func test_visited_village_stays_claimed_after_load():
+	var view: Node2D = await _fresh_prologue()
+	var spot_cell := Vector2i(2, 8)
+	var spot: VisitSpot = view._visit_spot_at(spot_cell)
+	assert_not_null(spot, "the prologue cottage is unclaimed at deployment")
+
+	# Claim the visit, then snapshot exactly as the field menu does.
+	view._visited_spot_ids.append(spot.id)
+	var payload: Dictionary = view.make_save_payload()
+	assert_true(payload["battle"]["visited_spot_ids"].has(spot.id),
+		"the claimed visit rides in the battle save")
+
+	var loaded: Node2D = await _fresh_prologue()
+	loaded.apply_save_payload(payload)
+	assert_true(loaded._visited_spot_ids.has(spot.id), "the claimed visit survives load")
+	assert_null(loaded._visit_spot_at(spot_cell), "the spent cottage stays spent")
+
+	var kai: Unit = loaded.unit_by_id("kai")
+	assert_not_null(kai)
+	kai.cell = spot_cell
+	kai.position = loaded._grid.cell_center(spot_cell)
+	kai.has_acted = false
+	loaded._selected = kai
+	loaded._menu_ctrl.open_action_menu()
+	assert_false(loaded._menu_actions.has("visit"),
+		"a loaded save cannot claim the same village reward twice")

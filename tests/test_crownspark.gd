@@ -143,3 +143,59 @@ func test_legacy_save_with_only_locked_spell_is_unarmed_until_story_unlock():
 	assert_eq(kai.inventory.items[0].uses, 980)
 	Campaign.flags["crownspark_unlocked"] = true
 	assert_eq(kai.weapon().id, "crownspark", "no inventory destruction or replacement")
+
+
+func test_break_fallback_skips_both_story_and_school_locked_spells():
+	var kai := Unit.new()
+	autofree(kai)
+	kai.setup(load("res://data/units/kai.tres"), Grid.new(3, 3), Vector2i.ZERO)
+	var sword := kai.inventory.equipped_weapon_item()
+	sword.uses = 1
+	var spark := kai.inventory.items[1]
+	var fire := InventoryItem.from_weapon(load("res://data/weapons/fire.tres"))
+	var backup := InventoryItem.from_weapon(load("res://data/weapons/iron_axe.tres"))
+	kai.inventory.add(fire)
+	kai.inventory.add(backup)
+	var spark_uses := spark.uses
+	assert_same(kai.spend_weapon_use(), sword)
+	assert_same(kai.weapon(), backup.weapon(), "a broken sword cannot strand Kai behind locked spells")
+	assert_same(kai.to_combatant(0, 0).weapon, backup.weapon())
+	assert_eq(spark.uses, spark_uses)
+	assert_eq(fire.uses, fire.weapon().max_uses)
+	assert_true(kai.inventory.has(spark))
+	assert_true(kai.inventory.has(fire))
+	assert_false(bool(Campaign.flags.get("crownspark_unlocked", false)))
+	assert_false(bool(Campaign.flags.get("school_ember", false)))
+
+
+func test_last_usable_weapon_break_leaves_locked_spark_inert_until_vision():
+	var kai := Unit.new()
+	autofree(kai)
+	kai.setup(load("res://data/units/kai.tres"), Grid.new(3, 3), Vector2i.ZERO)
+	var sword := kai.inventory.equipped_weapon_item()
+	sword.uses = 1
+	var spark := kai.inventory.items[1]
+	var uses_before := spark.uses
+	assert_same(kai.spend_weapon_use(), sword)
+	assert_null(kai.weapon())
+	assert_false(kai.can_attack())
+	assert_null(kai.to_combatant(0, 0).weapon)
+	assert_null(kai.spend_weapon_use())
+	assert_eq(spark.uses, uses_before)
+	Campaign.flags["crownspark_unlocked"] = true
+	assert_same(kai.weapon(), spark.weapon())
+
+
+func test_vision_permission_does_not_let_another_bearer_equip_crownspark():
+	Campaign.flags["crownspark_unlocked"] = true
+	var perrin := Unit.new()
+	autofree(perrin)
+	perrin.unit_def = load("res://data/units/perrin.tres")
+	perrin.equip_weapon(load("res://data/weapons/crownspark.tres"))
+	var spark := perrin.inventory.equipped_weapon_item()
+	var uses_before := spark.uses
+	assert_null(perrin.weapon(), "story permission does not transfer innate ownership")
+	assert_false(perrin.can_attack())
+	assert_null(perrin.to_combatant(0, 0).weapon)
+	assert_null(perrin.spend_weapon_use())
+	assert_eq(spark.uses, uses_before)

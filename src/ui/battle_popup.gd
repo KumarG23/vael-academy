@@ -730,7 +730,10 @@ func _play_strike(strike) -> void:
 		mt.tween_interval(0.4)
 		mt.tween_callback(func(): _miss_label.visible = false)
 
-	await actor.animation_finished
+	# Projectile travel and the impact delay can outlast a short animation.
+	# A finished one-shot will not emit animation_finished again.
+	if actor.is_playing():
+		await actor.animation_finished
 	actor.play("idle")
 	var back := create_tween()
 	back.tween_property(actor_holder, "position", home, 0.18) \

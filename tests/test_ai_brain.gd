@@ -36,6 +36,20 @@ func test_evaluate_credits_a_kill_when_all_hits_would_drop_target():
 	assert_true(ev["kills"])
 
 
+func test_evaluate_zero_hit_never_credits_a_kill():
+	var single := AIBrain.evaluate(_exchange(0, 12, false, 0, 0), 1)
+	assert_false(single["kills"], "lethal damage cannot kill if the attack always misses")
+	assert_eq(single["dealt"], 0.0)
+	var doubled := AIBrain.evaluate(_exchange(0, 12, false, 0, 0, true), 20)
+	assert_false(doubled["kills"], "doubling cannot make a zero-hit attack lethal")
+	assert_eq(doubled["dealt"], 0.0)
+
+
+func test_evaluate_nonzero_hit_still_credits_a_possible_kill():
+	var ev := AIBrain.evaluate(_exchange(1, 12, false, 0, 0), 1)
+	assert_true(ev["kills"], "even an unlikely hit can still kill")
+
+
 func test_evaluate_doubling_scales_dealt_and_received():
 	var ev := AIBrain.evaluate(_exchange(100, 5, true, 100, 4, true, true), 100)
 	assert_almost_eq(ev["dealt"], 10.0, 0.001)     # 5 * 2
@@ -104,6 +118,43 @@ func test_decide_advances_when_no_target_in_reach():
 	assert_lte(BattleView_manhattan(enemy.cell, d.move_to), 4, "within movement budget")
 
 
+func _tall_board(walls: Array) -> void:
+	_chapter = ChapterDef.new()
+	_chapter.width = 12
+	_chapter.height = 5
+	_chapter.fill(Terrain.Type.PLAINS)
+	for c in walls:
+		_chapter.set_terrain(c.x, c.y, Terrain.Type.WALL)
+	_grid = _chapter.make_grid()
+
+
+func test_decide_advances_around_a_wall_instead_of_into_a_dead_end():
+	# Wall column x=4 (y=0..3) with its only gap at the bottom (4,4).
+	_tall_board([Vector2i(4, 0), Vector2i(4, 1), Vector2i(4, 2), Vector2i(4, 3)])
+	assert_true(_db.is_impassable(Terrain.Type.WALL), "fixture relies on impassable walls")
+	var enemy := _spawn("enemy", CombatTestHelpers.sword(6, 90), 1, Vector2i(2, 0), 3)
+	var player := _spawn("player", CombatTestHelpers.sword(5, 90), 0, Vector2i(8, 0), 3)
+	var d := AIBrain.decide(enemy, _units, _chapter, _db)
+	assert_false(d.has_attack(), "the wall keeps the player out of reach this turn")
+	assert_ne(d.move_to, Vector2i(3, 0), "straight-line closest tile is a dead end against the wall")
+	assert_gte(d.move_to.y, 2, "heads down toward the gap in the wall")
+	var ctx := BattleMoveContext.new(_chapter, _db, enemy.movement_type(), {}, enemy.team)
+	var before := Pathfinder.find_path(enemy.cell, player.cell, ctx).size()
+	var after := Pathfinder.find_path(d.move_to, player.cell, ctx).size()
+	assert_eq(before - after, 3, "spends the full move shortening the real walking route")
+
+
+func test_decide_advances_on_a_reachable_foe_not_a_walled_off_one():
+	# A complete wall column x=8 seals the nearer player away from the enemy.
+	_tall_board([Vector2i(8, 0), Vector2i(8, 1), Vector2i(8, 2), Vector2i(8, 3), Vector2i(8, 4)])
+	var enemy := _spawn("enemy", CombatTestHelpers.sword(6, 90), 1, Vector2i(7, 2), 2)
+	var _sealed := _spawn("sealed", CombatTestHelpers.sword(5, 90), 0, Vector2i(9, 2), 2)
+	var _open := _spawn("open", CombatTestHelpers.sword(5, 90), 0, Vector2i(2, 2), 2)
+	var d := AIBrain.decide(enemy, _units, _chapter, _db)
+	assert_false(d.has_attack())
+	assert_eq(d.move_to, Vector2i(5, 2), "closes on the foe it can actually reach")
+
+
 func test_decide_prefers_the_killable_target():
 	var enemy := _spawn("enemy", CombatTestHelpers.sword(10, 100), 1, Vector2i(5, 1), 5)
 	# Two adjacent-reachable players: one healthy, one at 1 HP (killable).
@@ -112,6 +163,21 @@ func test_decide_prefers_the_killable_target():
 	weak.current_hp = 1
 	var d := AIBrain.decide(enemy, _units, _chapter, _db)
 	assert_eq(d.target, weak, "kill is preferred over the healthy target")
+
+
+func test_decide_prefers_hittable_target_over_zero_hit_apparent_kill():
+	var enemy := _spawn("enemy", CombatTestHelpers.sword(10, 100), 1, Vector2i(5, 1), 5)
+	var healthy := _spawn("healthy", CombatTestHelpers.sword(5, 90), 0, Vector2i(4, 1), 5, 24)
+	var evasive := _spawn("evasive", CombatTestHelpers.sword(5, 90), 0, Vector2i(6, 1), 5, 24)
+	evasive.current_hp = 1
+	evasive.unit_def.speed = 100
+	var ex := CombatForecast.exchange(enemy.to_combatant(0, 0), evasive.to_combatant(0, 0), 1)
+	assert_eq(ex["attacker"]["hit"], 0, "the low-HP target cannot be hit")
+	assert_gt(ex["attacker"]["damage"], evasive.current_hp, "raw damage alone appears lethal")
+	var d := AIBrain.decide(enemy, _units, _chapter, _db, AIBrain.Behavior.BOSS)
+	assert_true(d.has_attack())
+	assert_eq(d.target, healthy, "an impossible kill must not outrank a damaging attack")
+	assert_eq(d.move_to, enemy.cell, "both options are evaluated from the same tile")
 
 
 func test_decide_waits_when_no_enemies():

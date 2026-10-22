@@ -26,10 +26,13 @@ var _dialogue: DialogueScene
 var _auto_t := 0.0
 var _parsed: Array[DialogueScript] = []
 var _ended: bool = false
+var _origin_flags: Dictionary = {}
 var load_error: String = ""
 
 
 func _ready() -> void:
+	if campaign_opening:
+		_origin_flags = Campaign.flags
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	AudioManager.stop_music()  # the narrator opens in silence; music cues later
 	# Validate the whole sequence BEFORE playback: missing content must never be
@@ -57,7 +60,10 @@ func _ready() -> void:
 
 
 func _next_script() -> void:
-	if _ended:
+	# Reset/load replaces flags, so stale playback cannot advance a new campaign.
+	if campaign_opening and not is_same(Campaign.flags, _origin_flags):
+		return
+	if _ended or load_error != "":
 		return
 	_i += 1
 	_auto_t = 0.0
@@ -72,8 +78,18 @@ func _next_script() -> void:
 
 
 func _on_dialogue_event(event_name: String, params: Dictionary) -> void:
+	if campaign_opening and not is_same(Campaign.flags, _origin_flags):
+		return
+	if _ended or load_error != "":
+		return
 	if campaign_opening and event_name == "set_flag":
-		Campaign.flags[str(params["flag"])] = true
+		var flag: Variant = params.get("flag")
+		if not flag is String:
+			return
+		var flag_name: String = flag
+		if flag_name.strip_edges().is_empty():
+			return
+		Campaign.flags[flag_name] = true
 
 
 func _process(delta: float) -> void:

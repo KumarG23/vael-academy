@@ -128,3 +128,58 @@ func test_key_events_map_to_actions():
 			InputMap.event_is_action(e, cases[keycode]),
 			"key %d should trigger %s" % [keycode, cases[keycode]],
 		)
+
+
+# --- mouse click bounds checking ------------------------------------------------
+
+func test_left_click_outside_grid_does_not_confirm():
+	watch_signals(_cursor)
+	# Click at world position far outside the grid (negative coordinates)
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = Vector2(-100, -100)
+	click.global_position = Vector2(-100, -100)
+	_cursor._unhandled_input(click)
+	assert_signal_not_emitted(_cursor, "confirmed")
+	assert_signal_not_emitted(_cursor, "selection_changed")
+	assert_false(_cursor.is_selection_active())
+
+
+func test_right_click_outside_grid_does_not_cancel():
+	_cursor.confirm()  # set up a selection first
+	watch_signals(_cursor)
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_RIGHT
+	click.pressed = true
+	click.position = Vector2(-100, -100)
+	click.global_position = Vector2(-100, -100)
+	_cursor._unhandled_input(click)
+	assert_signal_not_emitted(_cursor, "cancelled")
+	assert_true(_cursor.is_selection_active(), "selection should remain")
+
+
+func test_left_click_inside_grid_confirms():
+	watch_signals(_cursor)
+	# Grid cell_size defaults to 128, so cell (5,5) center is at (704, 704)
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = Vector2(704, 704)
+	click.global_position = Vector2(704, 704)
+	_cursor._unhandled_input(click)
+	assert_signal_emitted_with_parameters(_cursor, "confirmed", [Vector2i(5, 5)])
+	assert_true(_cursor.is_selection_active())
+
+
+func test_right_click_inside_grid_cancels():
+	_cursor.confirm()  # set up a selection first
+	watch_signals(_cursor)
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_RIGHT
+	click.pressed = true
+	click.position = Vector2(704, 704)
+	click.global_position = Vector2(704, 704)
+	_cursor._unhandled_input(click)
+	assert_signal_emitted(_cursor, "cancelled")
+	assert_false(_cursor.is_selection_active())

@@ -19,7 +19,17 @@ var _hp_text := ""
 var _lines: Array = []
 
 
+func _init() -> void:
+	# Mouse events only reach _gui_input inside the Control's rect. Match the
+	# drawn sheet from construction on, so a freshly created panel is already a
+	# valid click target even before it enters the tree.
+	size = PANEL_SIZE
+	mouse_filter = Control.MOUSE_FILTER_STOP
+
+
 func _ready() -> void:
+	# Keep the hit area pinned to the drawn sheet through tree entry as well.
+	size = PANEL_SIZE
 	visible = false
 
 
@@ -28,6 +38,7 @@ func is_shown() -> bool:
 
 
 func show_unit(u: Unit) -> void:
+	size = PANEL_SIZE  # a container/reparent may have reset the clickable rect
 	_title = u.unit_def.display_name
 	var cls := u.current_class()
 	_subtitle = "%s   Lv %d  (%d/100 XP)" % [cls.display_name if cls != null else "?", u.level, u.xp]

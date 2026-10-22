@@ -99,6 +99,84 @@ func test_defeat_when_the_lord_is_slain_in_the_enemy_phase():
 	assert_true(_view._result_screen.is_shown())
 
 
+## The result screen draws full-screen and advertises "press any key" / click to
+## dismiss. Anchors alone do not resolve against a bare Viewport parent (the
+## battle's CanvasLayer, a SubViewport), leaving a zero-size rect that can never
+## receive _gui_input. A real click must land, dismiss exactly once, and hide.
+func test_result_screen_covers_its_viewport_and_one_real_click_dismisses_it():
+	var sv := SubViewport.new()
+	sv.size = Vector2i(800, 600)
+	sv.handle_input_locally = true
+	add_child_autofree(sv)
+	var rs := ResultScreen.new()
+	sv.add_child(rs)
+	rs.show_victory()
+	await get_tree().process_frame
+
+	assert_eq(rs.size, Vector2(800, 600), "the clickable rect covers the whole viewport")
+	assert_eq(rs.mouse_filter, Control.MOUSE_FILTER_STOP, "the overlay claims the click")
+	var dismissals := [0]
+	rs.dismissed.connect(func() -> void: dismissals[0] += 1)
+
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = Vector2(400, 300)
+	click.global_position = click.position
+	sv.push_input(click)
+	await get_tree().process_frame
+
+	assert_eq(dismissals[0], 1, "a real viewport click dismisses the result screen")
+	assert_false(rs.is_shown(), "the result screen is no longer shown")
+	assert_false(rs.visible, "a dismissed overlay hides instead of staying on top")
+
+	sv.push_input(click)
+	await get_tree().process_frame
+	assert_eq(dismissals[0], 1, "a second click cannot dismiss twice")
+
+
+## A normal battle reuses the ResultScreen the arena leaves behind. Victory and
+## defeat must not inherit its report card lines.
+func test_victory_and_defeat_clear_the_previous_report_lines():
+	var rs := ResultScreen.new()
+	add_child_autofree(rs)
+	rs.show_report("The Trial Ends", Color(0.55, 0.92, 0.65), ["Cleared 3 waves"])
+	assert_eq(rs._lines.size(), 1)
+	rs.show_victory()
+	assert_true(rs._lines.is_empty(), "victory clears the arena report card")
+	rs.show_report("The Trial Ends", Color(0.55, 0.92, 0.65), ["Cleared 3 waves"])
+	rs.show_defeat()
+	assert_true(rs._lines.is_empty(), "defeat clears the arena report card")
+
+
+func test_report_keeps_a_snapshot_of_the_supplied_lines():
+	var rs := ResultScreen.new()
+	add_child_autofree(rs)
+	var lines: Array = ["Cleared 3 waves", "Winnings: 30 gold"]
+	rs.show_report("The Trial Ends", Color.WHITE, lines)
+
+	lines[0] = "Cleared 4 waves"
+	lines.append("Another run")
+	assert_eq(rs._lines, ["Cleared 3 waves", "Winnings: 30 gold"],
+		"the displayed report stays stable when its caller reuses the array")
+
+
+func test_normal_results_do_not_clear_the_callers_report_lines():
+	var rs := ResultScreen.new()
+	add_child_autofree(rs)
+	var lines: Array = ["Cleared 3 waves", "Winnings: 30 gold"]
+	var expected := lines.duplicate()
+	rs.show_report("The Trial Ends", Color.WHITE, lines)
+	rs.show_victory()
+	assert_eq(lines, expected, "victory preserves the caller's report")
+	assert_true(rs._lines.is_empty(), "victory still clears the displayed report")
+
+	rs.show_report("The Trial Ends", Color.WHITE, lines)
+	rs.show_defeat()
+	assert_eq(lines, expected, "defeat preserves the caller's report")
+	assert_true(rs._lines.is_empty(), "defeat still clears the displayed report")
+
+
 func test_input_is_locked_after_the_battle_ends():
 	for enemy in _view._living_units_on_team(1).duplicate():
 		_view._kill(enemy)

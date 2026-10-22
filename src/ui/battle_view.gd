@@ -88,6 +88,7 @@ var _splash: ClashSplash
 
 var _menu: ChoiceMenu
 var _menu_context := ""
+var _end_turn_from_field := false
 var _menu_actions: Array = []      # action ids for the "action" context
 var _menu_items: Array = []        # InventoryItems for item/equip/trade_give
 var _menu_partners: Array[Unit] = []  # allies for trade_ally
@@ -436,11 +437,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
-	# 'T'/Tab ends the player phase when idle.
+	# 'T'/Tab requests the end of the player phase when idle.
 	if event.keycode == KEY_T or event.keycode == KEY_TAB:
 		if not _battle_over and _turn.is_player_phase() and not _busy and _phase == Phase.IDLE:
-			_end_player_phase()
 			get_viewport().set_input_as_handled()
+			_menu_ctrl.request_end_turn()
 	# 'H' toggles the enemy threat-range overlay.
 	elif event.keycode == KEY_H:
 		_toggle_threat_overlay()
@@ -706,6 +707,10 @@ func _kill(unit: Unit) -> void:
 	_record_defeat(unit)
 	if unit == _lord_unit:
 		_lord_alive = false
+		# An arena yield still keeps earned growth. Capture before queue_free:
+		# Kai may already be gone when the combat executor checks the objective.
+		if chapter.is_arena and Campaign.active:
+			Campaign.set_unit_state(unit.unit_id(), unit.progression_state())
 	if unit == _boss_unit:
 		_boss_alive = false
 	_units.erase(unit)
@@ -936,6 +941,10 @@ func _arena_retreat() -> void:
 func _arena_finish(retreated := false) -> void:
 	if _battle_over:
 		return
+	# Keep the latest progression on retreat (or a same-frame yield). Mission
+	# capture also advances the week; the trial only spends its weekly cooldown.
+	if Campaign.active and is_instance_valid(_lord_unit):
+		Campaign.set_unit_state(_lord_unit.unit_id(), _lord_unit.progression_state())
 	# the wave you fell on doesn't count — unless you'd already cleared the floor
 	# and its successor hadn't filed in yet.
 	var cleared := _arena_wave if _arena_pending_wave > 0 else maxi(0, _arena_wave - 1)
@@ -1113,6 +1122,7 @@ func make_save_payload() -> Dictionary:
 			"boss_quote_played": _boss_quote_played,
 			"defeated_unit_ids": _defeated_unit_ids.duplicate(),
 			"permadead_unit_ids": _permadead_unit_ids.duplicate(),
+			"visited_spot_ids": _visited_spot_ids.duplicate(),
 			"objective": int(chapter.objective),
 			"seize_cell": {"x": chapter.seize_cell.x, "y": chapter.seize_cell.y},
 		},
@@ -1145,6 +1155,9 @@ func apply_save_payload(payload: Dictionary) -> void:
 	chapter.seize_cell = Vector2i(int(seize.get("x", chapter.seize_cell.x)), int(seize.get("y", chapter.seize_cell.y)))
 	_defeated_unit_ids = _string_array(battle.get("defeated_unit_ids", []))
 	_permadead_unit_ids = _string_array(battle.get("permadead_unit_ids", []))
+	# One-time village visits are battle state too: without this, save/reload
+	# would let the player claim the same authored reward again.
+	_visited_spot_ids = _string_array(battle.get("visited_spot_ids", []))
 
 	_setup_supports()
 	_rebuild_units_from_save(payload.get("roster", []))

@@ -60,6 +60,108 @@ func test_auto_advances_when_all_player_units_have_acted():
 	assert_eq(_view._turn.round_number, 2)
 
 
+func test_end_turn_shortcuts_warn_and_default_to_keep_playing():
+	var players: Array = _view._living_units_on_team(0)
+	var hp_before := _total_hp(0)
+	for key in [KEY_T, KEY_TAB]:
+		var event := InputEventKey.new()
+		event.keycode = key
+		event.pressed = true
+		_view._unhandled_input(event)
+		assert_eq(_view._menu_context, "end_turn")
+		assert_eq(_view._menu._title, "%d units can still act" % players.size())
+		assert_eq(_view._menu._options, ["Keep playing", "End Turn"])
+		assert_eq(_view._menu._index, 0, "repeated confirm defaults to keeping the turn")
+		assert_false(_view._cursor.active, "map input pauses for the decision")
+		assert_eq(_view._turn.round_number, 1)
+		assert_true(_view._turn.is_player_phase())
+		assert_eq(_total_hp(0), hp_before, "requesting the end does not run enemies")
+		var accept := InputEventAction.new()
+		accept.action = "cursor_confirm"
+		accept.pressed = true
+		_view._menu._unhandled_input(accept)
+		assert_eq(_view._phase, _view.Phase.IDLE)
+		assert_false(_view._menu.visible)
+		assert_true(_view._cursor.active)
+		for unit in players:
+			assert_false(unit.has_acted, "declining preserves available actions")
+
+
+func test_end_turn_warning_counts_only_living_unacted_allies():
+	var players: Array = _view._living_units_on_team(0)
+	assert_gt(players.size(), 1, "fixture has allies to exclude")
+	for unit in players:
+		unit.has_acted = true
+	players[0].has_acted = false
+	players[1].has_acted = false
+	players[1].current_hp = 0
+	_view._menu_ctrl.request_end_turn()
+	assert_eq(_view._menu._title, "1 unit can still act")
+	_view._on_menu_cancelled()
+	assert_eq(_view._turn.round_number, 1)
+	assert_eq(_view._phase, _view.Phase.IDLE)
+	assert_true(_view._cursor.active)
+	assert_false(_view._menu.visible)
+
+
+func test_field_end_turn_cancel_returns_to_field_including_arena():
+	# Arena adds a row; both versions must keep their existing field choices.
+	_view.chapter = _view.chapter.duplicate(true)
+	for arena in [false, true]:
+		_view.chapter.is_arena = arena
+		_view._menu_ctrl.open_field_menu()
+		var field_options: Array = _view._menu._options.duplicate()
+		_view._on_menu_chosen(0)
+		assert_eq(_view._menu_context, "end_turn")
+		var cancel := InputEventAction.new()
+		cancel.action = "cursor_cancel"
+		cancel.pressed = true
+		_view._menu._unhandled_input(cancel)
+		assert_eq(_view._menu_context, "field")
+		assert_eq(_view._menu._options, field_options)
+		assert_false(_view._cursor.active)
+		assert_eq(_view._turn.round_number, 1)
+		_view._on_menu_cancelled()
+
+
+func test_confirming_manual_end_turn_advances_one_round():
+	_view._menu_ctrl.open_field_menu()
+	_view._on_menu_chosen(0)
+	assert_eq(_view._turn.round_number, 1, "field choice first asks for confirmation")
+	_view._on_menu_chosen(1)
+	await _wait_idle()
+	assert_eq(_view._turn.round_number, 2)
+	assert_true(_view._turn.is_player_phase())
+	assert_false(_view._menu.visible)
+	assert_true(_view._cursor.active)
+
+
+func test_manual_end_turn_without_available_actions_skips_warning():
+	for unit in _view._living_units_on_team(0):
+		unit.has_acted = true
+	_view._menu_ctrl.request_end_turn()
+	await _wait_idle()
+	assert_eq(_view._turn.round_number, 2)
+	assert_true(_view._turn.is_player_phase())
+	assert_false(_view._menu.visible)
+
+
+func test_end_turn_shortcut_does_not_interrupt_unit_selection_or_menu():
+	var unit: Unit = _view._living_units_on_team(0)[0]
+	_view._try_select(unit.cell)
+	var event := InputEventKey.new()
+	event.keycode = KEY_T
+	event.pressed = true
+	_view._unhandled_input(event)
+	assert_eq(_view._phase, _view.Phase.SELECTED)
+	assert_eq(_view._selected, unit)
+	_view._deselect()
+	_view._menu_ctrl.open_field_menu()
+	_view._unhandled_input(event)
+	assert_eq(_view._menu_context, "field")
+	assert_eq(_view._turn.round_number, 1)
+
+
 func _total_hp(team: int) -> int:
 	var sum := 0
 	for u in _view._living_units_on_team(team):

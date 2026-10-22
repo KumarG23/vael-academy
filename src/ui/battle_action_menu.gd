@@ -68,10 +68,11 @@ func field_choice(index: int) -> void:
 	_v._menu.close()
 	_v._cursor.active = true
 	_v._phase = _v.Phase.IDLE
+	if index == 0:
+		request_end_turn(true)
+		return
 	if _v.chapter.is_arena:
 		match index:
-			0:
-				_v._end_player_phase()
 			1:
 				_v._arena_retreat()
 			2:
@@ -80,12 +81,39 @@ func field_choice(index: int) -> void:
 				_v._open_save_menu("field")
 		return
 	match index:
-		0:
-			_v._end_player_phase()
 		1:
 			_v._toast_objective()
 		2:
 			_v._open_save_menu("field")
+
+
+## Manual turn endings share a warning while any living ally can still act.
+## Automatic advancement after the last action bypasses this menu.
+func request_end_turn(from_field := false) -> void:
+	if _v._busy or _v._battle_over or not _v._turn.is_player_phase() or _v._phase != _v.Phase.IDLE:
+		return
+	var remaining := 0
+	for unit in _v._living_units_on_team(0):
+		if not unit.has_acted:
+			remaining += 1
+	if remaining == 0:
+		_v._end_player_phase()
+		return
+	_v._end_turn_from_field = from_field
+	var title := "1 unit can still act" if remaining == 1 else "%d units can still act" % remaining
+	open_menu("end_turn", title, ["Keep playing", "End Turn"])
+
+
+func end_turn_choice(index: int) -> void:
+	var from_field: bool = _v._end_turn_from_field
+	_v._end_turn_from_field = false
+	_v._menu.close()
+	_v._cursor.active = true
+	_v._phase = _v.Phase.IDLE
+	if index == 1:
+		_v._end_player_phase()
+	elif from_field:
+		open_field_menu()
 
 
 func open_menu(context: String, title: String, labels: Array) -> void:
@@ -104,6 +132,8 @@ func choose(index: int) -> void:
 	match _v._menu_context:
 		"field":
 			field_choice(index)
+		"end_turn":
+			end_turn_choice(index)
 		"save_slot":
 			_v._do_save_slot(index)
 		"action":
@@ -129,6 +159,8 @@ func cancel() -> void:
 		_v._prep.cancel_menu(_v._menu_context)
 		return
 	match _v._menu_context:
+		"end_turn":
+			end_turn_choice(0)
 		"save_slot":
 			_v._menu.close()
 			_v._cursor.active = true
@@ -311,7 +343,10 @@ func open_trade_give_menu() -> void:
 
 func do_give(index: int) -> void:
 	var item: InventoryItem = _v._menu_items[index]
-	if _v._selected.inventory.transfer_to(item, _v._trade_partner.inventory):
+	if not _v._selected.inventory.is_tradeable(item):
+		_v._pop_text(_v._selected.position, "%s is bound to its bearer" % item.display_name(),
+			Color(0.9, 0.6, 0.4))
+	elif _v._selected.inventory.transfer_to(item, _v._trade_partner.inventory):
 		_v._pop_text(_v._trade_partner.position, "got %s" % item.display_name(), Color(0.7, 0.85, 1.0))
 	# Stay in the give menu so multiple items can be handed over; cancel finishes.
 	if _v._selected.inventory.is_empty():
@@ -354,6 +389,11 @@ func do_visit() -> void:
 	var spot: VisitSpot = _v._visit_spot_at(unit.cell)
 	if spot == null:
 		_v._finish_action()
+		return
+	# Keep the reward and the unit's action available until there is room.
+	if spot.item != null and unit.inventory.is_full():
+		_v._turn_banner.announce("Pack is full — trade something away first.", true)
+		open_action_menu()
 		return
 	_v._visited_spot_ids.append(spot.id)
 	if _v.dialogue_enabled and spot.dialogue != "" and FileAccess.file_exists(spot.dialogue):

@@ -200,3 +200,72 @@ func test_personal_best_survives_a_worse_run():
 	assert_eq(int(Campaign.flags.get("arena_best_wave", 0)), 5, "the record stands")
 	var joined := ". ".join(v._result_screen._lines.map(func(l): return str(l)))
 	assert_string_contains(joined, "Personal best: 5")
+
+
+func _campaign_arena() -> Node2D:
+	Campaign.house_locked = true
+	Campaign.week = 3
+	Campaign.training_used = true
+	Campaign.set_unit_state("kai", {"level": 1, "xp": 95})
+	Campaign.set_unit_state("kael", {"level": 3, "xp": 20})
+	Campaign.deploy()
+	return _arena()
+
+
+func test_retreat_keeps_earned_progression_without_advancing_the_week():
+	var v := _campaign_arena()
+	await wait_physics_frames(2)
+	var kai: Unit = v._lord_unit
+	kai.gain_xp(12, CombatRNG.new(17))
+	kai.inventory.items[0].uses = 12
+	_clear_wave(v)
+	var earned := kai.progression_state()
+	assert_eq(kai.level, 2, "the bout earned a level and stat gains")
+	assert_eq(kai.xp, 7, "overflow XP is part of the earned progression")
+	v._arena_retreat()
+	assert_eq(Campaign.get_unit_state("kai"), earned, "level, XP, gains and inventory survive retreat")
+	assert_eq(Campaign.get_unit_state("kael"), {"level": 3, "xp": 20}, "unfielded allies stay unchanged")
+	assert_eq(Campaign.week, 3, "an arena exit is not a weekly mission victory")
+	assert_eq(Campaign.last_result, "", "the arena does not set a mission result")
+	assert_true(Campaign.training_used, "the exit does not refresh weekly activities")
+	assert_true(bool(Campaign.flags.get("arena_used_this_week", false)), "the trial stays spent this week")
+	assert_eq(int(Campaign.flags.get("gold", 0)), ArenaController.reward(1)["gold"])
+	var banked := Campaign.to_dict()
+	v._arena_retreat()
+	assert_eq(Campaign.to_dict(), banked, "repeated exit cannot pay or capture twice")
+	var next_bout := _arena()
+	await wait_physics_frames(2)
+	assert_eq(next_bout._lord_unit.progression_state(), earned, "redeployment applies the earned state")
+
+
+func test_yield_keeps_earned_progression_after_kai_is_freed():
+	var v := _campaign_arena()
+	await wait_physics_frames(2)
+	var kai: Unit = v._lord_unit
+	kai.gain_xp(12, CombatRNG.new(17))
+	kai.inventory.items[0].uses = 11
+	var earned := kai.progression_state()
+	kai.set_hp(0)
+	v._kill(kai)
+	await wait_physics_frames(2)  # the normal death path frees Kai before the report
+	assert_false(is_instance_valid(kai))
+	v._check_objective()
+	assert_true(v._battle_over)
+	assert_true(v._battle_victory, "yielding still returns to the academy")
+	assert_eq(Campaign.get_unit_state("kai"), earned, "yielding cannot erase earned growth")
+	assert_eq(Campaign.week, 3)
+	assert_eq(Campaign.last_result, "")
+	assert_true(bool(Campaign.flags.get("arena_used_this_week", false)))
+	assert_true(v._permadead_unit_ids.is_empty(), "a yield never becomes permadeath")
+	var next_bout := _arena()
+	await wait_physics_frames(2)
+	assert_eq(next_bout._lord_unit.progression_state(), earned)
+	assert_eq(next_bout._lord_unit.current_hp, next_bout._lord_unit.max_hp(), "Kai returns healed")
+
+
+func test_standalone_arena_does_not_capture_campaign_progression():
+	var v := _arena()
+	await wait_physics_frames(2)
+	v._lord_unit.gain_xp(12, CombatRNG.new(17))
+	v._arena_retreat()
+	assert_true(Campaign.unit_states.is_empty(), "dev bouts leave campaign progression alone")

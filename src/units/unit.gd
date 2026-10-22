@@ -88,7 +88,7 @@ func setup(def: UnitDef, grid: Grid, start_cell: Vector2i) -> void:
 		var weapons: Array = [def.weapon]
 		weapons.append_array(def.extra_weapons)
 		inventory = Inventory.from_starting(weapons, def.starting_items)
-		_repair_story_locked_equipment()
+		_repair_ineligible_equipment()
 		ai_awake = def.ai_behavior != AIBrain.Behavior.SENTINEL
 	_grid = grid
 	cell = start_cell
@@ -352,22 +352,25 @@ func is_moving() -> bool:
 	return _moving
 
 
-## The equipped weapon (first weapon in the inventory).
+## The equipped weapon (first weapon in the inventory), if this unit can use it.
 func weapon() -> WeaponDef:
 	var w := inventory.equipped_weapon()
-	# Even direct equip / old snapshots cannot put locked magic into a counter
-	# or Combatant. Ordinary weapon/school behavior is unchanged.
-	if w != null and w.required_story_flag != "" and not can_use_weapon(w):
+	# Direct equip, old snapshots, and automatic inventory fallback must obey
+	# the same story, school, and bearer eligibility as the equipment menu.
+	if w != null and not can_use_weapon(w):
 		return null
 	return w
 
 
 ## Spend one use of the equipped weapon after an attack. Returns the item that
-## broke (removed from inventory), or null.
+## broke (removed from inventory), or null. A break selects an eligible backup.
 func spend_weapon_use() -> InventoryItem:
 	if weapon() == null:
 		return null
-	return inventory.use_equipped_weapon()
+	var broke := inventory.use_equipped_weapon()
+	if broke != null:
+		_repair_ineligible_equipment()
+	return broke
 
 
 ## Replace the equipped weapon (equip / test helper). Resets its uses.
@@ -421,10 +424,10 @@ func move_points() -> int:
 	return (unit_def.movement if unit_def != null else 5) + _move_bonus
 
 
-## This unit's promotion target: the per-character unique class when the def
-## carries one (approved ladder), else the class's own path.
+## The per-character target applies only before the first promotion. Afterward,
+## follow the current class's own path so the same bonuses cannot be reapplied.
 func promotion_target() -> ClassDef:
-	if unit_def != null and unit_def.promotion_class != null:
+	if _class_override == null and unit_def != null and unit_def.promotion_class != null:
 		return unit_def.promotion_class
 	var c := current_class()
 	return c.promoted_class if c != null else null
@@ -648,7 +651,7 @@ func apply_save_state(state: Dictionary) -> void:
 	_move_bonus = int(state.get("move_bonus", _move_bonus))
 	_apply_class_override(str(state.get("class_override", "")))
 	_apply_inventory_state(state.get("inventory", []))
-	_repair_story_locked_equipment()
+	_repair_ineligible_equipment()
 	current_hp = clampi(int(state.get("current_hp", current_hp)), 0, max_hp())
 	queue_redraw()
 
@@ -675,18 +678,18 @@ func apply_progression_state(state: Dictionary) -> void:
 	_move_bonus = int(state.get("move_bonus", _move_bonus))
 	_apply_class_override(str(state.get("class_override", "")))
 	_apply_inventory_state(state.get("inventory", []))
-	_repair_story_locked_equipment()
+	_repair_ineligible_equipment()
 	_ensure_innate_weapons()  # AW-53: saves that predate an innate weapon gain it
 	current_hp = max_hp()  # full HP for a fresh deployment
 	queue_redraw()
 
 
-## VS-1B: older saves may have Crownspark equipped. Keep every item/use, but
-## select an eligible carried weapon so loading does not strand Kai unarmed.
-## No week/house inference: only the explicit Vision flag permits the spell.
-func _repair_story_locked_equipment() -> void:
+## Older saves or weapon breaks may expose ineligible magic. Keep every item/use,
+## but select an eligible carried weapon when one exists. Ownership never grants
+## a missing story/school unlock or a different bearer's innate magic.
+func _repair_ineligible_equipment() -> void:
 	var equipped := inventory.equipped_weapon()
-	if equipped == null or equipped.required_story_flag == "" or can_use_weapon(equipped):
+	if equipped == null or can_use_weapon(equipped):
 		return
 	for item: InventoryItem in inventory.items:
 		if item.is_weapon() and can_use_weapon(item.weapon()):

@@ -74,6 +74,10 @@ func _build_snaps() -> void:
 func _snapshot(def: UnitDef) -> Dictionary:
 	var u := Unit.new()
 	u.unit_def = def
+	# Unit.setup() seeds level from the UnitDef; this bare unit skips it, so a
+	# student with no saved progression read as Lv 1 (Perrin/Rina start at 2,
+	# Serra at 5). A saved state still wins — apply_progression_state below.
+	u.level = def.level if def != null else 1
 	Campaign.apply_to_unit(u)  # live level-ups etc.; a no-op with no saved state
 	var stats := {}
 	for k in STAT_KEYS:
@@ -81,7 +85,9 @@ func _snapshot(def: UnitDef) -> Dictionary:
 	var skills: Array = []
 	for sk in u.active_skills():
 		skills.append(sk.display_name)
-	var cls := def.char_class.display_name if def.char_class != null else "—"
+	# current_class(): a promoted student shows the class they earned, not the def's base
+	var cur := u.current_class()
+	var cls := cur.display_name if cur != null else "—"
 	var items := _live_items(def.id)  # AW-52: from the live inventory, so trades show
 	var snap := {
 		"id": def.id, "name": def.display_name, "class": cls, "house": def.house_id,
@@ -285,16 +291,18 @@ func _do_save(slot: int) -> void:
 	# slots that LOOKED occupied but could never load.
 	if Campaign.save_to_slot(slot, _save):
 		AudioManager.play_sfx("confirm")
-		_show_toast("Saved to slot %d" % slot)
+		# The System rows read "Slot 1/2/3" (and the battle save banner does
+		# too); toasts must speak the same one-based number, not the 0-based key.
+		_show_toast("Saved to slot %d" % (slot + 1))
 		_refresh_slots()
 	else:
-		_show_toast("Couldn't save slot %d" % slot)
+		_show_toast("Couldn't save slot %d" % (slot + 1))
 	queue_redraw()
 
 
 func _do_load(slot: int) -> void:
 	if not _save.has_slot(slot):
-		_show_toast("Slot %d is empty" % slot)
+		_show_toast("Slot %d is empty" % (slot + 1))
 		queue_redraw()
 		return
 	# AW-75: a slot holding a live battle resumes into the battle itself.
@@ -606,7 +614,10 @@ func _slot_label(slot: int) -> String:
 		if int(info.get("slot", -1)) == slot:
 			var mode := "Casual" if bool(info.get("casual_mode", false)) else "Classic"
 			var ch := str(info.get("chapter_id", ""))
-			return "%s · %s" % [ch if ch != "" else "the academy", mode]
+			# A live battle is not a campus checkpoint: say so before the player
+			# loads it (the title screen uses the same ⚔ marker).
+			var battle_tag := "  ⚔ mid-battle" if bool(info.get("in_battle", false)) else ""
+			return "%s · %s%s" % [ch if ch != "" else "the academy", mode, battle_tag]
 	return "— empty —"
 
 

@@ -12,17 +12,21 @@ var _lines: Array = []  # AW-50: optional report lines under the title (the aren
 
 
 func show_victory() -> void:
+	_lines.clear()  # a normal battle never inherits an arena report card
 	_show("Victory", Color(0.95, 0.82, 0.35))
 
 
 func show_defeat() -> void:
+	_lines.clear()  # a normal battle never inherits an arena report card
 	_show("Defeat", Color(0.85, 0.28, 0.28))
 
 
 ## AW-50: a titled report card — the arena's "you made it this far" screen.
 ## `lines` render centred under the title.
 func show_report(title: String, accent: Color, lines: Array) -> void:
-	_lines = lines
+	# Own the report so caller edits and later battle results cannot mutate
+	# each other's lines. This overlay only presents the supplied report.
+	_lines = lines.duplicate()
 	_show(title, accent)
 
 
@@ -30,13 +34,46 @@ func is_shown() -> bool:
 	return _shown
 
 
+func _ready() -> void:
+	# A click-to-dismiss overlay has to claim the pointer; with the default FILTER
+	# the click can fall through to the map behind it and never reach _gui_input.
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	if not get_viewport().size_changed.is_connected(_fit_to_viewport):
+		get_viewport().size_changed.connect(_fit_to_viewport)
+	if _shown:
+		_fit_to_viewport()
+
+
+## Anchors alone leave a zero-size rect when the parent is a bare Viewport (the
+## battle's CanvasLayer, a SubViewport), so a real click never lands on the
+## overlay. Pin to the top-left and size it to the viewport explicitly.
+func _fit_to_viewport() -> void:
+	if not _shown or not is_inside_tree():
+		return
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	position = Vector2.ZERO
+	size = get_viewport_rect().size
+
+
 func _show(text: String, accent: Color) -> void:
 	_text = text
 	_accent = accent
 	_shown = true
 	visible = true
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	_fit_to_viewport()
 	queue_redraw()
+
+
+## Single dismissal path: hide the overlay and report once. Leaving it visible
+## would keep the (now dead) overlay over the scene and let a second input emit
+## `dismissed` again.
+func _dismiss() -> void:
+	if not _shown:
+		return
+	_shown = false
+	visible = false
+	queue_redraw()
+	dismissed.emit()
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -44,7 +81,7 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseButton and event.pressed:
 		accept_event()
-		dismissed.emit()
+		_dismiss()
 
 
 ## Keys arrive here — _gui_input only sees them when focused, and nothing focuses
@@ -54,7 +91,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		get_viewport().set_input_as_handled()
-		dismissed.emit()
+		_dismiss()
 
 
 func _draw() -> void:

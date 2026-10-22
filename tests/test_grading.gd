@@ -92,6 +92,142 @@ func test_pick_questions_returns_a_lesson():
 		assert_true(q.has("q") and q.has("choices") and q.has("correct"), "well-formed question")
 
 
+func test_malformed_questions_never_enter_the_pool():
+	assert_true(QuizScene.is_well_formed({"q": "ok", "choices": ["a", "b"], "correct": 1.0}), "JSON floats are fine")
+	assert_false(QuizScene.is_well_formed({"q": "no choices", "choices": [], "correct": 0}), "empty choices would divide by zero")
+	assert_false(QuizScene.is_well_formed({"q": "oob", "choices": ["a"], "correct": 1}), "answer index out of range")
+	assert_false(QuizScene.is_well_formed({"q": "neg", "choices": ["a"], "correct": -1}))
+	assert_false(QuizScene.is_well_formed({"q": "frac", "choices": ["a", "b"], "correct": 0.5}))
+	assert_false(QuizScene.is_well_formed({"choices": ["a"], "correct": 0}), "no question text")
+	assert_false(QuizScene.is_well_formed({"q": "no answer", "choices": ["a"]}))
+	assert_false(QuizScene.is_well_formed("not a dict"))
+	# the shipped bank is entirely runnable once every source is read
+	var all_read := {}
+	var raw: Array = JSON.parse_string(FileAccess.get_file_as_string(QuizScene.BANK_PATH))
+	for q in raw:
+		if str(q.get("req_flag", "")) != "":
+			all_read[str(q["req_flag"])] = true
+	assert_eq(QuizScene.eligible_questions(all_read).size(), raw.size(), "no shipped question is filtered out")
+
+
+func _press(quiz: QuizScene, action: String) -> void:
+	var ev := InputEventAction.new()
+	ev.action = action
+	ev.pressed = true
+	quiz._unhandled_input(ev)
+
+
+func test_input_after_the_last_answer_is_ignored():
+	var quiz := QuizScene.new()
+	add_child_autofree(quiz)
+	watch_signals(quiz)
+	quiz.start([{"q": "one", "choices": ["a", "b"], "correct": 0}])
+	_press(quiz, "cursor_confirm")
+	quiz._process(QuizScene.REVEAL_TIME + 0.1)
+	assert_signal_emitted_with_parameters(quiz, "finished", [1, 1])
+	# the host frees the overlay at frame end; stray keys in between must not index past the end
+	_press(quiz, "cursor_down")
+	_press(quiz, "cursor_confirm")
+	assert_eq(quiz._choice, 0, "no navigation once the lesson is over")
+	assert_signal_emit_count(quiz, "finished", 1, "the lesson finishes exactly once")
+
+
+func test_restart_clears_a_pending_reveal():
+	var quiz := QuizScene.new()
+	add_child_autofree(quiz)
+	quiz.start([{"q": "one", "choices": ["a", "b"], "correct": 1}])
+	_press(quiz, "cursor_confirm")
+	assert_true(quiz._revealing, "mid-reveal")
+	quiz.start([{"q": "two", "choices": ["a", "b"], "correct": 0}])
+	assert_false(quiz._revealing, "a fresh lesson starts unrevealed")
+	assert_eq(quiz._picked, -1)
+	_press(quiz, "cursor_down")
+	assert_eq(quiz._choice, 1, "and accepts input immediately")
+
+
+func test_start_filters_malformed_questions_at_the_scene_boundary():
+	var quiz := QuizScene.new()
+	add_child_autofree(quiz)
+	quiz.start([
+		{"q": "no choices", "choices": [], "correct": 0},
+		{"q": "out of range", "choices": ["a"], "correct": 3},
+		{"q": "runnable", "choices": ["a", "b"], "correct": 1},
+	])
+	assert_eq(quiz._questions.size(), 1, "only runnable questions enter the lesson")
+	_press(quiz, "cursor_down")  # would modulo by zero on the malformed first entry
+	assert_eq(quiz._choice, 1, "navigation uses the surviving question's choices")
+	_press(quiz, "cursor_confirm")
+	assert_true(quiz._revealing, "the valid question still answers")
+
+
+func test_an_empty_lesson_never_crashes_or_finishes_itself():
+	var quiz := QuizScene.new()
+	add_child_autofree(quiz)
+	watch_signals(quiz)
+	quiz.start([])
+	_press(quiz, "cursor_up")
+	_press(quiz, "cursor_down")
+	_press(quiz, "cursor_confirm")
+	assert_eq(quiz._q_i, 0)
+	assert_eq(quiz._choice, 0)
+	assert_signal_not_emitted(quiz, "finished", "there is no lesson to report")
+
+
+func test_a_direct_second_answer_cannot_double_count():
+	var quiz := QuizScene.new()
+	add_child_autofree(quiz)
+	quiz.start([{"q": "one", "choices": ["a", "b"], "correct": 0}])
+	quiz._answer()
+	quiz._answer()
+	assert_eq(quiz._correct, 1, "the reveal locks in exactly one answer")
+	assert_true(quiz._revealing)
+
+
+func test_the_lesson_overlay_fills_the_viewport_and_stops_the_pointer():
+	var quiz := QuizScene.new()
+	add_child_autofree(quiz)
+	quiz.start([{"q": "one", "choices": ["a", "b", "c"], "correct": 2}])
+	assert_eq(quiz.size, quiz.get_viewport_rect().size,
+		"a modal lesson must have a real clickable rect, not 0x0")
+	assert_eq(quiz.mouse_filter, Control.MOUSE_FILTER_STOP,
+		"clicks cannot fall through the lesson to the castle")
+
+
+func test_mouse_click_answers_the_row_under_the_pointer():
+	var quiz := QuizScene.new()
+	add_child_autofree(quiz)
+	quiz.start([{"q": "one", "choices": ["a", "b", "c"], "correct": 2}])
+	var row := quiz._choice_row_rect(2)
+	var motion := InputEventMouseMotion.new()
+	motion.position = row.get_center()
+	quiz._gui_input(motion)
+	assert_eq(quiz._choice, 2, "hovering highlights the row")
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = row.get_center()
+	quiz._gui_input(click)
+	assert_true(quiz._revealing, "a click answers")
+	assert_eq(quiz._picked, 2)
+	assert_eq(quiz._correct, 1, "the clicked right answer scores")
+
+
+func test_footer_hint_matches_the_one_click_answer():
+	var quiz := QuizScene.new()
+	add_child_autofree(quiz)
+	quiz.start([{"q": "one", "choices": ["a", "b"], "correct": 0}])
+	var hint := quiz.hint_text()
+	assert_true(hint.contains("click answer"), "a click answers at once, so the hint says so")
+	assert_false(hint.contains("click choose"), "no promise of a separate click-to-choose step")
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = quiz._choice_row_rect(1).get_center()
+	quiz._gui_input(click)
+	assert_true(quiz._revealing, "one click really did answer, as the hint promised")
+	assert_eq(quiz.hint_text(), "…", "the reveal beat hides the controls")
+
+
 # --- the lesson in the castle ----------------------------------------------------
 
 var _castle: CastleScene
@@ -227,3 +363,19 @@ func test_perfect_score_awards_a_spellbook_once():
 	_castle._start_class()
 	_castle._on_quiz_done(4, 4)
 	assert_true(bool(Campaign.flags.get("spellbook_gale", false)), "the ladder advances to Gale")
+
+
+func test_full_pack_keeps_the_spellbook_pending():
+	_open_castle()
+	# fill Kai's persisted kit to capacity
+	var guard := 0
+	while Campaign.grant_item("kai", "res://data/items/vulnerary.tres") and guard < 64:
+		guard += 1
+	assert_lt(guard, 64, "the pack really fills")
+	_castle._start_class()
+	_castle._on_quiz_done(4, 4)  # 100%
+	assert_false(bool(Campaign.flags.get("spellbook_ember", false)), "an undelivered book isn't marked as earned")
+	assert_false(bool(Campaign.flags.get("school_ember", false)), "nor does its school open without the tome")
+	for e in Campaign.get_unit_state("kai")["inventory"]:
+		assert_ne(str(e.get("id", "")), "fire", "no tome squeezed into a full pack")
+	assert_eq(_castle._next_spellbook()["flag"], "spellbook_ember", "Ember is still the next book owed")

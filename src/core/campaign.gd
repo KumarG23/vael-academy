@@ -310,7 +310,7 @@ func save_to_slot(slot: int, save_system: SaveSystem = null) -> bool:
 
 func load_from_slot(slot: int, save_system: SaveSystem = null) -> bool:
 	var data := _sys(save_system).load_slot(slot)
-	if data.is_empty() or not data.has("campaign"):
+	if not (data.get("campaign") is Dictionary):
 		return false
 	from_dict(data["campaign"])
 	_skip_next_hub_reset = true  # the next hub visit resumes the saved one

@@ -21,6 +21,21 @@ var _reveal_left := 0.0
 var _picked := -1
 
 
+## A question the lesson can actually run: text, at least one choice, and a
+## `correct` index inside the choices. Anything else would crash mid-lesson
+## (modulo-by-zero on navigation, out-of-range reveal), so it never enters the pool.
+static func is_well_formed(q: Variant) -> bool:
+	if not (q is Dictionary):
+		return false
+	if not (q.get("q") is String) or not (q.get("choices") is Array):
+		return false
+	var n: int = (q["choices"] as Array).size()
+	var c: Variant = q.get("correct")
+	if n == 0 or not (c is int or c is float) or float(c) != floorf(float(c)):
+		return false
+	return int(c) >= 0 and int(c) < n
+
+
 ## The eligible pool for the current campaign: ungated basics + any lore whose
 ## source has been read. Pure/static so tests can call it directly.
 static func eligible_questions(flags: Dictionary) -> Array:
@@ -31,7 +46,7 @@ static func eligible_questions(flags: Dictionary) -> Array:
 		return []
 	var out: Array = []
 	for q in raw:
-		if not (q is Dictionary):
+		if not is_well_formed(q):
 			continue
 		var req := str(q.get("req_flag", ""))
 		if req == "" or bool(flags.get(req, false)):
@@ -45,26 +60,60 @@ static func pick_questions(n: int, flags: Dictionary) -> Array:
 	return pool.slice(0, mini(n, pool.size()))
 
 
+func _ready() -> void:
+	# A lesson is a modal overlay. A Control added under the castle's CanvasLayer
+	# keeps a zero-size rect even after an anchor preset, so it would neither
+	# receive pointer input nor shield the scene underneath from stray clicks.
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	if not get_viewport().size_changed.is_connected(_fit_to_viewport):
+		get_viewport().size_changed.connect(_fit_to_viewport)
+	_fit_to_viewport()
+
+
 func start(questions: Array) -> void:
-	_questions = questions
+	# The pool helper filters the shipped bank, but `start` is also the scene's
+	# public lesson boundary. Drop anything it could not run so one bad entry
+	# can never divide by zero on navigation or index past the choices.
+	var runnable: Array = []
+	for q in questions:
+		if is_well_formed(q):
+			runnable.append(q)
+	_questions = runnable
 	_q_i = 0
 	_correct = 0
 	_choice = 0
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	_revealing = false
+	_reveal_left = 0.0
+	_picked = -1
+	_fit_to_viewport()
 	queue_redraw()
 
 
+## Size the overlay to the real viewport. Anchors alone are not enough for a
+## Control under a CanvasLayer/SubViewport; without this its clickable rect is 0×0.
+func _fit_to_viewport() -> void:
+	if not is_inside_tree():
+		return
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	position = Vector2.ZERO
+	size = get_viewport_rect().size
+
+
 func _unhandled_input(event: InputEvent) -> void:
-	if _revealing or _questions.is_empty():
+	# past the last question the lesson is over (the host frees us next frame)
+	if _revealing or _q_i < 0 or _q_i >= _questions.size():
+		return
+	var n := _n_choices()
+	if n <= 0:
 		return
 	if event.is_action_pressed("cursor_up"):
 		get_viewport().set_input_as_handled()
-		_choice = (_choice - 1 + _n_choices()) % _n_choices()
+		_choice = (_choice - 1 + n) % n
 		AudioManager.play_sfx("cursor")
 		queue_redraw()
 	elif event.is_action_pressed("cursor_down"):
 		get_viewport().set_input_as_handled()
-		_choice = (_choice + 1) % _n_choices()
+		_choice = (_choice + 1) % n
 		AudioManager.play_sfx("cursor")
 		queue_redraw()
 	elif event.is_action_pressed("cursor_confirm") or event.is_action_pressed("ui_accept"):
@@ -72,11 +121,65 @@ func _unhandled_input(event: InputEvent) -> void:
 		_answer()
 
 
+## Mouse users get the same choice rows as keyboard users: hover highlights,
+## a left click answers. The rows live inside the modal rect sized above.
+func _gui_input(event: InputEvent) -> void:
+	if _revealing or _q_i < 0 or _q_i >= _questions.size():
+		return
+	if event is InputEventMouseMotion:
+		var hovered := _choice_at(event.position)
+		if hovered >= 0 and hovered != _choice:
+			_choice = hovered
+			AudioManager.play_sfx("cursor")
+			queue_redraw()
+	elif event is InputEventMouseButton and event.pressed \
+			and event.button_index == MOUSE_BUTTON_LEFT:
+		var clicked := _choice_at(event.position)
+		if clicked >= 0:
+			_choice = clicked
+			accept_event()
+			_answer()
+
+
 func _n_choices() -> int:
-	return (_questions[_q_i]["choices"] as Array).size()
+	if _q_i < 0 or _q_i >= _questions.size():
+		return 0
+	var choices: Variant = _questions[_q_i].get("choices")
+	return (choices as Array).size() if choices is Array else 0
+
+
+func _choice_at(local: Vector2) -> int:
+	for i in range(_n_choices()):
+		if _choice_row_rect(i).has_point(local):
+			return i
+	return -1
+
+
+func _panel_rect() -> Rect2:
+	if _questions.is_empty() or _q_i < 0 or _q_i >= _questions.size():
+		return Rect2()
+	var vp := get_viewport_rect().size
+	var w := minf(760.0, vp.x * 0.8)
+	var h := 208.0 + _n_choices() * 46.0
+	return Rect2((vp.x - w) * 0.5, (vp.y - h) * 0.5, w, h)
+
+
+func _choice_row_rect(i: int) -> Rect2:
+	var r := _panel_rect()
+	if r.size.x <= 0.0 or r.size.y <= 0.0:
+		return Rect2()
+	return Rect2(r.position.x + 30.0, r.position.y + 180.0 + i * 46.0 - 22.0,
+		maxf(20.0, r.size.x - 60.0), 34.0)
 
 
 func _answer() -> void:
+	# Public method: ignore a repeated/direct call while the reveal is running,
+	# and never index a question that was filtered or already completed.
+	if _revealing or _q_i < 0 or _q_i >= _questions.size():
+		return
+	var n := _n_choices()
+	if n <= 0 or _choice < 0 or _choice >= n:
+		return
 	_picked = _choice
 	var right := _picked == int(_questions[_q_i]["correct"])
 	if right:
@@ -104,16 +207,24 @@ func _process(delta: float) -> void:
 		queue_redraw()
 
 
+## The footer must describe the real controls: a click on a row answers at once
+## (there is no separate click-to-choose step), exactly like Enter.
+func hint_text() -> String:
+	return "…" if _revealing else "↑/↓ choose   ·   Enter or click answer"
+
+
 func _draw() -> void:
-	if _questions.is_empty() or _q_i >= _questions.size():
+	if _questions.is_empty() or _q_i < 0 or _q_i >= _questions.size():
 		return
 	var vp := get_viewport_rect().size
 	draw_rect(Rect2(Vector2.ZERO, vp), Color(0.05, 0.06, 0.09, 0.75), true)
-	var w := minf(760.0, vp.x * 0.8)
 	var q: Dictionary = _questions[_q_i]
 	var choices: Array = q["choices"]
-	var h := 208.0 + choices.size() * 46.0
-	var r := Rect2((vp.x - w) * 0.5, (vp.y - h) * 0.5, w, h)
+	var r := _panel_rect()
+	if r.size.x <= 0.0 or r.size.y <= 0.0:
+		return
+	var w := r.size.x
+	var h := r.size.y
 	UITheme.draw_panel(self, r)  # AW-56: the shared noble frame
 	var font := UITheme.font()
 	# content sits inside the frame's ornate corners (AW-56 inset)
@@ -128,7 +239,9 @@ func _draw() -> void:
 	# the choices
 	var cy := r.position.y + 180.0
 	for i in range(choices.size()):
-		var row := Rect2(r.position.x + 30, cy - 22, w - 60, 34)
+		var row := _choice_row_rect(i)
+		if row.size.x <= 0.0:
+			continue
 		if _revealing:
 			if i == int(q["correct"]):
 				draw_rect(row, Color(0.25, 0.65, 0.35, 0.55), true)   # the truth, green
@@ -140,6 +253,5 @@ func _draw() -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, row.size.x - 24, 17,
 			Color(0.96, 0.94, 0.86) if (i == _choice and not _revealing) else Color(0.82, 0.84, 0.9))
 		cy += 46.0
-	var hint := "…" if _revealing else "↑/↓ choose   ·   Enter answer"
-	draw_string(font, Vector2(r.position.x + 36, r.position.y + h - 30), hint,
+	draw_string(font, Vector2(r.position.x + 36, r.position.y + h - 30), hint_text(),
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))

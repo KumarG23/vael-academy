@@ -107,10 +107,19 @@ func consumables() -> Array[InventoryItem]:
 	return out
 
 
+## Whether `item` can change hands. Innate gear is part of its bearer, and
+## tomes answer only the unit who learned them (AW-55: spells don't trade).
+func is_tradeable(item: InventoryItem) -> bool:
+	if item == null:
+		return false
+	var w := item.weapon()
+	return w == null or (not w.innate and w.weapon_type != WeaponDef.WeaponType.TOME)
+
+
 ## Transfer `item` from this inventory to `other`. Returns true on success
-## (item present here and room there).
+## (item present here, tradeable, and room there).
 func transfer_to(item: InventoryItem, other: Inventory) -> bool:
-	if not items.has(item) or other.is_full():
+	if other == null or not items.has(item) or other.is_full() or not is_tradeable(item):
 		return false
 	items.erase(item)
 	other.items.append(item)

@@ -765,10 +765,11 @@ func _rest_week() -> void:
 		return
 	var sem_before := Campaign.semester
 	Campaign.advance_week()
-	_refresh_date()
 	if Campaign.semester != sem_before:
 		_play_report_card()  # AW-64: the term closed — the ceremony, not a toast
+		_refresh_date()      # a set piece on the new week queues after it
 		return
+	_refresh_date()
 	var e := Campaign.current_event()
 	if e != null and e.kind == CalendarEventDef.Kind.HOLIDAY:
 		_toast("It's %s! The whole castle is celebrating." % e.label)
@@ -1033,11 +1034,16 @@ func _on_quiz_done(correct: int, total: int) -> void:
 	if pct >= 100:
 		var award := _next_spellbook()
 		if not award.is_empty():
-			Campaign.flags[award["flag"]] = true
-			Campaign.flags["school_" + str(award["school"])] = true  # WO-8.2: the school opens
-			Campaign.grant_weapon("kai", award["weapon"])
-			steps.append({"speaker": t["name"], "side": "right", "portrait": t["id"],
-				"text": "Kai received %s!" % award["label"]})
+			# a full pack must not eat the book: the award stays pending (unflagged)
+			# so the next perfect lesson — or the bookshop — can still deliver it
+			if Campaign.grant_weapon("kai", award["weapon"]):
+				Campaign.flags[award["flag"]] = true
+				Campaign.flags["school_" + str(award["school"])] = true  # WO-8.2: the school opens
+				steps.append({"speaker": t["name"], "side": "right", "portrait": t["id"],
+					"text": "Kai received %s!" % award["label"]})
+			else:
+				steps.append({"speaker": t["name"], "side": "right", "portrait": t["id"],
+					"text": "Kai's pack is full — clear a slot first."})
 		else:
 			Campaign.flags["gold"] = int(Campaign.flags.get("gold", 0)) + 60
 			steps.append({"speaker": t["name"], "side": "right", "portrait": t["id"],
@@ -1149,15 +1155,28 @@ func _play_dialogue_json(json_text: String) -> void:
 	_play_script(DialogueScript.from_json(json_text))
 
 
+## Scripts started while another is on screen wait their turn (the term's report
+## card and the Founding Festival can both land on one rest) — never stacked.
+var _dialogue_queue: Array[DialogueScript] = []
+
+
 func _play_script(script: DialogueScript) -> void:
-	_dialogue = DialogueScene.new()
-	_ui.add_child(_dialogue)
-	_dialogue.event_triggered.connect(_on_dialogue_event)
-	_dialogue.heart_gate = _heart_available  # AW-57: ♥ options gate on the bond
-	_dialogue.finished.connect(func():
-		_dialogue.queue_free()
-		_dialogue = null)
-	_dialogue.play(script)
+	if _dialogue != null:
+		_dialogue_queue.append(script)
+		return
+	var scene := DialogueScene.new()
+	_dialogue = scene
+	_ui.add_child(scene)
+	scene.event_triggered.connect(_on_dialogue_event)
+	scene.heart_gate = _heart_available  # AW-57: ♥ options gate on the bond
+	scene.finished.connect(func():
+		scene.queue_free()
+		if _dialogue != scene:
+			return  # a late repeat signal never advances someone else's turn
+		_dialogue = null
+		if not _dialogue_queue.is_empty():
+			_play_script(_dialogue_queue.pop_front()))
+	scene.play(script)
 
 
 ## AW-57: may a ♥ option for `uid` be offered to Kai right now? Needs an A-rank

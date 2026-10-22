@@ -29,6 +29,46 @@ func test_builds_a_snapshot_for_every_fielded_unit():
 	assert_true(s["stats"].has("hp") and int(s["stats"]["hp"]) > 0, "real stats captured")
 
 
+## A promoted student's card names the promoted class — the def's base class
+## is only the starting point (Unit._class_override carries the promotion).
+func test_roster_card_shows_the_promoted_class():
+	var def: UnitDef = null
+	for d in Roster.player_units():
+		if d.id == "kai":
+			def = d
+	assert_not_null(def, "Kai is fielded")
+	var promoted: ClassDef = load("res://data/classes/warder_lord.tres")
+	var scratch := Unit.new()
+	scratch.setup(def.duplicate(), Grid.new(1, 1), Vector2i.ZERO)
+	scratch._class_override = promoted
+	Campaign.set_unit_state("kai", scratch.save_state())
+	scratch.free()
+	_journal._build_snaps()
+	var card: Dictionary = {}
+	for s in _journal._snaps:
+		if s["id"] == "kai":
+			card = s
+	assert_eq(card.get("class", ""), promoted.display_name, "the card shows the promoted class")
+	assert_ne(card.get("class", ""), def.char_class.display_name, "not the base class")
+
+
+## A card must show the level the student actually deploys at. A bare Unit
+## (without setup()) starts at Lv 1, so every un-promoted card read as Lv 1 —
+## Perrin and Rina are authored at Lv 2, Serra at Lv 5.
+func test_roster_card_shows_the_authored_starting_level():
+	var card := _card_for("perrin")
+	assert_false(card.is_empty(), "Perrin is on the roster")
+	assert_eq(int(card["level"]), 2, "Perrin deploys at his authored Lv 2")
+
+
+## A saved level still wins over the authored one.
+func test_roster_card_shows_the_saved_level():
+	Campaign.set_unit_state("perrin", {"level": 7, "xp": 12})
+	_journal._build_snaps()
+	var card := _card_for("perrin")
+	assert_eq(int(card["level"]), 7, "the card follows the campaign's progression")
+
+
 func test_tabs_cycle():
 	assert_eq(_journal._tab, 0)
 	_journal._switch_tab(1)
@@ -53,6 +93,34 @@ func test_saving_writes_a_slot_and_the_label_updates():
 	assert_true(_journal._save.has_slot(TEST_SLOT), "the slot now exists on disk")
 	_journal._refresh_slots()
 	assert_ne(_journal._slot_label(TEST_SLOT), "— empty —", "the System tab shows it as filled")
+
+
+## The System rows read "Slot 1/2/3"; the toasts must say the same number or
+## saving Slot 1 visibly reports "Saved to slot 0".
+func test_system_toasts_use_one_based_slot_numbers():
+	_journal._tab = 4
+	_journal._do_load(0)
+	assert_eq(_journal._toast, "Slot 1 is empty")
+	_journal._do_save(TEST_SLOT)  # the third System row
+	assert_eq(_journal._toast, "Saved to slot 3")
+
+
+## A resumed battle is a different kind of save; the System tab should warn
+## before the player loads it instead of showing it like a campus checkpoint.
+func test_system_slot_label_marks_a_live_battle():
+	var payload := {
+		"campaign": Campaign.to_dict(),
+		"battle": {"chapter_id": "mock_battle", "battle_over": false},
+		"roster": [],
+	}
+	assert_true(_journal._save.save_slot(0, payload))
+	_journal._refresh_slots()
+	assert_string_contains(_journal._slot_label(0), "⚔ mid-battle")
+	payload["battle"]["battle_over"] = true
+	assert_true(_journal._save.save_slot(0, payload))
+	_journal._refresh_slots()
+	assert_false(_journal._slot_label(0).contains("⚔ mid-battle"),
+		"a finished battle is an ordinary save")
 
 
 ## AW-76 (Codex finding #3): a journal save must be LOADABLE — the raw
@@ -161,3 +229,10 @@ func test_volume_adjust_changes_the_audio_setting():
 	assert_true(changed, "the volume row consumes ←/→")
 	assert_lt(AudioManager.music_volume, before + 0.001, "music volume went down")
 	AudioManager.music_volume = 0.7
+
+
+func _card_for(id: String) -> Dictionary:
+	for s in _journal._snaps:
+		if str(s["id"]) == id:
+			return s
+	return {}

@@ -4,6 +4,13 @@ extends GutTest
 var _sys: SaveSystem
 
 
+class SlotPayloadFixture extends SaveSystem:
+	var payload: Dictionary = {}
+
+	func load_slot(_slot: int) -> Dictionary:
+		return payload.duplicate(true)
+
+
 func before_each() -> void:
 	Campaign.reset_new_game(false, 7)
 	_sys = SaveSystem.new("user://test_hub_saves")
@@ -51,6 +58,26 @@ func test_training_persists_through_save_and_load():
 	assert_false(Campaign.has_unit_state("kai"), "cleared before load")
 	assert_true(Campaign.load_from_slot(1, _sys))
 	assert_eq(int(Campaign.get_unit_state("kai").get("xp", -1)), 10, "training XP restored")
+
+
+func test_malformed_campaign_load_leaves_current_playthrough_unchanged():
+	var saves := SlotPayloadFixture.new()
+	Campaign.set_house("thornrook")
+	Campaign.house_locked = true
+	Campaign.flags["prologue_done"] = true
+	Campaign.set_unit_state("kai", {"level": 2, "xp": 17})
+	for payload in [{}, {"campaign": null}, {"campaign": []},
+			{"campaign": "broken"}, {"campaign": 42}, {"campaign": true}]:
+		saves.payload = payload
+		Campaign.training_used = true
+		Campaign.deploy()
+		var before := Campaign.to_dict()
+		assert_false(Campaign.load_from_slot(0, saves), "invalid campaign cannot load")
+		assert_eq(Campaign.to_dict(), before, "failed load preserves all saved state")
+		assert_eq(Roster.active_house, "thornrook")
+		assert_true(Campaign.active, "failed load preserves deployment state")
+		Campaign.begin_hub_visit()
+		assert_true(Campaign.can_train(), "failed load cannot suppress the next hub reset")
 
 
 func test_capture_stores_roster_and_result():

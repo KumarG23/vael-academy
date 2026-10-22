@@ -49,6 +49,31 @@ func test_reachable_clamps_at_map_edges():
 	assert_eq(reached[Vector2i(2, 2)], 4)
 
 
+func test_zero_budget_keeps_only_occupied_origin_without_charging_its_terrain():
+	var c := _plains_map(3, 1)
+	var origin := Vector2i(1, 0)
+	c.set_terrain(origin.x, origin.y, Terrain.Type.MOUNTAIN)
+	var ctx := _ctx(c, FOOT, {origin: 0})
+	assert_eq(Pathfinder.reachable(origin, 0, ctx), {origin: 0})
+	assert_eq(MovementRange.standable_tiles(origin, 0, ctx), [origin])
+	var reached := Pathfinder.reachable(origin, 1, ctx)
+	assert_eq(reached.get(Vector2i(0, 0), -1), 1, "leaving the mountain costs only plains entry")
+	assert_eq(reached.get(Vector2i(2, 0), -1), 1)
+
+
+func test_reachable_uses_cheaper_detour_at_exact_budget():
+	# Direct route costs 13; either plains detour takes six steps and costs 6.
+	var c := _plains_map(5, 3)
+	for x in range(1, 4):
+		c.set_terrain(x, 1, Terrain.Type.MOUNTAIN)
+	var origin := Vector2i(0, 1)
+	var goal := Vector2i(4, 1)
+	var ctx := _ctx(c)
+	assert_false(Pathfinder.reachable(origin, 5, ctx).has(goal), "one point short of detour cost")
+	assert_eq(Pathfinder.reachable(origin, 6, ctx).get(goal, -1), 6,
+		"a longer affordable route must remain reachable")
+
+
 func test_forest_costs_two_to_enter():
 	var c := _plains_map(5, 5)
 	c.set_terrain(3, 2, Terrain.Type.FOREST)  # east of origin at (2,2)
@@ -138,6 +163,56 @@ func test_find_path_prefers_plains_over_forest():
 	for step in path:
 		assert_ne(c.get_terrain(step.x, step.y), Terrain.Type.FOREST,
 			"cheapest path stays on plains")
+
+
+func test_find_path_takes_longer_route_when_it_costs_less():
+	var c := _plains_map(5, 3)
+	for x in range(1, 4):
+		c.set_terrain(x, 1, Terrain.Type.MOUNTAIN)
+	var start := Vector2i(0, 1)
+	var goal := Vector2i(4, 1)
+	var ctx := _ctx(c)
+	var path := Pathfinder.find_path(start, goal, ctx)
+	assert_eq(path.size(), 7, "six plains steps beat four steps through mountains")
+	if path.is_empty():
+		return
+	assert_eq(path.front(), start)
+	assert_eq(path.back(), goal)
+	var cost := 0
+	for i in range(1, path.size()):
+		var previous: Vector2i = path[i - 1]
+		var cell: Vector2i = path[i]
+		assert_eq(absi(cell.x - previous.x) + absi(cell.y - previous.y), 1,
+			"each step must enter an orthogonally adjacent cell")
+		assert_true(ctx.in_bounds(cell), "detour stays inside the map")
+		cost += ctx.enter_cost(cell)
+	assert_eq(cost, 6, "minimize movement cost rather than number of steps")
+	assert_eq(cost, Pathfinder.reachable(start, 6, ctx).get(goal, -1),
+		"path preview cost matches the reachable overlay")
+
+
+func test_find_path_respects_mover_team_in_occupied_corridor():
+	var c := _plains_map(5, 1)
+	var start := Vector2i(0, 0)
+	var occupied := Vector2i(2, 0)
+	var goal := Vector2i(4, 0)
+	for team in [0, 1]:
+		var ally_ctx := _ctx(c, FOOT, {start: team, occupied: team}, team)
+		assert_eq(Pathfinder.find_path(start, goal, ally_ctx), [
+			start, Vector2i(1, 0), occupied, Vector2i(3, 0), goal,
+		], "allied units allow passage for either team")
+		var enemy_ctx := _ctx(c, FOOT, {occupied: 1 - team}, team)
+		assert_eq(Pathfinder.find_path(start, occupied, enemy_ctx), [],
+			"an enemy cannot be the destination")
+		assert_eq(Pathfinder.find_path(start, goal, enemy_ctx), [],
+			"an enemy blocks the route beyond its cell")
+
+
+func test_find_path_rejects_goals_outside_each_map_edge():
+	var c := _plains_map(3, 3)
+	for goal in [Vector2i(-1, 1), Vector2i(3, 1), Vector2i(1, -1), Vector2i(1, 3)]:
+		assert_eq(Pathfinder.find_path(Vector2i(1, 1), goal, _ctx(c)), [],
+			"off-map destinations must not produce a path")
 
 
 func test_find_path_returns_empty_when_goal_walled():

@@ -163,3 +163,106 @@ func test_branch_sample_file_plays_both_paths():
 		assert_true(_finished, "sample finished on pick %d" % pick)
 		assert_eq(_lines.size(), 4, "ask + two path lines + converge on pick %d" % pick)
 	assert_string_contains(_lines[1], "marsh", "pick 1 took the marsh branch")
+
+
+# --- edge cases and UI helpers ------------------------------------------------
+
+func test_leading_choice_works_without_a_current_line():
+	var s := DialogueScript.from_json('[{"choice":"Pick?","options":[{"text":"A"},{"text":"B"}]},{"text":"after"}]')
+	assert_true(s.ok())
+	_scene.play(s)
+	assert_true(_scene.awaiting_choice())
+	assert_eq(_choices, ["Pick?"], "choice_shown fired for leading choice")
+	# No line should be shown yet
+	assert_eq(_lines.size(), 0)
+	_scene.choose(0)
+	var guard := 0
+	while not _scene.is_finished() and guard < 10:
+		_scene.advance()
+		guard += 1
+	assert_true(_finished)
+	assert_eq(_lines, ["after"])
+
+
+func test_shown_option_indices_reflects_filtered_options():
+	var s := DialogueScript.from_json('''
+	[{"choice":"Pick?",
+	  "options":[
+	    {"text":"Normal"},
+	    {"text":"Heart option","heart":"liora"}
+	  ]}
+	]''')
+	assert_true(s.ok())
+	_scene.play(s)
+	_scene.advance()  # hit the choice
+	# Without heart_gate, heart option is hidden
+	assert_eq(_scene.shown_option_indices(), [0])
+	# With heart_gate allowing, both shown
+	_scene.heart_gate = func(uid: String) -> bool: return uid == "liora"
+	_scene._refresh_shown_options()
+	assert_eq(_scene.shown_option_indices(), [0, 1])
+
+
+func test_choice_with_only_heart_options_falls_back_to_showing_all():
+	# Authoring safety: if all options are heart options and gate blocks all,
+	# the fallback shows all options so the player isn't stranded.
+	var s := DialogueScript.from_json('''
+	[{"choice":"Pick?",
+	  "options":[
+	    {"text":"Heart A","heart":"a"},
+	    {"text":"Heart B","heart":"b"}
+	  ]}
+	]''')
+	assert_true(s.ok())
+	_scene.play(s)
+	_scene.advance()
+	# Gate blocks both
+	_scene.heart_gate = func(uid: String) -> bool: return false
+	_scene._refresh_shown_options()
+	assert_eq(_scene.shown_option_indices(), [0, 1], "fallback shows all when gate blocks everything")
+
+
+## The overlay fills the viewport even under a CanvasLayer (how castle, battle,
+## hub and house choice parent it). Before this, PRESET_FULL_RECT alone left a
+## zero-sized rect under a non-Control parent, so clicks never reached _gui_input.
+func test_scene_fills_the_viewport_under_a_canvas_layer():
+	var layer := CanvasLayer.new()
+	add_child_autofree(layer)
+	var scene := DialogueScene.new()
+	scene.typewriter_speed = 0.0
+	layer.add_child(scene)
+	await wait_physics_frames(1)
+	assert_gt(scene.size.x, 0.0, "the overlay has a clickable width")
+	assert_eq(scene.size, scene.get_viewport_rect().size, "the overlay covers the viewport")
+	assert_eq(scene.global_position, Vector2.ZERO, "top-left anchors keep the overlay at the origin")
+
+
+## A real viewport click on a specific option row must choose that row, not just
+## confirm the highlighted one. A desktop-sized SubViewport is used because GUT's
+## headless viewport (64x64) puts the option panel off-screen.
+func test_viewport_click_on_a_choice_row_picks_it():
+	var vp := SubViewport.new()
+	vp.size = Vector2i(1280, 720)
+	add_child_autofree(vp)
+	var scene := DialogueScene.new()
+	scene.typewriter_speed = 0.0
+	vp.add_child(scene)
+	scene.play(DialogueScript.from_json(BRANCH))
+	scene.advance()
+	assert_true(scene.awaiting_choice(), "the script paused on its choice")
+	var vp_size := scene.get_viewport_rect().size
+	var row_h := 40.0
+	var title_h := 44.0
+	var panel_pos := Vector2(vp_size.x * 0.50, vp_size.y * 0.66 - title_h - row_h * 2 - 24)
+	var right_row := Rect2(panel_pos + Vector2(10, title_h + row_h),
+		Vector2(vp_size.x * 0.36 - 20, row_h - 6))
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = right_row.get_center()
+	click.global_position = click.position
+	vp.push_input(click)
+	await wait_physics_frames(1)
+	assert_false(scene.awaiting_choice(), "the row click answered the choice")
+	assert_eq(scene.current_line().text, "Right path.")
+	assert_eq(scene.flags, {}, "the Right option sets no flag")
