@@ -61,11 +61,11 @@ For additional reviewable proof, byte-for-byte copies of each original native po
 
 | Issue | Observed behavior | Qualification impact |
 | --- | --- | --- |
-| [#14](https://github.com/KumarG23/vael-academy/issues/14) | Sparse save rows display metadata for the wrong fixed slot; an apparently empty row overwrites the occupied slot. Title also uses zero-based labels. | Save safety failure. Only disposable saves used. |
+| [#14](https://github.com/KumarG23/vael-academy/issues/14) | Sparse save rows display metadata for the wrong fixed slot; an apparently empty row overwrites the occupied slot. Title also uses zero-based labels. | Baseline save safety failure; repaired row/write mapping graphically verified on `19cad888` below. Title numbering remains unchanged. |
 | [#15](https://github.com/KumarG23/vael-academy/issues/15) | Fishing, training and empty-archive feedback is clipped off the right edge. | Feedback unreadable; activity itself completes. |
 | [#16](https://github.com/KumarG23/vael-academy/issues/16) | Journal close key reaches the castle: Escape opens the system menu; J reopens the Journal. | Baseline input failure; fixed behavior verified on accepted `9afc166a` below. |
 | [#19](https://github.com/KumarG23/vael-academy/issues/19) | Animated defeat frees Kai before objective checks; Emberwing continues and awards victory/Week 2 after lord loss. | Baseline rules failure under MASTER_PLAN §3; fixed behavior verified on accepted `366a8e5f` below. |
-| [#20](https://github.com/KumarG23/vael-academy/issues/20) | Road bandit at (8,7) occupies a water tile labeled impassable and remains attackable. | Terrain/spawn consistency defect; road victory remains reachable. |
+| [#20](https://github.com/KumarG23/vael-academy/issues/20) | Road bandit at (8,7) occupies a water tile labeled impassable and remains attackable. | Baseline terrain/spawn defect; accepted repair and road victory verified on `19cad888` below. |
 | [#23](https://github.com/KumarG23/vael-academy/issues/23) | Thornrook’s Nilu has no chapter deployment entry and defaults to isolated (0,0). | Missing deployment data; battle remains playable. |
 
 These issues were checked against all open/closed issues and PRs before filing and left for lead assignment. QA did not implement repairs or change canon.
@@ -168,15 +168,46 @@ Accepted game source: `9afc166af8769ce18bd059ea1e988122ed865ab4` (PR #26). Loade
 
 All **11 inspected state checks passed**; house remains Thornrook and week remains 2. [Curated results](journal-retest-results.json) retain the input cases, UI counts/modes and movement receipt. This is a focused native-save continuation retest, not another fresh campaign run. The original failing screenshot/issue #16 remains as historical evidence.
 
+### Sparse save rows — PR #31 / issue #14
+
+Accepted main: `19cad888161230bbc6c17b377bde4f496a4f63fc`, including #31 merge `59334ad3`. Godot 4.7.2, unchanged Forward Plus, real keyboard input and disposable data. These are **existing Dev Jump encounters plus an isolated file-occupancy fixture**, not additional campaign playthroughs.
+
+For each path, initialize only disposable `slot_2.json` with a copy of the native Thornrook return save. Enter Title → Dev Jump → Mock Battle for Preparations, then Begin battle for the field; restart through Dev Jump → Arena for the third path. Restore the same isolated Slot-3-only arrangement between paths. Open Save game from the normal preparation/field menu.
+
+| Path | Only Slot 3 occupied | Slots 1 + 3 occupied, Slot 2 empty |
+| --- | --- | --- |
+| Preparations | [Correct three rows](images/save-rows-prep-only-third.png) | [Correct gap](images/save-rows-prep-gap.png) |
+| Field | [Correct three rows](images/save-rows-field-only-third.png) | [Correct gap](images/save-rows-field-gap.png) |
+| Arena | [Correct three rows](images/save-rows-arena-only-third.png) | [Correct gap](images/save-rows-arena-gap.png) |
+
+In each path: cancel the sparse picker without writing; reopen and save row 1; reopen with the 1+3 gap and save row 2; reopen full and overwrite row 3. All **nine writes** changed exactly the displayed physical slot (`slot_0/1/2.json` respectively), wrote an actual battle payload and preserved every other occupied slot byte-for-byte. Reopening showed the new occupancy; [arena’s full picker](images/save-rows-arena-full.png) now identifies all three saves as arena. All **three cancellation checks** preserved the files. Preparations cancellation returns first to its [Preparations menu](images/save-rows-prep-cancel.png), then Escape restores the prep map; field/arena cancel directly restore map input. [Curated checks](save-rows-retest-results.json).
+
+The related zero-based **Title Load Game** labels remain unchanged, as explicitly retained by #31’s accepted numbering scope. This pass verifies the repaired battle picker, not a numbering redesign.
+
+### Road spawn passability — PR #32 / issue #20
+
+Accepted main: `19cad888161230bbc6c17b377bde4f496a4f63fc`. Use Title → Dev Jump → Prologue battle, then advance the existing road introduction. This creates a **fresh encounter from current chapter data**, not a full New Game/opening playthrough or restoration of an old battle snapshot. Old snapshots retain their saved positions and cannot prove a new deployment correction.
+
+Actual four allies/five foes spawned. [Perrin at (3,6)](images/road-fixed-perrin-spawn.png) and [bandit_b at (7,7)](images/road-fixed-bandit_b-spawn.png) both visibly show **Plains, move 1** in the HUD. Read-only live movement inspection found 62 standable cells for Perrin and 35 for bandit_b. The accepted correction moves Perrin off the former cottage footprint as well as moving the reported bandit off water; the lead explicitly accepted both local corrections under the all-spawns-passable requirement.
+
+Two distinct encounters were exercised:
+
+1. **Completed encounter:** move Perrin from (3,6) to (4,6) through the normal movement menu and Wait; let Kai, Serra and Rina Wait in place. Continue normal tactical inputs/animations. The battle reached [Victory in round 4](images/road-fixed-result.png), with Kai 14 HP, Serra 19 HP and Rina 20 HP; Perrin had fallen. The authored aftermath completed and dismissing Victory reached the [existing house-choice screen](images/road-fixed-house-choice.png). No outcome, HP, RNG or progression was injected.
+2. **Movement capture repeat:** start a separate fresh Dev Jump road encounter and repeat only that first turn. [Perrin moves to (4,6)](images/road-fixed-perrin-moved.png). During the normal enemy phase, bandit_b moves from (7,7) to (4,5), attacks Perrin and is defeated by his counterattacks. [Combat after movement](images/road-fixed-bandit-moved.png), [17-second input/movement/combat video](road-mobility-retest.mp4). Read-only observation sampled the live bandit at (4,5), HP 20 → 8 → 0 before removal. This repeat stops after enemy phase 1; its video is not the full victorious encounter.
+
+[Curated spawn, movement and completed-encounter input/results](road-spawn-retest-results.json) distinguish both runs. Captures and sampled video frames were inspected. The historical water-spawn failure remains above; no terrain, roster, canon or renderer change was made by QA.
+
 ## Final verification and remaining limits
 
-Latest combined verification after accepted #16 (`9afc166a`): editor import exit 0, no script-load errors; full GUT **791/791 tests, 9,501 assertions, 99 scripts, 200.053 s**, exit 0. Shared lock and disposable data; helpers **35 pass/two opt-in skips**. There were 22 deprecations, no script-load errors and no ObjectDB/resource-in-use exit diagnostic in this run.
+Latest combined verification after accepted #14/#20 (`19cad888`): editor import exit 0/no script-load errors; full GUT **800/800, 10,296 assertions, 100 scripts, 201.302 s**, exit 0. Shared lock/disposable data; helpers **42 pass/two opt-in skips** (44 discovered). The suite retains 22 deprecations, two ObjectDB leak warnings and one resource-in-use exit diagnostic; these did not fail the run and are not claimed fixed. No gameplay source/tests/renderer changes in this evidence revision.
+
+Previous combined verification after accepted #16 (`9afc166a`): editor import exit 0, no script-load errors; full GUT **791/791 tests, 9,501 assertions, 99 scripts, 200.053 s**, exit 0. Shared lock and disposable data; helpers **35 pass/two opt-in skips**. There were 22 deprecations, no script-load errors and no ObjectDB/resource-in-use exit diagnostic in this run.
 
 Previous integration verification after accepted #11 (`883ff334`): editor import exit 0, no script-load errors; full GUT **787/787 tests, 9,467 assertions, 98 scripts, 198.36 s**, exit 0. Both used disposable data and the shared heavy lock. Helpers: **35 pass, two opt-in skips**. The suite reported 18 deprecations. No game source/tests/renderer changes relative to accepted main.
 
 Earlier route/support verification: Editor import exited 0 with no script-load errors. Full GUT exited 0: **771/771 tests, 6,823 assertions, 96 scripts, 180.212 s**. Both ran under the shared lock with disposable data. The suite retains 18 deprecation reports, two ObjectDB leak warnings and one resource-in-use exit error; none failed the run. Team helper checks ran 37 tests: 35 passed, two opt-in user-systemd probes skipped. No story/design, source mechanics or tests were edited by QA.
 
-Remaining qualification gaps are explicit: six baseline functional defects were filed separately. #19 now passes its accepted-code graphical regression retest above; #14 still compromises save-slot safety, and #15/#20/#23 remain repair/retest work. #16 now passes its accepted-code desktop close/nested-Inventory retest above. Neal resolved the event contract/name in #22; implementation remains #28/#29, with precise calendar/story mapping pending #30. Accepted #11 now passes the graphical malformed/valid-load retest above. Only Emberwing was a fresh New Game run; the two other routes reused the earned road checkpoint. Archive eligibility and malformed assets were fixtures; natural C-rank accrual was not established. Speaker/headphone listening and Neal’s visual/story/taste approvals were not claimed. Later weeks, full-semester progression, active-defense production adoption and VS-1C are outside this validation. Retest the affected paths on accepted repair commits before closing parent #8.
+Remaining qualification gaps are explicit: six baseline functional defects were filed separately. #19 now passes its accepted-code graphical regression retest above; #14 now passes sparse-row/write/cancel checks and #20 passes spawn/movement plus road-victory checks on accepted `19cad888`. #15/#23 remain repair/retest work; Title’s related zero-based labels are unchanged by #14’s accepted scope. #16 now passes its accepted-code desktop close/nested-Inventory retest above. Neal resolved the event contract/name in #22; implementation remains #28/#29, with precise calendar/story mapping pending #30. Accepted #11 now passes the graphical malformed/valid-load retest above. Only Emberwing was a fresh New Game run; the two other routes reused the earned road checkpoint. Archive eligibility and malformed assets were fixtures; natural C-rank accrual was not established. Speaker/headphone listening and Neal’s visual/story/taste approvals were not claimed. Later weeks, full-semester progression, active-defense production adoption and VS-1C are outside this validation. Retest the affected paths on accepted repair commits before closing parent #8.
 
 ## Evidence index
 
