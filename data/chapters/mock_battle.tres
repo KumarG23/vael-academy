@@ -214,7 +214,7 @@ ai_override = 0
 [resource]
 script = ExtResource("9_ro4ud")
 id = "mock_battle"
-display_name = "Chapter 1 — The Mock Battle"
+display_name = "Clash of Three Banners"
 objective = 0
 boss_unit_id = "serra"
 non_lethal = true
