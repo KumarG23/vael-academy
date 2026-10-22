@@ -63,7 +63,7 @@ For additional reviewable proof, byte-for-byte copies of each original native po
 | --- | --- | --- |
 | [#14](https://github.com/KumarG23/vael-academy/issues/14) | Sparse save rows display metadata for the wrong fixed slot; an apparently empty row overwrites the occupied slot. Title also uses zero-based labels. | Save safety failure. Only disposable saves used. |
 | [#15](https://github.com/KumarG23/vael-academy/issues/15) | Fishing, training and empty-archive feedback is clipped off the right edge. | Feedback unreadable; activity itself completes. |
-| [#16](https://github.com/KumarG23/vael-academy/issues/16) | Journal close key reaches the castle: Escape opens the system menu; J reopens the Journal. | Input failure; Escape twice permits continuation. |
+| [#16](https://github.com/KumarG23/vael-academy/issues/16) | Journal close key reaches the castle: Escape opens the system menu; J reopens the Journal. | Baseline input failure; fixed behavior verified on accepted `9afc166a` below. |
 | [#19](https://github.com/KumarG23/vael-academy/issues/19) | Animated defeat frees Kai before objective checks; Emberwing continues and awards victory/Week 2 after lord loss. | Baseline rules failure under MASTER_PLAN §3; fixed behavior verified on accepted `366a8e5f` below. |
 | [#20](https://github.com/KumarG23/vael-academy/issues/20) | Road bandit at (8,7) occupies a water tile labeled impassable and remains attackable. | Terrain/spawn consistency defect; road victory remains reachable. |
 | [#23](https://github.com/KumarG23/vael-academy/issues/23) | Thornrook’s Nilu has no chapter deployment entry and defaults to isolated (0,0). | Missing deployment data; battle remains playable. |
@@ -153,15 +153,30 @@ All four rejection checks and both valid transitions passed. [Curated results](s
 
 ### Journal repair — issue #16
 
-PR #26 remains pending accepted integration. The requested real-keyboard close/nested-Inventory retest remains open under #5; the baseline defect is not claimed fixed here.
+Accepted game source: `9afc166af8769ce18bd059ea1e988122ed865ab4` (PR #26). Loaded an unchanged copy of the original native Thornrook Week-2 return save through Title in fresh disposable data. All inputs below were actual desktop keyboard events; inspection only read UI/campaign state. No seeded campaign or directly invoked input/close handler. The native slot stayed byte-identical.
+
+| Real input sequence | Observed result |
+| --- | --- |
+| J opens Roster, then one Escape | Book closes once; zero Journal nodes, no castle menu; [exploration visible](images/journal-fixed-escape.png). |
+| J opens Roster, then J | Book closes with zero Journal nodes and no replacement/menu. |
+| J → Right twice → Return twice | Inventory reaches [give-recipient selection](images/journal-fixed-inventory-give.png); no transfer confirmed. |
+| Escape, Escape, Escape | Give → item → [student list](images/journal-fixed-inventory-back.png) → closed. First two steps retain the same book; final step leaves zero books and no castle menu. |
+| Hold Right for 0.4 s after closure | Avatar moves from x=3008 to x≈3220.69 at the same y=2112; [exploration responds normally](images/journal-fixed-exploration.png). |
+| Reopen Inventory give selection, then J | Closes directly from the nested mode, with zero books/no castle menu. |
+| Fresh Escape, then Escape | [Normal castle menu opens](images/journal-fixed-fresh-escape.png), then closes. This is a new keypress after Journal closure, not propagation from its close event. |
+| Fresh J, then Escape | [One new Roster book opens](images/journal-fixed-fresh-j.png), then closes to exploration without a system menu. |
+
+All **11 inspected state checks passed**; house remains Thornrook and week remains 2. [Curated results](journal-retest-results.json) retain the input cases, UI counts/modes and movement receipt. This is a focused native-save continuation retest, not another fresh campaign run. The original failing screenshot/issue #16 remains as historical evidence.
 
 ## Final verification and remaining limits
 
-Latest integration verification after accepted #11 (`883ff334`): editor import exit 0, no script-load errors; full GUT **787/787 tests, 9,467 assertions, 98 scripts, 198.36 s**, exit 0. Both used disposable data and the shared heavy lock. Helpers: **35 pass, two opt-in skips**. The suite reported 18 deprecations. No game source/tests/renderer changes relative to accepted main.
+Latest combined verification after accepted #16 (`9afc166a`): editor import exit 0, no script-load errors; full GUT **791/791 tests, 9,501 assertions, 99 scripts, 200.053 s**, exit 0. Shared lock and disposable data; helpers **35 pass/two opt-in skips**. There were 22 deprecations, no script-load errors and no ObjectDB/resource-in-use exit diagnostic in this run.
+
+Previous integration verification after accepted #11 (`883ff334`): editor import exit 0, no script-load errors; full GUT **787/787 tests, 9,467 assertions, 98 scripts, 198.36 s**, exit 0. Both used disposable data and the shared heavy lock. Helpers: **35 pass, two opt-in skips**. The suite reported 18 deprecations. No game source/tests/renderer changes relative to accepted main.
 
 Earlier route/support verification: Editor import exited 0 with no script-load errors. Full GUT exited 0: **771/771 tests, 6,823 assertions, 96 scripts, 180.212 s**. Both ran under the shared lock with disposable data. The suite retains 18 deprecation reports, two ObjectDB leak warnings and one resource-in-use exit error; none failed the run. Team helper checks ran 37 tests: 35 passed, two opt-in user-systemd probes skipped. No story/design, source mechanics or tests were edited by QA.
 
-Remaining qualification gaps are explicit: six baseline functional defects were filed separately. #19 now passes its accepted-code graphical regression retest above; #14 still compromises save-slot safety, and #15/#16/#20/#23 remain repair/retest work. Neal resolved the event contract/name in #22; implementation remains #28/#29, with precise calendar/story mapping pending #30. Accepted #11 now passes the graphical malformed/valid-load retest above. Only Emberwing was a fresh New Game run; the two other routes reused the earned road checkpoint. Archive eligibility and malformed assets were fixtures; natural C-rank accrual was not established. Speaker/headphone listening and Neal’s visual/story/taste approvals were not claimed. Later weeks, full-semester progression, active-defense production adoption and VS-1C are outside this validation. Retest the affected paths on accepted repair commits before closing parent #8.
+Remaining qualification gaps are explicit: six baseline functional defects were filed separately. #19 now passes its accepted-code graphical regression retest above; #14 still compromises save-slot safety, and #15/#20/#23 remain repair/retest work. #16 now passes its accepted-code desktop close/nested-Inventory retest above. Neal resolved the event contract/name in #22; implementation remains #28/#29, with precise calendar/story mapping pending #30. Accepted #11 now passes the graphical malformed/valid-load retest above. Only Emberwing was a fresh New Game run; the two other routes reused the earned road checkpoint. Archive eligibility and malformed assets were fixtures; natural C-rank accrual was not established. Speaker/headphone listening and Neal’s visual/story/taste approvals were not claimed. Later weeks, full-semester progression, active-defense production adoption and VS-1C are outside this validation. Retest the affected paths on accepted repair commits before closing parent #8.
 
 ## Evidence index
 
