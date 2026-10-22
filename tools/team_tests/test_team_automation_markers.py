@@ -126,7 +126,7 @@ class AutomationMarkerTests(unittest.TestCase):
         return comment_body(comments[0])
 
     def scan(self, bodies, stamp):
-        rows = [{'id': 100 + index, 'body': body,
+        rows = [{'id': 100 + index, 'body': body, 'user': {'login': 'shared-account'},
                  'issue_url': f'https://api.github.com/repos/{team.SLUG}/issues/5'}
                 for index, body in enumerate(bodies)]
 
