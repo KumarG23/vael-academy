@@ -1,0 +1,91 @@
+{
+  "mode_fixture": {
+    "campaign.casual": [
+      true,
+      false
+    ]
+  },
+  "mode_during_battle": false,
+  "victory_round": 9,
+  "battle_result": {
+    "active_team": 0,
+    "arena_pending_wave": 0,
+    "arena_wave": 0,
+    "battle_over": true,
+    "battle_victory": true,
+    "boss_quote_played": true,
+    "chapter_id": "mock_battle_vs_emberwing",
+    "defeated_unit_ids": [
+      "dain",
+      "kael",
+      "wren",
+      "marlow",
+      "elowen",
+      "liora",
+      "corvin",
+      "brenna",
+      "vesper",
+      "isolde",
+      "fenn",
+      "osric",
+      "bertram",
+      "nilu",
+      "perrin",
+      "serra"
+    ],
+    "fielded": 8,
+    "lord_alive": true,
+    "objective": 0,
+    "permadead_unit_ids": [],
+    "rng_seed": "16632787",
+    "rng_state": "5126363698247555086",
+    "round_number": 9,
+    "seize_cell": {
+      "x": -1,
+      "y": -1
+    },
+    "visited_spot_ids": []
+  },
+  "yielded_players": [
+    "corvin",
+    "marlow",
+    "nilu",
+    "vesper"
+  ],
+  "earned_campus_return": "saves/thornrook-classic-campus-return.json",
+  "next_calendar_fixture_delta": {
+    "campaign.week": [
+      2,
+      6
+    ]
+  },
+  "next_deployment_scene": "res://scenes/battle/closing_rite_thornrook.tscn",
+  "next_deployment_casual": false,
+  "recovered_hp": {
+    "corvin": 19,
+    "marlow": 20,
+    "nilu": 24,
+    "vesper": 18
+  },
+  "max_hp": {
+    "corvin": 19,
+    "marlow": 20,
+    "nilu": 24,
+    "vesper": 18
+  },
+  "all_player_ids": [
+    "corvin",
+    "kai",
+    "marlow",
+    "nilu",
+    "rina",
+    "rurik",
+    "thessaly",
+    "vesper"
+  ],
+  "next_deployment_resume_differences": {},
+  "images": [
+    "images/classic-victory.png",
+    "images/classic-next-deployment.png"
+  ]
+}
