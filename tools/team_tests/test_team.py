@@ -96,5 +96,71 @@ class TeamTests(unittest.TestCase):
         self.assertNotIn('Only change the exact files', prompt)
 
 
+    def test_zero_exit_terminal_provider_error_is_failure(self):
+        log = self.state / 'native.log'
+        log.write_text(json.dumps({'type': 'result', 'is_error': True, 'subtype': 'success'}))
+        self.assertEqual(team.native_result('opus', log, 0), 1)
+
+    def test_native_warning_preamble_does_not_hide_success(self):
+        log = self.state / 'native.log'
+        log.write_text('native warning\n' + json.dumps({'type': 'result', 'is_error': False, 'subtype': 'success'}))
+        self.assertEqual(team.native_result('opus', log, 0), 0)
+
+    def test_codex_repaired_tool_failure_can_finish_successfully(self):
+        log = self.state / 'native.log'
+        log.write_text(json.dumps({'type': 'item.completed', 'item': {'exit_code': 1}}) + '\n' +
+                       json.dumps({'type': 'turn.completed'}))
+        self.assertEqual(team.native_result('sol', log, 0), 0)
+        log.write_text(json.dumps({'type': 'turn.failed'}))
+        self.assertEqual(team.native_result('sol', log, 0), 1)
+
+    def test_argon_native_status_and_free_terminal_errors(self):
+        log = self.state / 'native.log'
+        log.write_text(json.dumps({'status': 'SUCCESS'}))
+        self.assertEqual(team.native_result('argon', log, 0), 0)
+        log.write_text(json.dumps({'type': 'error'}))
+        self.assertEqual(team.native_result('deepseek', log, 0), 1)
+        log.write_text(json.dumps({'type': 'text', 'part': {'text': 'delivery'}}))
+        self.assertEqual(team.native_result('deepseek', log, 0), 0)
+
+    def test_explicit_free_routes_do_not_have_paid_fallback(self):
+        for profile in ('deepseek', 'minimax', 'nemotron', 'cohere'):
+            cmd = team.command(profile)
+            self.assertTrue(cmd[cmd.index('--model') + 1].endswith(('-free', ':free')))
+            self.assertNotIn('--fallback-model', cmd)
+
+    def test_draft_only_queue_does_not_invoke_model(self):
+        draft = json.dumps([{'number': 1, 'title': 'Pending', 'isDraft': True, 'labels': []}])
+        with patch.object(team, 'run', side_effect=['[]', draft]), patch.object(team.subprocess, 'run') as sub:
+            self.assertEqual(team.lead(), 0)
+            sub.assert_not_called()
+
+    def test_blocked_issue_is_not_an_actionable_queue(self):
+        issue = json.dumps([{'number': 2, 'title': 'Wait', 'labels': [{'name': 'team:blocked'}]}])
+        with patch.object(team, 'run', side_effect=[issue, '[]']), patch.object(team.subprocess, 'run') as sub:
+            self.assertEqual(team.lead(), 0)
+            sub.assert_not_called()
+
+    def test_existing_worktree_must_match_repository_and_issue_branch(self):
+        import subprocess
+        repo = self.state / 'repo'
+        repo.mkdir()
+        def git(*args):
+            return subprocess.run(['git', '-C', str(repo), *args], check=True, capture_output=True, text=True)
+        git('init', '-b', 'main')
+        git('-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '--allow-empty', '-m', 'seed')
+        wt = self.state / 'issue-8'
+        git('worktree', 'add', '-b', 'team/issue-8', str(wt))
+        with patch.object(team, 'REPO', repo):
+            team.validate_worktree(wt, 'team/issue-8')
+            with self.assertRaisesRegex(RuntimeError, 'wrong branch'):
+                team.validate_worktree(wt, 'team/issue-9')
+            other = self.state / 'different'
+            subprocess.run(['git', 'init', '-q', str(other)], check=True)
+            with patch.object(team, 'REPO', other):
+                with self.assertRaisesRegex(RuntimeError, 'different repository'):
+                    team.validate_worktree(wt, 'team/issue-8')
+
+
 if __name__ == '__main__':
     unittest.main()

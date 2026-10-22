@@ -72,6 +72,43 @@ def command(profile, resume=False):
             '--output-format', 'json'] + (['--continue'] if resume else [])
 
 
+def native_result(profile, log, rc):
+    """A zero process exit is not necessarily a successful native model turn."""
+    if rc:
+        return rc
+    records = []
+    for line in log.read_text().splitlines():
+        try:
+            value = json.loads(line)
+            if isinstance(value, dict):
+                records.append(value)
+        except ValueError:
+            pass  # Native stderr warnings can precede the JSON result.
+    tool = PROFILES[profile][0]
+    if tool == 'codex':
+        terminal = [r for r in records if r.get('type') in ('turn.completed', 'turn.failed')]
+        return 0 if terminal and terminal[-1]['type'] == 'turn.completed' else 1
+    if tool == 'claude':
+        terminal = [r for r in records if r.get('type') == 'result']
+        return 0 if terminal and not terminal[-1].get('is_error', True) and terminal[-1].get('subtype') == 'success' else 1
+    if tool == 'agy':
+        return 0 if records and records[-1].get('status') == 'SUCCESS' else 1
+    if any(r.get('type') == 'error' for r in records):
+        return 1
+    return 0 if records and records[-1].get('type') == 'text' and records[-1].get('part', {}).get('text') else 1
+
+
+def validate_worktree(path, branch):
+    if Path(run('git', 'rev-parse', '--show-toplevel', cwd=path)).resolve() != path.resolve():
+        raise RuntimeError('Issue directory is not its own Git worktree')
+    expected = run('git', 'rev-parse', '--path-format=absolute', '--git-common-dir', cwd=REPO)
+    actual = run('git', 'rev-parse', '--path-format=absolute', '--git-common-dir', cwd=path)
+    if Path(actual).resolve() != Path(expected).resolve():
+        raise RuntimeError('Issue worktree belongs to a different repository')
+    if run('git', 'branch', '--show-current', cwd=path) != branch:
+        raise RuntimeError('Issue worktree is on the wrong branch; preserve it and inspect')
+
+
 def active():
     result = subprocess.run(['tmux', 'list-sessions', '-F', '#{session_name}'], capture_output=True, text=True)
     return [s for s in result.stdout.splitlines() if s.startswith('vael-issue-')]
@@ -126,6 +163,7 @@ def start(number, profile):
             run('git', 'worktree', 'add', str(worktree), branch)
         else:
             run('git', 'worktree', 'add', '-b', branch, str(worktree), 'origin/main')
+    validate_worktree(worktree, branch)
     assignment = STATE / f'issue-{number}.json'
     old = json.loads(assignment.read_text()) if assignment.exists() else {}
     if resume and old.get('profile') != profile:
@@ -157,15 +195,16 @@ def worker(number):
         result = subprocess.run(cmd, input=prompt if tool in ('codex', 'claude') else None,
                                 cwd=assignment['worktree'], env=env,
                                 stdout=output, stderr=subprocess.STDOUT, text=True)
-    (STATE / f'issue-{number}.exit').write_text(str(result.returncode))
-    if result.returncode:
+    rc = native_result(profile, log, result.returncode)
+    (STATE / f'issue-{number}.exit').write_text(str(rc))
+    if rc:
         subprocess.run(['gh', 'issue', 'edit', str(number), '--repo', SLUG,
                         '--add-label', 'team:blocked', '--remove-label', 'team:ready'], env=environment())
         subprocess.run(['gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
-                        f'`{profile}` session exited with code {result.returncode}. Worktree and native '
+                        f'`{profile}` session did not complete successfully (status {rc}). Worktree and native '
                         'session are preserved. Lead: inspect the private log and resume this task; '
                         'do not reset it or silently switch to a paid fallback.'], env=environment())
-    return result.returncode
+    return rc
 
 
 def lead():
@@ -177,10 +216,17 @@ def lead():
         except BlockingIOError:
             return 0
         ready = json.loads(run('gh', 'issue', 'list', '--repo', SLUG, '--state', 'open',
-                               '--label', 'team:ready', '--json', 'number,title'))
-        prs = json.loads(run('gh', 'pr', 'list', '--repo', SLUG, '--state', 'open', '--json', 'number,title'))
+                               '--label', 'team:ready', '--json', 'number,title,labels'))
+        ready = [i for i in ready if not any(l['name'] == 'team:blocked' for l in i['labels'])]
+        prs = json.loads(run('gh', 'pr', 'list', '--repo', SLUG, '--state', 'open', '--json', 'number,title,isDraft,labels'))
+        prs = [p for p in prs if not p['isDraft'] and not any(l['name'] == 'team:blocked' for l in p['labels'])]
         if not ready and not prs:
             return 0  # No model invocation when there is no actionable work.
+        if run('git', 'branch', '--show-current') != 'main' or run('git', 'status', '--porcelain'):
+            (STATE / 'paused').write_text('Lead checkout is not clean main; preserve work and inspect.\n')
+            return 1
+        run('git', 'fetch', 'origin', 'main')
+        run('git', 'merge', '--ff-only', 'origin/main')
         prompt = f'''You are Vael's engineering lead, Codex Sol/high. Read AGENTS.md and docs/TEAM_WORKFLOW.md,
 then HANDOFF.md and the relevant MASTER_PLAN/bibles. GitHub {SLUG} is the only task/PR record.
 Review open PRs against plan, actual diff, tests and behavior. Comment concrete findings and return to
@@ -203,10 +249,11 @@ Finish with a short actual-results summary. Do not wait in a polling loop for wo
         with log.open('w') as output:
             result = subprocess.run(command('sol'), input=prompt, cwd=REPO, env=environment(),
                                     stdout=output, stderr=subprocess.STDOUT, text=True)
-        (STATE / 'lead.exit').write_text(str(result.returncode))
-        if result.returncode:
+        rc = native_result('sol', log, result.returncode)
+        (STATE / 'lead.exit').write_text(str(rc))
+        if rc:
             (STATE / 'paused').write_text('Lead failed; inspect native/provider error before resuming.\n')
-        return result.returncode
+        return rc
 
 
 def main():
