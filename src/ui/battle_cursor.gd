@@ -119,26 +119,40 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _grid == null or not active:
 		return
 	if event is InputEventMouseMotion:
-		var hovered := _grid.world_to_cell(event.global_position)
+		# Event positions are already in viewport coordinates (stretch removed).
+		# The grid is drawn in this node's local space; undo the current camera
+		# canvas and map transforms, rather than treating screen pixels as cells.
+		var hovered := _grid.world_to_cell(make_canvas_position_local(event.position))
 		if _grid.in_bounds(hovered):
 			move_to(hovered)
 		return
-	if event.is_action_pressed("cursor_confirm"):
-		confirm()
-		get_viewport().set_input_as_handled()
-		return
-	if event.is_action_pressed("cursor_cancel"):
-		cancel()
-		get_viewport().set_input_as_handled()
-		return
-	if event is InputEventMouseButton and event.pressed:
-		var hovered := _grid.world_to_cell(event.global_position)
+	# Resolve mouse input BEFORE generic actions: mapped clicks must obey the
+	# same bounds check and update hover before any confirm/cancel is emitted.
+	if event is InputEventMouseButton:
+		if not event.pressed:
+			return
+		var confirms: bool = event.button_index == MOUSE_BUTTON_LEFT or event.is_action_pressed("cursor_confirm")
+		var cancels: bool = event.button_index == MOUSE_BUTTON_RIGHT or event.is_action_pressed("cursor_cancel")
+		if not confirms and not cancels:
+			return
+		var hovered := _grid.world_to_cell(make_canvas_position_local(event.position))
 		if not _grid.in_bounds(hovered):
 			return
-		if event.button_index == MOUSE_BUTTON_LEFT:
+		get_viewport().set_input_as_handled()
+		move_to(hovered)
+		if confirms:
 			confirm()
-		elif event.button_index == MOUSE_BUTTON_RIGHT:
+		else:
 			cancel()
+		return
+	if event.is_action_pressed("cursor_confirm"):
+		get_viewport().set_input_as_handled()
+		confirm()
+		return
+	if event.is_action_pressed("cursor_cancel"):
+		get_viewport().set_input_as_handled()
+		cancel()
+		return
 
 
 func _draw() -> void:
