@@ -1,0 +1,261 @@
+{
+	"campaign": {
+		"casual": true,
+		"chapter_id": "mock_battle",
+		"fish_log": {},
+		"flags": {
+			"kai_awakened": true,
+			"opening_complete": true,
+			"opening_started": true,
+			"prologue_done": true,
+			"road_aftermath_seen": true,
+			"road_intro_seen": true
+		},
+		"grade_samples": {
+			"arena_best_wave": 0.0,
+			"battle_scores": [
+				88.0,
+				88
+			],
+			"conduct_points": 0.0,
+			"quiz_scores": []
+		},
+		"house_id": "thornrook",
+		"house_locked": true,
+		"last_result": "victory",
+		"report_cards": [],
+		"rng_state": "1612510189733646864",
+		"semester": 1,
+		"support_save": {
+			"consents": {},
+			"points": {
+				"kai_kael": 0,
+				"kai_liora": 0
+			},
+			"ranks": {
+				"kai_kael": "",
+				"kai_liora": ""
+			},
+			"romances": {},
+			"viewed": {}
+		},
+		"training_used": false,
+		"unit_states": {
+			"corvin": {
+				"class_override": "",
+				"id": "corvin",
+				"inventory": [
+					{
+						"id": "sig_corvin",
+						"path": "res://data/weapons/sig_corvin.tres",
+						"type": "weapon",
+						"uses": 38
+					}
+				],
+				"level": 1,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 20
+			},
+			"kai": {
+				"class_override": "",
+				"id": "kai",
+				"inventory": [
+					{
+						"id": "sig_kai",
+						"path": "res://data/weapons/sig_kai.tres",
+						"type": "weapon",
+						"uses": 36
+					},
+					{
+						"id": "crownspark",
+						"path": "res://data/weapons/crownspark.tres",
+						"type": "weapon",
+						"uses": 999
+					},
+					{
+						"id": "vulnerary",
+						"path": "res://data/items/vulnerary.tres",
+						"type": "item",
+						"uses": 3
+					}
+				],
+				"level": 2,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 1,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 1,
+					"str": 0
+				},
+				"xp": 11
+			},
+			"marlow": {
+				"class_override": "",
+				"id": "marlow",
+				"inventory": [
+					{
+						"id": "sig_marlow",
+						"path": "res://data/weapons/sig_marlow.tres",
+						"type": "weapon",
+						"uses": 38
+					}
+				],
+				"level": 1,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 40
+			},
+			"nilu": {
+				"class_override": "",
+				"id": "nilu",
+				"inventory": [
+					{
+						"id": "claw",
+						"path": "res://data/weapons/claw.tres",
+						"type": "weapon",
+						"uses": 998
+					}
+				],
+				"level": 1,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 30
+			},
+			"rina": {
+				"class_override": "",
+				"id": "rina",
+				"inventory": [
+					{
+						"id": "sig_rina",
+						"path": "res://data/weapons/sig_rina.tres",
+						"type": "weapon",
+						"uses": 37
+					}
+				],
+				"level": 2,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 74
+			},
+			"serra": {
+				"class_override": "",
+				"id": "serra",
+				"inventory": [
+					{
+						"id": "iron_lance",
+						"path": "res://data/weapons/iron_lance.tres",
+						"type": "weapon",
+						"uses": 38.0
+					}
+				],
+				"level": 2.0,
+				"move_bonus": 0.0,
+				"stat_bonus": {
+					"def": 0.0,
+					"hp": 0.0,
+					"lck": 0.0,
+					"mag": 0.0,
+					"res": 0.0,
+					"skl": 0.0,
+					"spd": 0.0,
+					"str": 0.0
+				},
+				"xp": 18.0
+			},
+			"thessaly": {
+				"class_override": "",
+				"id": "thessaly",
+				"inventory": [
+					{
+						"id": "sig_thessaly",
+						"path": "res://data/weapons/sig_thessaly.tres",
+						"type": "weapon",
+						"uses": 38
+					}
+				],
+				"level": 1,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 41
+			},
+			"vesper": {
+				"class_override": "",
+				"id": "vesper",
+				"inventory": [
+					{
+						"id": "sig_vesper",
+						"path": "res://data/weapons/sig_vesper.tres",
+						"type": "weapon",
+						"uses": 39
+					}
+				],
+				"level": 1,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 22
+			}
+		},
+		"week": 2
+	},
+	"slot": 0,
+	"version": 1
+}

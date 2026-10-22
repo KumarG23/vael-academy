@@ -2,6 +2,7 @@
 """Thin GitHub/tmux launcher. GitHub owns tasks; native CLIs own sessions."""
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -303,49 +304,75 @@ def lead():
         return 1
 
 
-def planning_due(head):
-    """Private wake-up receipt, not another task database. Revisit exhausted plans hourly."""
-    try:
-        receipt = json.loads((STATE / 'planning.json').read_text())
-        age = time.time() - float(receipt['checked_at'])
-        return receipt['head'] != head or not 0 <= age < 3600
-    except (OSError, ValueError, KeyError, TypeError):
-        return True
+# Native subscription route for the engineering lead. Codex Sol/Astra remain worker profiles
+# for explicitly requested escalations; there is no automatic lead fallback to them.
+LEAD = 'opus'
+REFRESH = 3600  # Periodic safety refresh for an unchanged queue, including comment-only changes.
 
 
-def lead_pass():
-    if (STATE / 'paused').exists():
-        return 0
-    with (STATE / 'lead.lock').open('w') as lock:
+def checks(pr):
+    # Only state transitions matter; run URLs/timestamps would wake on every rerun detail.
+    return sorted([c.get('name') or c.get('context') or '', c.get('status') or c.get('state') or '',
+                   c.get('conclusion') or ''] for c in pr.get('statusCheckRollup') or [])
+
+
+def snapshot(head, ready, prs, running):
+    """Deterministic digest of what a lead pass acts on; excludes comments and timestamps."""
+    exits = {}
+    for receipt in STATE.glob('issue-*.exit'):
         try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            return 0
-        ready = json.loads(run('gh', 'issue', 'list', '--repo', SLUG, '--state', 'open',
-                               '--label', 'team:ready', '--json', 'number,title,labels'))
-        ready = [i for i in ready if not any(l['name'] == 'team:blocked' for l in i['labels'])]
-        prs = json.loads(run('gh', 'pr', 'list', '--repo', SLUG, '--state', 'open', '--json', 'number,title,isDraft,labels'))
-        prs = [p for p in prs if not p['isDraft'] and not any(l['name'] == 'team:blocked' for l in p['labels'])]
-        planning = not ready and not prs
-        if planning and active():
-            return 0  # Existing developers are working; wait for their PRs.
-        if run('git', 'branch', '--show-current') != 'main' or run('git', 'status', '--porcelain'):
-            (STATE / 'paused').write_text('Lead checkout is not clean main; preserve work and inspect.\n')
-            return 1
-        run('git', 'fetch', 'origin', 'main')
-        run('git', 'merge', '--ff-only', 'origin/main')
-        head = run('git', 'rev-parse', 'HEAD')
-        if planning and not planning_due(head):
-            return 0
-        prompt = f'''You are Vael's engineering lead, Codex Sol/high. Read AGENTS.md and docs/TEAM_WORKFLOW.md,
-then HANDOFF.md and the relevant MASTER_PLAN/bibles. GitHub {SLUG} is the only task/PR record.
+            exits[receipt.name] = [receipt.read_text().strip(), receipt.stat().st_mtime_ns]
+        except OSError:
+            exits[receipt.name] = None
+    parts = {
+        'main': head,
+        'ready': sorted([i['number'], i['title'], i.get('body', ''), sorted(l['name'] for l in i['labels'])]
+                        for i in ready),
+        'prs': sorted([p['number'], p['title'], p.get('headRefOid'), p.get('mergeable'), checks(p),
+                       sorted(l['name'] for l in p['labels'])] for p in prs),
+        'workers': [running, sorted(exits.items())],
+    }
+    return {k: hashlib.sha256(json.dumps(v, sort_keys=True).encode()).hexdigest() for k, v in parts.items()}
+
+
+def wake_reasons(parts):
+    """Private wake-up receipt of the last SUCCESSFUL pass, not another task database."""
+    try:
+        receipt = json.loads((STATE / 'lead-receipt.json').read_text())
+        age = time.time() - float(receipt['checked_at'])
+        changed = [k for k in parts if receipt['parts'].get(k) != parts[k]]
+        return changed or ([] if 0 <= age < REFRESH else ['periodic refresh'])
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return ['first pass']
+
+
+def lead_prompt(ready, prs, running, reasons):
+    tool, model, effort = PROFILES[LEAD]
+    ready = [{'number': i['number'], 'title': i['title'], 'labels': [l['name'] for l in i['labels']]} for i in ready]
+    prs = [{'number': p['number'], 'title': p['title'], 'head': p.get('headRefOid'),
+            'mergeable': p.get('mergeable'), 'checks': checks(p)} for p in prs]
+    return f'''You are Vael's engineering lead: Claude {model.capitalize()}/{effort} (`{LEAD}` profile, native
+Claude subscription). Read AGENTS.md and docs/TEAM_WORKFLOW.md, then HANDOFF.md and the relevant
+MASTER_PLAN/bibles. GitHub {SLUG} is the only task/PR record.
+This pass woke because: {', '.join(reasons)}. Focus on what changed; don't redo settled work.
 Review open PRs against plan, actual diff, tests and behavior. Comment concrete findings and return to
 same developer with `{sys.executable} tools/team.py start ISSUE PROFILE` (preserves task/session).
 Merge appropriate non-draft PRs only after actual passing checks and your review, using gh pr merge
 with an exact --match-head-commit SHA. Never merge a knowingly failing build or your own unreviewed
 implementation. Skip draft/blocked/migration work and ask Jarvis/Neal on product/canon decisions.
+Review efficiently, without relaxing acceptance. When you review a head, record an exact-head
+acceptance receipt in your PR comment (SHA, plan alignment, findings, checks/runtime evidence relied on).
+On later passes, review only the delta since the last reviewed SHA and the boundaries it affects. Rely on
+passing CI for that exact head and the worker's recorded runtime/QA evidence; do not re-run the full GUT
+suite or re-audit every QA asset/capture each pass unless you have a concrete suspected defect, the
+evidence is missing/stale for the head, or the change touches behavior the evidence did not cover.
 Assign ready issues using the same launcher command. Profiles are {json.dumps(PROFILES)}; disabled
 profiles have a reason file in your team state directory. No model substitution on quota failure.
+Routing for NEW assignments (Codex quota is scarce): prefer `opus` and `argon` for substantive
+implementation, documentation and routine QA; give qualified `deepseek` bounded, well-specified work.
+Reserve `sol`/`astra` for an explicitly requested escalation or a hard problem that Opus/Argon have
+demonstrably not solved; state that reason in the issue. An issue already owned by a developer stays
+with that owner through revisions; never interrupt or reassign running or owned work for routing.
 Choose by task fit, not filling every seat. Up to three workers may run concurrently on this host.
 Workers own their fixes. You can read/search/test and use native tools normally; no exact-file gates.
 Don't expose private paths/logs/credentials, spend new money, deploy, force-push, reset preserved work,
@@ -363,7 +390,7 @@ merge completed PRs while other workers continue; replenish capacity after a wor
 Separate worktrees prevent edit collisions; consider logical/file overlap and dependency ordering when
 splitting work. One task needing creative input or one PR awaiting CI does not halt other workstreams.
 Coordinate heavy Godot imports/full test runs to avoid simultaneous resource spikes; editing and focused
-checks can proceed independently. Only one worker controls the shared GUI at once.
+checks can proceed independently.
 Do not manufacture tiny chores to occupy models or invent a second coordination database: use GitHub
 parent/child issue links and the existing native launcher. Do not wait for Neal to refill the queue.
 A blocked task must not stop unrelated plan-grounded work. Keep human decisions as specific blocked
@@ -372,25 +399,66 @@ or bypass dependency/creative gates just to keep busy. Existing approved plan is
 not a requirement for Neal to re-approve every ticket. Escalate actual scope/canon/taste choices only.
 You own graphical gameplay QA too: run it yourself or assign an appropriately capable developer.
 Use the existing graphical desktop, real input and screenshots/video, inspect captures, preserve the
-project renderer and isolate game saves. Serialize shared GUI control; code work can run alongside QA.
-Headless tests are not a graphical playthrough. If a GUI tool is missing, report the exact blocker and
-continue other work rather than making Neal the default tester. Final taste approval is Neal's, routine
-functional QA is yours. Issue #5's existing-school-loop validation is authorized by Neal's direction.
+project renderer and isolate game saves. Only one worker controls the shared GUI at once; code work can
+run alongside QA. Headless tests are not a graphical playthrough. If a GUI tool is missing, report the
+exact blocker and continue other work rather than making Neal the default tester. Final taste approval
+is Neal's, routine functional QA is yours. Issue #5's existing-school-loop validation is authorized.
 When all remaining planned work truly needs a human decision, summarize the specific blockers without
 inventing busywork; an unchanged empty queue is revisited hourly or after a new main commit.
-Open ready issues: {json.dumps(ready)}; open PRs: {json.dumps(prs)}; running: {active()}.
+Open ready issues: {json.dumps(ready)}; open PRs: {json.dumps(prs)}; running: {running}.
 Finish with a short actual-results summary. Do not wait in a polling loop for workers or CI.
 '''
+
+
+def lead_pass():
+    if (STATE / 'paused').exists():
+        return 0
+    with (STATE / 'lead.lock').open('w') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return 0
+        ready = json.loads(run('gh', 'issue', 'list', '--repo', SLUG, '--state', 'open',
+                               '--label', 'team:ready', '--json', 'number,title,body,labels'))
+        ready = [i for i in ready if not any(l['name'] == 'team:blocked' for l in i['labels'])]
+        prs = json.loads(run('gh', 'pr', 'list', '--repo', SLUG, '--state', 'open', '--json',
+                             'number,title,isDraft,labels,headRefOid,mergeable,statusCheckRollup'))
+        prs = [p for p in prs if not p['isDraft'] and not any(l['name'] == 'team:blocked' for l in p['labels'])]
+        planning = not ready and not prs
+        running = active()
+        if planning and running:
+            return 0  # Existing developers are working; wait for their PRs.
+        if run('git', 'branch', '--show-current') != 'main' or run('git', 'status', '--porcelain'):
+            (STATE / 'paused').write_text('Lead checkout is not clean main; preserve work and inspect.\n')
+            return 1
+        run('git', 'fetch', 'origin', 'main')
+        run('git', 'merge', '--ff-only', 'origin/main')
+        head = run('git', 'rev-parse', 'HEAD')
+        # Digest the state the lead is about to see, so changes made during the pass still wake.
+        parts = snapshot(head, ready, prs, running)
+        reasons = wake_reasons(parts)
+        if not reasons:
+            return 0
+        env = environment()
+        env['PWD'] = str(REPO)
         log = STATE / f'lead-{time.time_ns()}.log'
         with log.open('w') as output:
-            result = subprocess.run(command('sol'), input=prompt, cwd=REPO, env=environment(),
-                                    stdout=output, stderr=subprocess.STDOUT, text=True)
-        rc = native_result('sol', log, result.returncode)
+            try:
+                claude_subscription(REPO, env)  # Same cwd/env as inference; no provider fallback.
+            except (OSError, subprocess.SubprocessError, ValueError, RuntimeError) as error:
+                output.write('Lead subscription preflight failed: ' + type(error).__name__ + '\n')
+                (STATE / 'lead.exit').write_text('1')
+                (STATE / 'paused').write_text('Lead Claude subscription preflight failed; no fallback. '
+                                              'Inspect login before resuming.\n')
+                return 1
+            result = subprocess.run(command(LEAD), input=lead_prompt(ready, prs, running, reasons),
+                                    cwd=REPO, env=env, stdout=output, stderr=subprocess.STDOUT, text=True)
+        rc = native_result(LEAD, log, result.returncode)
         (STATE / 'lead.exit').write_text(str(rc))
         if rc:
             (STATE / 'paused').write_text('Lead failed; inspect native/provider error before resuming.\n')
-        elif planning:
-            (STATE / 'planning.json').write_text(json.dumps({'head': head, 'checked_at': time.time()}))
+        else:
+            (STATE / 'lead-receipt.json').write_text(json.dumps({'parts': parts, 'checked_at': time.time()}))
         return rc
 
 
@@ -399,7 +467,7 @@ def main():
     STATE.mkdir(parents=True, exist_ok=True)
     (STATE / 'worktrees').mkdir(exist_ok=True)
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=['start', '_worker', 'lead', 'status', 'pause', 'resume'])
+    parser.add_argument('action', choices=['start', '_worker', 'lead', 'wake', 'status', 'pause', 'resume'])
     parser.add_argument('issue', nargs='?', type=int)
     parser.add_argument('profile', nargs='?', choices=PROFILES)
     args = parser.parse_args()
@@ -415,6 +483,9 @@ def main():
         return worker(args.issue)
     elif args.action == 'lead':
         return lead()
+    elif args.action == 'wake':
+        # Operator/human nudge (e.g. a comment-only change): the next lead pass runs inference.
+        (STATE / 'lead-receipt.json').unlink(missing_ok=True)
     elif args.action == 'pause':
         (STATE / 'paused').write_text('Operator pause: existing workers may finish.\n')
     elif args.action == 'resume':

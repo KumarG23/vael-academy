@@ -1,0 +1,32 @@
+[
+  {
+    "route": "emberwing",
+    "native_save_sha256": "681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4",
+    "loaded_house": "emberwing",
+    "week": 2,
+    "scene": "res://scenes/castle/castle.tscn",
+    "last_result": "victory",
+    "game_source": "366a8e5f358fb57cc64a3b37a986f3a217be8313",
+    "provenance": "byte-for-byte native return-save reload; no campaign seeding"
+  },
+  {
+    "route": "tidemark",
+    "native_save_sha256": "ce1c8cde71bc3eb6d30257d98ae8e597198b24a7a32092dddb9a68bb30ae54b7",
+    "loaded_house": "tidemark",
+    "week": 2,
+    "scene": "res://scenes/castle/castle.tscn",
+    "last_result": "victory",
+    "game_source": "366a8e5f358fb57cc64a3b37a986f3a217be8313",
+    "provenance": "byte-for-byte native return-save reload; no campaign seeding"
+  },
+  {
+    "route": "thornrook",
+    "native_save_sha256": "c4e2473f55378e7281bc7e9fe5c7da0414f2f28334d4ca5711d5aaa982bd553b",
+    "loaded_house": "thornrook",
+    "week": 2,
+    "scene": "res://scenes/castle/castle.tscn",
+    "last_result": "victory",
+    "game_source": "366a8e5f358fb57cc64a3b37a986f3a217be8313",
+    "provenance": "byte-for-byte native return-save reload; no campaign seeding"
+  }
+]
