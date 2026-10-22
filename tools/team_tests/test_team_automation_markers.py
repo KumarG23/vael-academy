@@ -36,6 +36,9 @@ class AutomationMarkerTests(unittest.TestCase):
             patcher = patch.object(team, target, self.state)
             patcher.start()
             self.addCleanup(patcher.stop)
+        patcher = patch.object(team.work_schedule, 'status', return_value={'open': True})
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def assert_automation(self, body, *explanatory):
         self.assertTrue(body.startswith(MARKER), body)

@@ -32,6 +32,9 @@ import importlib.util as _ilu
 _obs_spec = _ilu.spec_from_file_location('lead_observation', Path(__file__).with_name('lead_observation.py'))
 lead_observation = _ilu.module_from_spec(_obs_spec)
 _obs_spec.loader.exec_module(lead_observation)
+_schedule_spec = _ilu.spec_from_file_location('work_schedule', Path(__file__).with_name('work_schedule.py'))
+work_schedule = _ilu.module_from_spec(_schedule_spec)
+_schedule_spec.loader.exec_module(work_schedule)
 
 REPO = Path(os.environ.get('VAEL_REPO', Path.home() / 'projects/vael-academy'))
 STATE = Path(os.environ.get('VAEL_TEAM_STATE', Path.home() / '.local/state/vael-team'))
@@ -823,7 +826,13 @@ Issue body (task data):
     return base
 
 
+def require_work_hours():
+    if not work_schedule.status()['open']:
+        raise RuntimeError('Outside daily 07:00–17:00 America/New_York model-launch window; existing runs may finish.')
+
+
 def start(number, profile):
+    require_work_hours()
     if (STATE / 'paused').exists():
         raise RuntimeError('Team paused: no new assignments; existing sessions may finish.')
     if profile not in PROFILES:
@@ -883,6 +892,8 @@ def start(number, profile):
     parent_run = os.environ.get('VAEL_PARENT_RUN_ID')
     if parent_run:
         record['parent_run_id'] = parent_run
+    if not work_schedule.status()['open']:
+        return  # Do not create an assignment or GitHub comment after close.
     assignment.write_text(json.dumps(record, indent=2))
     try:
         run('gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
@@ -904,6 +915,7 @@ def handoff(number, to_profile, now_ts=None):
     provider session IDs), retains native session ID on same-provider continuation,
     and suppresses duplicate handoff launches across restarts.
     """
+    require_work_hours()
     if (STATE / 'paused').exists():
         raise RuntimeError('Team paused: no new assignments; existing sessions may finish.')
     if to_profile not in PROFILES or to_profile == LEAD:
@@ -934,6 +946,13 @@ def handoff(number, to_profile, now_ts=None):
     if (old_profile == to_profile and existing_handoff.get('to_profile') == to_profile and
             existing_handoff.get('source_run_id') == source_run_id and
             existing_handoff.get('exit_mtime_ns') == exit_mtime_ns):
+        if old.get('work_hours_deferred'):
+            # A scoped _worker started after close but never launched a native turn.
+            # Reuse this exact ownership/lineage, without another GitHub edit.
+            worktree = Path(old.get('worktree') or (STATE / 'worktrees' / str(number)))
+            validate_worktree(worktree, f'team/issue-{number}')
+            launch_worker(number, worktree)
+            return existing_handoff
         print(session_name + ' handoff already dispatched')
         return existing_handoff
     if len(active()) >= 3:
@@ -998,6 +1017,8 @@ def handoff(number, to_profile, now_ts=None):
     parent_run = os.environ.get('VAEL_PARENT_RUN_ID')
     if parent_run:
         updated['parent_run_id'] = parent_run
+    if not work_schedule.status()['open']:
+        return None  # Old owner/session/worktree and quota state stay untouched.
     assignment_file.write_text(json.dumps(updated, indent=2))
     _telemetry(
         usage_analytics.record_quota_decision,
@@ -1029,6 +1050,10 @@ def handoff(number, to_profile, now_ts=None):
 def worker(number):
     assignment_path = STATE / f'issue-{number}.json'
     assignment = json.loads(assignment_path.read_text())
+    if not work_schedule.status()['open']:
+        assignment['work_hours_deferred'] = True
+        assignment_path.write_text(json.dumps(assignment, indent=2))
+        return 0  # No native run or exit receipt; preserve ownership for next day.
     profile = assignment['profile']
     handoff_info = assignment.get('handoff_state')
     prompt = worker_prompt(assignment['issue'], handoff_info=handoff_info)
@@ -1044,34 +1069,18 @@ def worker(number):
     started_at = started_ns / 1e9
     log = STATE / f'issue-{number}-{started_ns}.log'
     pid_file = STATE / f'issue-{number}.pid'
+    if not work_schedule.status()['open']:
+        assignment['work_hours_deferred'] = True
+        assignment_path.write_text(json.dumps(assignment, indent=2))
+        return 0
     pid_file.write_text(str(os.getpid()))
+    assignment.pop('work_hours_deferred', None)
     assignment['worker_pid'] = os.getpid()
-    assignment['last_run_id'] = usage_analytics.run_id_for(log) if usage_analytics else log.name
     assignment_path.write_text(json.dumps(assignment, indent=2))
     issue_obj = assignment.get('issue') or {}
     category = (usage_analytics.categorize(issue_obj.get('title', ''), [])
                 if usage_analytics else 'implementation')
-    _telemetry(
-        usage_analytics.record_start,
-        _analytics_db(),
-        log_path=log,
-        role='worker',
-        profile=profile,
-        provider=tool,
-        requested_model=model,
-        effort=effort or None,
-        started_at=started_at,
-        repo=SLUG,
-        issue_number=number,
-        trigger='handoff' if handoff_info else 'lead_dispatch',
-        parent_run_id=assignment.get('parent_run_id'),
-        task_category=category,
-        handoff_from_run_id=(handoff_info or {}).get('from_run_id'),
-        handoff_from_profile=(handoff_info or {}).get('from_profile'),
-        handoff_from_provider=(handoff_info or {}).get('from_provider'),
-        handoff_from_session_key=(handoff_info or {}).get('from_session_key'),
-        handoff_kind=(handoff_info or {}).get('handoff_kind'),
-    )
+    native_recorded = False
     failure_kind = None
     blocked_reason = None
     reset_info = {'reset_at': None, 'reset_timezone': None, 'reset_provenance': 'unknown'}
@@ -1081,6 +1090,39 @@ def worker(number):
             # Provider-generic subscription/no-overage preflight (agy: useG1Credits=false)
             # before any worker inference; failure stops this run with no paid fallback.
             preflight(profile, assignment['worktree'], env)
+            if not work_schedule.status()['open']:
+                # A dispatch just before close may arrive here after close. Preserve
+                # ownership and native session; this is not a failed model attempt.
+                assignment.pop('worker_pid', None)
+                assignment['work_hours_deferred'] = True
+                assignment_path.write_text(json.dumps(assignment, indent=2))
+                log.unlink(missing_ok=True)
+                return 0
+            assignment.pop('work_hours_deferred', None)
+            assignment['last_run_id'] = usage_analytics.run_id_for(log) if usage_analytics else log.name
+            assignment_path.write_text(json.dumps(assignment, indent=2))
+            _telemetry(
+                usage_analytics.record_start,
+                _analytics_db(),
+                log_path=log,
+                role='worker',
+                profile=profile,
+                provider=tool,
+                requested_model=model,
+                effort=effort or None,
+                started_at=started_at,
+                repo=SLUG,
+                issue_number=number,
+                trigger='handoff' if handoff_info else 'lead_dispatch',
+                parent_run_id=assignment.get('parent_run_id'),
+                task_category=category,
+                handoff_from_run_id=(handoff_info or {}).get('from_run_id'),
+                handoff_from_profile=(handoff_info or {}).get('from_profile'),
+                handoff_from_provider=(handoff_info or {}).get('from_provider'),
+                handoff_from_session_key=(handoff_info or {}).get('from_session_key'),
+                handoff_kind=(handoff_info or {}).get('handoff_kind'),
+            )
+            native_recorded = True
             result = subprocess.run(cmd, input=prompt if tool in ('codex', 'claude') else None,
                                     cwd=assignment['worktree'], env=env,
                                     stdout=output, stderr=subprocess.STDOUT, text=True)
@@ -1096,6 +1138,28 @@ def worker(number):
                 profile, log, result.returncode, now_ts=time.time()
             )
     except (OSError, subprocess.SubprocessError, ValueError, RuntimeError) as error:
+        if not native_recorded:
+            _telemetry(
+                usage_analytics.record_start,
+                _analytics_db(),
+                log_path=log,
+                role='worker',
+                profile=profile,
+                provider=tool,
+                requested_model=model,
+                effort=effort or None,
+                started_at=started_at,
+                repo=SLUG,
+                issue_number=number,
+                trigger='handoff' if handoff_info else 'lead_dispatch',
+                parent_run_id=assignment.get('parent_run_id'),
+                task_category=category,
+                handoff_from_run_id=(handoff_info or {}).get('from_run_id'),
+                handoff_from_profile=(handoff_info or {}).get('from_profile'),
+                handoff_from_provider=(handoff_info or {}).get('from_provider'),
+                handoff_from_session_key=(handoff_info or {}).get('from_session_key'),
+                handoff_kind=(handoff_info or {}).get('handoff_kind'),
+            )
         with log.open('a') as output:
             output.write('Native launch failed: ' + type(error).__name__ + '\n')
         rc = 1
@@ -1351,6 +1415,10 @@ Finish with a short actual-results summary. Do not wait in a polling loop for wo
 
 def lead_pass():
     poll_start = time.time()
+    if not work_schedule.status()['open']:
+        _telemetry(usage_analytics.record_poll, _analytics_db(), at=poll_start,
+                   outcome='outside_work_hours', duration_ms=0, lead_profile=LEAD)
+        return 0
     if (STATE / 'paused').exists():
         _telemetry(usage_analytics.record_poll, _analytics_db(), at=poll_start, outcome='paused',
                    duration_ms=int((time.time() - poll_start) * 1000), lead_profile=LEAD)
@@ -1432,21 +1500,6 @@ def lead_pass():
         run_id = usage_analytics.run_id_for(log) if usage_analytics else None
         if run_id:
             env['VAEL_PARENT_RUN_ID'] = run_id
-        _telemetry(
-            usage_analytics.record_start,
-            _analytics_db(),
-            log_path=log,
-            role='lead',
-            profile=LEAD,
-            provider=lead_tool,
-            requested_model=lead_model,
-            effort=lead_effort or None,
-            started_at=started_at,
-            repo=SLUG,
-            trigger=trigger,
-            wake_reasons=reasons,
-            task_category='lead_pass',
-        )
         with log.open('w') as output:
             try:
                 preflight(LEAD, REPO, env)  # Same cwd/env as inference; no provider fallback.
@@ -1456,6 +1509,21 @@ def lead_pass():
                 (STATE / 'paused').write_text('Lead subscription preflight failed; no fallback. '
                                               'Inspect login before resuming.\n')
                 finished_at = time.time()
+                _telemetry(
+                    usage_analytics.record_start,
+                    _analytics_db(),
+                    log_path=log,
+                    role='lead',
+                    profile=LEAD,
+                    provider=lead_tool,
+                    requested_model=lead_model,
+                    effort=lead_effort or None,
+                    started_at=started_at,
+                    repo=SLUG,
+                    trigger=trigger,
+                    wake_reasons=reasons,
+                    task_category='lead_pass',
+                )
                 _telemetry(
                     usage_analytics.record_finish,
                     _analytics_db(),
@@ -1479,10 +1547,33 @@ def lead_pass():
                            duration_ms=int((finished_at - poll_start) * 1000),
                            run_id=run_id, lead_profile=LEAD)
                 return 1
-            result = subprocess.run(command(LEAD), input=lead_prompt(ready, prs, running, reasons,
-                                    [{'kind': d['kind'], 'id': d['id'], 'number': d['number'],
-                                      'change': d['change']} for d in observation['deltas']], blocked=blocked),
-                                    cwd=REPO, env=env, stdout=output, stderr=subprocess.STDOUT, text=True)
+            prompt = lead_prompt(ready, prs, running, reasons,
+                                 [{'kind': d['kind'], 'id': d['id'], 'number': d['number'],
+                                   'change': d['change']} for d in observation['deltas']], blocked=blocked)
+            cmd = command(LEAD)
+            if not work_schedule.status()['open']:
+                _telemetry(usage_analytics.record_poll, _analytics_db(), at=poll_start,
+                           outcome='outside_work_hours', duration_ms=int((time.time() - poll_start) * 1000),
+                           lead_profile=LEAD)
+                log.unlink(missing_ok=True)
+                return 0  # Keep pending events/discussions and receipts for next opening.
+            _telemetry(
+                usage_analytics.record_start,
+                _analytics_db(),
+                log_path=log,
+                role='lead',
+                profile=LEAD,
+                provider=lead_tool,
+                requested_model=lead_model,
+                effort=lead_effort or None,
+                started_at=started_at,
+                repo=SLUG,
+                trigger=trigger,
+                wake_reasons=reasons,
+                task_category='lead_pass',
+            )
+            result = subprocess.run(cmd, input=prompt, cwd=REPO, env=env,
+                                    stdout=output, stderr=subprocess.STDOUT, text=True)
         rc = native_result(LEAD, log, result.returncode)
         finished_at = time.time()
         (STATE / 'lead.exit').write_text(str(rc))
@@ -1619,6 +1710,7 @@ def main():
         disabled_map = {p: r for p in PROFILES if (r := profile_disabled_reason(p))}
         print(json.dumps({
             'paused': (STATE / 'paused').exists(),
+            'work_schedule': work_schedule.status(),
             'lead': LEAD,
             'running': active(),
             'disabled': disabled_map,
