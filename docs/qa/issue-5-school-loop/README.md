@@ -1,0 +1,138 @@
+# Issue #5 — graphical school-loop qualification
+
+Functional QA of existing delivered behavior; not story, art, pacing or Neal visual approval.
+
+## Basis and environment
+
+- [Issue #5](https://github.com/KumarG23/vael-academy/issues/5), within reliability milestone [#8](https://github.com/KumarG23/vael-academy/issues/8).
+- MASTER_PLAN §1 school-slice checkpoint; §3 lord-loss rule; §6/§10 WO-4.3/4.4, 5.3, 5.6, 6.2a and 6.4. ACADEMY_BIBLE §§3–4 (campus activities, Common Hall, inter-house rites); CAMPAIGN_STRUCTURE **What house choice actually forks**. HANDOFF migration qualification, issue #3 support receipt repair, and AW-30 known limits.
+- Route baseline: `f975683c63fef668b35fff841b92407db7d52cdf`, current main when QA began, 2026-10-22.
+- Godot `4.7.2.stable.official.ed1daf0bf`; unchanged Forward Plus renderer, Vulkan llvmpipe, 1280×720 graphical window.
+- Used the existing shared desktop, real X11 keyboard/pointer events and inspected screenshots. The prescribed display rejected authentication; another existing desktop was available. No service was started and renderer configuration was preserved.
+- All game/test processes used disposable `XDG_DATA_HOME`; real saves and old branches were untouched. Native saves were copied only within disposable QA data.
+- Tactics were assisted by read-only inspection of live units/reachability/forecasts. Actions were sent through keyboard menus and watched through normal animations. No victory, HP, RNG, dialogue completion, roster or campaign progress was injected in the route runs. Reading was accelerated; this does not assess emotional pacing.
+
+## Route provenance and results
+
+| Route | Starting point | Activity / persistence | Opening rite and return |
+| --- | --- | --- | --- |
+| Emberwing | Fresh New Game, Casual; seven opening scripts; road introduction, round-3 victory and completed aftermath; existing pitch/oath; Week 1 campus | Fishing: Warded Coin ×1. Native Save Game → Title → Load preserved house, Week 1 and catch. Initial Common Hall correctly had no unlocked bonds. | Three factions; victory round 6, Perrin sole survivor; returned to Week 2 **Term begins**. Kai had fallen in round 2, so this is reachable flow with a rules failure, not a clean pass (#19). |
+| Tidemark | Native round-3 road save reused from the fresh run; boss fight/aftermath replayed, then existing choice/pitch and Week 1 campus. **Not a fresh New Game run.** | Training: Serra 18 → 28 XP, training-used recorded. | Rina defeated, victory round 12 with Kai alive; returned to Week 2 **Term begins**. Fenn fell; six player units survived. |
+| Thornrook | Same earned round-3 road checkpoint; boss/aftermath replayed, existing choice/pitch and Week 1 campus. **Not a fresh New Game run.** | Rina trained 27 → 37 XP; native Save → Title → Load preserved Thornrook / Week 1. | Perrin defeated, victory round 5 with Kai alive; returned to Week 2 **Term begins**. Rurik fell; seven player units survived. |
+
+The reused road save contained Kai at (7,6), 26 HP and unacted; Serra at (9,5), 12 HP and unacted; Rina at (8,5), 20 HP and acted; only the bandit boss remained at (13,5), 27 HP. Native Title → Load restored round 3 and these states. It is an input-earned checkpoint, not a seeded fixture.
+
+## Actual roster and rival selection
+
+| Player route | Player team | Opposing teams |
+| --- | --- | --- |
+| Emberwing | Kai, Perrin, Kael, Brenna, Wren, Dain, Liora (7) | Team 1: Osric, Elowen, Isolde, Fenn, Bertram, Serra (6). Team 2: Rina, Thessaly, Corvin, Marlow, Vesper, Rurik, Nilu (7). |
+| Tidemark | Serra, Osric, Elowen, Isolde, Fenn, Bertram, Kai (7) | Team 1 only: Marlow, Rurik, Thessaly, Corvin, Vesper, Rina (6); objective **Defeat Rina — or rout them all**. |
+| Thornrook | Rina, Thessaly, Corvin, Marlow, Vesper, Rurik, Nilu, Kai (8) | Team 1 only: Kael, Dain, Liora, Brenna, Wren, Perrin (6); objective **Defeat Perrin — or rout them all**. |
+
+**Document discrepancy:** MASTER_PLAN §4 / WO-5.6 and CAMPAIGN_STRUCTURE describe the two unpicked houses as rivals. The §10 WO-5.6 completion row instead records a single-rival cycle; HANDOFF AW-30 explicitly limits the three-house free-for-all to Emberwing and leaves house-aware parity as follow-on work. Both alternate routes match that known limitation. The lead has opened decision [#22](https://github.com/KumarG23/vael-academy/issues/22) to resolve the conflicting acceptance. This report does not invent a canon exception or claim all routes are three-way. Nilu is the separately documented Thornrook companion, not an additional noble student.
+
+## Reproduction through existing UI
+
+1. Launch the project with a new disposable data directory. New Game → Casual. Advance the current authored opening with Return, then play the road battle through normal move/action/target menus. Finish the aftermath before dismissing victory.
+2. Use Left/Right to select a house, R to inspect its roster preview, and the oath button to commit. Complete the pitch. Verify the Week 1 campus header and selected house roster.
+3. Emberwing: walk to Waterside, interact at the fishing spot, then press Space when the bite appears. Escape → Save Game; Escape → Return to Title; Load the occupied campaign slot. Check house/week/catch.
+4. Training alternative: enter Training Grounds, interact with **Train a housemate**, select the first roster member, and check +10 XP / one-use state.
+5. Deploy from the War Room mission table (Emberwing tested through the building) or campus Mission Board. Check Preparations, actual teams and objective; Begin battle. Play to result, dismiss it and inspect the castle calendar.
+6. For alternate routes, use the isolated native road checkpoint above, finish its remaining fight/aftermath, and choose the next house. Do not call these full fresh playthroughs.
+
+## Functional defects found
+
+| Issue | Observed behavior | Qualification impact |
+| --- | --- | --- |
+| [#14](https://github.com/KumarG23/vael-academy/issues/14) | Sparse save rows display metadata for the wrong fixed slot; an apparently empty row overwrites the occupied slot. Title also uses zero-based labels. | Save safety failure. Only disposable saves used. |
+| [#15](https://github.com/KumarG23/vael-academy/issues/15) | Fishing, training and empty-archive feedback is clipped off the right edge. | Feedback unreadable; activity itself completes. |
+| [#16](https://github.com/KumarG23/vael-academy/issues/16) | Journal close key reaches the castle: Escape opens the system menu; J reopens the Journal. | Input failure; Escape twice permits continuation. |
+| [#19](https://github.com/KumarG23/vael-academy/issues/19) | Animated defeat frees Kai before objective checks; Emberwing continues and awards victory/Week 2 after lord loss. | Blocks clean combat-rule signoff under MASTER_PLAN §3. |
+| [#20](https://github.com/KumarG23/vael-academy/issues/20) | Road bandit at (8,7) occupies a water tile labeled impassable and remains attackable. | Terrain/spawn consistency defect; road victory remains reachable. |
+| [#23](https://github.com/KumarG23/vael-academy/issues/23) | Thornrook’s Nilu has no chapter deployment entry and defaults to isolated (0,0). | Missing deployment data; battle remains playable. |
+
+These issues were checked against all open/closed issues and PRs before filing and left for lead assignment. QA did not implement repairs or change canon.
+
+## Support archive — isolated fixture
+
+Retest baseline: accepted main `ca584fe27be2dacdf83e63c8d50aa25b3bcdf465` (includes PR #17 pointer and PR #18 mute repairs). This was a new graphical process with a separate disposable data directory.
+
+The natural Emberwing return had Kai–Kael 10 points, no rank and no viewed scenes. For archive coverage only, copy that native return save and set `campaign.support_save.points.kai_kael = 20`, `ranks.kai_kael = "C"`, leaving `viewed = {}`. This is **seeded support eligibility**, not an earned C-rank playthrough. Load it through Title, walk to Great Hall → Common Hall, and interact at **Gather by the fire (bonds)**.
+
+| Case | Real UI result | Viewed receipt / availability |
+| --- | --- | --- |
+| Initial C fixture | **Kai + Kael C**, no checkmark | Unviewed and available |
+| Missing path | Rejects playback, keeps archive menu | Still unviewed and available |
+| Malformed JSON (`{`) | Rejects playback, keeps archive menu | Still unviewed and available |
+| Empty JSON (`[]`) | Rejects playback, keeps archive menu | Still unviewed and available |
+| Authored `kai_kael_c.json` | Actual portrait/dialogue playback; Return advances all lines | Unviewed during playback; checkmark only after completion |
+| Replay | Same authored conversation plays again | Exactly one viewed key, `kai_kael:C`; archive entry remains available |
+| Native Save → Title → Load → Common Hall | Checkmark still shown | Viewed key persists; entry remains replayable |
+
+For invalid-asset cases only, duplicate the live Kai–Kael `SupportChainDef` in the disposable process, replace its C path with a missing or malformed/empty `user://` fixture, then close/reopen the archive and select it with real Return input. Restore the authored path before the valid case. No repository dialogue/resource was edited, and no support handler or completion callback was called directly. The clipped error toast remains #15. These checks confirm the issue #3 receipt repair in the Common Hall; battle-menu coverage follows.
+
+### Battle support fixture
+
+Separately copy the native Emberwing prebattle save, set Kai–Kael to 20/C in **both** its top-level `supports` and `campaign.support_save`, and clear viewed receipts. Load normally, Begin battle, select Kai without moving, then choose Supports. The same missing/malformed/empty paths returned to the action menu with Supports still available and no viewed receipt. Valid authored playback stayed unviewed until completion, then removed Supports from this unit's unwatched menu. Kai remained at (2,12), unacted. A native battle save, process restart, Title → Load and reselecting Kai preserved `kai_kael:C` and the absence of Supports. No battle action, HP or RNG was altered by the fixture.
+
+## Accepted repair retests
+
+Both checks below ran on accepted main `ca584fe27be2dacdf83e63c8d50aa25b3bcdf465`. They are focused fixtures, not additional fresh campaign playthroughs.
+
+### Pointer repair — PR #17 / issue #9
+
+Using the native Emberwing prebattle continuation above and real pointer input:
+
+- Hover Kael at (3,12), move the keyboard cursor left to Kai without moving the pointer, then left-click: **Kael selected**, movement range visible.
+- Right-click cancels selection and leaves Kael unacted.
+- Pan using keyboard movement to (11,9), then point/click Kael at his transformed visible position: **Kael selected**.
+- Repeat at a 960×540 window and camera zoom 1.75: **Kael selected** and cancellation spends no action.
+- Fit the map at zoom 0.3, select Kael, then click the visible outside-map margin: selection and cursor remain unchanged. Valid right-click still cancels.
+
+The two explicit zoom values and window resize were presentation-only runtime fixture settings; no renderer/project configuration or gameplay state was changed. Original-size keyboard movement and native camera following were also exercised. This extends PR #17's headless input dispatch proof with actual desktop events.
+
+### Audio repair — PR #18 / issue #10
+
+Captured the graphical game's actual PulseAudio output monitor as signed 16-bit PCM. This is real audio-driver output, not the dummy driver or only `AudioStreamPlayer.playing` flags. It measures functional silence/resumption on a virtual output device; it is not a speaker/headphone listening or music-taste approval.
+
+Invoke existing AudioManager methods in the disposable graphical process. Play `campus_chill.mp3`; mute; request `rooms/library.mp3` while muted; unmute. Separately stop music, play `vo/prologue/p1_opener.wav`, then mute while its voice player is still active. Repeat with `victory.wav` SFX at pitch 0.25 so the short one-shot is still active when muted. That pitch is only a test fixture setting. After mute, wait 0.3 s to drain output buffering and capture one second. Unmute must not replay old voice/SFX; new one-shot requests while muted must stay silent.
+
+| Output sample | Peak PCM amplitude | RMS |
+| --- | ---: | ---: |
+| music-before | 16042 | 3180.81 |
+| music-muted | 0 | 0.0 |
+| new-track-while-muted | 0 | 0.0 |
+| latest-track-resumed | 21885 | 4743.857 |
+| voice-before | 8409 | 1816.464 |
+| voice-muted | 0 | 0.0 |
+| voice-not-replayed | 0 | 0.0 |
+| sfx-before | 18170 | 12220.177 |
+| sfx-muted | 0 | 0.0 |
+| new-oneshots-muted | 0 | 0.0 |
+| oneshots-not-replayed | 0 | 0.0 |
+
+Active voice and SFX player state was checked immediately before mute; both were still playing. All seven silent intervals had peak **0**. Music resumed with the latest requested library track; narration and SFX did not replay. See [sample measurements](audio/measurements.json) and the linked PCM clips below. Capture command: `ffmpeg -f pulse -i auto_null.monitor -t 1 capture.wav` (use your existing output monitor; do not start a service).
+
+## Final verification and remaining limits
+
+Graphical work is complete on the SHAs above. Editor import exited 0 with no script-load errors. Full GUT exited 0: **771/771 tests, 6,823 assertions, 96 scripts, 180.212 s**. Both ran under the shared lock with disposable data. The suite retains 18 deprecation reports, two ObjectDB leak warnings and one resource-in-use exit error; none failed the run. Team helper checks ran 37 tests: 35 passed, two opt-in user-systemd probes skipped. No story/design, source mechanics or tests were edited by QA.
+
+Remaining qualification gaps are explicit: six functional defects remain separate repair work; #19 prevents a clean lord-loss rules pass, and #14 compromises save-slot safety. Decision #22 governs rival/objective parity. Only Emberwing was a fresh New Game run; the two other routes reused the earned road checkpoint. Archive eligibility and malformed assets were fixtures; natural C-rank accrual was not established. Speaker/headphone listening and Neal’s visual/story/taste approvals were not claimed. Later weeks, full-semester progression, active-defense production adoption and VS-1C are outside this validation. Retest the affected paths on accepted repair commits before closing parent #8.
+
+## Evidence index
+
+- [Road introduction](images/road-intro.png), [native round-3 reload](images/road-resumed.png), [water-tile forecast](images/road-perrin-forecast.png).
+- [Emberwing preview](images/emberwing-preview.png), [Week 1 campus](images/emberwing-campus.png), [fishing result / clipped toast](images/fishing-result.png).
+- [Sparse save labels](images/sparse-save-slots.png), [Journal Escape opens system menu](images/journal-cancel-system.png), [initial locked archive feedback](images/archive-initial.png).
+- [Emberwing preparations](images/emberwing-rite-prep.png), [round 3 after Kai fell](images/emberwing-mock_battle-turn3.png), [victory](images/emberwing-mock_battle-result.png), [Week 2 return](images/emberwing-return.png).
+- [Tidemark preview](images/tidemark-preview.png), [Tidemark preparations / six foes](images/tidemark-rite-prep.png).
+- [Native Emberwing prebattle save](emberwing-rite-start.json), [curated input transcript](emberwing-actions.md). To reproduce, copy the JSON to `godot/app_userdata/Vael Academy/saves/slot_0.json` beneath a **new disposable** `XDG_DATA_HOME`, launch normally, Load through Title, and Begin battle. Do not overwrite a real player's slot.
+
+- [Archive eligible / unwatched](images/archive-unwatched.png), [malformed asset retained](images/archive-malformed.png), [actual playback](images/archive-playback.png), [completed checkmark](images/archive-completed.png), [native reload checkmark](images/archive-reloaded.png).
+- [Thornrook roster preview](images/thornrook-preview.png), [house persisted on reload](images/thornrook-reloaded.png), [six-rival preparations](images/thornrook-rite-prep.png), [Week 2 return](images/thornrook-return.png), [Tidemark Week 2 return](images/tidemark-return.png).
+
+- [Battle invalid asset remains available](images/battle-support-malformed.png), [completed battle support](images/battle-support-valid.png), [receipt retained after battle reload](images/battle-support-reloaded.png).
+- [Stationary pointer selects Kael after keyboard movement](images/pointer-stationary-selected.png), [selection after camera pan](images/pointer-panned-selected.png), [960×540 client / zoom fixture](images/pointer-resized.png), [outside-map margin ignored](images/pointer-outside-margin.png).
+- [Nilu at (0,0)](images/nilu-corner.png), [native Thornrook prebattle save](thornrook-rite-start.json). Reproduce with the same isolated-save instructions above, then move the preparations cursor to (0,0). This screenshot was retaken on accepted `ca584fe2`; the native route run was on `f975683c`.
+- PCM clips: music [before](audio/music-before.wav) / [muted](audio/music-muted.wav) / [latest track resumed](audio/latest-track-resumed.wav); narration [before](audio/voice-before.wav) / [muted](audio/voice-muted.wav); SFX [before](audio/sfx-before.wav) / [muted](audio/sfx-muted.wav).
