@@ -65,7 +65,7 @@ QUOTA_SCOPES = (
 )
 ROLES = ('lead', 'worker')
 STATUSES = ('running', 'success', 'failed', 'interrupted', 'launch_error', 'unknown')
-TRIGGERS = ('timer', 'manual_start', 'lead_dispatch', 'lead_handoff', 'handoff', 'operator', 'unknown')
+TRIGGERS = ('timer', 'systemd', 'manual_start', 'recovery', 'lead_dispatch', 'lead_handoff', 'handoff', 'operator', 'unknown')
 CATEGORIES = ('lead_review', 'planning', 'lead_pass', 'implementation', 'qa', 'docs', 'bugfix', 'unknown')
 ATTEMPTS = ('initial', 'retry', 'rework', 'handoff', 'lead')
 FAILURE_KINDS = ('quota_exhausted', 'auth_failure', 'permission_failure', 'network_failure',
@@ -79,20 +79,20 @@ HANDOFF_KINDS = ('cross_provider_reassign', 'same_provider_reassign', 'same_owne
 QUOTA_DECISIONS = ('pending', 'wait', 'reassign', 'escalate', 'resumed')
 POLL_OUTCOMES = ('paused', 'locked', 'lock_contention', 'deferred_workers_running',
                  'no_work_workers_running', 'dirty_checkout', 'no_wake_reason', 'unchanged',
-                 'exhausted_empty_queue', 'quota_cooldown', 'error', 'preflight_failed',
+                 'exhausted_empty_queue', 'quota_cooldown', 'error', 'observation_unavailable', 'preflight_failed',
                  'inference_success', 'inference_failed', 'unmatched_activation_unknown',
                  'no_inference_unrecorded', 'service_failed_unrecorded')
 VERIFIED_ZERO_MODEL_OUTCOMES = (
     'paused', 'locked', 'lock_contention', 'deferred_workers_running',
     'no_work_workers_running', 'no_wake_reason', 'unchanged',
-    'exhausted_empty_queue', 'quota_cooldown',
+    'exhausted_empty_queue', 'quota_cooldown', 'observation_unavailable',
 )
 UNMATCHED_POLL_OUTCOMES = (
     'unmatched_activation_unknown', 'no_inference_unrecorded', 'service_failed_unrecorded',
 )
 MAX_JOURNAL_LAUNCH_WINDOW_SEC = 120.0
-WAKE_REASONS = ('first pass', 'main', 'ready', 'prs', 'workers', 'quota', 'events', 'periodic refresh',
-                'planning refresh', 'pending event')
+WAKE_REASONS = ('first pass', 'receipt recovery', 'manual nudge', 'main', 'ready', 'prs', 'workers',
+                'discussions', 'blocked', 'quota', 'events', 'periodic refresh', 'planning refresh', 'pending event')
 EFFORTS = ('low', 'medium', 'high', 'xhigh', 'max', 'provider_default')
 # Allowlisted identifier shapes. Anything else is stored/served as NULL.
 MODEL_RE = re.compile(r'[A-Za-z0-9][A-Za-z0-9._:/-]{0,79}')
@@ -426,8 +426,11 @@ def upsert_run(conn, row):
     row['updated_at'] = now()
     cols = list(row)
     keep = ('run_id', 'source_key')
-    updates = ', '.join(f'{c}=COALESCE(excluded.{c}, runs.{c})' if c not in keep else f'{c}=runs.{c}'
-                        for c in cols)
+    updates = ', '.join(
+        "status=CASE WHEN runs.finished_at IS NOT NULL AND excluded.status='running' "
+        "THEN runs.status ELSE COALESCE(excluded.status,runs.status) END" if c == 'status' else
+        f'{c}=COALESCE(excluded.{c}, runs.{c})' if c not in keep else f'{c}=runs.{c}'
+        for c in cols)
     conn.execute(f'INSERT INTO runs({",".join(cols)}) VALUES({",".join("?" * len(cols))}) '
                  f'ON CONFLICT(source_key) DO UPDATE SET {updates}', [row[c] for c in cols])
     return conn.execute('SELECT run_id FROM runs WHERE source_key=?', (row['source_key'],)).fetchone()[0]
@@ -1269,6 +1272,10 @@ def build_run(*, source_key, source_kind, role, provider, profile, profile_prove
     for k, v in extra.items():
         if k in RUN_COLUMNS and v is not None:
             row[k] = v
+    if 'wake_reasons' in row:
+        row['wake_reasons'] = normalize_wake_reasons(row['wake_reasons'])
+    if 'trigger' in row:
+        row['trigger'] = safe_enum(row['trigger'], TRIGGERS, 'unknown')
     if row.get('issue_number') is not None and row.get('logical_task_id') is None:
         row['logical_task_id'] = logical_task_for(row['issue_number'], row['role'])
     if row.get('issue_number') is not None and row.get('worktree_key') is None:
@@ -1488,6 +1495,15 @@ def run_id_for(log_path):
     return digest('run', run_key(log_path))
 
 
+def normalize_wake_reasons(reasons):
+    if isinstance(reasons, str):
+        reasons = reasons.split(',')
+    if not isinstance(reasons, (list, tuple)):
+        return None
+    return ','.join(dict.fromkeys(r.strip() for r in reasons
+                                 if isinstance(r, str) and r.strip() in WAKE_REASONS)) or None
+
+
 def record_start(db_path, *, log_path, role, profile, provider, requested_model, effort, started_at,
                  repo=None, issue_number=None, trigger=None, wake_reasons=None, parent_run_id=None,
                  task_category=None, cli_version=None, handoff_from_run_id=None,
@@ -1508,7 +1524,7 @@ def record_start(db_path, *, log_path, role, profile, provider, requested_model,
                'logical_task_id': logical_task_for(clean_issue, role),
                'worktree_key': worktree_key_for(clean_issue, role),
                'trigger': safe_enum(trigger, TRIGGERS, 'unknown'),
-               'wake_reasons': ','.join(r for r in (wake_reasons or []) if r in WAKE_REASONS) or None,
+               'wake_reasons': normalize_wake_reasons(wake_reasons),
                'parent_run_id': parent_run_id if isinstance(parent_run_id, str) and re.fullmatch(r'[0-9a-f]{32}', parent_run_id) else None,
                'parent_provenance': 'launcher_env' if parent_run_id else None,
                'task_category': safe_enum(task_category, CATEGORIES),
@@ -1605,13 +1621,17 @@ def reconcile_running(db_path, state_dir, live_sessions, older_than=600, session
                 mtime = log.stat().st_mtime
             except OSError:
                 continue
-            if now() - mtime < older_than:
+            lines = log.read_text(errors='replace').splitlines()
+            # A terminal envelope is stronger evidence than file age. Active workers
+            # were excluded above; callers hold the lead lock before reconciliation.
+            terminal = parse_native(r['provider'], lines).get('terminal')
+            if terminal not in ('success', 'failed') and now() - mtime < older_than:
                 continue
             row = build_run(source_key=r['source_key'], source_kind=r['source_kind'], role=r['role'],
                             provider=r['provider'], profile=r['profile'], profile_provenance=r['profile_provenance'],
                             requested_model=r['requested_model'], effort=r['effort'], started_at=r['started_at'],
                             finished_at=mtime, exit_code=None,
-                            lines=log.read_text(errors='replace').splitlines(), sessions=sessions,
+                            lines=lines, sessions=sessions,
                             issue_number=r['issue_number'])
             if row['status'] == 'running':
                 row['status'] = 'interrupted'
