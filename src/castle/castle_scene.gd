@@ -17,6 +17,7 @@ const AVATAR_SCALE := 3.0
 const WALK_SPEED := 520.0          # world px/s (cells are 128 world px)
 const INTERACT_RADIUS := 1.4       # cells
 const TARGET_CELL_PX := 76.0       # on-screen cell size (camera zoom)
+const DATE_MARGIN := 12.0          # issue #40: keep the calendar in the top-right HUD band
 const TOAST_TOP := 60.0            # issue #15: toast band, viewport px
 const TOAST_MARGIN := 40.0         # side margin the wrapped toast keeps
 
@@ -145,7 +146,15 @@ func _ready() -> void:
 	_date_label.add_theme_color_override("font_color", Color(0.95, 0.88, 0.6))
 	_date_label.add_theme_color_override("font_outline_color", Color(0.1, 0.08, 0.05))
 	_date_label.add_theme_constant_override("outline_size", 5)
-	_date_label.position = Vector2(get_viewport_rect().size.x - 430, 12)
+	# Keep the existing week/event readout aligned to the upper-right edge as
+	# the native window changes size, without a one-time viewport-x calculation.
+	_date_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_date_label.offset_left = DATE_MARGIN
+	_date_label.offset_right = -DATE_MARGIN
+	_date_label.offset_top = DATE_MARGIN
+	_date_label.offset_bottom = 40.0
+	_date_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_date_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_ui.add_child(_date_label)
 	_toast_label = Label.new()
 	_toast_label.add_theme_font_size_override("font_size", 24)
