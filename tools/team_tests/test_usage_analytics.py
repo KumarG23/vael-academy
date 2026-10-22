@@ -1021,6 +1021,8 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
     def test_lead_quota_exhaustion_pauses_without_silent_lead_replacement(self):
         # When Sol (lead) hits a quota limit, lead_pass pauses and records lead quota block without replacing LEAD.
         def fake_lead_run(*args, **kwargs):
+            if args[:2] == ('gh', 'api'):
+                return '[[]]'
             if args[:2] in (('gh', 'issue'), ('gh', 'pr')):
                 return '[]'
             if args[:3] == ('git', 'branch', '--show-current'):
