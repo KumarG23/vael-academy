@@ -26,7 +26,7 @@ func _open_castle(size: Vector2i) -> void:
 	add_child_autofree(_viewport)
 	_castle = (load("res://scenes/castle/castle.tscn") as PackedScene).instantiate()
 	_viewport.add_child(_castle)
-	await wait_frames(1)
+	await wait_process_frames(1)
 
 
 ## The longest castle toasts a player can actually see: support availability,
@@ -67,7 +67,7 @@ func _catch(fish: String) -> void:
 	Campaign.fish_log[fish] = int(Campaign.fish_log.get(fish, 0)) + 1
 	_castle._start_fishing()
 	_castle._fishing.finished.emit({"caught": true, "fish": fish})
-	await wait_frames(1)
+	await wait_process_frames(1)
 
 
 func test_fishing_catch_is_whole_and_inside_the_default_viewport():
@@ -84,10 +84,10 @@ func test_long_messages_wrap_inside_default_and_small_viewports():
 		await _open_castle(size)
 		for msg in _long_messages():
 			_castle._toast(msg)
-			await wait_frames(1)
+			await wait_process_frames(1)
 			_assert_toast_readable("%s %s" % [size, msg.left(24)])
 		_viewport.queue_free()
-		await wait_frames(1)
+		await wait_process_frames(1)
 
 
 func test_toast_follows_a_live_viewport_resize():
@@ -95,15 +95,15 @@ func test_toast_follows_a_live_viewport_resize():
 	await _catch("Warded Coin")
 	_assert_toast_readable("before resize")
 	_viewport.size = Vector2i(800, 450)
-	await wait_frames(2)
+	await wait_process_frames(2)
 	_assert_toast_readable("shrunk to 800×450")
 	_castle._toast(_long_messages()[3])
-	await wait_frames(1)
+	await wait_process_frames(1)
 	_assert_toast_readable("long message after resize")
 	_viewport.size = Vector2i(1280, 720)
-	await wait_frames(2)
+	await wait_process_frames(2)
 	_castle._toast(FISHING_RESULT)
-	await wait_frames(1)
+	await wait_process_frames(1)
 	_assert_toast_readable("restored to 1280×720")
 	assert_almost_eq(_castle._toast_label.get_global_rect().get_center().x, 640.0, 1.0,
 		"centered again after the resize")
@@ -112,10 +112,10 @@ func test_toast_follows_a_live_viewport_resize():
 func test_short_toast_after_long_one_does_not_keep_stale_height():
 	await _open_castle(Vector2i(640, 360))
 	_castle._toast(_long_messages()[3])
-	await wait_frames(1)
+	await wait_process_frames(1)
 	var tall := _castle._toast_label.get_global_rect().size.y
 	_castle._toast("Game saved.")
-	await wait_frames(1)
+	await wait_process_frames(1)
 	var short := _castle._toast_label.get_global_rect().size.y
 	assert_lt(short, tall, "a one-line toast shrinks back from a wrapped one")
 	_assert_toast_readable("short after long")
