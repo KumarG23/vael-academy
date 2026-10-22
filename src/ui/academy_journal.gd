@@ -258,6 +258,7 @@ func _adjust_volume(dir: int) -> bool:
 	if _tab != 4:  # System (AW-54 slid it right for Grades)
 		return false
 	var kind: String = SYS_ROWS[_sys_i][1]
+	var before := [AudioManager.master_volume, AudioManager.music_volume, AudioManager.sfx_volume]
 	match kind:
 		"music":
 			AudioManager.music_volume = clampf(AudioManager.music_volume + dir * 0.1, 0.0, 1.0)
@@ -268,6 +269,10 @@ func _adjust_volume(dir: int) -> bool:
 			AudioManager.master_volume = clampf(AudioManager.master_volume + dir * 0.1, 0.0, 1.0)
 		_:
 			return false
+	# Issue #43: the new level is already live; also keep it for the next launch
+	# (a failed write only warns — this session's sound is unaffected).
+	if before != [AudioManager.master_volume, AudioManager.music_volume, AudioManager.sfx_volume]:
+		AudioManager.save_preferences()
 	queue_redraw()
 	return true
 
