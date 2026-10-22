@@ -281,6 +281,16 @@ def lead():
         return 1
 
 
+def planning_due(head):
+    """Private wake-up receipt, not another task database. Revisit exhausted plans hourly."""
+    try:
+        receipt = json.loads((STATE / 'planning.json').read_text())
+        age = time.time() - float(receipt['checked_at'])
+        return receipt['head'] != head or not 0 <= age < 3600
+    except (OSError, ValueError, KeyError, TypeError):
+        return True
+
+
 def lead_pass():
     if (STATE / 'paused').exists():
         return 0
@@ -294,13 +304,17 @@ def lead_pass():
         ready = [i for i in ready if not any(l['name'] == 'team:blocked' for l in i['labels'])]
         prs = json.loads(run('gh', 'pr', 'list', '--repo', SLUG, '--state', 'open', '--json', 'number,title,isDraft,labels'))
         prs = [p for p in prs if not p['isDraft'] and not any(l['name'] == 'team:blocked' for l in p['labels'])]
-        if not ready and not prs:
-            return 0  # No model invocation when there is no actionable work.
+        planning = not ready and not prs
+        if planning and active():
+            return 0  # Existing developers are working; wait for their PRs.
         if run('git', 'branch', '--show-current') != 'main' or run('git', 'status', '--porcelain'):
             (STATE / 'paused').write_text('Lead checkout is not clean main; preserve work and inspect.\n')
             return 1
         run('git', 'fetch', 'origin', 'main')
         run('git', 'merge', '--ff-only', 'origin/main')
+        head = run('git', 'rev-parse', 'HEAD')
+        if planning and not planning_due(head):
+            return 0
         prompt = f'''You are Vael's engineering lead, Codex Sol/high. Read AGENTS.md and docs/TEAM_WORKFLOW.md,
 then HANDOFF.md and the relevant MASTER_PLAN/bibles. GitHub {SLUG} is the only task/PR record.
 Review open PRs against plan, actual diff, tests and behavior. Comment concrete findings and return to
@@ -314,8 +328,24 @@ Choose by task fit, not filling every seat. Two concurrent writers initially to 
 Workers own their fixes. You can read/search/test and use native tools normally; no exact-file gates.
 Don't expose private paths/logs/credentials, spend new money, deploy, force-push, reset preserved work,
 or enable old Studio services. Ordinary issue comments/branches/PR review/merges are authorized.
-Do not invent a new game roadmap: use approved plan and ready issues. When ready work is exhausted,
-leave a concise next-milestone proposal in an issue without team:ready; don't spin on speculative work.
+Own the development backlog, not just pre-labelled tickets. Neal authorizes you to derive and assign
+ordinary implementation, bug fixes and validation from MASTER_PLAN/HANDOFF and the owning bibles.
+Create or refine GitHub issues with exact plan references, prerequisites, acceptance behavior and tests;
+check all existing open/closed issues and PRs first to avoid duplicates or repeating delivered work.
+Mark dependency-ready plan-grounded work team:ready yourself and launch suitable developers now.
+Maintain a useful small ready queue while independent work runs; do not wait for Neal to refill it.
+A blocked task must not stop unrelated plan-grounded work. Keep human decisions as specific blocked
+issues, then find independent work. Do not invent canon/design, declare drafts approved, spend money
+or bypass dependency/creative gates just to keep busy. Existing approved plan is standing authority,
+not a requirement for Neal to re-approve every ticket. Escalate actual scope/canon/taste choices only.
+You own graphical gameplay QA too: run it yourself or assign an appropriately capable developer.
+Use the existing graphical desktop, real input and screenshots/video, inspect captures, preserve the
+project renderer and isolate game saves. Serialize shared GUI control; code work can run alongside QA.
+Headless tests are not a graphical playthrough. If a GUI tool is missing, report the exact blocker and
+continue other work rather than making Neal the default tester. Final taste approval is Neal's, routine
+functional QA is yours. Issue #5's existing-school-loop validation is authorized by Neal's direction.
+When all remaining planned work truly needs a human decision, summarize the specific blockers without
+inventing busywork; an unchanged empty queue is revisited hourly or after a new main commit.
 Open ready issues: {json.dumps(ready)}; open PRs: {json.dumps(prs)}; running: {active()}.
 Finish with a short actual-results summary. Do not wait in a polling loop for workers or CI.
 '''
@@ -327,6 +357,8 @@ Finish with a short actual-results summary. Do not wait in a polling loop for wo
         (STATE / 'lead.exit').write_text(str(rc))
         if rc:
             (STATE / 'paused').write_text('Lead failed; inspect native/provider error before resuming.\n')
+        elif planning:
+            (STATE / 'planning.json').write_text(json.dumps({'head': head, 'checked_at': time.time()}))
         return rc
 
 

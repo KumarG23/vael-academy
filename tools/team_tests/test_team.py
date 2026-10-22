@@ -80,10 +80,59 @@ class TeamTests(unittest.TestCase):
                 team.start(3, 'sol')
             self.assertEqual(run.call_count, 1)
 
-    def test_idle_lead_does_not_call_a_model(self):
-        with patch.object(team, 'run', return_value='[]'), patch.object(team.subprocess, 'run') as sub:
+    def fake_lead_run(self, *args, **kwargs):
+        if args[:2] == ('gh', 'issue') or args[:2] == ('gh', 'pr'):
+            return '[]'
+        if args[:3] == ('git', 'branch', '--show-current'):
+            return 'main'
+        if args[:2] == ('git', 'rev-parse'):
+            return 'current-head'
+        return ''
+
+    def test_empty_queue_wakes_lead_to_derive_plan_work(self):
+        def native(*args, **kwargs):
+            self.assertIn('Create or refine GitHub issues', kwargs['input'])
+            self.assertIn('graphical', kwargs['input'])
+            self.assertIn('blocked task must not stop unrelated', kwargs['input'])
+            kwargs['stdout'].write(json.dumps({'type': 'turn.completed'}))
+            return team.subprocess.CompletedProcess([], 0)
+        with patch.object(team, 'run', side_effect=self.fake_lead_run), \
+                patch.object(team, 'active', return_value=[]), \
+                patch.object(team.subprocess, 'run', side_effect=native) as sub:
+            self.assertEqual(team.lead(), 0)
+            sub.assert_called_once()
+        receipt = json.loads((self.state / 'planning.json').read_text())
+        self.assertEqual(receipt['head'], 'current-head')
+
+    def test_recent_exhausted_plan_skips_model_until_recheck(self):
+        (self.state / 'planning.json').write_text(json.dumps({'head': 'current-head', 'checked_at': team.time.time()}))
+        with patch.object(team, 'run', side_effect=self.fake_lead_run), \
+                patch.object(team, 'active', return_value=[]), patch.object(team.subprocess, 'run') as sub:
             self.assertEqual(team.lead(), 0)
             sub.assert_not_called()
+
+    def test_changed_head_or_expired_or_corrupt_receipt_wakes_planning(self):
+        for receipt in ['broken', json.dumps({'head': 'old-head', 'checked_at': team.time.time()}),
+                        json.dumps({'head': 'current-head', 'checked_at': 0})]:
+            (self.state / 'planning.json').write_text(receipt)
+            self.assertTrue(team.planning_due('current-head'))
+
+    def test_empty_queue_with_workers_running_waits_for_results(self):
+        with patch.object(team, 'run', return_value='[]'), \
+                patch.object(team, 'active', return_value=['vael-issue-5']), \
+                patch.object(team.subprocess, 'run') as sub:
+            self.assertEqual(team.lead(), 0)
+            sub.assert_not_called()
+
+    def test_failed_planning_does_not_record_success(self):
+        def native(*args, **kwargs):
+            kwargs['stdout'].write(json.dumps({'type': 'turn.failed'}))
+            return team.subprocess.CompletedProcess([], 0)
+        with patch.object(team, 'run', side_effect=self.fake_lead_run), \
+                patch.object(team, 'active', return_value=[]), patch.object(team.subprocess, 'run', side_effect=native):
+            self.assertEqual(team.lead(), 1)
+        self.assertFalse((self.state / 'planning.json').exists())
+        self.assertTrue((self.state / 'paused').exists())
 
     def test_paused_lead_does_not_query_github(self):
         (self.state / 'paused').touch()
@@ -133,13 +182,13 @@ class TeamTests(unittest.TestCase):
 
     def test_draft_only_queue_does_not_invoke_model(self):
         draft = json.dumps([{'number': 1, 'title': 'Pending', 'isDraft': True, 'labels': []}])
-        with patch.object(team, 'run', side_effect=['[]', draft]), patch.object(team.subprocess, 'run') as sub:
+        with patch.object(team, 'run', side_effect=['[]', draft]), patch.object(team, 'active', return_value=['vael-issue-5']), patch.object(team.subprocess, 'run') as sub:
             self.assertEqual(team.lead(), 0)
             sub.assert_not_called()
 
     def test_blocked_issue_is_not_an_actionable_queue(self):
         issue = json.dumps([{'number': 2, 'title': 'Wait', 'labels': [{'name': 'team:blocked'}]}])
-        with patch.object(team, 'run', side_effect=[issue, '[]']), patch.object(team.subprocess, 'run') as sub:
+        with patch.object(team, 'run', side_effect=[issue, '[]']), patch.object(team, 'active', return_value=['vael-issue-5']), patch.object(team.subprocess, 'run') as sub:
             self.assertEqual(team.lead(), 0)
             sub.assert_not_called()
 
