@@ -17,6 +17,8 @@ const AVATAR_SCALE := 3.0
 const WALK_SPEED := 520.0          # world px/s (cells are 128 world px)
 const INTERACT_RADIUS := 1.4       # cells
 const TARGET_CELL_PX := 76.0       # on-screen cell size (camera zoom)
+const TOAST_TOP := 60.0            # issue #15: toast band, viewport px
+const TOAST_MARGIN := 40.0         # side margin the wrapped toast keeps
 
 ## Set by flows (or tests) before entering; falls back to START_ROOM.
 static var next_room: String = ""
@@ -150,9 +152,15 @@ func _ready() -> void:
 	_toast_label.add_theme_color_override("font_color", Color(0.98, 0.94, 0.75))
 	_toast_label.add_theme_color_override("font_outline_color", Color(0.1, 0.08, 0.05))
 	_toast_label.add_theme_constant_override("outline_size", 7)
-	_toast_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	_toast_label.position = Vector2(get_viewport_rect().size.x * 0.5 - 260, 60)
-	_toast_label.custom_minimum_size = Vector2(520, 0)
+	# Issue #15: span the viewport top via anchors + offsets (not `position`,
+	# which is resolved against a zero-size parent before add_child — gotcha 7)
+	# and wrap, so long feedback stays whole and follows viewport resizes.
+	_toast_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_toast_label.offset_left = TOAST_MARGIN
+	_toast_label.offset_right = -TOAST_MARGIN
+	_toast_label.offset_top = TOAST_TOP
+	_toast_label.offset_bottom = TOAST_TOP
+	_toast_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toast_label.visible = false
 	_ui.add_child(_toast_label)
@@ -675,6 +683,7 @@ func _open_function(fn: String) -> void:
 
 func _toast(text: String) -> void:
 	_toast_label.text = text
+	_toast_label.offset_bottom = TOAST_TOP  # re-fit height to this text's wrapped lines
 	_toast_label.visible = true
 	_toast_left = 2.6
 
