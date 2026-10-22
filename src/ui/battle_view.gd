@@ -102,6 +102,9 @@ var _stats_from_menu := false
 var _battle_over := false
 var _battle_victory := false
 var _lord_unit: Unit = null
+## A rule of the deployed force, independent of the lord node's lifetime.
+## ObjectiveResolver.has_lord is false only for genuinely lordless chapters.
+var _has_lord := false
 var _lord_alive := true
 ## Visited spot ids this battle (maps v3 FE villages) — each spot is once-only.
 var _visited_spot_ids: Array[String] = []
@@ -866,13 +869,12 @@ func _check_objective() -> void:
 	if chapter.is_arena:
 		_check_arena()
 		return
-	var has_lord := _lord_unit != null
 	var lord_cell := Vector2i(-1, -1)
-	if has_lord and _lord_alive and is_instance_valid(_lord_unit):
+	if _has_lord and _lord_alive and is_instance_valid(_lord_unit):
 		lord_cell = _lord_unit.cell
 	var outcome := ObjectiveResolver.evaluate(
 		chapter.objective, chapter.seize_cell,
-		has_lord, _lord_alive, lord_cell,
+		_has_lord, _lord_alive, lord_cell,
 		# AW-30: "enemies" = every rival across all houses, so ROUT means being
 		# the last house standing, not merely beating one side.
 		_living_units_on_team(0).size(), _living_foes_of(0).size(),
@@ -1166,6 +1168,10 @@ func apply_save_payload(payload: Dictionary) -> void:
 	# pre-battle copy and would erase every point earned since deployment.
 	_support_state.apply_save_state(payload.get("supports", {}))
 	_fielded_at_start = int(battle.get("fielded", _living_units_on_team(0).size()))
+	# An unfinished snapshot can already record lord loss. Resolve it before
+	# returning control; completed results must not be captured/graded twice.
+	if not _battle_over and not chapter.is_arena and _has_lord and not _lord_alive:
+		_check_objective()
 	_restore_post_load_ui()
 
 
@@ -1208,6 +1214,7 @@ func _clear_units() -> void:
 			u.queue_free()
 	_units.clear()
 	_lord_unit = null
+	_has_lord = false
 	_boss_unit = null
 
 
@@ -1706,6 +1713,9 @@ var _spawner: BattleUnitSpawner
 
 func _spawn_units() -> void:
 	_spawner.spawn_units()
+	# Reconstruct from the force on new deployment and save rebuild alike.
+	# No new save field is needed, including for valid legacy snapshots.
+	_has_lord = is_instance_valid(_lord_unit)
 
 
 func _try_load(path: String) -> Resource:
