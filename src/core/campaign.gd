@@ -278,6 +278,19 @@ func to_dict() -> Dictionary:
 	}
 
 
+## Untrusted save boundary shared by campus loads and battle resume. Validate
+## every collection before from_dict changes live state; omitted fields retain
+## the loader's defaults for older saves.
+func restore_save(data: Dictionary) -> bool:
+	for key: String in ["unit_states", "support_save", "fish_log", "flags", "grade_samples"]:
+		if data.has(key) and not (data[key] is Dictionary):
+			return false
+	if data.has("report_cards") and not (data["report_cards"] is Array):
+		return false
+	from_dict(data)
+	return true
+
+
 func from_dict(data: Dictionary) -> void:
 	unit_states = (data.get("unit_states", {}) as Dictionary).duplicate(true)
 	support_save = (data.get("support_save", {}) as Dictionary).duplicate(true)
@@ -312,7 +325,8 @@ func load_from_slot(slot: int, save_system: SaveSystem = null) -> bool:
 	var data := _sys(save_system).load_slot(slot)
 	if not (data.get("campaign") is Dictionary):
 		return false
-	from_dict(data["campaign"])
+	if not restore_save(data["campaign"]):
+		return false
 	_skip_next_hub_reset = true  # the next hub visit resumes the saved one
 	return true
 
