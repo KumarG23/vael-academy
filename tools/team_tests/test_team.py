@@ -30,9 +30,11 @@ class TeamTests(unittest.TestCase):
         self.assertFalse(any('max-turn' in s for s in cmd))
 
     def test_resume_uses_same_native_conversation(self):
-        self.assertEqual(team.command('sol', True)[2:4], ['resume', '--last'])
-        self.assertIn('--continue', team.command('opus', True))
-        self.assertIn('--continue', team.command('argon', True))
+        session = 'test-session-1234'
+        self.assertEqual(team.command('sol', session)[2:4], ['resume', session])
+        self.assertEqual(team.command('opus', session)[-2:], ['--resume', session])
+        self.assertEqual(team.command('argon', session)[-2:], ['--conversation', session])
+        self.assertEqual(team.command('deepseek', session)[-2:], ['--session', session])
 
     def test_claude_has_native_shell_no_restricted_tool_adapter(self):
         cmd = team.command('opus')
@@ -160,6 +162,88 @@ class TeamTests(unittest.TestCase):
             with patch.object(team, 'REPO', other):
                 with self.assertRaisesRegex(RuntimeError, 'different repository'):
                     team.validate_worktree(wt, 'team/issue-8')
+
+
+    def test_cloud_billing_selectors_are_not_inherited(self):
+        names = ['CLAUDE_CODE_USE_BEDROCK', 'CLAUDE_CODE_USE_VERTEX', 'CLAUDE_CODE_USE_FOUNDRY',
+                 'ANTHROPIC_PROFILE', 'CLAUDE_CODE_OAUTH_TOKEN', 'CLAUDE_CONFIG_DIR']
+        with patch.dict(os.environ, {name: 'test' for name in names}):
+            env = team.environment()
+        for name in names:
+            self.assertNotIn(name, env)
+        cmd = team.command('opus')
+        self.assertEqual(cmd[cmd.index('--setting-sources') + 1], '')
+        self.assertIn('claudeai', cmd[cmd.index('--settings') + 1])
+
+    def test_console_auth_is_rejected_without_logging_credentials(self):
+        import subprocess
+        console = subprocess.CompletedProcess([], 0, json.dumps({'loggedIn': True,
+                    'authMethod': 'api_key', 'apiProvider': 'firstParty', 'subscriptionType': 'pro'}))
+        with patch.object(team.subprocess, 'run', return_value=console):
+            with self.assertRaisesRegex(RuntimeError, 'subscription'):
+                team.claude_subscription(self.state, {})
+
+    def test_session_id_is_from_native_output_not_checkout_existence(self):
+        log = self.state / 'native.log'
+        log.write_text('')
+        self.assertIsNone(team.native_session('sol', log))
+        for profile, field in [('sol', 'thread_id'), ('opus', 'session_id'),
+                               ('argon', 'conversation_id'), ('deepseek', 'sessionID')]:
+            log.write_text(json.dumps({'type': 'thread.started', field: 'session-issue-1234'}))
+            self.assertEqual(team.native_session(profile, log), 'session-issue-1234')
+
+    def test_missing_executable_records_failure_and_blocks_issue(self):
+        assignment = {'profile': 'sol', 'issue': {'number': 7, 'title': 'Fixture', 'body': ''},
+                      'worktree': str(self.state), 'session_id': None}
+        (self.state / 'issue-7.json').write_text(json.dumps(assignment))
+        with patch.object(team.subprocess, 'run', side_effect=FileNotFoundError), patch.object(team, 'block_issue') as block:
+            self.assertEqual(team.worker(7), 1)
+            block.assert_called_once_with(7, 'sol', 1)
+        self.assertEqual((self.state / 'issue-7.exit').read_text(), '1')
+        self.assertIsNone(json.loads((self.state / 'issue-7.json').read_text())['session_id'])
+
+    def test_failed_github_block_pauses_dispatch_not_existing_work(self):
+        import subprocess
+        with patch.object(team.subprocess, 'run', side_effect=subprocess.CalledProcessError(1, ['gh'])):
+            team.block_issue(7, 'sol', 1)
+        self.assertTrue((self.state / 'paused').exists())
+        self.assertEqual((self.state / 'issue-7.exit').read_text(), '1')
+
+    def test_lead_query_or_spawn_failure_is_recorded_once_and_paused(self):
+        with patch.object(team, 'run', side_effect=FileNotFoundError):
+            self.assertEqual(team.lead(), 1)
+        self.assertTrue((self.state / 'paused').exists())
+        self.assertEqual((self.state / 'lead.exit').read_text(), '1')
+
+
+    def test_failed_first_tmux_launch_does_not_invent_session(self):
+        import subprocess
+        worktree = self.state / 'worktrees/7'
+        worktree.mkdir(parents=True)
+        issue = json.dumps({'number': 7, 'title': 'Fixture', 'body': '', 'state': 'OPEN'})
+        def fake_run(*args, **kwargs):
+            return issue if args[:3] == ('gh', 'issue', 'view') else ''
+        with patch.object(team, 'active', return_value=[]), patch.object(team, 'run', side_effect=fake_run), \
+                patch.object(team, 'validate_worktree'), patch.object(team, 'block_issue') as block, \
+                patch.object(team.subprocess, 'run', side_effect=subprocess.CalledProcessError(1, ['tmux'])):
+            with self.assertRaises(subprocess.CalledProcessError):
+                team.start(7, 'sol')
+            block.assert_called_once_with(7, 'sol', 1)
+        assignment = json.loads((self.state / 'issue-7.json').read_text())
+        self.assertIsNone(assignment['session_id'])
+        self.assertNotIn('resume', team.command('sol', assignment['session_id']))
+
+    def test_two_issue_resumes_use_distinct_persisted_ids(self):
+        for number in (7, 8):
+            assignment = {'profile': 'sol', 'session_id': f'issue-{number}-native-session'}
+            (self.state / f'issue-{number}.json').write_text(json.dumps(assignment))
+        commands = []
+        for number in (7, 8):
+            assignment = json.loads((self.state / f'issue-{number}.json').read_text())
+            commands.append(team.command(assignment['profile'], assignment['session_id']))
+        self.assertIn('issue-7-native-session', commands[0])
+        self.assertNotIn('issue-8-native-session', commands[0])
+        self.assertIn('issue-8-native-session', commands[1])
 
 
 if __name__ == '__main__':

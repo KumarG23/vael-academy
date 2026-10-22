@@ -36,9 +36,11 @@ def environment():
     env = os.environ.copy()
     env['PATH'] = str(Path.home() / '.local/bin') + ':/usr/local/bin:/usr/bin:/bin'
     # Native subscription auth only; never inherit an API-billed fallback.
-    for key in ('ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'ANTHROPIC_BASE_URL',
-                'OPENAI_API_KEY', 'OPENAI_BASE_URL'):
-        env.pop(key, None)
+    for key in list(env):
+        if key.startswith(('ANTHROPIC_', 'CLAUDE_CODE_USE_')) or key in (
+                'OPENAI_API_KEY', 'OPENAI_BASE_URL', 'CLAUDE_CODE_OAUTH_TOKEN',
+                'CLAUDE_CODE_OAUTH_TOKEN_FILE', 'CLAUDE_CONFIG_DIR'):
+            env.pop(key, None)
     # Antigravity uses the already signed-in desktop's Secret Service.
     for proc in Path('/proc').iterdir():
         try:
@@ -56,20 +58,66 @@ def environment():
     return env
 
 
-def command(profile, resume=False):
+def command(profile, session=None):
     tool, model, effort = PROFILES[profile]
     if tool == 'codex':
-        args = ['codex', 'exec'] + (['resume', '--last'] if resume else [])
+        args = ['codex', 'exec'] + (['resume', session] if session else [])
         return args + ['--ignore-user-config', '--dangerously-bypass-approvals-and-sandbox',
                        '--model', model, '-c', 'model_reasoning_effort="' + effort + '"',
                        '-c', 'forced_login_method="chatgpt"', '--json', '-']
     if tool == 'claude':
         return ['claude', '--print', '--model', model, '--effort', effort,
-                '--dangerously-skip-permissions', '--output-format', 'json'] + (['--continue'] if resume else [])
+                '--dangerously-skip-permissions', '--setting-sources', '',
+                '--settings', '{"forceLoginMethod":"claudeai"}',
+                '--output-format', 'json'] + (['--resume', session] if session else [])
     if tool == 'opencode':
-        return ['opencode', 'run', '--standalone', '--auto', '--format', 'json', '--model', model] + (['--continue'] if resume else [])
+        return ['opencode', 'run', '--standalone', '--auto', '--format', 'json', '--model', model] + (['--session', session] if session else [])
     return ['agy', '--model', model, '--effort', effort, '--dangerously-skip-permissions',
-            '--output-format', 'json'] + (['--continue'] if resume else [])
+            '--output-format', 'json'] + (['--conversation', session] if session else [])
+
+
+def native_session(profile, log):
+    tool = PROFILES[profile][0]
+    for line in log.read_text().splitlines():
+        try:
+            record = json.loads(line)
+        except ValueError:
+            continue
+        if not isinstance(record, dict):
+            continue
+        value = (record.get('thread_id') if tool == 'codex' and record.get('type') == 'thread.started'
+                 else record.get('session_id') if tool == 'claude'
+                 else record.get('conversation_id') if tool == 'agy'
+                 else record.get('sessionID') if tool == 'opencode' else None)
+        if isinstance(value, str) and re.fullmatch(r'[A-Za-z0-9_-]{8,100}', value):
+            return value
+    return None
+
+
+def claude_subscription(cwd, env):
+    # Ignore inference settings, not CLAUDE.md or native tools. Pin the supported login.
+    result = subprocess.run(['claude', '--setting-sources', '', '--settings',
+                             '{"forceLoginMethod":"claudeai"}', 'auth', 'status'],
+                            cwd=cwd, env=env, capture_output=True, text=True, check=True)
+    status = json.loads(result.stdout)
+    if not (status.get('loggedIn') is True and status.get('authMethod') == 'claude.ai'
+            and status.get('apiProvider') == 'firstParty'
+            and status.get('subscriptionType') in ('pro', 'max')):
+        raise RuntimeError('Supported Claude subscription login required; no paid route fallback')
+
+
+def block_issue(number, profile, rc):
+    (STATE / f'issue-{number}.exit').write_text(str(rc))
+    try:
+        subprocess.run(['gh', 'issue', 'edit', str(number), '--repo', SLUG,
+                        '--add-label', 'team:blocked', '--remove-label', 'team:ready'],
+                       env=environment(), check=True)
+        subprocess.run(['gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
+                        f'`{profile}` launch/turn did not complete (status {rc}). Existing work is '
+                        'preserved. Lead: inspect private diagnostics and resume this task. '
+                        'No automatic model or paid-route fallback.'], env=environment(), check=True)
+    except (OSError, subprocess.SubprocessError):
+        (STATE / 'paused').write_text('Cannot record blocked issue on GitHub; inspect reporting before dispatch.\n')
 
 
 def native_result(profile, log, rc):
@@ -156,8 +204,8 @@ def start(number, profile):
     run('git', 'fetch', 'origin', 'main')
     branch = f'team/issue-{number}'
     worktree = STATE / 'worktrees' / str(number)
-    resume = worktree.exists()
-    if not resume:
+    exists_on_disk = worktree.exists()
+    if not exists_on_disk:
         exists = subprocess.run(['git', 'show-ref', '--verify', '--quiet', 'refs/heads/' + branch], cwd=REPO).returncode == 0
         if exists:
             run('git', 'worktree', 'add', str(worktree), branch)
@@ -166,15 +214,19 @@ def start(number, profile):
     validate_worktree(worktree, branch)
     assignment = STATE / f'issue-{number}.json'
     old = json.loads(assignment.read_text()) if assignment.exists() else {}
-    if resume and old.get('profile') != profile:
+    if old and old.get('profile') != profile:
         raise RuntimeError('Existing task belongs to another profile; lead must explicitly hand it over.')
-    assignment.write_text(json.dumps({'profile': profile, 'resume': resume, 'issue': issue,
+    assignment.write_text(json.dumps({'profile': profile, 'session_id': old.get('session_id'), 'issue': issue,
                                       'worktree': str(worktree)}, indent=2))
-    run('gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
-        f'Engineering assignment: `{profile}` owns implementation and PR revisions on `{branch}`. '
-        'Plan/bible alignment, tests, and lead review are required before merge.')
-    subprocess.run(['tmux', 'new-session', '-d', '-s', session,
-                    shlex.join([sys.executable, str(Path(__file__).resolve()), '_worker', str(number)])], check=True)
+    try:
+        run('gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
+            f'Engineering assignment: `{profile}` owns implementation and PR revisions on `{branch}`. '
+            'Plan/bible alignment, tests, and lead review are required before merge.')
+        subprocess.run(['tmux', 'new-session', '-d', '-s', session,
+                        shlex.join([sys.executable, str(Path(__file__).resolve()), '_worker', str(number)])], check=True)
+    except (OSError, subprocess.SubprocessError):
+        block_issue(number, profile, 1)
+        raise
     print(session)
 
 
@@ -182,7 +234,7 @@ def worker(number):
     assignment = json.loads((STATE / f'issue-{number}.json').read_text())
     profile = assignment['profile']
     prompt = worker_prompt(assignment['issue'])
-    cmd = command(profile, assignment['resume'])
+    cmd = command(profile, assignment.get('session_id'))
     tool = PROFILES[profile][0]
     if tool == 'agy':
         cmd += ['--print', prompt]
@@ -191,23 +243,38 @@ def worker(number):
     env = environment()
     env['PWD'] = assignment['worktree']
     log = STATE / f'issue-{number}-{time.time_ns()}.log'
-    with log.open('w') as output:
-        result = subprocess.run(cmd, input=prompt if tool in ('codex', 'claude') else None,
-                                cwd=assignment['worktree'], env=env,
-                                stdout=output, stderr=subprocess.STDOUT, text=True)
-    rc = native_result(profile, log, result.returncode)
+    try:
+        with log.open('w') as output:
+            if tool == 'claude':
+                claude_subscription(assignment['worktree'], env)
+            result = subprocess.run(cmd, input=prompt if tool in ('codex', 'claude') else None,
+                                    cwd=assignment['worktree'], env=env,
+                                    stdout=output, stderr=subprocess.STDOUT, text=True)
+        session = native_session(profile, log)
+        if session:
+            assignment['session_id'] = session
+            (STATE / f'issue-{number}.json').write_text(json.dumps(assignment, indent=2))
+        rc = native_result(profile, log, result.returncode)
+    except (OSError, subprocess.SubprocessError, ValueError, RuntimeError) as error:
+        with log.open('a') as output:
+            output.write('Native launch failed: ' + type(error).__name__ + '\n')
+        rc = 1
     (STATE / f'issue-{number}.exit').write_text(str(rc))
     if rc:
-        subprocess.run(['gh', 'issue', 'edit', str(number), '--repo', SLUG,
-                        '--add-label', 'team:blocked', '--remove-label', 'team:ready'], env=environment())
-        subprocess.run(['gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
-                        f'`{profile}` session did not complete successfully (status {rc}). Worktree and native '
-                        'session are preserved. Lead: inspect the private log and resume this task; '
-                        'do not reset it or silently switch to a paid fallback.'], env=environment())
+        block_issue(number, profile, rc)
     return rc
 
 
 def lead():
+    try:
+        return lead_pass()
+    except (OSError, subprocess.SubprocessError, ValueError, RuntimeError):
+        (STATE / 'lead.exit').write_text('1')
+        (STATE / 'paused').write_text('Lead launch/reporting failed; inspect before resuming dispatch.\n')
+        return 1
+
+
+def lead_pass():
     if (STATE / 'paused').exists():
         return 0
     with (STATE / 'lead.lock').open('w') as lock:
