@@ -1058,10 +1058,13 @@ var _save_menu_origin := ""
 func _open_save_menu(origin: String) -> void:
 	_save_menu_origin = origin
 	var labels: Array = []
+	for slot in range(3):
+		labels.append("Slot %d — empty" % (slot + 1))
+	# list_slots contains only occupied saves; its array index is not the slot.
+	# Keep each label at the same physical index that _do_save_slot writes.
 	for entry in _save_system.list_slots(3):
-		labels.append("Slot %d — %s" % [int(entry["slot"]) + 1, str(entry["chapter_id"])])
-	while labels.size() < 3:
-		labels.append("Slot %d — empty" % (labels.size() + 1))
+		var slot := int(entry["slot"])
+		labels[slot] = "Slot %d — %s" % [slot + 1, str(entry["chapter_id"])]
 	_menu_ctrl.open_menu("save_slot", "Save game", labels)
 
 
