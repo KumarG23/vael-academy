@@ -1,0 +1,100 @@
+{
+  "entry": "unchanged native Thornrook round-1 earned UI save; two passive AI phases, then move Kai through real movement/Wait menus and end turns",
+  "pre_loss_save": "saves/lord-preloss.json",
+  "pre_loss_round": 5,
+  "pre_loss_kai_hp": 3,
+  "pre_loss_kai_cell": {
+    "x": 7,
+    "y": 10
+  },
+  "pre_loss_lord_node_valid": true,
+  "loaded_payload_differences": {},
+  "replayed_result_payload_differences": {},
+  "first_result": {
+    "scene": "res://scenes/battle/mock_battle_vs_emberwing.tscn",
+    "week": 1,
+    "last_result": "defeat",
+    "lord_node_valid": false,
+    "result_text": "Defeat"
+  },
+  "replayed_result": {
+    "scene": "res://scenes/battle/mock_battle_vs_emberwing.tscn",
+    "week": 1,
+    "last_result": "defeat",
+    "lord_node_valid": false,
+    "result_text": "Defeat"
+  },
+  "defeated_battle": {
+    "active_team": 1,
+    "arena_pending_wave": 0,
+    "arena_wave": 0,
+    "battle_over": true,
+    "battle_victory": false,
+    "boss_quote_played": false,
+    "chapter_id": "mock_battle_vs_emberwing",
+    "defeated_unit_ids": [
+      "vesper",
+      "dain",
+      "wren",
+      "rurik",
+      "kael",
+      "elowen",
+      "marlow",
+      "brenna",
+      "thessaly",
+      "kai"
+    ],
+    "fielded": 8,
+    "lord_alive": false,
+    "objective": 0,
+    "permadead_unit_ids": [],
+    "rng_seed": "16711464",
+    "rng_state": "-3597469074792771453",
+    "round_number": 5,
+    "seize_cell": {
+      "x": -1,
+      "y": -1
+    },
+    "visited_spot_ids": []
+  },
+  "surviving_allies": [
+    "rina",
+    "corvin",
+    "nilu"
+  ],
+  "surviving_rivals": [
+    "liora",
+    "perrin",
+    "osric",
+    "isolde",
+    "fenn",
+    "bertram",
+    "serra"
+  ],
+  "calendar_week_delta": 0,
+  "fixture_field_changes": [],
+  "recording": {
+    "path": "lord-loss-resume.mp4",
+    "audio": "silent desktop capture",
+    "media": {
+      "programs": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 720,
+          "avg_frame_rate": "24/1"
+        }
+      ],
+      "format": {
+        "duration": "4.333333"
+      }
+    }
+  },
+  "images": [
+    "images/lord-preloss-save-ui.png",
+    "images/lord-defeat.png",
+    "images/lord-resumed-defeat.png",
+    "images/lord-title-after-defeat.png"
+  ]
+}
