@@ -1,0 +1,345 @@
+{
+  "accepted_game_source": "19cad888161230bbc6c17b377bde4f496a4f63fc",
+  "entry": "two separate real Title Dev Jump Prologue encounters; no saved-position load or injected gameplay",
+  "initial_units": [
+    {
+      "cell": [
+        1,
+        5
+      ],
+      "enter_cost": 1,
+      "id": "kai",
+      "movable_cells": 36,
+      "team": 0,
+      "terrain_type": 6
+    },
+    {
+      "cell": [
+        3,
+        6
+      ],
+      "enter_cost": 1,
+      "id": "perrin",
+      "movable_cells": 62,
+      "team": 0,
+      "terrain_type": 0
+    },
+    {
+      "cell": [
+        3,
+        4
+      ],
+      "enter_cost": 1,
+      "id": "serra",
+      "movable_cells": 26,
+      "team": 0,
+      "terrain_type": 0
+    },
+    {
+      "cell": [
+        2,
+        3
+      ],
+      "enter_cost": 1,
+      "id": "rina",
+      "movable_cells": 23,
+      "team": 0,
+      "terrain_type": 0
+    },
+    {
+      "cell": [
+        7,
+        3
+      ],
+      "enter_cost": 1,
+      "id": "bandit_a",
+      "movable_cells": 31,
+      "team": 1,
+      "terrain_type": 0
+    },
+    {
+      "cell": [
+        7,
+        7
+      ],
+      "enter_cost": 1,
+      "id": "bandit_b",
+      "movable_cells": 35,
+      "team": 1,
+      "terrain_type": 0
+    },
+    {
+      "cell": [
+        11,
+        2
+      ],
+      "enter_cost": 2,
+      "id": "bandit_c",
+      "movable_cells": 30,
+      "team": 1,
+      "terrain_type": 1
+    },
+    {
+      "cell": [
+        12,
+        8
+      ],
+      "enter_cost": 2,
+      "id": "bandit_d",
+      "movable_cells": 17,
+      "team": 1,
+      "terrain_type": 1
+    },
+    {
+      "cell": [
+        13,
+        5
+      ],
+      "enter_cost": 2,
+      "id": "bandit_boss",
+      "movable_cells": 30,
+      "team": 1,
+      "terrain_type": 3
+    }
+  ],
+  "first_run": {
+    "opening_actions": "Perrin (3,6) to (4,6), Wait; Kai, Serra, Rina Wait in place",
+    "subsequent_real_actions": [
+      {
+        "id": "perrin",
+        "from": [
+          4,
+          6
+        ],
+        "to": [
+          7,
+          4
+        ],
+        "kind": "Attack",
+        "target": [
+          8,
+          4
+        ]
+      },
+      {
+        "id": "rina",
+        "from": [
+          2,
+          3
+        ],
+        "to": [
+          2,
+          4
+        ],
+        "kind": "Attack",
+        "target": [
+          4,
+          4
+        ]
+      },
+      {
+        "id": "kai",
+        "from": [
+          1,
+          5
+        ],
+        "to": [
+          7,
+          5
+        ],
+        "kind": "Wait"
+      },
+      {
+        "id": "serra",
+        "from": [
+          3,
+          4
+        ],
+        "to": [
+          6,
+          5
+        ],
+        "kind": "Wait"
+      },
+      {
+        "id": "kai",
+        "from": [
+          7,
+          5
+        ],
+        "to": [
+          12,
+          5
+        ],
+        "kind": "Attack",
+        "target": [
+          13,
+          5
+        ]
+      },
+      {
+        "id": "perrin",
+        "from": [
+          7,
+          4
+        ],
+        "to": [
+          13,
+          4
+        ],
+        "kind": "Wait"
+      },
+      {
+        "id": "serra",
+        "from": [
+          6,
+          5
+        ],
+        "to": [
+          10,
+          5
+        ],
+        "kind": "Wait"
+      },
+      {
+        "id": "rina",
+        "from": [
+          2,
+          4
+        ],
+        "to": [
+          6,
+          5
+        ],
+        "kind": "Wait"
+      },
+      {
+        "id": "rina",
+        "from": [
+          6,
+          5
+        ],
+        "to": [
+          11,
+          5
+        ],
+        "kind": "Attack",
+        "target": [
+          13,
+          5
+        ]
+      }
+    ],
+    "victory_round": 4,
+    "survivors": [
+      {
+        "acted": false,
+        "cell": [
+          12,
+          5
+        ],
+        "hp": 14,
+        "id": "kai",
+        "team": 0,
+        "weapon": "sig_kai"
+      },
+      {
+        "acted": false,
+        "cell": [
+          10,
+          5
+        ],
+        "hp": 19,
+        "id": "serra",
+        "team": 0,
+        "weapon": "iron_lance"
+      },
+      {
+        "acted": false,
+        "cell": [
+          11,
+          5
+        ],
+        "hp": 20,
+        "id": "rina",
+        "team": 0,
+        "weapon": "sig_rina"
+      }
+    ],
+    "aftermath_seen": true,
+    "dismissal_scene": "res://scenes/flow/house_choice.tscn"
+  },
+  "second_run": {
+    "purpose": "repeat first-turn movement with video and read-only observation; stopped after enemy phase",
+    "perrin_move": [
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ]
+    ],
+    "bandit_b_state_changes": [
+      {
+        "seconds": 0.1,
+        "bandit_b": {
+          "cell": [
+            7,
+            7
+          ],
+          "hp": 20,
+          "id": "bandit_b"
+        },
+        "round": 1,
+        "busy": true
+      },
+      {
+        "seconds": 4.75,
+        "bandit_b": {
+          "cell": [
+            4,
+            5
+          ],
+          "hp": 20,
+          "id": "bandit_b"
+        },
+        "round": 1,
+        "busy": true
+      },
+      {
+        "seconds": 5.95,
+        "bandit_b": {
+          "cell": [
+            4,
+            5
+          ],
+          "hp": 8,
+          "id": "bandit_b"
+        },
+        "round": 1,
+        "busy": true
+      },
+      {
+        "seconds": 6.55,
+        "bandit_b": {
+          "cell": [
+            4,
+            5
+          ],
+          "hp": 0,
+          "id": "bandit_b"
+        },
+        "round": 1,
+        "busy": true
+      },
+      {
+        "seconds": 7.56,
+        "bandit_b": null,
+        "round": 1,
+        "busy": true
+      }
+    ]
+  }
+}
