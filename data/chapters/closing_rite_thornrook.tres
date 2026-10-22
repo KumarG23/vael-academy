@@ -165,48 +165,48 @@ ai_override = 2
 script = ExtResource("14_lk316")
 unit = ExtResource("21_ujn1f")
 cell = Vector2i(15, 13)
-team_override = 1
+team_override = 2
 ai_override = 1
 
 [sub_resource type="Resource" id="Resource_jl3u3"]
 script = ExtResource("14_lk316")
 unit = ExtResource("22_2mcgp")
 cell = Vector2i(17, 12)
-team_override = 1
+team_override = 2
 ai_override = 0
 
 [sub_resource type="Resource" id="Resource_jj1kr"]
 script = ExtResource("14_lk316")
 unit = ExtResource("23_l54v7")
 cell = Vector2i(13, 13)
-team_override = 1
+team_override = 2
 ai_override = 0
 
 [sub_resource type="Resource" id="Resource_onqsc"]
 script = ExtResource("14_lk316")
 unit = ExtResource("24_yvmvl")
 cell = Vector2i(18, 10)
-team_override = 1
+team_override = 2
 ai_override = 0
 
 [sub_resource type="Resource" id="Resource_dro77"]
 script = ExtResource("14_lk316")
 unit = ExtResource("25_lsxsy")
 cell = Vector2i(16, 11)
-team_override = 1
+team_override = 2
 ai_override = 0
 
 [sub_resource type="Resource" id="Resource_2to8s"]
 script = ExtResource("14_lk316")
 unit = ExtResource("26_2goom")
 cell = Vector2i(19, 12)
-team_override = 1
+team_override = 2
 ai_override = 2
 
 [resource]
 script = ExtResource("27_r44jt")
 id = "closing_rite_thornrook"
-display_name = "The Closing Rite"
+display_name = "Clash of Three Banners"
 non_lethal = true
 enemy_spawns = Array[ExtResource("14_lk316")]([SubResource("Resource_60xc6"), SubResource("Resource_t4qob"), SubResource("Resource_hx5ol"), SubResource("Resource_0pi68"), SubResource("Resource_8c5d0"), SubResource("Resource_3eidg"), SubResource("Resource_kdlmh"), SubResource("Resource_jl3u3"), SubResource("Resource_jj1kr"), SubResource("Resource_onqsc"), SubResource("Resource_dro77"), SubResource("Resource_2to8s")])
 deploy_cells = Dictionary[String, Vector2i]({

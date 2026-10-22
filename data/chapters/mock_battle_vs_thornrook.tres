@@ -23,6 +23,14 @@
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="21_g7phq"]
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="22_0cw4l"]
 
+[ext_resource type="Resource" path="res://data/units/kael.tres" id="gh29_kael"]
+[ext_resource type="Resource" path="res://data/units/dain.tres" id="gh29_dain"]
+[ext_resource type="Resource" path="res://data/units/liora.tres" id="gh29_liora"]
+[ext_resource type="Resource" path="res://data/units/brenna.tres" id="gh29_brenna"]
+[ext_resource type="Resource" path="res://data/units/wren.tres" id="gh29_wren"]
+[ext_resource type="Resource" path="res://data/units/perrin.tres" id="gh29_perrin"]
+[ext_resource type="Resource" path="res://data/units/nilu.tres" id="gh29_nilu"]
+
 [sub_resource type="Resource" id="Resource_bqu2u"]
 script = ExtResource("1_1fgv0")
 texture = ExtResource("2_wvs7o")
@@ -155,14 +163,63 @@ cell = Vector2i(17, 2)
 team_override = 1
 ai_override = 2
 
+[sub_resource type="Resource" id="gh29_kael"]
+script = ExtResource("14_0nyig")
+unit = ExtResource("gh29_kael")
+cell = Vector2i(15, 13)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="gh29_dain"]
+script = ExtResource("14_0nyig")
+unit = ExtResource("gh29_dain")
+cell = Vector2i(17, 12)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="gh29_liora"]
+script = ExtResource("14_0nyig")
+unit = ExtResource("gh29_liora")
+cell = Vector2i(13, 13)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="gh29_brenna"]
+script = ExtResource("14_0nyig")
+unit = ExtResource("gh29_brenna")
+cell = Vector2i(18, 10)
+team_override = 2
+ai_override = 1
+
+[sub_resource type="Resource" id="gh29_wren"]
+script = ExtResource("14_0nyig")
+unit = ExtResource("gh29_wren")
+cell = Vector2i(16, 11)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="gh29_perrin"]
+script = ExtResource("14_0nyig")
+unit = ExtResource("gh29_perrin")
+cell = Vector2i(19, 12)
+team_override = 2
+ai_override = 2
+
+[sub_resource type="Resource" id="gh29_nilu"]
+script = ExtResource("14_0nyig")
+unit = ExtResource("gh29_nilu")
+cell = Vector2i(18, 2)
+team_override = 1
+ai_override = 0
+
 [resource]
 script = ExtResource("21_g7phq")
 id = "mock_battle_vs_thornrook"
-display_name = "Chapter 1 — The Mock Battle"
-objective = 2
+display_name = "Clash of Three Banners"
+objective = 0
 boss_unit_id = "rina"
 non_lethal = true
-enemy_spawns = Array[ExtResource("14_0nyig")]([SubResource("Resource_nb6xj"), SubResource("Resource_y48kd"), SubResource("Resource_xd6de"), SubResource("Resource_6sgmm"), SubResource("Resource_d03hv"), SubResource("Resource_03hmd")])
+enemy_spawns = Array[ExtResource("14_0nyig")]([SubResource("Resource_nb6xj"), SubResource("Resource_y48kd"), SubResource("Resource_xd6de"), SubResource("Resource_6sgmm"), SubResource("Resource_d03hv"), SubResource("Resource_03hmd"), SubResource("gh29_kael"), SubResource("gh29_dain"), SubResource("gh29_liora"), SubResource("gh29_brenna"), SubResource("gh29_wren"), SubResource("gh29_perrin"), SubResource("gh29_nilu")])
 deploy_cells = Dictionary[String, Vector2i]({
 "bertram": Vector2i(3, 10),
 "brenna": Vector2i(2, 13),

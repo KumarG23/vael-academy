@@ -1,6 +1,6 @@
 extends GutTest
 ## WO-5.6: rival-force variants of the opening battle. Whichever house the
-## player picks, they field their own roster AND face the correct rival —
+## player picks, they field their own roster AND face both correct rivals —
 ## no house ever fights itself.
 
 const CYCLE := {"emberwing": "tidemark", "tidemark": "thornrook", "thornrook": "emberwing"}
@@ -35,6 +35,7 @@ func test_full_parity_for_every_house():
 				enemy_houses[hid] = true
 		assert_true(player_houses.has(house), "%s fields its own units" % house)
 		assert_false(enemy_houses.has(house), "%s never fights itself" % house)
+		assert_eq(enemy_houses.size(), 2, "both unpicked houses compete")
 		assert_true(enemy_houses.has(CYCLE[house]),
 			"%s faces %s at the opening rite" % [house, CYCLE[house]])
 		Campaign.active = false
