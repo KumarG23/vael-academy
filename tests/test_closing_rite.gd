@@ -1,6 +1,6 @@
 extends GutTest
 ## WO-7.4: the Closing Rite — the year's climax fields BOTH unpicked houses
-## (twelve rivals, two heirs), ROUT objective, stakes over the opening.
+## (both full rival rosters, two heirs), ROUT objective, stakes over the opening.
 
 const RIVALS := {
 	"emberwing": ["tidemark", "thornrook"],
@@ -25,10 +25,10 @@ func test_every_route_fields_both_rivals():
 		var enemy_houses := {}
 		var enemies := 0
 		for u in v._units:
-			if u.team == 1:
+			if u.team != 0:
 				enemies += 1
 				enemy_houses[u.unit_def.house_id] = true
-		assert_eq(enemies, 12, "%s faces twelve rivals" % house)
+		assert_eq(enemies, 12 if house == "thornrook" else 13, "%s faces both full rival rosters" % house)
 		for rival in RIVALS[house]:
 			assert_true(enemy_houses.has(rival), "%s faces %s" % [house, rival])
 		assert_false(enemy_houses.has(house), "%s never fights itself" % house)

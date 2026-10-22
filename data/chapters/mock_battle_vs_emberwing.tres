@@ -23,6 +23,13 @@
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="21_vgkid"]
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="22_n8tep"]
 
+[ext_resource type="Resource" path="res://data/units/osric.tres" id="gh29_osric"]
+[ext_resource type="Resource" path="res://data/units/elowen.tres" id="gh29_elowen"]
+[ext_resource type="Resource" path="res://data/units/isolde.tres" id="gh29_isolde"]
+[ext_resource type="Resource" path="res://data/units/fenn.tres" id="gh29_fenn"]
+[ext_resource type="Resource" path="res://data/units/bertram.tres" id="gh29_bertram"]
+[ext_resource type="Resource" path="res://data/units/serra_prologue.tres" id="gh29_serra_prologue"]
+
 [sub_resource type="Resource" id="Resource_ujifp"]
 script = ExtResource("1_ffs3m")
 texture = ExtResource("2_tsn7d")
@@ -155,14 +162,56 @@ cell = Vector2i(17, 2)
 team_override = 1
 ai_override = 2
 
+[sub_resource type="Resource" id="gh29_osric"]
+script = ExtResource("14_p8v0b")
+unit = ExtResource("gh29_osric")
+cell = Vector2i(15, 13)
+team_override = 2
+ai_override = 1
+
+[sub_resource type="Resource" id="gh29_elowen"]
+script = ExtResource("14_p8v0b")
+unit = ExtResource("gh29_elowen")
+cell = Vector2i(17, 12)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="gh29_isolde"]
+script = ExtResource("14_p8v0b")
+unit = ExtResource("gh29_isolde")
+cell = Vector2i(13, 13)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="gh29_fenn"]
+script = ExtResource("14_p8v0b")
+unit = ExtResource("gh29_fenn")
+cell = Vector2i(18, 10)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="gh29_bertram"]
+script = ExtResource("14_p8v0b")
+unit = ExtResource("gh29_bertram")
+cell = Vector2i(16, 11)
+team_override = 2
+ai_override = 0
+
+[sub_resource type="Resource" id="gh29_serra_prologue"]
+script = ExtResource("14_p8v0b")
+unit = ExtResource("gh29_serra_prologue")
+cell = Vector2i(19, 12)
+team_override = 2
+ai_override = 2
+
 [resource]
 script = ExtResource("21_vgkid")
 id = "mock_battle_vs_emberwing"
-display_name = "Chapter 1 — The Mock Battle"
-objective = 2
+display_name = "Clash of Three Banners"
+objective = 0
 boss_unit_id = "perrin"
 non_lethal = true
-enemy_spawns = Array[ExtResource("14_p8v0b")]([SubResource("Resource_ws2v5"), SubResource("Resource_dl4en"), SubResource("Resource_5lvs3"), SubResource("Resource_dnlo6"), SubResource("Resource_sl1vu"), SubResource("Resource_tto7o")])
+enemy_spawns = Array[ExtResource("14_p8v0b")]([SubResource("Resource_ws2v5"), SubResource("Resource_dl4en"), SubResource("Resource_5lvs3"), SubResource("Resource_dnlo6"), SubResource("Resource_sl1vu"), SubResource("Resource_tto7o"), SubResource("gh29_osric"), SubResource("gh29_elowen"), SubResource("gh29_isolde"), SubResource("gh29_fenn"), SubResource("gh29_bertram"), SubResource("gh29_serra_prologue")])
 deploy_cells = Dictionary[String, Vector2i]({
 "bertram": Vector2i(3, 10),
 "brenna": Vector2i(2, 13),

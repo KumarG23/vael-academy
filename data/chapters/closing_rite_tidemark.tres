@@ -29,6 +29,8 @@
 [ext_resource type="Script" path="res://src/core/chapter_def.gd" id="27_pxrne"]
 [ext_resource type="Script" path="res://src/core/visit_spot.gd" id="28_vdeut"]
 
+[ext_resource type="Resource" path="res://data/units/nilu.tres" id="gh29_nilu"]
+
 [sub_resource type="Resource" id="Resource_qrejh"]
 script = ExtResource("1_2t4ju")
 texture = ExtResource("2_2jj5r")
@@ -165,50 +167,57 @@ ai_override = 2
 script = ExtResource("14_s31bl")
 unit = ExtResource("21_5end8")
 cell = Vector2i(15, 13)
-team_override = 1
+team_override = 2
 ai_override = 0
 
 [sub_resource type="Resource" id="Resource_cqnji"]
 script = ExtResource("14_s31bl")
 unit = ExtResource("22_hx57n")
 cell = Vector2i(17, 12)
-team_override = 1
+team_override = 2
 ai_override = 0
 
 [sub_resource type="Resource" id="Resource_mcdjo"]
 script = ExtResource("14_s31bl")
 unit = ExtResource("23_3uv0p")
 cell = Vector2i(13, 13)
-team_override = 1
+team_override = 2
 ai_override = 0
 
 [sub_resource type="Resource" id="Resource_nktwx"]
 script = ExtResource("14_s31bl")
 unit = ExtResource("24_k33yl")
 cell = Vector2i(18, 10)
-team_override = 1
+team_override = 2
 ai_override = 1
 
 [sub_resource type="Resource" id="Resource_4v0v1"]
 script = ExtResource("14_s31bl")
 unit = ExtResource("25_jl4da")
 cell = Vector2i(16, 11)
-team_override = 1
+team_override = 2
 ai_override = 0
 
 [sub_resource type="Resource" id="Resource_l2b8r"]
 script = ExtResource("14_s31bl")
 unit = ExtResource("26_5hofk")
 cell = Vector2i(19, 12)
-team_override = 1
+team_override = 2
 ai_override = 2
+
+[sub_resource type="Resource" id="gh29_nilu"]
+script = ExtResource("14_s31bl")
+unit = ExtResource("gh29_nilu")
+cell = Vector2i(18, 2)
+team_override = 1
+ai_override = 0
 
 [resource]
 script = ExtResource("27_pxrne")
 id = "closing_rite_tidemark"
-display_name = "The Closing Rite"
+display_name = "Clash of Three Banners"
 non_lethal = true
-enemy_spawns = Array[ExtResource("14_s31bl")]([SubResource("Resource_uivl3"), SubResource("Resource_y3vvc"), SubResource("Resource_y2tnd"), SubResource("Resource_w7crk"), SubResource("Resource_uq762"), SubResource("Resource_ecg21"), SubResource("Resource_sogb0"), SubResource("Resource_cqnji"), SubResource("Resource_mcdjo"), SubResource("Resource_nktwx"), SubResource("Resource_4v0v1"), SubResource("Resource_l2b8r")])
+enemy_spawns = Array[ExtResource("14_s31bl")]([SubResource("Resource_uivl3"), SubResource("Resource_y3vvc"), SubResource("Resource_y2tnd"), SubResource("Resource_w7crk"), SubResource("Resource_uq762"), SubResource("Resource_ecg21"), SubResource("Resource_sogb0"), SubResource("Resource_cqnji"), SubResource("Resource_mcdjo"), SubResource("Resource_nktwx"), SubResource("Resource_4v0v1"), SubResource("Resource_l2b8r"), SubResource("gh29_nilu")])
 deploy_cells = Dictionary[String, Vector2i]({
 "bertram": Vector2i(3, 10),
 "brenna": Vector2i(2, 13),
