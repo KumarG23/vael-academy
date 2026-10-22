@@ -158,8 +158,28 @@ def validate_worktree(path, branch):
 
 
 def active():
-    result = subprocess.run(['tmux', 'list-sessions', '-F', '#{session_name}'], capture_output=True, text=True)
-    return [s for s in result.stdout.splitlines() if s.startswith('vael-issue-')]
+    # Count preserved pre-scope sessions as well as the new owned server. Never
+    # auto-start a server here, or inherit the calling pane's TMUX socket.
+    sessions = set()
+    for socket in (['-L', 'default'], ['-S', str(STATE / 'tmux.sock')]):
+        result = subprocess.run(['tmux', *socket, '-N', 'list-sessions', '-F', '#{session_name}'],
+                                capture_output=True, text=True)
+        sessions.update(s for s in result.stdout.splitlines() if s.startswith('vael-issue-'))
+    return sorted(sessions)
+
+
+def launch_worker(number, worktree):
+    # A new tmux server must belong to a worker scope, not the short-lived lead
+    # service. The scope lasts until its last process exits; the tmux client
+    # returns promptly. Keep default service cleanup and native exit reporting.
+    # A private socket prevents reuse of a legacy server in an unsafe cgroup.
+    subprocess.run(['systemd-run', '--user', '--scope', '--quiet',
+                    '--unit=vael-team-dispatch-' + str(time.time_ns()),
+                    'tmux', '-S', str(STATE / 'tmux.sock'), '-f', '/dev/null',
+                    'new-session', '-d', '-s', f'vael-issue-{number}', '-c', str(worktree),
+                    '-e', 'VAEL_REPO=' + str(REPO), '-e', 'VAEL_TEAM_STATE=' + str(STATE),
+                    shlex.join([sys.executable, str(Path(__file__).resolve()), '_worker', str(number)])],
+                   check=True)
 
 
 def worker_prompt(issue):
@@ -232,8 +252,7 @@ def start(number, profile):
         run('gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
             f'Engineering assignment: `{profile}` owns implementation and PR revisions on `{branch}`. '
             'Plan/bible alignment, tests, and lead review are required before merge.')
-        subprocess.run(['tmux', 'new-session', '-d', '-s', session,
-                        shlex.join([sys.executable, str(Path(__file__).resolve()), '_worker', str(number)])], check=True)
+        launch_worker(number, worktree)
     except (OSError, subprocess.SubprocessError):
         block_issue(number, profile, 1)
         raise

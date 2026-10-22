@@ -85,8 +85,25 @@ class TeamTests(unittest.TestCase):
                 patch.object(team.shutil, 'disk_usage', return_value=SimpleNamespace(free=10 * 1024**3)), \
                 patch.object(team.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0)) as launch:
             team.start(9, 'deepseek')
-            self.assertEqual(launch.call_args.args[0][:2], ['tmux', 'new-session'])
+            cmd = launch.call_args.args[0]
+            self.assertEqual(cmd[:4], ['systemd-run', '--user', '--scope', '--quiet'])
+            self.assertIn(str(self.state / 'tmux.sock'), cmd)
+            self.assertIn('VAEL_TEAM_STATE=' + str(self.state), cmd)
+            self.assertIn('VAEL_REPO=' + str(self.state), cmd)
+            self.assertNotIn('--wait', cmd)
+            self.assertIn('new-session', cmd)
+            self.assertIn('_worker 9', cmd[-1])
         self.assertEqual(json.loads((self.state / 'issue-9.json').read_text())['profile'], 'deepseek')
+
+    def test_active_counts_both_sockets_without_inheriting_or_creating_a_server(self):
+        from types import SimpleNamespace
+        results = [SimpleNamespace(stdout='vael-issue-7\npersonal\nvael-issue-8\n'),
+                   SimpleNamespace(stdout='vael-issue-8\nvael-issue-9\n')]
+        with patch.object(team.subprocess, 'run', side_effect=results) as query:
+            self.assertEqual(team.active(), ['vael-issue-7', 'vael-issue-8', 'vael-issue-9'])
+        self.assertEqual(query.call_args_list[0].args[0][:4], ['tmux', '-L', 'default', '-N'])
+        self.assertEqual(query.call_args_list[1].args[0][:4],
+                         ['tmux', '-S', str(self.state / 'tmux.sock'), '-N'])
 
     def test_closed_issue_does_not_create_workspace(self):
         with patch.object(team, 'active', return_value=[]), patch.object(team, 'run',
