@@ -1,0 +1,136 @@
+{
+  "accepted_game_source": "9afc166af8769ce18bd059ea1e988122ed865ab4",
+  "input": "real desktop keyboard; state inspection read-only",
+  "native_save_sha256": "c4e2473f55378e7281bc7e9fe5c7da0414f2f28334d4ca5711d5aaa982bd553b",
+  "native_slot_unchanged": true,
+  "results": [
+    {
+      "case": "Escape closes once",
+      "avatar": [
+        3008.0,
+        2112.0
+      ],
+      "house": "thornrook",
+      "inventory_mode": -1,
+      "journal_count": 0,
+      "system_menu_visible": false,
+      "tab": -1,
+      "week": 2
+    },
+    {
+      "case": "J closes without reopening",
+      "avatar": [
+        3008.0,
+        2112.0
+      ],
+      "house": "thornrook",
+      "inventory_mode": -1,
+      "journal_count": 0,
+      "system_menu_visible": false,
+      "tab": -1,
+      "week": 2
+    },
+    {
+      "case": "Inventory give back to items",
+      "avatar": [
+        3008.0,
+        2112.0
+      ],
+      "house": "thornrook",
+      "inventory_mode": 1,
+      "journal_count": 1,
+      "system_menu_visible": false,
+      "tab": 2,
+      "week": 2
+    },
+    {
+      "case": "Inventory items back to students",
+      "avatar": [
+        3008.0,
+        2112.0
+      ],
+      "house": "thornrook",
+      "inventory_mode": 0,
+      "journal_count": 1,
+      "system_menu_visible": false,
+      "tab": 2,
+      "week": 2
+    },
+    {
+      "case": "Inventory root closes",
+      "avatar": [
+        3008.0,
+        2112.0
+      ],
+      "house": "thornrook",
+      "inventory_mode": -1,
+      "journal_count": 0,
+      "system_menu_visible": false,
+      "tab": -1,
+      "week": 2
+    },
+    {
+      "case": "exploration resumes",
+      "before": [
+        3008.0,
+        2112.0
+      ],
+      "avatar": [
+        3220.69262695312,
+        2112.0
+      ],
+      "house": "thornrook",
+      "inventory_mode": -1,
+      "journal_count": 0,
+      "system_menu_visible": false,
+      "tab": -1,
+      "week": 2
+    },
+    {
+      "case": "J directly closes nested Inventory",
+      "house": "thornrook",
+      "inventory_mode": -1,
+      "journal_count": 0,
+      "system_menu_visible": false,
+      "tab": -1,
+      "week": 2
+    },
+    {
+      "case": "Fresh Escape opens normal castle menu",
+      "house": "thornrook",
+      "inventory_mode": -1,
+      "journal_count": 0,
+      "system_menu_visible": true,
+      "tab": -1,
+      "week": 2
+    },
+    {
+      "case": "Fresh Escape closes normal castle menu",
+      "house": "thornrook",
+      "inventory_mode": -1,
+      "journal_count": 0,
+      "system_menu_visible": false,
+      "tab": -1,
+      "week": 2
+    },
+    {
+      "case": "Fresh J opens one Journal",
+      "house": "thornrook",
+      "inventory_mode": 0,
+      "journal_count": 1,
+      "system_menu_visible": false,
+      "tab": 0,
+      "week": 2
+    },
+    {
+      "case": "Fresh Journal Escape returns to exploration",
+      "house": "thornrook",
+      "inventory_mode": -1,
+      "journal_count": 0,
+      "system_menu_visible": false,
+      "tab": -1,
+      "week": 2
+    }
+  ],
+  "inventory_back_steps_keep_same_book": true
+}

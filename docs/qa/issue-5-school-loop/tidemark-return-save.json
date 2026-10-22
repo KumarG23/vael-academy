@@ -1,0 +1,236 @@
+{
+	"campaign": {
+		"casual": true,
+		"chapter_id": "mock_battle",
+		"fish_log": {},
+		"flags": {
+			"kai_awakened": true,
+			"opening_complete": true,
+			"opening_started": true,
+			"prologue_done": true,
+			"road_aftermath_seen": true,
+			"road_intro_seen": true
+		},
+		"grade_samples": {
+			"arena_best_wave": 0.0,
+			"battle_scores": [
+				88,
+				80
+			],
+			"conduct_points": 0.0,
+			"quiz_scores": []
+		},
+		"house_id": "tidemark",
+		"house_locked": true,
+		"last_result": "victory",
+		"report_cards": [],
+		"rng_state": "1612510189733646864",
+		"semester": 1,
+		"support_save": {
+			"consents": {},
+			"points": {
+				"kai_kael": 0,
+				"kai_liora": 0
+			},
+			"ranks": {
+				"kai_kael": "",
+				"kai_liora": ""
+			},
+			"romances": {},
+			"viewed": {}
+		},
+		"training_used": false,
+		"unit_states": {
+			"bertram": {
+				"class_override": "",
+				"id": "bertram",
+				"inventory": [
+					{
+						"id": "sig_bertram",
+						"path": "res://data/weapons/sig_bertram.tres",
+						"type": "weapon",
+						"uses": 37
+					}
+				],
+				"level": 1,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 21
+			},
+			"elowen": {
+				"class_override": "",
+				"id": "elowen",
+				"inventory": [
+					{
+						"id": "sig_elowen",
+						"path": "res://data/weapons/sig_elowen.tres",
+						"type": "weapon",
+						"uses": 33
+					}
+				],
+				"level": 2,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 1,
+					"mag": 0,
+					"res": 1,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 57
+			},
+			"isolde": {
+				"class_override": "",
+				"id": "isolde",
+				"inventory": [
+					{
+						"id": "sig_isolde",
+						"path": "res://data/weapons/sig_isolde.tres",
+						"type": "weapon",
+						"uses": 38
+					}
+				],
+				"level": 1,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 60
+			},
+			"kai": {
+				"class_override": "",
+				"id": "kai",
+				"inventory": [
+					{
+						"id": "sig_kai",
+						"path": "res://data/weapons/sig_kai.tres",
+						"type": "weapon",
+						"uses": 35
+					},
+					{
+						"id": "crownspark",
+						"path": "res://data/weapons/crownspark.tres",
+						"type": "weapon",
+						"uses": 999
+					},
+					{
+						"id": "vulnerary",
+						"path": "res://data/items/vulnerary.tres",
+						"type": "item",
+						"uses": 3
+					}
+				],
+				"level": 2,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 1,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 21
+			},
+			"osric": {
+				"class_override": "",
+				"id": "osric",
+				"inventory": [
+					{
+						"id": "sig_osric",
+						"path": "res://data/weapons/sig_osric.tres",
+						"type": "weapon",
+						"uses": 40
+					}
+				],
+				"level": 1,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 0
+			},
+			"rina": {
+				"class_override": "",
+				"id": "rina",
+				"inventory": [
+					{
+						"id": "sig_rina",
+						"path": "res://data/weapons/sig_rina.tres",
+						"type": "weapon",
+						"uses": 39
+					}
+				],
+				"level": 2,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 27
+			},
+			"serra": {
+				"class_override": "",
+				"id": "serra",
+				"inventory": [
+					{
+						"id": "iron_lance",
+						"path": "res://data/weapons/iron_lance.tres",
+						"type": "weapon",
+						"uses": 37
+					}
+				],
+				"level": 2,
+				"move_bonus": 0,
+				"stat_bonus": {
+					"def": 0,
+					"hp": 0,
+					"lck": 0,
+					"mag": 0,
+					"res": 0,
+					"skl": 0,
+					"spd": 0,
+					"str": 0
+				},
+				"xp": 55
+			}
+		},
+		"week": 2
+	},
+	"slot": 0,
+	"version": 1
+}
