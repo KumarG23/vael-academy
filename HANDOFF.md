@@ -1,6 +1,14 @@
 # HANDOFF.md — agent handoff & project state
 
-## GitHub team workflow transition
+## GitHub team workflow transition — in progress
+
+Current transition record (update with each completed move):
+- Existing GitHub game remains the baseline; no Studio gameplay changes have been promoted yet.
+- Draft workflow PR #1 adds native developer sessions, GitHub issues/PRs, CI and lead review. Helper tests pass; runtime/CI review is in progress. The new team is not activated.
+- Old scheduler stopped cleanly and automatic activation was disabled. Old game branches, history, unfinished work and the VM are preserved.
+- Initial Studio audit reviewed the aggregate 45-integration delta: useful gameplay fixes are migration candidates, not blanket-approved work. Eight ready branches still need individual disposition; failed/stale work remains parked.
+- Studio gameplay commits did not update MASTER_PLAN/HANDOFF. Reconcile each adopted change here with actual checks and remaining limitations. A roster-equipment preview is not VS-1C's authored arrival/informed-invitations sequence; pending Neal story/visual approvals remain pending.
+- Next: qualify the isolated migration, record exact adopted commits/features and real test results, then activate the new team only after the delivery loop works.
 
 GitHub is the active repository/task/PR host; see `docs/TEAM_WORKFLOW.md` and `tools/team.py`. This changes delivery mechanics, not approved game direction or Neal’s pending visual/story approvals below. Preserve old Studio branches; review their plan alignment before proposing a migration PR. Native sessions own issue branches through review corrections; Sol leads review/merge. The clean GitHub baseline remains authoritative until selected Studio changes are separately reviewed and merged. Runtime enrollment and completed model/CI checks are reported in the workflow PR, not assumed by this note.
 
