@@ -120,7 +120,7 @@ class TeamTests(unittest.TestCase):
         if args[:2] == ('gh', 'api'):
             if getattr(self, 'github_error', False):
                 raise ValueError('incomplete source')
-            return json.dumps([getattr(self, 'comments', [])]) if '/issues/comments?' in args[-1] else '[[]]'
+            return json.dumps(getattr(self, 'comments', [])) if '/issues/comments?' in args[-1] else '[]'
         if args[:2] == ('gh', 'issue'):
             return json.dumps(getattr(self, 'ready', []))
         if args[:2] == ('gh', 'pr'):
@@ -440,13 +440,13 @@ class TeamTests(unittest.TestCase):
 
     def test_draft_only_queue_does_not_invoke_model(self):
         draft = json.dumps([{'number': 1, 'title': 'Pending', 'isDraft': True, 'labels': []}])
-        with patch.object(team, 'run', side_effect=lambda *a: '[]' if a[:2] == ('gh', 'issue') else draft if a[:2] == ('gh', 'pr') else '[[]]' if a[:2] == ('gh', 'api') else 'main' if a[:2] == ('git', 'branch') else ''), patch.object(team, 'active', return_value=['vael-issue-5']), patch.object(team.subprocess, 'run') as sub:
+        with patch.object(team, 'run', side_effect=lambda *a: '[]' if a[:2] == ('gh', 'issue') else draft if a[:2] == ('gh', 'pr') else '[]' if a[:2] == ('gh', 'api') else 'main' if a[:2] == ('git', 'branch') else ''), patch.object(team, 'active', return_value=['vael-issue-5']), patch.object(team.subprocess, 'run') as sub:
             self.assertEqual(team.lead(), 0)
             sub.assert_not_called()
 
     def test_blocked_issue_is_not_an_actionable_queue(self):
         issue = json.dumps([{'number': 2, 'title': 'Wait', 'labels': [{'name': 'team:blocked'}]}])
-        with patch.object(team, 'run', side_effect=lambda *a: issue if a[:2] == ('gh', 'issue') else '[]' if a[:2] == ('gh', 'pr') else '[[]]' if a[:2] == ('gh', 'api') else 'main' if a[:2] == ('git', 'branch') else ''), patch.object(team, 'active', return_value=['vael-issue-5']), patch.object(team.subprocess, 'run') as sub:
+        with patch.object(team, 'run', side_effect=lambda *a: issue if a[:2] == ('gh', 'issue') else '[]' if a[:2] == ('gh', 'pr') else '[]' if a[:2] == ('gh', 'api') else 'main' if a[:2] == ('git', 'branch') else ''), patch.object(team, 'active', return_value=['vael-issue-5']), patch.object(team.subprocess, 'run') as sub:
             self.assertEqual(team.lead(), 0)
             sub.assert_not_called()
 

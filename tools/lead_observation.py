@@ -32,10 +32,20 @@ def _load(path):
 
 
 def _pages(run, endpoint):
-    data = json.loads(run('gh', 'api', '--paginate', '--slurp', endpoint))
-    if not isinstance(data, list) or any(not isinstance(page, list) for page in data):
-        raise ValueError('Expected complete paginated GitHub lists')
-    return [row for page in data for row in page]
+    # Older supported gh versions concatenate JSON arrays with --paginate and
+    # have no --slurp flag. Decode every complete page, including empty pages.
+    text = run('gh', 'api', '--paginate', endpoint).strip()
+    decoder, rows, pages = json.JSONDecoder(), [], 0
+    while text:
+        page, offset = decoder.raw_decode(text)
+        if not isinstance(page, list) or any(not isinstance(row, dict) for row in page):
+            raise ValueError('Expected complete paginated GitHub lists')
+        rows.extend(page)
+        pages += 1
+        text = text[offset:].lstrip()
+    if not pages:
+        raise ValueError('Missing GitHub response')
+    return rows
 
 
 def collect(run, slug, issue_numbers, pr_numbers, receipt_path, now, refresh=3600):

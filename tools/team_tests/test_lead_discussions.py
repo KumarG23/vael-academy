@@ -20,7 +20,7 @@ class DiscussionTests(unittest.TestCase):
         self.calls.append(args)
         endpoint = args[-1]
         rows = self.inline if '/pulls/comments?' in endpoint else self.reviews if '/reviews?' in endpoint else self.comments
-        return json.dumps([rows[:1], rows[1:]])  # Real gh --paginate --slurp page shape.
+        return json.dumps(rows[:1]) + '\n' + json.dumps(rows[1:])  # Actual older gh --paginate shape.
 
     def scan(self, now=1000):
         return obs.collect(self.github, 'example/repo', [30], [34], self.path, now)

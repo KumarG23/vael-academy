@@ -1022,7 +1022,7 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
         # When Sol (lead) hits a quota limit, lead_pass pauses and records lead quota block without replacing LEAD.
         def fake_lead_run(*args, **kwargs):
             if args[:2] == ('gh', 'api'):
-                return '[[]]'
+                return '[]'
             if args[:2] in (('gh', 'issue'), ('gh', 'pr')):
                 return '[]'
             if args[:3] == ('git', 'branch', '--show-current'):
