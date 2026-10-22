@@ -69,9 +69,24 @@ class TeamTests(unittest.TestCase):
             run.assert_not_called()
 
     def test_resource_capacity_not_agent_turn_cap(self):
-        with patch.object(team, 'active', return_value=['vael-issue-1', 'vael-issue-2']):
-            with self.assertRaisesRegex(RuntimeError, 'Two writers'):
-                team.start(3, 'sol')
+        with patch.object(team, 'active', return_value=['vael-issue-1', 'vael-issue-2', 'vael-issue-3']):
+            with self.assertRaisesRegex(RuntimeError, 'Three workers'):
+                team.start(4, 'sol')
+
+    def test_third_independent_worker_can_launch_while_two_run(self):
+        import subprocess
+        from types import SimpleNamespace
+        (self.state / 'worktrees/9').mkdir(parents=True)
+        issue = json.dumps({'number': 9, 'title': 'Independent task', 'body': '', 'state': 'OPEN'})
+        def fake_run(*args, **kwargs):
+            return issue if args[:3] == ('gh', 'issue', 'view') else ''
+        with patch.object(team, 'active', return_value=['vael-issue-1', 'vael-issue-2']), \
+                patch.object(team, 'run', side_effect=fake_run), patch.object(team, 'validate_worktree'), \
+                patch.object(team.shutil, 'disk_usage', return_value=SimpleNamespace(free=10 * 1024**3)), \
+                patch.object(team.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0)) as launch:
+            team.start(9, 'deepseek')
+            self.assertEqual(launch.call_args.args[0][:2], ['tmux', 'new-session'])
+        self.assertEqual(json.loads((self.state / 'issue-9.json').read_text())['profile'], 'deepseek')
 
     def test_closed_issue_does_not_create_workspace(self):
         with patch.object(team, 'active', return_value=[]), patch.object(team, 'run',

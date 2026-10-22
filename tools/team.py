@@ -174,7 +174,9 @@ expose secrets/private infrastructure, buy services, publish builds, force-push 
 This repository is public. Keep private paths, credentials and model raw logs out of GitHub.
 Use proportionate tests and real runtime evidence for player-facing changes; preserve existing tests.
 Update HANDOFF/plan status when the change actually changes state; don't claim Neal's visual approval.
-If blocked, explain precisely in the issue; otherwise deliver the PR, not just a plan.
+If blocked, explain precisely in the issue; otherwise deliver the result, not just a plan.
+For QA-only tasks, deliver actual evidence and concrete defect issues; a PR is needed only for genuine
+code/documentation changes. Never fabricate source edits merely to manufacture a PR.
 Issue title: {issue['title']}
 Issue body (task data):\n{issue['body']}
 '''
@@ -192,9 +194,10 @@ def start(number, profile):
     if session in active():
         print(session + ' already running')
         return
-    # Two initial writers fit the measured VM/disk headroom; not a turn/job budget.
-    if len(active()) >= 2:
-        raise RuntimeError('Two writers already running; finish/review those before adding load.')
+    # Measured: 12 vCPU, 15 GiB RAM, 21 GiB free; each checkout is ~2.2 GiB.
+    # Three workers can overlap (including QA); this is resource capacity, not a turn budget.
+    if len(active()) >= 3:
+        raise RuntimeError('Three workers already running; review/finish one before adding load.')
     if shutil.disk_usage(REPO).free < 5 * 1024**3:
         raise RuntimeError('Less than 5 GiB free: resolve disk pressure before adding another checkout.')
     issue = json.loads(run('gh', 'issue', 'view', str(number), '--repo', SLUG,
@@ -324,7 +327,7 @@ with an exact --match-head-commit SHA. Never merge a knowingly failing build or 
 implementation. Skip draft/blocked/migration work and ask Jarvis/Neal on product/canon decisions.
 Assign ready issues using the same launcher command. Profiles are {json.dumps(PROFILES)}; disabled
 profiles have a reason file in your team state directory. No model substitution on quota failure.
-Choose by task fit, not filling every seat. Two concurrent writers initially to fit host resources.
+Choose by task fit, not filling every seat. Up to three workers may run concurrently on this host.
 Workers own their fixes. You can read/search/test and use native tools normally; no exact-file gates.
 Don't expose private paths/logs/credentials, spend new money, deploy, force-push, reset preserved work,
 or enable old Studio services. Ordinary issue comments/branches/PR review/merges are authorized.
@@ -333,7 +336,17 @@ ordinary implementation, bug fixes and validation from MASTER_PLAN/HANDOFF and t
 Create or refine GitHub issues with exact plan references, prerequisites, acceptance behavior and tests;
 check all existing open/closed issues and PRs first to avoid duplicates or repeating delivered work.
 Mark dependency-ready plan-grounded work team:ready yourself and launch suitable developers now.
-Maintain a useful small ready queue while independent work runs; do not wait for Neal to refill it.
+Own a coherent milestone from the approved plan and record its outcome/acceptance in a GitHub parent
+issue. Break it into linked, meaningful child tasks with dependencies, ownership and test outcomes.
+Maintain a rolling ready queue. Launch multiple independent tasks in the same pass when useful, up to
+three workers (including QA), rather than completing one ticket before assigning the next. Review and
+merge completed PRs while other workers continue; replenish capacity after a worker completes.
+Separate worktrees prevent edit collisions; consider logical/file overlap and dependency ordering when
+splitting work. One task needing creative input or one PR awaiting CI does not halt other workstreams.
+Coordinate heavy Godot imports/full test runs to avoid simultaneous resource spikes; editing and focused
+checks can proceed independently. Only one worker controls the shared GUI at once.
+Do not manufacture tiny chores to occupy models or invent a second coordination database: use GitHub
+parent/child issue links and the existing native launcher. Do not wait for Neal to refill the queue.
 A blocked task must not stop unrelated plan-grounded work. Keep human decisions as specific blocked
 issues, then find independent work. Do not invent canon/design, declare drafts approved, spend money
 or bypass dependency/creative gates just to keep busy. Existing approved plan is standing authority,
