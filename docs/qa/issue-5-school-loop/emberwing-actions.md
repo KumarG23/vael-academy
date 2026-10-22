@@ -1,6 +1,6 @@
 # Emberwing native-input action transcript
 
-Reproduction companion for issue #19. Start with `emberwing-rite-start.json` in an isolated save slot, load it through Title, then Begin battle. Coordinates are zero-based map cells; all actions below were sent through keyboard movement/action menus. Enemy turns and normal dialogue advance run between rounds. This is a curated action list, not a raw runtime/model log.
+Reproduction companion for issue #19. Start with `emberwing-rite-start.json` in an isolated save slot, load it through Title, then choose Begin battle only if Preparations appears. Native battle loads can resume directly at round 1. Coordinates are zero-based map cells; all actions below were sent through keyboard movement/action menus. Enemy turns and normal dialogue advance run between rounds. This is a curated action list, not a raw runtime/model log.
 
 | Round | Unit | From → destination | Action | Target |
 | --- | --- | --- | --- | --- |

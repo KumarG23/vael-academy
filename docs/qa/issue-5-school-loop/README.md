@@ -18,9 +18,25 @@ Functional QA of existing delivered behavior; not story, art, pacing or Neal vis
 | --- | --- | --- | --- |
 | Emberwing | Fresh New Game, Casual; seven opening scripts; road introduction, round-3 victory and completed aftermath; existing pitch/oath; Week 1 campus | Fishing: Warded Coin ×1. Native Save Game → Title → Load preserved house, Week 1 and catch. Initial Common Hall correctly had no unlocked bonds. | Three factions; victory round 6, Perrin sole survivor; returned to Week 2 **Term begins**. Kai had fallen in round 2, so this is reachable flow with a rules failure, not a clean pass (#19). |
 | Tidemark | Native round-3 road save reused from the fresh run; boss fight/aftermath replayed, then existing choice/pitch and Week 1 campus. **Not a fresh New Game run.** | Training: Serra 18 → 28 XP, training-used recorded. | Rina defeated, victory round 12 with Kai alive; returned to Week 2 **Term begins**. Fenn fell; six player units survived. |
-| Thornrook | Same earned round-3 road checkpoint; boss/aftermath replayed, existing choice/pitch and Week 1 campus. **Not a fresh New Game run.** | Rina trained 27 → 37 XP; native Save → Title → Load preserved Thornrook / Week 1. | Perrin defeated, victory round 5 with Kai alive; returned to Week 2 **Term begins**. Rurik fell; seven player units survived. |
+| Thornrook | Same earned round-3 road checkpoint; boss/aftermath replayed, existing choice/pitch and Week 1 campus. **Not a fresh New Game run.** | Rina trained 27 → 37 XP; native Save → Title → Load preserved Thornrook / Week 1. | Perrin defeated, victory round 5 with Kai alive; returned to Week 2 **Term begins**. Rurik fell; seven player units survived. Original arrival-frame capture missing; native post-return save records Week 2 (see provenance below). |
 
 The reused road save contained Kai at (7,6), 26 HP and unacted; Serra at (9,5), 12 HP and unacted; Rina at (8,5), 20 HP and acted; only the bandit boss remained at (13,5), 27 HP. Native Title → Load restored round 3 and these states. It is an input-earned checkpoint, not a seeded fixture.
+
+### Return-evidence provenance (review correction)
+
+The original Emberwing and Tidemark campus captures are byte-identical (SHA-256 `349a1c38716ff62265de543eb0bcfa299e03017078017e4ec90de13f1b3e0732`). They were separately captured at the shared initial campus view after their respective result dismissals. They show **Week 2 — Term begins**, but contain no route identity and cannot independently prove which house returned. Route identity comes from the preserved native post-return saves, not those images.
+
+The file originally labeled Thornrook “Week 2 return” was captured too early and actually shows the battle **Victory** overlay. It is now [labeled as that result](images/thornrook-victory.png). **The original Thornrook arrival-frame capture is missing.** The following native save was written after the transition and records Thornrook, Week 2 and victory; contemporaneous read-only inspection also reported the castle scene. The earlier result screenshot itself does not establish castle return.
+
+For additional reviewable proof, byte-for-byte copies of each original native post-return save were loaded through Title in separate disposable data directories on accepted game source `366a8e5f358fb57cc64a3b37a986f3a217be8313`. No house/week/result was edited or seeded. The Journal was opened with real J input after loading. These are **later native-save reload captures**, not replacement frames from the original playthroughs.
+
+| Original route save | Later reload: house-identifying Journal + Week 2 header |
+| --- | --- |
+| [Emberwing native return](emberwing-return-save.json) | [Emberwing reload](images/emberwing-native-return-journal.png) |
+| [Tidemark native return](tidemark-return-save.json) | [Tidemark reload](images/tidemark-native-return-journal.png) |
+| [Thornrook native return](thornrook-return-save.json) | [Thornrook reload](images/thornrook-native-return-journal.png) |
+
+[Curated provenance checks](return-reload-provenance.json) record hashes, loaded house/week/result and tested source. Reproduce by copying one native return file unchanged to `godot/app_userdata/Vael Academy/saves/slot_0.json` beneath a new disposable `XDG_DATA_HOME`, launch, Title → Load, then J. This differs from the explicitly seeded support fixtures below.
 
 ## Actual roster and rival selection
 
@@ -48,7 +64,7 @@ The reused road save contained Kai at (7,6), 26 HP and unacted; Serra at (9,5), 
 | [#14](https://github.com/KumarG23/vael-academy/issues/14) | Sparse save rows display metadata for the wrong fixed slot; an apparently empty row overwrites the occupied slot. Title also uses zero-based labels. | Save safety failure. Only disposable saves used. |
 | [#15](https://github.com/KumarG23/vael-academy/issues/15) | Fishing, training and empty-archive feedback is clipped off the right edge. | Feedback unreadable; activity itself completes. |
 | [#16](https://github.com/KumarG23/vael-academy/issues/16) | Journal close key reaches the castle: Escape opens the system menu; J reopens the Journal. | Input failure; Escape twice permits continuation. |
-| [#19](https://github.com/KumarG23/vael-academy/issues/19) | Animated defeat frees Kai before objective checks; Emberwing continues and awards victory/Week 2 after lord loss. | Blocks clean combat-rule signoff under MASTER_PLAN §3. |
+| [#19](https://github.com/KumarG23/vael-academy/issues/19) | Animated defeat frees Kai before objective checks; Emberwing continues and awards victory/Week 2 after lord loss. | Baseline rules failure under MASTER_PLAN §3; fixed behavior verified on accepted `366a8e5f` below. |
 | [#20](https://github.com/KumarG23/vael-academy/issues/20) | Road bandit at (8,7) occupies a water tile labeled impassable and remains attackable. | Terrain/spawn consistency defect; road victory remains reachable. |
 | [#23](https://github.com/KumarG23/vael-academy/issues/23) | Thornrook’s Nilu has no chapter deployment entry and defaults to isolated (0,0). | Missing deployment data; battle remains playable. |
 
@@ -74,7 +90,7 @@ For invalid-asset cases only, duplicate the live Kai–Kael `SupportChainDef` in
 
 ### Battle support fixture
 
-Separately copy the native Emberwing prebattle save, set Kai–Kael to 20/C in **both** its top-level `supports` and `campaign.support_save`, and clear viewed receipts. Load normally, Begin battle, select Kai without moving, then choose Supports. The same missing/malformed/empty paths returned to the action menu with Supports still available and no viewed receipt. Valid authored playback stayed unviewed until completion, then removed Supports from this unit's unwatched menu. Kai remained at (2,12), unacted. A native battle save, process restart, Title → Load and reselecting Kai preserved `kai_kael:C` and the absence of Supports. No battle action, HP or RNG was altered by the fixture.
+Separately copy the native Emberwing prebattle save, set Kai–Kael to 20/C in **both** its top-level `supports` and `campaign.support_save`, and clear viewed receipts. Load normally (begin only if Preparations appears), select Kai without moving, then choose Supports. The same missing/malformed/empty paths returned to the action menu with Supports still available and no viewed receipt. Valid authored playback stayed unviewed until completion, then removed Supports from this unit's unwatched menu. Kai remained at (2,12), unacted. A native battle save, process restart, Title → Load and reselecting Kai preserved `kai_kael:C` and the absence of Supports. No battle action, HP or RNG was altered by the fixture.
 
 ## Accepted repair retests
 
@@ -114,11 +130,23 @@ Invoke existing AudioManager methods in the disposable graphical process. Play `
 
 Active voice and SFX player state was checked immediately before mute; both were still playing. All seven silent intervals had peak **0**. Music resumed with the latest requested library track; narration and SFX did not replay. See [sample measurements](audio/measurements.json) and the linked PCM clips below. Capture command: `ffmpeg -f pulse -i auto_null.monitor -t 1 capture.wav` (use your existing output monitor; do not start a service).
 
+### Lord-loss repair — PR #25 / issue #19
+
+Accepted game source: `366a8e5f358fb57cc64a3b37a986f3a217be8313`. Loaded a byte-for-byte copy of the original [native Emberwing prebattle save](emberwing-rite-start.json) through Title in a new disposable data directory. Repeated the **first 12 actions** of the [original transcript](emberwing-actions.md), through Dain’s round-2 attack, using real keyboard menus and unchanged production animations. No unit HP, position, RNG, progression or outcome was seeded or injected.
+
+Kai fell during the ensuing enemy phase. The game now displayed **Defeat in round 2**, with Perrin (24 HP), Brenna (20 HP) and Dain (28 HP) still alive. Units and turn state stayed unchanged during a two-second result hold; no later rival action or rout victory occurred. Dismissing Defeat returned to Title with campaign week still **1**, not the castle or Week 2. This is a checkpoint regression retest, not a new fresh playthrough. The earlier erroneous baseline victory evidence is preserved.
+
+Evidence: [18-second tail of the actual replay](lord-loss-retest.mp4), [Defeat result](images/lord-retest-defeat.png), [Title after dismissal](images/lord-retest-title.png). Native battle reload resumes directly; choose Begin battle only if Preparations is actually shown.
+
+### Journal repair — issue #16
+
+PR #26 remains pending accepted integration. The requested real-keyboard close/nested-Inventory retest remains open under #5; the baseline defect is not claimed fixed here.
+
 ## Final verification and remaining limits
 
 Graphical work is complete on the SHAs above. Editor import exited 0 with no script-load errors. Full GUT exited 0: **771/771 tests, 6,823 assertions, 96 scripts, 180.212 s**. Both ran under the shared lock with disposable data. The suite retains 18 deprecation reports, two ObjectDB leak warnings and one resource-in-use exit error; none failed the run. Team helper checks ran 37 tests: 35 passed, two opt-in user-systemd probes skipped. No story/design, source mechanics or tests were edited by QA.
 
-Remaining qualification gaps are explicit: six functional defects remain separate repair work; #19 prevents a clean lord-loss rules pass, and #14 compromises save-slot safety. Decision #22 governs rival/objective parity. Only Emberwing was a fresh New Game run; the two other routes reused the earned road checkpoint. Archive eligibility and malformed assets were fixtures; natural C-rank accrual was not established. Speaker/headphone listening and Neal’s visual/story/taste approvals were not claimed. Later weeks, full-semester progression, active-defense production adoption and VS-1C are outside this validation. Retest the affected paths on accepted repair commits before closing parent #8.
+Remaining qualification gaps are explicit: six baseline functional defects were filed separately. #19 now passes its accepted-code graphical regression retest above; #14 still compromises save-slot safety, and #15/#16/#20/#23 remain repair/retest work. Decision #22 governs rival/objective parity. Only Emberwing was a fresh New Game run; the two other routes reused the earned road checkpoint. Archive eligibility and malformed assets were fixtures; natural C-rank accrual was not established. Speaker/headphone listening and Neal’s visual/story/taste approvals were not claimed. Later weeks, full-semester progression, active-defense production adoption and VS-1C are outside this validation. Retest the affected paths on accepted repair commits before closing parent #8.
 
 ## Evidence index
 
@@ -127,10 +155,10 @@ Remaining qualification gaps are explicit: six functional defects remain separat
 - [Sparse save labels](images/sparse-save-slots.png), [Journal Escape opens system menu](images/journal-cancel-system.png), [initial locked archive feedback](images/archive-initial.png).
 - [Emberwing preparations](images/emberwing-rite-prep.png), [round 3 after Kai fell](images/emberwing-mock_battle-turn3.png), [victory](images/emberwing-mock_battle-result.png), [Week 2 return](images/emberwing-return.png).
 - [Tidemark preview](images/tidemark-preview.png), [Tidemark preparations / six foes](images/tidemark-rite-prep.png).
-- [Native Emberwing prebattle save](emberwing-rite-start.json), [curated input transcript](emberwing-actions.md). To reproduce, copy the JSON to `godot/app_userdata/Vael Academy/saves/slot_0.json` beneath a **new disposable** `XDG_DATA_HOME`, launch normally, Load through Title, and Begin battle. Do not overwrite a real player's slot.
+- [Native Emberwing prebattle save](emberwing-rite-start.json), [curated input transcript](emberwing-actions.md). To reproduce, copy the JSON to `godot/app_userdata/Vael Academy/saves/slot_0.json` beneath a **new disposable** `XDG_DATA_HOME`, launch normally and Load through Title; choose Begin battle only if Preparations appears (native battle loads can resume directly). Do not overwrite a real player's slot.
 
 - [Archive eligible / unwatched](images/archive-unwatched.png), [malformed asset retained](images/archive-malformed.png), [actual playback](images/archive-playback.png), [completed checkmark](images/archive-completed.png), [native reload checkmark](images/archive-reloaded.png).
-- [Thornrook roster preview](images/thornrook-preview.png), [house persisted on reload](images/thornrook-reloaded.png), [six-rival preparations](images/thornrook-rite-prep.png), [Week 2 return](images/thornrook-return.png), [Tidemark Week 2 return](images/tidemark-return.png).
+- [Thornrook roster preview](images/thornrook-preview.png), [house persisted on reload](images/thornrook-reloaded.png), [six-rival preparations](images/thornrook-rite-prep.png), [Thornrook Victory overlay](images/thornrook-victory.png), [Tidemark Week 2 return](images/tidemark-return.png).
 
 - [Battle invalid asset remains available](images/battle-support-malformed.png), [completed battle support](images/battle-support-valid.png), [receipt retained after battle reload](images/battle-support-reloaded.png).
 - [Stationary pointer selects Kael after keyboard movement](images/pointer-stationary-selected.png), [selection after camera pan](images/pointer-panned-selected.png), [960×540 client / zoom fixture](images/pointer-resized.png), [outside-map margin ignored](images/pointer-outside-margin.png).
