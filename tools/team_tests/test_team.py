@@ -246,5 +246,26 @@ class TeamTests(unittest.TestCase):
         self.assertIn('issue-8-native-session', commands[1])
 
 
+    def test_interrupted_first_turn_recovers_confirmed_id_from_its_own_log(self):
+        import subprocess
+        worktree = self.state / 'worktrees/7'
+        worktree.mkdir(parents=True)
+        (self.state / 'issue-7.json').write_text(json.dumps({'profile': 'sol', 'session_id': None}))
+        (self.state / 'issue-7-100.log').write_text(json.dumps(
+            {'type': 'thread.started', 'thread_id': 'issue-seven-confirmed-session'}) + '\npartial tail')
+        (self.state / 'issue-8-200.log').write_text(json.dumps(
+            {'type': 'thread.started', 'thread_id': 'other-issue-session'}))
+        issue = json.dumps({'number': 7, 'title': 'Interrupted', 'body': '', 'state': 'OPEN'})
+        def fake_run(*args, **kwargs):
+            return issue if args[:3] == ('gh', 'issue', 'view') else ''
+        with patch.object(team, 'active', return_value=[]), patch.object(team, 'run', side_effect=fake_run), \
+                patch.object(team, 'validate_worktree'), \
+                patch.object(team.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0)):
+            team.start(7, 'sol')
+        assignment = json.loads((self.state / 'issue-7.json').read_text())
+        self.assertEqual(assignment['session_id'], 'issue-seven-confirmed-session')
+        self.assertIn('issue-seven-confirmed-session', team.command('sol', assignment['session_id']))
+
+
 if __name__ == '__main__':
     unittest.main()

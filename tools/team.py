@@ -216,7 +216,14 @@ def start(number, profile):
     old = json.loads(assignment.read_text()) if assignment.exists() else {}
     if old and old.get('profile') != profile:
         raise RuntimeError('Existing task belongs to another profile; lead must explicitly hand it over.')
-    assignment.write_text(json.dumps({'profile': profile, 'session_id': old.get('session_id'), 'issue': issue,
+    native_id = old.get('session_id')
+    if not native_id:
+        # A killed first turn may have emitted its ID before metadata was saved.
+        for log in sorted(STATE.glob(f'issue-{number}-*.log'), reverse=True):
+            native_id = native_session(profile, log)
+            if native_id:
+                break
+    assignment.write_text(json.dumps({'profile': profile, 'session_id': native_id, 'issue': issue,
                                       'worktree': str(worktree)}, indent=2))
     try:
         run('gh', 'issue', 'comment', str(number), '--repo', SLUG, '--body',
