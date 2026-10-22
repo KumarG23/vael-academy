@@ -112,42 +112,168 @@ class TeamTests(unittest.TestCase):
                 team.start(3, 'sol')
             self.assertEqual(run.call_count, 1)
 
+    SUBSCRIPTION = json.dumps({'loggedIn': True, 'authMethod': 'claude.ai',
+                               'apiProvider': 'firstParty', 'subscriptionType': 'max'})
+
     def fake_lead_run(self, *args, **kwargs):
-        if args[:2] == ('gh', 'issue') or args[:2] == ('gh', 'pr'):
-            return '[]'
+        if args[:2] == ('gh', 'issue'):
+            return json.dumps(getattr(self, 'ready', []))
+        if args[:2] == ('gh', 'pr'):
+            return json.dumps(getattr(self, 'prs', []))
         if args[:3] == ('git', 'branch', '--show-current'):
             return 'main'
         if args[:2] == ('git', 'rev-parse'):
-            return 'current-head'
+            return getattr(self, 'head', 'current-head')
         return ''
 
-    def test_empty_queue_wakes_lead_to_derive_plan_work(self):
-        def native(*args, **kwargs):
-            self.assertIn('Create or refine GitHub issues', kwargs['input'])
-            self.assertIn('graphical', kwargs['input'])
-            self.assertIn('blocked task must not stop unrelated', kwargs['input'])
-            kwargs['stdout'].write(json.dumps({'type': 'turn.completed'}))
-            return team.subprocess.CompletedProcess([], 0)
+    def lead_once(self, result='success', running=()):
+        """One lead pass with fake GitHub/git; returns (rc, inference calls)."""
+        self.calls = []
+        def native(args, **kwargs):
+            if args[-2:] == ['auth', 'status']:
+                self.calls.append(('preflight', kwargs['cwd'], kwargs['env']))
+                return team.subprocess.CompletedProcess(args, 0, self.SUBSCRIPTION)
+            self.calls.append(('inference', kwargs['cwd'], kwargs['env'], args, kwargs['input']))
+            kwargs['stdout'].write(json.dumps({'type': 'result', 'subtype': result,
+                                               'is_error': result != 'success'}))
+            return team.subprocess.CompletedProcess(args, 0)
         with patch.object(team, 'run', side_effect=self.fake_lead_run), \
-                patch.object(team, 'active', return_value=[]), \
-                patch.object(team.subprocess, 'run', side_effect=native) as sub:
-            self.assertEqual(team.lead(), 0)
-            sub.assert_called_once()
-        receipt = json.loads((self.state / 'planning.json').read_text())
-        self.assertEqual(receipt['head'], 'current-head')
+                patch.object(team, 'active', return_value=list(running)), \
+                patch.object(team.subprocess, 'run', side_effect=native):
+            rc = team.lead()
+        return rc, [c for c in self.calls if c[0] == 'inference']
+
+    def pr(self, head='abc123', status='COMPLETED', conclusion='SUCCESS', mergeable='MERGEABLE', **extra):
+        check = {'__typename': 'CheckRun', 'name': 'verify', 'status': status, 'conclusion': conclusion,
+                 'startedAt': '2026-10-22T12:00:00Z', 'detailsUrl': 'https://example.invalid/run/1'}
+        check.update(extra)
+        return {'number': 31, 'title': 'Fix', 'isDraft': False, 'labels': [], 'headRefOid': head,
+                'mergeable': mergeable, 'statusCheckRollup': [check]}
+
+    def test_lead_is_opus_subscription_with_same_cwd_env_preflight_first(self):
+        rc, inference = self.lead_once()
+        self.assertEqual(rc, 0)
+        self.assertEqual([c[0] for c in self.calls], ['preflight', 'inference'])
+        preflight, (_, cwd, env, cmd, prompt) = self.calls[0], inference[0]
+        self.assertEqual((preflight[1], preflight[2]), (cwd, env))
+        self.assertIs(preflight[2], env)
+        self.assertEqual(cwd, team.REPO)
+        self.assertEqual(cmd, team.command('opus'))
+        self.assertEqual(cmd[cmd.index('--model') + 1:cmd.index('--model') + 4], ['opus', '--effort', 'medium'])
+        self.assertIn('claudeai', cmd[cmd.index('--settings') + 1])
+        self.assertNotIn('codex', cmd)
+        self.assertIn('engineering lead: Claude Opus/medium', prompt)
+        self.assertNotIn('Codex Sol', prompt)
+
+    def test_lead_preflight_failure_pauses_without_inference_or_fallback(self):
+        self.SUBSCRIPTION = json.dumps({'loggedIn': True, 'authMethod': 'api_key',
+                                        'apiProvider': 'firstParty', 'subscriptionType': 'max'})
+        rc, inference = self.lead_once()
+        self.assertEqual(rc, 1)
+        self.assertEqual(inference, [])
+        self.assertIn('no fallback', (self.state / 'paused').read_text())
+        self.assertEqual((self.state / 'lead.exit').read_text(), '1')
+        self.assertFalse((self.state / 'lead-receipt.json').exists())
+
+    def test_lead_routing_prefers_subscription_capacity_and_keeps_owners(self):
+        prompt = team.lead_prompt([], [], [], ['first pass'])
+        for expected in ['prefer `opus` and `argon`', 'qualified `deepseek` bounded',
+                         'Reserve `sol`/`astra` for an explicitly requested escalation',
+                         'stays\nwith that owner through revisions', 'three workers',
+                         'Only one worker controls the shared GUI', 'exact-head\nacceptance receipt',
+                         'only the delta since the last reviewed SHA', '--match-head-commit']:
+            self.assertIn(expected, prompt)
+        self.assertEqual(team.PROFILES['sol'], ('codex', 'gpt-6.1-sol', 'high'))
+        self.assertEqual(team.PROFILES['astra'], ('codex', 'gpt-6-astra', 'high'))
+
+    def test_empty_queue_wakes_lead_to_derive_plan_work(self):
+        rc, inference = self.lead_once()
+        self.assertEqual(rc, 0)
+        prompt = inference[0][4]
+        self.assertIn('Create or refine GitHub issues', prompt)
+        self.assertIn('graphical', prompt)
+        self.assertIn('blocked task must not stop unrelated', prompt)
+        self.assertIn('woke because: first pass', prompt)
+        self.assertTrue((self.state / 'lead-receipt.json').exists())
 
     def test_recent_exhausted_plan_skips_model_until_recheck(self):
-        (self.state / 'planning.json').write_text(json.dumps({'head': 'current-head', 'checked_at': team.time.time()}))
-        with patch.object(team, 'run', side_effect=self.fake_lead_run), \
-                patch.object(team, 'active', return_value=[]), patch.object(team.subprocess, 'run') as sub:
-            self.assertEqual(team.lead(), 0)
-            sub.assert_not_called()
+        self.lead_once()
+        rc, inference = self.lead_once()
+        self.assertEqual((rc, inference), (0, []))
+        receipt = json.loads((self.state / 'lead-receipt.json').read_text())
+        receipt['checked_at'] -= team.REFRESH + 1
+        (self.state / 'lead-receipt.json').write_text(json.dumps(receipt))
+        rc, inference = self.lead_once()
+        self.assertIn('woke because: periodic refresh', inference[0][4])
 
-    def test_changed_head_or_expired_or_corrupt_receipt_wakes_planning(self):
-        for receipt in ['broken', json.dumps({'head': 'old-head', 'checked_at': team.time.time()}),
-                        json.dumps({'head': 'current-head', 'checked_at': 0})]:
-            (self.state / 'planning.json').write_text(receipt)
-            self.assertTrue(team.planning_due('current-head'))
+    def test_unchanged_actionable_queue_skips_inference_until_safety_refresh(self):
+        self.ready = [{'number': 5, 'title': 'QA', 'body': 'Acceptance', 'labels': [{'name': 'team:ready'}]}]
+        self.prs = [self.pr(status='IN_PROGRESS', conclusion='')]
+        running = ['vael-issue-5']
+        self.assertEqual(len(self.lead_once(running=running)[1]), 1)
+        for _ in range(3):
+            self.assertEqual(self.lead_once(running=running), (0, []))
+        # Run URLs/timestamps are not state transitions.
+        self.prs = [self.pr(status='IN_PROGRESS', conclusion='', detailsUrl='https://example.invalid/2',
+                            startedAt='2026-10-22T13:00:00Z')]
+        self.assertEqual(self.lead_once(running=running), (0, []))
+        with patch.object(team.time, 'time', return_value=team.time.time() + team.REFRESH + 1):
+            self.assertEqual(len(self.lead_once(running=running)[1]), 1)
+
+    def test_github_and_worker_changes_wake_the_lead(self):
+        self.ready = [{'number': 5, 'title': 'QA', 'body': 'Acceptance', 'labels': [{'name': 'team:ready'}]}]
+        self.prs = [self.pr(status='IN_PROGRESS', conclusion='')]
+        running = ['vael-issue-5']
+        self.lead_once(running=running)
+        changes = [
+            ('prs', lambda: setattr(self, 'prs', [self.pr()])),                       # CI transition
+            ('prs', lambda: setattr(self, 'prs', [self.pr(conclusion='FAILURE')])),   # CI result
+            ('prs', lambda: setattr(self, 'prs', [self.pr(head='def456')])),          # new PR head
+            ('prs', lambda: setattr(self, 'prs', [self.pr(head='def456', mergeable='CONFLICTING')])),
+            ('ready', lambda: self.ready[0].update(body='Acceptance (revised by Neal)')),
+            ('ready', lambda: self.ready.append({'number': 6, 'title': 'New', 'body': '', 'labels': []})),
+            ('main', lambda: setattr(self, 'head', 'next-head')),
+            ('workers', lambda: running.append('vael-issue-6')),                     # slot change
+            ('workers', lambda: (self.state / 'issue-5.exit').write_text('0')),     # completion
+        ]
+        for reason, change in changes:
+            change()
+            rc, inference = self.lead_once(running=running)
+            self.assertEqual(rc, 0)
+            self.assertEqual(len(inference), 1, reason)
+            self.assertIn('woke because: ' + reason, inference[0][4])
+            self.assertEqual(self.lead_once(running=running), (0, []), reason)
+
+    def test_failed_turn_does_not_record_or_suppress_retry(self):
+        self.prs = [self.pr()]
+        self.lead_once()
+        self.prs = [self.pr(head='def456')]
+        rc, inference = self.lead_once(result='error_during_execution')
+        self.assertEqual((rc, len(inference)), (1, 1))
+        self.assertTrue((self.state / 'paused').exists())
+        (self.state / 'paused').unlink()  # Operator resumes after inspection.
+        rc, inference = self.lead_once()
+        self.assertEqual((rc, len(inference)), (0, 1))
+        self.assertIn('woke because: prs', inference[0][4])
+
+    def test_failed_planning_does_not_record_success(self):
+        rc, inference = self.lead_once(result='error_during_execution')
+        self.assertEqual((rc, len(inference)), (1, 1))
+        self.assertFalse((self.state / 'lead-receipt.json').exists())
+        self.assertTrue((self.state / 'paused').exists())
+
+    def test_corrupt_or_missing_receipt_wakes(self):
+        parts = team.snapshot('h', [], [], [])
+        self.assertEqual(team.wake_reasons(parts), ['first pass'])
+        for receipt in ['broken', '[]', json.dumps({'parts': parts}), json.dumps({'checked_at': 'x'})]:
+            (self.state / 'lead-receipt.json').write_text(receipt)
+            self.assertEqual(team.wake_reasons(parts), ['first pass'])
+
+    def test_wake_action_clears_receipt_for_comment_only_changes(self):
+        self.lead_once()
+        with patch.object(team.sys, 'argv', ['team.py', 'wake']):
+            self.assertEqual(team.main(), 0)
+        self.assertEqual(len(self.lead_once()[1]), 1)
 
     def test_empty_queue_with_workers_running_waits_for_results(self):
         with patch.object(team, 'run', return_value='[]'), \
@@ -155,16 +281,6 @@ class TeamTests(unittest.TestCase):
                 patch.object(team.subprocess, 'run') as sub:
             self.assertEqual(team.lead(), 0)
             sub.assert_not_called()
-
-    def test_failed_planning_does_not_record_success(self):
-        def native(*args, **kwargs):
-            kwargs['stdout'].write(json.dumps({'type': 'turn.failed'}))
-            return team.subprocess.CompletedProcess([], 0)
-        with patch.object(team, 'run', side_effect=self.fake_lead_run), \
-                patch.object(team, 'active', return_value=[]), patch.object(team.subprocess, 'run', side_effect=native):
-            self.assertEqual(team.lead(), 1)
-        self.assertFalse((self.state / 'planning.json').exists())
-        self.assertTrue((self.state / 'paused').exists())
 
     def test_paused_lead_does_not_query_github(self):
         (self.state / 'paused').touch()
