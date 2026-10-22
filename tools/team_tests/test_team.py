@@ -114,6 +114,7 @@ class TeamTests(unittest.TestCase):
 
     SUBSCRIPTION = json.dumps({'loggedIn': True, 'authMethod': 'claude.ai',
                                'apiProvider': 'firstParty', 'subscriptionType': 'max'})
+    CODEX_SUBSCRIPTION = 'Logged in using ChatGPT\n'
 
     def fake_lead_run(self, *args, **kwargs):
         if args[:2] == ('gh', 'issue'):
@@ -130,12 +131,20 @@ class TeamTests(unittest.TestCase):
         """One lead pass with fake GitHub/git; returns (rc, inference calls)."""
         self.calls = []
         def native(args, **kwargs):
+            if args[:3] == ['codex', 'login', 'status']:
+                self.calls.append(('preflight', kwargs['cwd'], kwargs['env']))
+                return team.subprocess.CompletedProcess(args, 0, self.CODEX_SUBSCRIPTION)
             if args[-2:] == ['auth', 'status']:
                 self.calls.append(('preflight', kwargs['cwd'], kwargs['env']))
                 return team.subprocess.CompletedProcess(args, 0, self.SUBSCRIPTION)
             self.calls.append(('inference', kwargs['cwd'], kwargs['env'], args, kwargs['input']))
-            kwargs['stdout'].write(json.dumps({'type': 'result', 'subtype': result,
-                                               'is_error': result != 'success'}))
+            if args[0] == 'codex':
+                kwargs['stdout'].write(json.dumps({
+                    'type': 'turn.completed' if result == 'success' else 'turn.failed'
+                }) + '\n')
+            else:
+                kwargs['stdout'].write(json.dumps({'type': 'result', 'subtype': result,
+                                                   'is_error': result != 'success'}))
             return team.subprocess.CompletedProcess(args, 0)
         with patch.object(team, 'run', side_effect=self.fake_lead_run), \
                 patch.object(team, 'active', return_value=list(running)), \
@@ -150,7 +159,7 @@ class TeamTests(unittest.TestCase):
         return {'number': 31, 'title': 'Fix', 'isDraft': False, 'labels': [], 'headRefOid': head,
                 'mergeable': mergeable, 'statusCheckRollup': [check]}
 
-    def test_lead_is_opus_subscription_with_same_cwd_env_preflight_first(self):
+    def test_lead_is_sol_subscription_with_same_cwd_env_preflight_first(self):
         rc, inference = self.lead_once()
         self.assertEqual(rc, 0)
         self.assertEqual([c[0] for c in self.calls], ['preflight', 'inference'])
@@ -158,16 +167,14 @@ class TeamTests(unittest.TestCase):
         self.assertEqual((preflight[1], preflight[2]), (cwd, env))
         self.assertIs(preflight[2], env)
         self.assertEqual(cwd, team.REPO)
-        self.assertEqual(cmd, team.command('opus'))
-        self.assertEqual(cmd[cmd.index('--model') + 1:cmd.index('--model') + 4], ['opus', '--effort', 'medium'])
-        self.assertIn('claudeai', cmd[cmd.index('--settings') + 1])
-        self.assertNotIn('codex', cmd)
-        self.assertIn('engineering lead: Claude Opus/medium', prompt)
-        self.assertNotIn('Codex Sol', prompt)
+        self.assertEqual(cmd, team.command('sol'))
+        self.assertIn('gpt-6.1-sol', cmd)
+        self.assertIn('model_reasoning_effort="high"', cmd)
+        self.assertIn('forced_login_method="chatgpt"', cmd)
+        self.assertIn('engineering lead: Codex gpt-6.1-sol/high (`sol` profile', prompt)
 
     def test_lead_preflight_failure_pauses_without_inference_or_fallback(self):
-        self.SUBSCRIPTION = json.dumps({'loggedIn': True, 'authMethod': 'api_key',
-                                        'apiProvider': 'firstParty', 'subscriptionType': 'max'})
+        self.CODEX_SUBSCRIPTION = 'Logged in using API key\n'
         rc, inference = self.lead_once()
         self.assertEqual(rc, 1)
         self.assertEqual(inference, [])
@@ -177,14 +184,19 @@ class TeamTests(unittest.TestCase):
 
     def test_lead_routing_prefers_subscription_capacity_and_keeps_owners(self):
         prompt = team.lead_prompt([], [], [], ['first pass'])
-        for expected in ['prefer `opus` and `argon`', 'qualified `deepseek` bounded',
-                         'Reserve `sol`/`astra` for an explicitly requested escalation',
+        for expected in ['`sol-dev` (`codex`, `gpt-6.1-sol`, `medium`)', 'qualified `deepseek` bounded',
+                         'Evaluate `luna` for meaningful bounded implementation',
+                         'Sole emergency developer',
                          'stays\nwith that owner through revisions', 'three workers',
                          'Only one worker controls the shared GUI', 'exact-head\nacceptance receipt',
                          'only the delta since the last reviewed SHA', '--match-head-commit']:
             self.assertIn(expected, prompt)
+        self.assertEqual(team.LEAD, 'sol')
         self.assertEqual(team.PROFILES['sol'], ('codex', 'gpt-6.1-sol', 'high'))
         self.assertEqual(team.PROFILES['astra'], ('codex', 'gpt-6-astra', 'high'))
+        self.assertEqual(team.PROFILES['opus'], ('claude', 'opus', 'medium'))
+        self.assertEqual(team.PROFILES['argon'], ('agy', 'gemini-4-argon-medium', 'medium'))
+        self.assertEqual(team.PROFILES['luna'], ('codex', 'gpt-6-luna', 'high'))
 
     def test_empty_queue_wakes_lead_to_derive_plan_work(self):
         rc, inference = self.lead_once()
