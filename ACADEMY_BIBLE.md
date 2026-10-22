@@ -44,14 +44,16 @@ Design intent — the school should feel *alive*: NPCs where they belong (housem
 
 ## 4. Calendar & Traditions
 
-The academic year is the spine of the campaign — the player lives through one, and its rhythm alternates high-stakes battle with the warm, low-stakes school life that makes the battles matter.
+The academic calendar is the campaign's spine. Each semester opens and closes with the major recurring **Clash of Three Banners**. At each event, the chosen house and both other houses compete as three independent factions; the houses are friendly competitors, not allies in battle. The contest is nonlethal in fiction: nobody dies or is permanently lost because of a school battle. Normal tactical combat, damage, defeat, and lord-defeat handling still apply. The event is important across campus: students anticipate and react to it during its event week. That direction is approved; any unwritten conversations remain co-writes with Neal.
 
-**The year is bracketed by two inter-house battles.** Both are the Mock Battle rite — student against student, non-lethal by long tradition (yield, don't kill your own future officer corps), a deliberate echo of how the founding Warder lines tested each other before the real thing:
-- **Opening battle** — early in the year, right after house choice. The house sizes each other up. *(This is the currently-built Chapter 1 content — WO-4.1 — just reframed as the year's opening rite rather than a standalone chapter. No rebuild.)*
-- **Closing battle** — the year's climax. Higher stakes, everything the player and their house have grown into, tested against rivals who've grown too.
+The approved event name and contract are recorded in Neal's decisions [#22 comment 6340423944](https://github.com/KumarG23/vael-academy/issues/22#issuecomment-6340423944) (Discord decision 1562800434702196807) and [#22 comment 6340542559](https://github.com/KumarG23/vael-academy/issues/22#issuecomment-6340542559) (name decision 1562802189938982935). The former annual-bookend wording below is superseded. This approval does not settle the semester-to-week mapping or the boundary around the co-written year-end sabotage; those remain pending in [#30](https://github.com/KumarG23/vael-academy/issues/30).
 
-**Between them, the year fills with life:**
-- **Terms & exams** — end-of-term tests (library/classroom events) that reward the study and training the player's been doing; a soft, recurring goalpost.
+**Historical implementation and outstanding calendar gap:** the delivered sample calendar has six weeks, with an opening Mock Battle at week 1 and a Closing Rite at week 6. It is not yet a mapped multi-semester cadence and does not demonstrate an event at both boundaries of every semester. Do not infer new dates, semester count, or week positions before #30 is resolved. The opening and closing chapter resources also do not yet implement three independent factions on all routes; parity is tracked in [#29](https://github.com/KumarG23/vael-academy/issues/29).
+
+The currently authored year-end story includes a rite that is interrupted by sabotage and bonded rivals joining the player's command. Preserve that co-written beat; do not recast it as an ordinary friendly contest or remove it while the story boundary remains open in #30.
+
+**Between Clashes, the school year fills with life:**
+- **Terms & exams** — end-of-term tests (library/classroom events) that reward the study and training the player's been doing; a soft, recurring goalpost. Their exact mapping to the still-unresolved semester calendar is not specified here.
 - **Homework / assignments** — light between-mission tasks; a reason to visit rooms and talk to people.
 - **Holidays** — authored calendar events, house rituals and kingdom-wide festivals, pure feel-good.
 - **Parties & feasts** — set-piece social scenes; character-forward, no combat, high warmth.
