@@ -46,15 +46,8 @@ static func stage(payload: Dictionary) -> String:
 		return ""
 	if has_campaign(payload):
 		var campaign: Dictionary = payload["campaign"]
-		# from_dict mutates live state before reading all its collections. Check
-		# their types first so a malformed save cannot leave a partial restore.
-		# Missing fields keep the loader's defaults for older campaign saves.
-		for key: String in ["unit_states", "support_save", "fish_log", "flags", "grade_samples"]:
-			if campaign.has(key) and not (campaign[key] is Dictionary):
-				return ""
-		if campaign.has("report_cards") and not (campaign["report_cards"] is Array):
+		if not Campaign.restore_save(campaign):
 			return ""
-		Campaign.from_dict(campaign)
 		Campaign.active = true
 	BattleView.next_resume = payload
 	return scene
