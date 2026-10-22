@@ -119,7 +119,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _grid == null or not active:
 		return
 	if event is InputEventMouseMotion:
-		var hovered := _grid.world_to_cell(get_global_mouse_position())
+		var hovered := _grid.world_to_cell(event.global_position)
 		if _grid.in_bounds(hovered):
 			move_to(hovered)
 		return
@@ -132,6 +132,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if event is InputEventMouseButton and event.pressed:
+		var hovered := _grid.world_to_cell(event.global_position)
+		if not _grid.in_bounds(hovered):
+			return
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			confirm()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:

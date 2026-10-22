@@ -165,6 +165,10 @@ func open_trade_giver() -> void:
 	if labels.is_empty():
 		_v._turn_banner.announce("No one has anything to hand over.", true)
 		return
+	if _v._living_units_on_team(0).size() < 2:
+		# a lone unit would get an empty "To whom?" list
+		_v._turn_banner.announce("No one to trade with.", true)
+		return
 	_v._menu_ctrl.open_menu("prep_trade_a", "Who gives?", labels)
 
 
@@ -201,8 +205,13 @@ func open_give_menu() -> void:
 ## Hand one item over and stay in the menu — prep trading never spends actions.
 func do_give(index: int) -> void:
 	var item: InventoryItem = _v._menu_items[index]
-	if item.is_weapon() and item.weapon().innate:
-		_v._pop_text(_trade_giver.position, "bound to its bearer", Color(0.9, 0.6, 0.4))
+	if not _trade_giver.inventory.is_tradeable(item):
+		_v._pop_text(_trade_giver.position, "%s is bound to its bearer" % item.display_name(),
+			Color(0.9, 0.6, 0.4))
+	elif _v._trade_partner.inventory.is_full():
+		# say why nothing moved, rather than silently re-listing the same gear
+		_v._pop_text(_v._trade_partner.position,
+			"%s's pack is full" % _v._trade_partner.unit_def.display_name, Color(0.9, 0.6, 0.4))
 	elif _trade_giver.inventory.transfer_to(item, _v._trade_partner.inventory):
 		_v._pop_text(_v._trade_partner.position, "got %s" % item.display_name(), Color(0.7, 0.85, 1.0))
 	if _trade_giver.inventory.is_empty():

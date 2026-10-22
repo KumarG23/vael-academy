@@ -126,6 +126,52 @@ func test_stats_panel_describes_a_healer():
 	assert_string_contains(text, "cannot attack", "staff limitation is explicit")
 
 
+## The panel draws at PANEL_SIZE, so its Control rect must match; a zero-size
+## rect never receives _gui_input and the advertised click-to-close is dead.
+func test_clicking_the_stats_panel_closes_it():
+	var panel: UnitStatsPanel = _view._stats_panel
+	panel.show_unit(_view.unit_by_id("kai"))
+	assert_eq(panel.size, UnitStatsPanel.PANEL_SIZE, "clickable rect covers the drawn sheet")
+	var center := panel.get_global_rect().get_center()
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = center
+	click.global_position = center
+	get_viewport().push_input(click)
+	await wait_physics_frames(1)
+	assert_false(panel.is_shown(), "a click on the sheet closes it")
+
+
+## A reparent/container pass can reset a Control's rect after _ready; showing the
+## sheet again must restore the hit area so the advertised click never goes dead.
+func test_showing_the_stats_panel_repairs_a_collapsed_click_rect():
+	var panel: UnitStatsPanel = _view._stats_panel
+	panel.size = Vector2.ZERO
+	panel.show_unit(_view.unit_by_id("kai"))
+	assert_eq(panel.size, UnitStatsPanel.PANEL_SIZE, "showing restores the clickable rect")
+	var center := panel.get_global_rect().get_center()
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = center
+	click.global_position = center
+	get_viewport().push_input(click)
+	await wait_physics_frames(1)
+	assert_false(panel.is_shown(), "the restored rect receives the closing click")
+
+
+## Panels are often configured before add_child; the hit area must already match
+## the drawn sheet at that point, not only once _ready runs.
+func test_stats_panel_is_sized_before_entering_the_tree():
+	var panel := UnitStatsPanel.new()
+	assert_eq(panel.size, UnitStatsPanel.PANEL_SIZE, "constructed panel matches the drawn sheet")
+	assert_eq(panel.mouse_filter, Control.MOUSE_FILTER_STOP, "the sheet receives mouse input")
+	panel.size = Vector2.ZERO
+	add_child_autofree(panel)
+	assert_eq(panel.size, UnitStatsPanel.PANEL_SIZE, "tree entry restores the drawn rect")
+
+
 # --- viewed-once supports ------------------------------------------------------------
 
 func test_supports_stop_appearing_in_battle_once_viewed():

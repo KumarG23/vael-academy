@@ -7,9 +7,20 @@ extends Node
 const SFX_DIR := "res://assets/audio/sfx/"
 const VOICES := 10  # simultaneous one-shots before the oldest is stolen
 
-var master_volume := 1.0
-var music_volume := 0.7
-var sfx_volume := 0.85
+# Volume changes (e.g. the journal's System sliders) reach what is already
+# sounding, not just the next track or line.
+var master_volume := 1.0:
+	set(v):
+		master_volume = v
+		_apply_volumes()
+var music_volume := 0.7:
+	set(v):
+		music_volume = v
+		_apply_volumes()
+var sfx_volume := 0.85:
+	set(v):
+		sfx_volume = v
+		_apply_volumes()
 var muted := false
 
 var _sfx_cache := {}
@@ -47,7 +58,7 @@ func play_sfx(sfx_name: String, pitch := 1.0) -> void:
 	_next = (_next + 1) % VOICES
 	p.stream = stream
 	p.pitch_scale = pitch
-	p.volume_db = linear_to_db(clampf(sfx_volume * master_volume, 0.0001, 1.0))
+	p.volume_db = _sfx_db()
 	p.play()
 
 
@@ -74,7 +85,7 @@ func play_music(path: String) -> void:
 		return
 	_set_loop(s)
 	_music.stream = s
-	_music.volume_db = linear_to_db(clampf(music_volume * master_volume, 0.0001, 1.0))
+	_music.volume_db = _music_db()
 	if not muted:
 		_music.play()
 
@@ -91,7 +102,7 @@ func play_voice(path: String) -> void:
 	if s is AudioStreamWAV:
 		(s as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_DISABLED
 	_voice.stream = s
-	_voice.volume_db = linear_to_db(clampf(sfx_volume * master_volume, 0.0001, 1.0))
+	_voice.volume_db = _sfx_db()
 	_voice.play()
 
 
@@ -116,6 +127,24 @@ func _set_loop(s: AudioStream) -> void:
 		(s as AudioStreamMP3).loop = true
 	elif s is AudioStreamOggVorbis:
 		(s as AudioStreamOggVorbis).loop = true
+
+
+func _music_db() -> float:
+	return linear_to_db(clampf(music_volume * master_volume, 0.0001, 1.0))
+
+
+func _sfx_db() -> float:
+	return linear_to_db(clampf(sfx_volume * master_volume, 0.0001, 1.0))
+
+
+## Re-level the players that already exist; null-safe before _ready builds them.
+func _apply_volumes() -> void:
+	if _music != null:
+		_music.volume_db = _music_db()
+	if _voice != null:
+		_voice.volume_db = _sfx_db()
+	for p in _voices:
+		p.volume_db = _sfx_db()
 
 
 func set_muted(on: bool) -> void:

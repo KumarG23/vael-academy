@@ -306,3 +306,39 @@ func test_resting_through_a_battle_week_is_refused():
 	assert_true(_castle._toast_label.visible, "and the castle says why")
 	Campaign.week = 1
 
+
+## Resting out the first term lands on the Founding Festival: the report card
+## and the festival must play one after the other, not stacked — and finishing
+## the first must not tear down the second.
+func test_term_close_and_festival_play_in_turn():
+	Campaign.reset_new_game(false)
+	Campaign.house_locked = true
+	Campaign.week = Campaign.semester_end_week()
+	_castle._rest_week()
+	var e := Campaign.current_event()
+	assert_true(e != null and e.kind == CalendarEventDef.Kind.HOLIDAY, "the new week is the festival")
+	assert_eq(Campaign.semester, 2, "the term closed")
+	var scenes := _dialogue_scenes()
+	assert_eq(scenes.size(), 1, "one dialogue on screen at a time")
+	var card := _castle._dialogue
+	assert_not_null(card, "the report card plays first")
+	assert_eq(_castle._dialogue_queue.size(), 1, "the festival waits its turn")
+	card._finish()
+	var festival := _castle._dialogue
+	assert_not_null(festival, "the festival follows the ceremony")
+	assert_ne(festival, card)
+	assert_true(is_instance_valid(festival) and not festival.is_queued_for_deletion(),
+		"finishing the card leaves the festival playing")
+	assert_true(_castle._dialogue_queue.is_empty())
+	festival._finish()
+	assert_null(_castle._dialogue, "and the castle is free again")
+	Campaign.reset_new_game(false)
+
+
+func _dialogue_scenes() -> Array:
+	var out: Array = []
+	for c in _castle._ui.get_children():
+		if c is DialogueScene and not c.is_queued_for_deletion():
+			out.append(c)
+	return out
+

@@ -61,3 +61,48 @@ func test_visit_is_once_per_battle():
 	kai.has_acted = false
 	_open_menu_on(kai, Vector2i(2, 8))
 	assert_false(_view._menu_actions.has("visit"), "the cottage is spent for this battle")
+
+
+func test_full_pack_preserves_reward_and_action_until_retry():
+	var kai := _kai()
+	var spot: VisitSpot = _view._visit_spot_at(Vector2i(2, 8))
+	for i in range(Inventory.MAX_SLOTS - kai.inventory.size()):
+		assert_true(kai.inventory.add(InventoryItem.from_item(spot.item)))
+	var items_before := kai.inventory.items.duplicate()
+	_open_menu_on(kai, spot.cell)
+	await _view._menu_ctrl.choose(_view._menu_actions.find("visit"))
+
+	assert_eq(kai.inventory.items, items_before, "a full pack keeps every existing item")
+	assert_false(kai.has_acted, "a rejected reward does not spend the action")
+	assert_false(_view._visited_spot_ids.has(spot.id), "the reward remains unclaimed")
+	assert_eq(_view._selected, kai, "the visitor stays selected")
+	assert_eq(_view._phase, _view.Phase.MENU)
+	assert_eq(_view._menu_context, "action")
+	assert_true(_view._menu.visible, "the closed action menu reopens")
+	assert_false(_view._cursor.active, "menu input retains control")
+	assert_true(_view._menu_actions.has("visit"), "the visit can be retried")
+	assert_true(_view._turn_banner._text.contains("Pack is full"), "explain how to retry")
+
+	kai.inventory.remove(items_before.back())
+	await _view._menu_ctrl.choose(_view._menu_actions.find("visit"))
+	assert_eq(kai.inventory.size(), Inventory.MAX_SLOTS, "the reward fills the freed slot")
+	assert_eq(kai.inventory.items.back().item(), spot.item, "the authored reward is received")
+	assert_true(kai.has_acted, "the successful retry spends the action")
+	assert_eq(_view._visited_spot_ids.count(spot.id), 1, "the successful visit is recorded once")
+	kai.has_acted = false
+	_open_menu_on(kai, spot.cell)
+	assert_false(_view._menu_actions.has("visit"), "the claimed reward cannot be repeated")
+
+
+func test_full_pack_still_allows_visit_without_item_reward():
+	var kai := _kai()
+	var reward_spot: VisitSpot = _view._visit_spot_at(Vector2i(2, 8))
+	for i in range(Inventory.MAX_SLOTS - kai.inventory.size()):
+		assert_true(kai.inventory.add(InventoryItem.from_item(reward_spot.item)))
+	var items_before := kai.inventory.items.duplicate()
+	_open_menu_on(kai, Vector2i(4, 3))
+	await _view._menu_ctrl.choose(_view._menu_actions.find("visit"))
+
+	assert_eq(kai.inventory.items, items_before, "a dialogue-only visit leaves the pack alone")
+	assert_true(kai.has_acted, "a dialogue-only visit still spends the action")
+	assert_true(_view._visited_spot_ids.has("hamlet_house"), "the visit completes with a full pack")

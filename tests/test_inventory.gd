@@ -109,3 +109,28 @@ func test_transfer_fails_when_target_full():
 	a.add(item)
 	assert_false(a.transfer_to(item, b), "no room in target")
 	assert_true(a.has(item), "item stays put")
+
+
+func test_transfer_refuses_innate_and_tome_items():
+	var a := Inventory.new()
+	var b := Inventory.new()
+	var bound := InventoryItem.from_weapon(_sword())
+	bound.weapon().innate = true
+	var spell := InventoryItem.from_weapon(_sword())
+	spell.weapon().weapon_type = WeaponDef.WeaponType.TOME
+	var plain := InventoryItem.from_weapon(_sword())
+	a.add(bound)
+	a.add(spell)
+	a.add(plain)
+
+	assert_false(a.is_tradeable(bound), "bound gear stays with its bearer")
+	assert_false(a.is_tradeable(spell), "spells don't change hands")
+	assert_false(a.transfer_to(bound, b))
+	assert_false(a.transfer_to(spell, b))
+	assert_true(a.has(bound))
+	assert_true(a.has(spell))
+	assert_true(b.is_empty(), "the refused items never reached the receiver")
+
+	assert_true(a.transfer_to(plain, b), "ordinary gear still trades")
+	assert_false(a.has(plain))
+	assert_true(b.has(plain))
