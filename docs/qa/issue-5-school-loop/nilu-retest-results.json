@@ -1,0 +1,434 @@
+{
+  "tested_source": "eecc29f3b23bcd3591a9772f87b2cb9f464c32f5",
+  "later_docs_only_main": "24b9bf539493d0acf83a4b1e35126165f76ea83b",
+  "input": "native X11 keyboard and window-manager operations; read-only runtime inspection",
+  "opening_save_sha256": "ea3b33faabc50df45a55b0cb234ad666bb9fd47ae96fe542fb676e1b5202f833",
+  "closing_fixture_delta": {
+    "campaign.week": {
+      "from": 1,
+      "to": 6
+    }
+  },
+  "deployments": [
+    {
+      "case": "opening",
+      "scene": "res://scenes/battle/mock_battle_vs_emberwing.tscn",
+      "week": 1,
+      "house": "thornrook",
+      "preparations": true,
+      "initial_units": [
+        {
+          "acted": false,
+          "cell": [
+            4,
+            12
+          ],
+          "hp": 20,
+          "id": "rina",
+          "team": 0,
+          "weapon": "sig_rina"
+        },
+        {
+          "acted": false,
+          "cell": [
+            6,
+            12
+          ],
+          "hp": 20,
+          "id": "thessaly",
+          "team": 0,
+          "weapon": "sig_thessaly"
+        },
+        {
+          "acted": false,
+          "cell": [
+            6,
+            13
+          ],
+          "hp": 19,
+          "id": "corvin",
+          "team": 0,
+          "weapon": "sig_corvin"
+        },
+        {
+          "acted": false,
+          "cell": [
+            7,
+            12
+          ],
+          "hp": 20,
+          "id": "marlow",
+          "team": 0,
+          "weapon": "sig_marlow"
+        },
+        {
+          "acted": false,
+          "cell": [
+            7,
+            13
+          ],
+          "hp": 18,
+          "id": "vesper",
+          "team": 0,
+          "weapon": "sig_vesper"
+        },
+        {
+          "acted": false,
+          "cell": [
+            4,
+            10
+          ],
+          "hp": 27,
+          "id": "rurik",
+          "team": 0,
+          "weapon": "sig_rurik"
+        },
+        {
+          "acted": false,
+          "cell": [
+            4,
+            11
+          ],
+          "hp": 24,
+          "id": "nilu",
+          "team": 0,
+          "weapon": "claw"
+        },
+        {
+          "acted": false,
+          "cell": [
+            2,
+            12
+          ],
+          "hp": 26,
+          "id": "kai",
+          "team": 0,
+          "weapon": "sig_kai"
+        },
+        {
+          "acted": false,
+          "cell": [
+            9,
+            9
+          ],
+          "hp": 24,
+          "id": "kael",
+          "team": 1,
+          "weapon": "sig_kael"
+        },
+        {
+          "acted": false,
+          "cell": [
+            12,
+            11
+          ],
+          "hp": 28,
+          "id": "dain",
+          "team": 1,
+          "weapon": "sig_dain"
+        },
+        {
+          "acted": false,
+          "cell": [
+            7,
+            6
+          ],
+          "hp": 18,
+          "id": "liora",
+          "team": 1,
+          "weapon": "sig_liora"
+        },
+        {
+          "acted": false,
+          "cell": [
+            11,
+            7
+          ],
+          "hp": 28,
+          "id": "brenna",
+          "team": 1,
+          "weapon": "sig_brenna"
+        },
+        {
+          "acted": false,
+          "cell": [
+            17,
+            5
+          ],
+          "hp": 20,
+          "id": "wren",
+          "team": 1,
+          "weapon": "sig_wren"
+        },
+        {
+          "acted": false,
+          "cell": [
+            17,
+            2
+          ],
+          "hp": 24,
+          "id": "perrin",
+          "team": 1,
+          "weapon": "sig_perrin"
+        }
+      ],
+      "action": "Begin battle; select Nilu; move (4,11) to (5,11); Wait",
+      "after_nilu": {
+        "acted": true,
+        "cell": [
+          5,
+          11
+        ],
+        "hp": 24,
+        "id": "nilu",
+        "team": 0,
+        "weapon": "claw"
+      },
+      "round_after": 1,
+      "battle_over": false
+    },
+    {
+      "case": "closing",
+      "scene": "res://scenes/battle/closing_rite_thornrook.tscn",
+      "week": 6,
+      "house": "thornrook",
+      "preparations": true,
+      "initial_units": [
+        {
+          "acted": false,
+          "cell": [
+            4,
+            12
+          ],
+          "hp": 20,
+          "id": "rina",
+          "team": 0,
+          "weapon": "sig_rina"
+        },
+        {
+          "acted": false,
+          "cell": [
+            6,
+            12
+          ],
+          "hp": 20,
+          "id": "thessaly",
+          "team": 0,
+          "weapon": "sig_thessaly"
+        },
+        {
+          "acted": false,
+          "cell": [
+            6,
+            13
+          ],
+          "hp": 19,
+          "id": "corvin",
+          "team": 0,
+          "weapon": "sig_corvin"
+        },
+        {
+          "acted": false,
+          "cell": [
+            7,
+            12
+          ],
+          "hp": 20,
+          "id": "marlow",
+          "team": 0,
+          "weapon": "sig_marlow"
+        },
+        {
+          "acted": false,
+          "cell": [
+            7,
+            13
+          ],
+          "hp": 18,
+          "id": "vesper",
+          "team": 0,
+          "weapon": "sig_vesper"
+        },
+        {
+          "acted": false,
+          "cell": [
+            4,
+            10
+          ],
+          "hp": 27,
+          "id": "rurik",
+          "team": 0,
+          "weapon": "sig_rurik"
+        },
+        {
+          "acted": false,
+          "cell": [
+            4,
+            11
+          ],
+          "hp": 24,
+          "id": "nilu",
+          "team": 0,
+          "weapon": "claw"
+        },
+        {
+          "acted": false,
+          "cell": [
+            2,
+            12
+          ],
+          "hp": 26,
+          "id": "kai",
+          "team": 0,
+          "weapon": "sig_kai"
+        },
+        {
+          "acted": false,
+          "cell": [
+            9,
+            9
+          ],
+          "hp": 24,
+          "id": "kael",
+          "team": 1,
+          "weapon": "sig_kael"
+        },
+        {
+          "acted": false,
+          "cell": [
+            12,
+            11
+          ],
+          "hp": 28,
+          "id": "dain",
+          "team": 1,
+          "weapon": "sig_dain"
+        },
+        {
+          "acted": false,
+          "cell": [
+            7,
+            6
+          ],
+          "hp": 18,
+          "id": "liora",
+          "team": 1,
+          "weapon": "sig_liora"
+        },
+        {
+          "acted": false,
+          "cell": [
+            11,
+            7
+          ],
+          "hp": 28,
+          "id": "brenna",
+          "team": 1,
+          "weapon": "sig_brenna"
+        },
+        {
+          "acted": false,
+          "cell": [
+            17,
+            5
+          ],
+          "hp": 20,
+          "id": "wren",
+          "team": 1,
+          "weapon": "sig_wren"
+        },
+        {
+          "acted": false,
+          "cell": [
+            17,
+            2
+          ],
+          "hp": 24,
+          "id": "perrin",
+          "team": 1,
+          "weapon": "sig_perrin"
+        },
+        {
+          "acted": false,
+          "cell": [
+            15,
+            13
+          ],
+          "hp": 30,
+          "id": "osric",
+          "team": 1,
+          "weapon": "sig_osric"
+        },
+        {
+          "acted": false,
+          "cell": [
+            17,
+            12
+          ],
+          "hp": 19,
+          "id": "elowen",
+          "team": 1,
+          "weapon": "sig_elowen"
+        },
+        {
+          "acted": false,
+          "cell": [
+            13,
+            13
+          ],
+          "hp": 20,
+          "id": "isolde",
+          "team": 1,
+          "weapon": "sig_isolde"
+        },
+        {
+          "acted": false,
+          "cell": [
+            18,
+            10
+          ],
+          "hp": 21,
+          "id": "fenn",
+          "team": 1,
+          "weapon": "sig_fenn"
+        },
+        {
+          "acted": false,
+          "cell": [
+            16,
+            11
+          ],
+          "hp": 25,
+          "id": "bertram",
+          "team": 1,
+          "weapon": "sig_bertram"
+        },
+        {
+          "acted": false,
+          "cell": [
+            19,
+            12
+          ],
+          "hp": 26,
+          "id": "serra",
+          "team": 1,
+          "weapon": "iron_lance"
+        }
+      ],
+      "action": "Begin battle; select Nilu; move (4,11) to (5,11); Wait",
+      "after_nilu": {
+        "acted": true,
+        "cell": [
+          5,
+          11
+        ],
+        "hp": 24,
+        "id": "nilu",
+        "team": 0,
+        "weapon": "claw"
+      },
+      "round_after": 1,
+      "battle_over": false
+    }
+  ]
+}
