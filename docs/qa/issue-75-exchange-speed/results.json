@@ -1,0 +1,493 @@
+{
+  "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05",
+  "routes": {
+    "map": {
+      "normal": [
+        {
+          "duration_ms": 1726,
+          "rates": [
+            {
+              "at_ms": 0,
+              "speed": 1.0
+            }
+          ]
+        },
+        {
+          "duration_ms": 1577,
+          "rates": [
+            {
+              "at_ms": 0,
+              "speed": 1.0
+            }
+          ]
+        }
+      ],
+      "normal_settled_sha256": "bc52b0fac4851fcc000c5f1d9f11081509b8c6274fbb7f6f2d248e5972fd0725",
+      "normal_final_rng": "-6426956736407991359",
+      "comparisons": {
+        "hold": {
+          "settle_count": 4,
+          "settled_sha256": "bc52b0fac4851fcc000c5f1d9f11081509b8c6274fbb7f6f2d248e5972fd0725",
+          "final_rng": "-6426956736407991359",
+          "entire_battle_roster_supports_equal": true,
+          "native_illustrated_contacts_equal": true,
+          "native_illustrated_contacts": [],
+          "observed_hp_changes_equal": true,
+          "observed_hp_changes": [
+            [
+              "marlow",
+              9,
+              0
+            ],
+            [
+              "marlow",
+              0,
+              null
+            ],
+            [
+              "perrin",
+              10,
+              24
+            ]
+          ],
+          "exchanges": [
+            {
+              "duration_ms": 927,
+              "rates": [
+                {
+                  "at_ms": 0,
+                  "speed": 1.0
+                },
+                {
+                  "at_ms": 83,
+                  "speed": 2.0
+                },
+                {
+                  "at_ms": 927,
+                  "speed": 1.0
+                }
+              ]
+            },
+            {
+              "duration_ms": 827,
+              "rates": [
+                {
+                  "at_ms": 0,
+                  "speed": 1.0
+                },
+                {
+                  "at_ms": 100,
+                  "speed": 2.0
+                },
+                {
+                  "at_ms": 827,
+                  "speed": 1.0
+                }
+              ]
+            }
+          ],
+          "final_rng_equal": true,
+          "final_speed": 1.0,
+          "final_time_scale": 1.0,
+          "final_ui_layer": true
+        },
+        "release": {
+          "settle_count": 4,
+          "settled_sha256": "bc52b0fac4851fcc000c5f1d9f11081509b8c6274fbb7f6f2d248e5972fd0725",
+          "final_rng": "-6426956736407991359",
+          "entire_battle_roster_supports_equal": true,
+          "native_illustrated_contacts_equal": true,
+          "native_illustrated_contacts": [],
+          "observed_hp_changes_equal": true,
+          "observed_hp_changes": [
+            [
+              "marlow",
+              9,
+              0
+            ],
+            [
+              "marlow",
+              0,
+              null
+            ],
+            [
+              "perrin",
+              10,
+              24
+            ]
+          ],
+          "exchanges": [
+            {
+              "duration_ms": 1385,
+              "rates": [
+                {
+                  "at_ms": 0,
+                  "speed": 1.0
+                },
+                {
+                  "at_ms": 85,
+                  "speed": 2.0
+                },
+                {
+                  "at_ms": 439,
+                  "speed": 1.0
+                }
+              ]
+            },
+            {
+              "duration_ms": 1237,
+              "rates": [
+                {
+                  "at_ms": 0,
+                  "speed": 1.0
+                },
+                {
+                  "at_ms": 92,
+                  "speed": 2.0
+                },
+                {
+                  "at_ms": 467,
+                  "speed": 1.0
+                }
+              ]
+            }
+          ],
+          "final_rng_equal": true,
+          "final_speed": 1.0,
+          "final_time_scale": 1.0,
+          "final_ui_layer": true
+        }
+      }
+    },
+    "ill": {
+      "normal": [
+        {
+          "duration_ms": 4391,
+          "rates": [
+            {
+              "at_ms": 0,
+              "speed": 1.0
+            }
+          ]
+        }
+      ],
+      "normal_settled_sha256": "d4fafd6e79f611bf6d6d247236668aa69ebe72f3d5e8df6faec39ed30840c2bc",
+      "normal_final_rng": "8123836371601731482",
+      "comparisons": {
+        "hold": {
+          "settle_count": 2,
+          "settled_sha256": "d4fafd6e79f611bf6d6d247236668aa69ebe72f3d5e8df6faec39ed30840c2bc",
+          "final_rng": "8123836371601731482",
+          "entire_battle_roster_supports_equal": true,
+          "native_illustrated_contacts_equal": true,
+          "native_illustrated_contacts": [
+            {
+              "hp": 20,
+              "strike": "Kai -> Serra: 6 dmg (26 -> 20)",
+              "unit": "serra"
+            },
+            {
+              "hp": 15,
+              "strike": "Serra -> Kai: 11 dmg (26 -> 15)",
+              "unit": "kai"
+            },
+            {
+              "hp": 14,
+              "strike": "Kai -> Serra: 6 dmg (20 -> 14)",
+              "unit": "serra"
+            }
+          ],
+          "observed_hp_changes_equal": true,
+          "observed_hp_changes": [
+            [
+              "serra",
+              26,
+              20
+            ],
+            [
+              "kai",
+              26,
+              15
+            ],
+            [
+              "serra",
+              20,
+              14
+            ]
+          ],
+          "exchanges": [
+            {
+              "duration_ms": 2464,
+              "rates": [
+                {
+                  "at_ms": 0,
+                  "speed": 1.0
+                },
+                {
+                  "at_ms": 417,
+                  "speed": 2.0
+                },
+                {
+                  "at_ms": 2464,
+                  "speed": 1.0
+                }
+              ]
+            }
+          ],
+          "final_rng_equal": true,
+          "final_speed": 1.0,
+          "final_time_scale": 1.0,
+          "final_ui_layer": true
+        },
+        "release": {
+          "settle_count": 2,
+          "settled_sha256": "d4fafd6e79f611bf6d6d247236668aa69ebe72f3d5e8df6faec39ed30840c2bc",
+          "final_rng": "8123836371601731482",
+          "entire_battle_roster_supports_equal": true,
+          "native_illustrated_contacts_equal": true,
+          "native_illustrated_contacts": [
+            {
+              "hp": 20,
+              "strike": "Kai -> Serra: 6 dmg (26 -> 20)",
+              "unit": "serra"
+            },
+            {
+              "hp": 15,
+              "strike": "Serra -> Kai: 11 dmg (26 -> 15)",
+              "unit": "kai"
+            },
+            {
+              "hp": 14,
+              "strike": "Kai -> Serra: 6 dmg (20 -> 14)",
+              "unit": "serra"
+            }
+          ],
+          "observed_hp_changes_equal": true,
+          "observed_hp_changes": [
+            [
+              "serra",
+              26,
+              20
+            ],
+            [
+              "kai",
+              26,
+              15
+            ],
+            [
+              "serra",
+              20,
+              14
+            ]
+          ],
+          "exchanges": [
+            {
+              "duration_ms": 4028,
+              "rates": [
+                {
+                  "at_ms": 0,
+                  "speed": 1.0
+                },
+                {
+                  "at_ms": 428,
+                  "speed": 2.0
+                },
+                {
+                  "at_ms": 867,
+                  "speed": 1.0
+                }
+              ]
+            }
+          ],
+          "final_rng_equal": true,
+          "final_speed": 1.0,
+          "final_time_scale": 1.0,
+          "final_ui_layer": true
+        }
+      }
+    },
+    "pop": {
+      "normal": [
+        {
+          "duration_ms": 7852,
+          "rates": [
+            {
+              "at_ms": 0,
+              "speed": 1.0
+            }
+          ]
+        }
+      ],
+      "normal_settled_sha256": "9f624bfae571dcb2217bbbd2e9441a24d86fcee5071d1acf438d4dd84ad3f8ac",
+      "normal_final_rng": "8123836371601731482",
+      "comparisons": {
+        "hold": {
+          "settle_count": 1,
+          "settled_sha256": "9f624bfae571dcb2217bbbd2e9441a24d86fcee5071d1acf438d4dd84ad3f8ac",
+          "final_rng": "8123836371601731482",
+          "entire_battle_roster_supports_equal": true,
+          "native_illustrated_contacts_equal": true,
+          "native_illustrated_contacts": [],
+          "observed_hp_changes_equal": true,
+          "observed_hp_changes": [
+            [
+              "kael",
+              24,
+              10
+            ],
+            [
+              "osric",
+              30,
+              22
+            ]
+          ],
+          "exchanges": [
+            {
+              "duration_ms": 4068,
+              "rates": [
+                {
+                  "at_ms": 0,
+                  "speed": 1.0
+                },
+                {
+                  "at_ms": 197,
+                  "speed": 2.0
+                },
+                {
+                  "at_ms": 4068,
+                  "speed": 1.0
+                }
+              ]
+            }
+          ],
+          "final_rng_equal": true,
+          "final_speed": 1.0,
+          "final_time_scale": 1.0,
+          "final_ui_layer": true
+        },
+        "release": {
+          "settle_count": 1,
+          "settled_sha256": "9f624bfae571dcb2217bbbd2e9441a24d86fcee5071d1acf438d4dd84ad3f8ac",
+          "final_rng": "8123836371601731482",
+          "entire_battle_roster_supports_equal": true,
+          "native_illustrated_contacts_equal": true,
+          "native_illustrated_contacts": [],
+          "observed_hp_changes_equal": true,
+          "observed_hp_changes": [
+            [
+              "kael",
+              24,
+              10
+            ],
+            [
+              "osric",
+              30,
+              22
+            ]
+          ],
+          "exchanges": [
+            {
+              "duration_ms": 7550,
+              "rates": [
+                {
+                  "at_ms": 0,
+                  "speed": 1.0
+                },
+                {
+                  "at_ms": 185,
+                  "speed": 2.0
+                },
+                {
+                  "at_ms": 539,
+                  "speed": 1.0
+                }
+              ]
+            }
+          ],
+          "final_rng_equal": true,
+          "final_speed": 1.0,
+          "final_time_scale": 1.0,
+          "final_ui_layer": true
+        }
+      }
+    }
+  },
+  "compact_hint_checks": {
+    "map": {
+      "tested_sha": "548fdd15bb56b0965cbfd431bc7a840ffdc08079",
+      "reference_run": "map-hold",
+      "entire_settled_state_equal": true,
+      "settle_count": 4,
+      "settled_sha256": "bc52b0fac4851fcc000c5f1d9f11081509b8c6274fbb7f6f2d248e5972fd0725",
+      "native_illustrated_contacts_equal": true,
+      "final_rng": "-6426956736407991359",
+      "final_speed": 1.0,
+      "final_time_scale": 1.0,
+      "final_ui_layer": true
+    },
+    "ill": {
+      "tested_sha": "548fdd15bb56b0965cbfd431bc7a840ffdc08079",
+      "reference_run": "ill-hold",
+      "entire_settled_state_equal": true,
+      "settle_count": 2,
+      "settled_sha256": "d4fafd6e79f611bf6d6d247236668aa69ebe72f3d5e8df6faec39ed30840c2bc",
+      "native_illustrated_contacts_equal": true,
+      "final_rng": "8123836371601731482",
+      "final_speed": 1.0,
+      "final_time_scale": 1.0,
+      "final_ui_layer": true
+    },
+    "pop": {
+      "tested_sha": "548fdd15bb56b0965cbfd431bc7a840ffdc08079",
+      "reference_run": "pop-hold",
+      "entire_settled_state_equal": true,
+      "settle_count": 1,
+      "settled_sha256": "9f624bfae571dcb2217bbbd2e9441a24d86fcee5071d1acf438d4dd84ad3f8ac",
+      "native_illustrated_contacts_equal": true,
+      "final_rng": "8123836371601731482",
+      "final_speed": 1.0,
+      "final_time_scale": 1.0,
+      "final_ui_layer": true
+    }
+  },
+  "default_hint_recheck": {
+    "tested_sha": "19ae15139ccca94d51b5a106e3dd0201255337f3",
+    "reference_run": "ill-hold",
+    "entire_settled_state_equal": true,
+    "settle_count": 2,
+    "settled_sha256": "d4fafd6e79f611bf6d6d247236668aa69ebe72f3d5e8df6faec39ed30840c2bc",
+    "native_illustrated_contacts_equal": true,
+    "final_rng": "8123836371601731482",
+    "final_speed": 1.0,
+    "final_time_scale": 1.0,
+    "final_ui_layer": true
+  },
+  "accepted_72_integration": {
+    "tested_sha": "5bc0f8255f6b59204a23cc97b7a3461fb97ae61f",
+    "reference_run": "map-normal",
+    "entire_settled_state_equal": true,
+    "settle_count": 4,
+    "settled_sha256": "bc52b0fac4851fcc000c5f1d9f11081509b8c6274fbb7f6f2d248e5972fd0725",
+    "native_illustrated_contacts_equal": true,
+    "final_rng": "-6426956736407991359",
+    "final_speed": 1.0,
+    "final_time_scale": 1.0,
+    "final_ui_layer": true,
+    "stationary_readouts_inspected": {
+      "attack": "Marlow absent; header and hover clear at (9,12)",
+      "heal": "Perrin 24/24 in header and hover at (3,10)"
+    }
+  },
+  "renderer": "Godot 4.7.2 Vulkan 1.4.318 Forward+ / llvmpipe (LLVM 20.1.2, 256 bits)",
+  "native_checkpoint_sha256": "c156c62b43e6d6f48002d50f787751e708ec03cdef3378ceadddcd806e99a4d3",
+  "viewport_sizes": [
+    [
+      1280,
+      720
+    ],
+    [
+      640,
+      360
+    ]
+  ]
+}
