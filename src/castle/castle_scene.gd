@@ -19,6 +19,7 @@ const INTERACT_RADIUS := 1.4       # cells
 const TARGET_CELL_PX := 76.0       # on-screen cell size (camera zoom)
 const DATE_MARGIN := 12.0          # issue #40: keep the calendar in the top-right HUD band
 const TOAST_TOP := 60.0            # issue #15: toast band, viewport px
+const ROOM_FADE_HALF := 0.12       # GH-95: 120 ms out + one concealed frame + 120 ms in
 const TOAST_MARGIN := 40.0         # side margin the wrapped toast keeps
 
 ## Set by flows (or tests) before entering; falls back to START_ROOM.
@@ -49,6 +50,12 @@ var _toast_left := 0.0
 var _dialogue: DialogueScene = null
 var _room_map: AcademyRoomMap = null
 var _map_hint: Label
+enum RoomFade { IDLE, OUT, SWITCH, IN }
+var _room_fade := RoomFade.IDLE
+var _fade_elapsed := 0.0
+var _fade_cover: ColorRect
+var _fade_request: Dictionary = {}
+var _fade_switched := false
 var _leaving := false  # deferred scene changes must gate map opening too
 var _journal: AcademyJournal = null  # AW-39: the J-key book UI
 var _editor: CampusEditor = null     # AW-44: the ` visual room editor
@@ -199,6 +206,16 @@ func _ready() -> void:
 	_editor = CampusEditor.new()  # AW-44: the in-game visual room editor (` to toggle)
 	add_child(_editor)
 	_editor.setup(self)
+	# Local, viewport-sized cover above the whole castle HUD. No global state.
+	var fade_layer := CanvasLayer.new()
+	fade_layer.layer = 100
+	add_child(fade_layer)
+	_fade_cover = ColorRect.new()
+	_fade_cover.color = Color.BLACK
+	_fade_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fade_cover.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_fade_cover.hide()
+	fade_layer.add_child(_fade_cover)
 	_start_music()
 	var target := next_room if next_room != "" else START_ROOM
 	var spawn := next_spawn
@@ -276,6 +293,13 @@ func _build_avatar_frames(unit_id: String) -> SpriteFrames:
 func enter_room(room_id: String, spawn := Vector2i(-1, -1)) -> void:
 	if not _rooms.has(room_id):
 		return
+	# External synchronous initialization supersedes any pending presentation.
+	if _room_fade != RoomFade.IDLE:
+		_cancel_room_fade()
+	_rebuild_room(room_id, spawn)
+
+
+func _rebuild_room(room_id: String, spawn: Vector2i) -> void:
 	_close_room_map()
 	room = _rooms[room_id]
 	Campaign.record_academy_entry(room)
@@ -294,9 +318,97 @@ func enter_room(room_id: String, spawn := Vector2i(-1, -1)) -> void:
 	_spawn_npcs()
 	_setup_camera()
 	queue_redraw()
-	if _title_card != null:
+	if _title_card != null and _room_fade == RoomFade.IDLE:
 		_title_card.show_title(room.display_name)  # AW-71: name the place
 	room_changed.emit(room_id)
+
+
+## A small local state machine: no await, timers, deferred callbacks or global
+## input locks survive scene removal. Switch only after a fully covered frame.
+func _valid_fade_request(request: Dictionary) -> bool:
+	if _leaving or room == null or room.id != request["source"]:
+		return false
+	var target: String = request["target"]
+	if target == room.id or not _rooms.has(target) or not AcademyTravel.is_public(room) \
+			or not AcademyTravel.is_public(_rooms[target]):
+		return false
+	var spawn: Vector2i = request["spawn"]
+	if request.has("door"):
+		var door: CastleDoor = request["door"]
+		return (_door_armed or _room_fade == RoomFade.SWITCH) \
+			and _grid.world_to_cell(_avatar.position) == door.cell \
+			and room.doors.has(door) and door.to_room == target and door.spawn_cell == spawn \
+			and AcademyTravel.passable_cell(room, door.cell, _terrain_db) \
+			and AcademyTravel.passable_cell(_rooms[target], spawn, _terrain_db)
+	return Campaign.academy_visits.has(target) \
+		and AcademyTravel.arrival(_rooms, room.id, target, _terrain_db) == spawn
+
+
+func _start_room_fade(request: Dictionary) -> void:
+	if _room_fade != RoomFade.IDLE or not _valid_fade_request(request):
+		return
+	_close_room_map()
+	if request.has("door"):
+		_door_armed = false  # one attempt per doorway edge, even if revalidation fails
+	_fade_request = request
+	_fade_switched = false
+	_room_fade = RoomFade.OUT
+	_fade_elapsed = 0.0
+	_fade_cover.modulate.a = 0.0
+	_fade_cover.show()
+	_title_card.hide()
+	_nearest_point = null
+	_prompt.hide()
+	_map_hint.hide()
+	_avatar.play("idle")
+
+
+func _tick_room_fade(delta: float) -> void:
+	if _leaving:
+		_cancel_room_fade()
+		return
+	_fade_elapsed += delta
+	match _room_fade:
+		RoomFade.OUT:
+			_fade_cover.modulate.a = minf(1.0, _fade_elapsed / ROOM_FADE_HALF)
+			if _fade_elapsed >= ROOM_FADE_HALF:
+				_room_fade = RoomFade.SWITCH
+		RoomFade.SWITCH:
+			if _valid_fade_request(_fade_request):
+				if _fade_request.has("door"):
+					AudioManager.play_sfx("door")
+				_rebuild_room(_fade_request["target"], _fade_request["spawn"])
+				# room_changed listeners may synchronously remove the scene.
+				if not is_inside_tree() or _leaving or _room_fade != RoomFade.SWITCH:
+					_cancel_room_fade()
+					return
+				_fade_switched = true
+			_fade_request = {}
+			_fade_elapsed = 0.0
+			_room_fade = RoomFade.IN
+		RoomFade.IN:
+			_fade_cover.modulate.a = maxf(0.0, 1.0 - _fade_elapsed / ROOM_FADE_HALF)
+			if _fade_elapsed >= ROOM_FADE_HALF:
+				var switched := _fade_switched
+				_cancel_room_fade()
+				if switched:
+					_title_card.show_title(room.display_name)
+				_update_prompt()
+
+
+func _cancel_room_fade() -> void:
+	_room_fade = RoomFade.IDLE
+	_fade_request = {}
+	_fade_switched = false
+	if is_instance_valid(_fade_cover):
+		_fade_cover.hide()
+		_fade_cover.modulate.a = 0.0
+	if is_instance_valid(_title_card):
+		_title_card.show()
+
+
+func _exit_tree() -> void:
+	_cancel_room_fade()
 
 
 func _setup_camera() -> void:
@@ -375,11 +487,14 @@ func _point_available(p: CastlePoint) -> bool:
 
 
 func busy() -> bool:
-	return _room_map != null or _leaving or _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
+	return _room_fade != RoomFade.IDLE or _room_map != null or _leaving or _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
 		or _quiz != null or (_editor != null and _editor.active)
 
 
 func _process(delta: float) -> void:
+	if _room_fade != RoomFade.IDLE:
+		_tick_room_fade(delta)
+		return
 	_map_hint.visible = not busy() and _map_available()
 	_door_pulse += delta
 	if _toast_left > 0.0:
@@ -409,6 +524,8 @@ func _process(delta: float) -> void:
 			_avatar.position.y = next.y
 		_face(move)
 		_check_door()
+		if _room_fade != RoomFade.IDLE:
+			return
 	elif _avatar.animation != "idle":
 		_avatar.play("idle")
 	_tick_walkers(delta)
@@ -450,14 +567,19 @@ func _check_door() -> void:
 		if d.cell == cell:
 			on_door = true
 			if _door_armed and _rooms.has(d.to_room):
-				AudioManager.play_sfx("door")  # AW-36
-				enter_room(d.to_room, d.spawn_cell)
+				if AcademyTravel.is_public(room) and AcademyTravel.is_public(_rooms[d.to_room]):
+					_start_room_fade({"source": room.id, "target": d.to_room, "door": d, "spawn": d.spawn_cell})
+				else:
+					AudioManager.play_sfx("door")  # AW-36: excluded routes retain their behavior
+					enter_room(d.to_room, d.spawn_cell)
 				return
 	if not on_door:
 		_door_armed = true
 
 
 func _update_prompt() -> void:
+	if _room_fade != RoomFade.IDLE:
+		return
 	_nearest_point = null
 	var best := INTERACT_RADIUS * float(_grid.cell_size)
 	for p in room.points:
@@ -517,6 +639,9 @@ func _layout_prompt(preferred: Vector2) -> void:
 ## Own map keys before GUI/unhandled dispatch. Closing cannot leak Escape to
 ## the castle menu; all other input is modal while open (including the editor).
 func _input(event: InputEvent) -> void:
+	if _room_fade != RoomFade.IDLE or _leaving:
+		get_viewport().set_input_as_handled()
+		return
 	if _room_map != null:
 		if event is InputEventKey and event.pressed and not event.echo \
 				and event.keycode in [KEY_M, KEY_ESCAPE]:
@@ -582,7 +707,9 @@ func _travel_destinations() -> Array[CastleRoomDef]:
 
 
 func _travel_to(id: String) -> void:
-	if _room_map == null or not _map_available() or not Campaign.academy_visits.has(id):
+	if _room_fade != RoomFade.IDLE or _leaving or _dialogue != null or _menu_context != "" \
+			or _journal != null or _fishing != null or _quiz != null or (_editor != null and _editor.active) \
+			or _room_map == null or not _map_available() or not Campaign.academy_visits.has(id):
 		return
 	if id == room.id:
 		return
@@ -590,7 +717,7 @@ func _travel_to(id: String) -> void:
 	var spawn := AcademyTravel.arrival(_rooms, room.id, id, _terrain_db)
 	if spawn == Vector2i(-1, -1):
 		return
-	enter_room(id, spawn)
+	_start_room_fade({"source": room.id, "target": id, "spawn": spawn})
 
 
 func _close_room_map() -> void:
@@ -601,6 +728,9 @@ func _close_room_map() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _room_fade != RoomFade.IDLE or _leaving:
+		get_viewport().set_input_as_handled()
+		return
 	# AW-44: backtick/tilde toggles the visual room editor; while it's on, it eats
 	# all input (no walking / journal / interacting).
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_QUOTELEFT:
