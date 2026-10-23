@@ -68,6 +68,39 @@ class MultiProjectTests(unittest.TestCase):
         self.assertTrue((self.vael/'quota-agy_argon_weekly.json').exists())
         self.assertFalse((self.command/'quota-agy_argon_weekly.json').exists())
 
+    def test_shared_provider_policy_applies_to_every_project_without_copying_state(self):
+        (self.vael/'disabled-fable').write_text('Credits required; no paid fallback')
+        (self.vael/'qualified-agy-sonnet').write_text('Verified subscription and native test')
+        (self.command/'qualified-agy-opus').write_text('Untrusted local qualification')
+        (self.command/'disabled-agy-flash').write_text('Additional Command restriction')
+        for state in (self.vael, self.command):
+            with patch.object(team, 'STATE', state):
+                self.assertEqual(team.profile_disabled_reason('fable'), 'Credits required; no paid fallback')
+                self.assertIsNone(team.profile_disabled_reason('agy-sonnet'))
+                self.assertEqual(team.profile_disabled_reason('agy-opus'), team.UNQUALIFIED_PROFILES['agy-opus'])
+                self.assertEqual(team.profile_disabled_reason('agy-flash'), 'Additional Command restriction' if state == self.command else team.UNQUALIFIED_PROFILES['agy-flash'])
+                self.assertNotIn('agy-sonnet', team.unqualified_profiles())
+                self.assertIn('agy-opus', team.unqualified_profiles())
+        self.assertFalse((self.command/'disabled-fable').exists())
+
+    def test_shared_cooldown_blocks_command_lead_before_native_inference(self):
+        (self.vael/'quota-chatgpt_subscription.json').write_text(json.dumps({
+            'provider':'codex', 'quota_scope':'chatgpt_subscription', 'profile':'sol',
+            'blocked_reason':'usage_limit', 'observed_at':100, 'reset_at':9999999999,
+            'reset_provenance':'provider_error_text'}))
+        with patch.object(team,'STATE',self.command), patch.object(team,'PROJECT','command'), \
+             patch.object(team,'REPO',Path(self.registry['command']['repo'])), \
+             patch.object(team,'BASE','release/gpt6-sol-luna'), \
+             patch.object(team,'active',return_value=[]), \
+             patch.object(team,'run',side_effect=lambda *args: ('release/gpt6-sol-luna' if args[:3]==('git','branch','--show-current') else 'HEAD' if args[:3]==('git','rev-parse','HEAD') else '[]' if args[0]=='gh' else '')), \
+             patch.object(team,'observe_discussions',return_value={'baseline':False,'full_scan':True,'receipt':{'entries':{}},'deltas':[]}), \
+             patch.object(team,'preflight') as preflight, patch.object(team.subprocess,'run') as native:
+            self.assertEqual(team.lead_pass(),0)
+            preflight.assert_not_called()
+            native.assert_not_called()
+            self.assertFalse((self.command/'paused').exists())
+            self.assertFalse(list(self.command.glob('lead-*.log')))
+
     def test_capacity_counts_both_project_sockets(self):
         with patch.object(team, 'PROJECT','vael'), patch.object(team, 'STATE', self.vael), \
              patch.object(team.subprocess, 'run', side_effect=[SimpleNamespace(stdout='vael-issue-2\n'),SimpleNamespace(stdout='vael-issue-3\n'),SimpleNamespace(stdout='studio-command-issue-2\n')]):
