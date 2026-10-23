@@ -18,7 +18,7 @@ New coverage exercises production rest and completion callbacks, normal rest int
 
 ## Required original-renderer evidence — pending
 
-No game/native input/capture was launched for GH-85. #83 remains sole GUI controller until explicit release and lead naming of #85. This is a preparation receipt, not graphical acceptance or Neal visual approval.
+#83 explicitly ended all jobs and released the desktop; the lead named #85 sole GUI controller in issue comment 6372352510. No graphical/input/capture leftovers were present. Bounded original-renderer evidence is now in progress; no graphical acceptance or Neal visual approval is claimed yet.
 
 After release, use disposable save files and the original project renderer:
 
@@ -29,4 +29,4 @@ After release, use disposable save files and the original project renderer:
 5. In isolated data only, occupy Autosave with invalid JSON. Exercise rejection, retry after replacing the file, other-slot selection and cancel; capture default and compact layouts. Preserve source/neighbor bytes and live Campaign/roster/RNG/staging/room state on rejection.
 6. End every game/input/capture job and explicitly release the desktop. Record tested SHA, renderer, native checkpoint/fixture differences, inputs, inspected captures, hashes and limits here.
 
-Final accepted-main fetch remains `cd2af67c`; no accepted sibling delta is available at publication. Accepted #83 feedback and #76 Journal changes must be integrated normally before readiness. Exact-head Verify and engineering-lead review remain required; no self-merge, full-year replay or creative approval claim.
+Accepted #76 main `c07617e2` integrated normally; only concurrent HANDOFF insertions conflicted and both records were retained. Combined rest/autosave/save/delivery/Title/Journal/input/load/travel checks pass **92/92, 4,052 assertions / 8 scripts**, exit 0 (28.106 s), common lock/disposable data. Source assertions are retained. No unchanged full baseline was repeated. #83 feedback remains unaccepted and must be integrated normally before readiness. Exact-head Verify and engineering-lead review remain required; no self-merge, full-year replay or creative approval claim.
