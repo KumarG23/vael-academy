@@ -646,5 +646,3 @@ func test_map_strike_lethal_yield_fast_matches_normal():
 		if fast:
 			await _assert_settled(view, "map lethal")
 	_assert_same(states[1], states[0], "map lethal yield")
-
-
