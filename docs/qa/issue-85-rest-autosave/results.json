@@ -1,0 +1,55 @@
+{
+  "checks": {
+    "all_gui_input_capture_jobs_ended": true,
+    "all_three_manual_bytes_unchanged_through_term_reload": true,
+    "compact_rejection_all_live_boundary_fields_unchanged": true,
+    "default_rejection_all_live_boundary_fields_unchanged": true,
+    "default_retry_frame_byte_identical": true,
+    "explicit_repair_week4_entire_campaign_exact": true,
+    "inspected_default_1280x720_and_compact_640x360": true,
+    "invalid_source_and_manual_bytes_unchanged": true,
+    "no_checkpoint_before_rest": true,
+    "normal_quit_fresh_process_week3_exact": true,
+    "normal_quit_fresh_process_week4_exact_no_replay": true,
+    "ordinary_keyboard_continuation": true,
+    "plain_checkpoint_entire_campaign_exact": true,
+    "retry_other_slot_cancel_usable": true,
+    "settled_week4_entire_campaign_exact": true,
+    "unchanged_checkpoint_during_festival": true,
+    "unchanged_checkpoint_during_report_card": true
+  },
+  "limits": [
+    "Bounded two ordinary rests from an existing native Week-2 checkpoint; no full-year replay.",
+    "Keyboard input only; read-only inspector snapshots and external path planning never call game action/save/load handlers.",
+    "Success after deliberate invalid-fixture repair was loaded through reopened Title Load.",
+    "No Neal taste or visual approval.",
+    "Native captures precede accepted-#83 integration; the integration-only feedback clearing transition has viewport-key and engine draw-signal regression coverage."
+  ],
+  "native_checkpoint": {
+    "deltas": "None. Initial files slot_0, slot_1, slot_2 are byte-identical copies; no campaign field, location or visit was seeded.",
+    "file": "../issue-5-school-loop/emberwing-return-save.json",
+    "sha256": "681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4"
+  },
+  "rejection_fixture": {
+    "explicit_repair": "Replace invalid fixture with the earned week-4-autosave.json externally, then reopen Title Load and recover.",
+    "invalid_autosave": "{broken",
+    "invalid_sha256": "be302461cda285db3ed2d45fb767b23e08ca8808b35a638009937df22b332d73",
+    "manual_files": [
+      "slot_2.json"
+    ],
+    "manual_sha256": "681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4"
+  },
+  "renderer": "Godot 4.7.2 Vulkan 1.4.318 Forward+ / llvmpipe LLVM 20.1.2 (256 bits)",
+  "settled": {
+    "cooking_unlocked": true,
+    "delivered_card_index": 0,
+    "festival_seen": true,
+    "gold": 80,
+    "merchant_unlocked": true,
+    "new_term_conduct": 3,
+    "rank": "C",
+    "score": 62,
+    "seal_reward": "none at C; inventories unchanged"
+  },
+  "source": "42476315ad293b30e01ead0525103690ed4a7f87"
+}

@@ -139,12 +139,21 @@ func _open_load() -> void:
 	_context = "load"
 	_status = ""
 	_slots = _save_system.list_slots(MAX_SLOTS)
+	if _save_system.has_autosave():
+		_slots.append(_save_system.autosave_entry())
 	_menu.open("Load Game", _slot_labels(), _menu_pos())
 
 
 func _slot_labels() -> Array:
 	var labels: Array = []
 	for s in _slots:
+		if bool(s.get("autosave", false)):
+			if str(s["chapter_id"]) == "" or int(s["week"]) < 1:
+				labels.append("Autosave (unavailable)")
+				continue
+			labels.append("Autosave — %s W%d (%s)" % [str(s["chapter_id"]),
+				int(s["week"]), "Casual" if bool(s["casual_mode"]) else "Classic"])
+			continue
 		var battle_tag := "  ⚔ mid-battle" if bool(s.get("in_battle", false)) else ""
 		labels.append("Slot %d — %s (%s)%s" % [
 			int(s["slot"]), str(s["chapter_id"]),
@@ -188,11 +197,26 @@ func _start_new_game(casual: bool) -> void:
 
 func _choose_slot(index: int) -> void:
 	_status = ""
+	queue_redraw()  # erase a prior manual error when choosing Autosave too
 	if index >= _slots.size():
 		# The "(no saves found)" placeholder or "Back".
 		if index == _slot_labels().size() - 1:
 			_open_main()
 		return
+	if bool(_slots[index].get("autosave", false)):
+		if prepare_autosave():
+			_enter_campaign()
+		else:
+			# Keep the same occupied entry, even if removed after browsing, so
+			# retry never changes the player's selection to a different save.
+			_menu.open("Autosave unavailable. Retry or Back.", _slot_labels(), _menu_pos())
+			_menu._index = index
+			_menu._keep_selection_visible()
+		return
+	# An Autosave rejection temporarily names the menu; manual feedback uses
+	# the accepted #83 status band and the ordinary Load Game heading.
+	_menu._title = "Load Game"
+	_menu.queue_redraw()
 	var slot := int(_slots[index]["slot"])
 	# AW-75: a slot holding a live battle resumes INTO the battle, mid-fight.
 	if bool(_slots[index].get("in_battle", false)):
@@ -222,6 +246,13 @@ func status_rect() -> Rect2:
 	var vp := get_viewport_rect().size
 	var width := clampf(vp.x - 80.0, 240.0, 720.0)
 	return Rect2((vp.x - width) * 0.5, 14.0, width, 34.0)
+
+
+func prepare_autosave(save_system: SaveSystem = null) -> bool:
+	if not Campaign.load_autosave(save_system if save_system != null else _save_system):
+		return false
+	Campaign.active = true
+	return true
 
 
 ## Reset the campaign for a fresh run. Split from the scene change so tests can
