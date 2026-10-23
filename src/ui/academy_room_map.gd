@@ -1,13 +1,19 @@
 class_name AcademyRoomMap
 extends Control
-## GH-69 / WO-9.8: presentation of the loaded room only. No interaction points,
-## destination resources, campaign state, camera changes or navigation commands.
+## WO-9.8: current-room map plus earned destinations supplied by CastleScene.
+## Emits intent; the owner validates travel before changing the world.
+signal travel_requested(room_id: String)
 
 const EXIT_COLOR := Color("f1ca72")
 const POSITION_COLOR := Color("76edff")
 const BLOCKED_COLOR := Color("282a37")
 const GROUND_COLOR := Color("687562")
 
+var destinations: Array[CastleRoomDef] = []
+var showing_destinations := false
+var selected := 0
+var _switch: Label
+var _destination_labels: Array[Label] = []
 var room: CastleRoomDef
 var avatar: Node2D
 var grid: Grid
@@ -27,7 +33,7 @@ func _ready() -> void:
 	_fit_to_viewport()
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_title = _label(room.display_name + " — Map", 22)
-	_legend = _label("Cyan ring: you • Gold: exits\nLight ground: walkable\nDark ground: blocked\nM / Esc: close • Read only\nExit list: ↑/↓ or wheel", 14)
+	_legend = _label("Cyan ring: you • Gold: exits\nLight ground: walkable\nDark ground: blocked\nM / Esc / RMB: close • Tab: travel\nExit list: ↑/↓ or wheel", 14)
 	_exits = ScrollContainer.new()
 	_exits.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(_exits)
@@ -35,6 +41,12 @@ func _ready() -> void:
 	_exit_rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_exit_rows.add_theme_constant_override("separation", 8)
 	_exits.add_child(_exit_rows)
+	_switch = Label.new()
+	_switch.text = "▶ Visited rooms (Tab / click)"
+	_switch.add_theme_font_override("font", UITheme.font())
+	_switch.add_theme_font_size_override("font_size", 14)
+	_switch.add_theme_color_override("font_color", UITheme.GOLD)
+	_exit_rows.add_child(_switch)
 	for i in range(room.doors.size()):
 		var label := Label.new()
 		label.text = "%d  %s" % [i + 1, room.doors[i].label]
@@ -45,8 +57,65 @@ func _ready() -> void:
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_exit_rows.add_child(label)
 		_exit_labels.append(label)
+	for destination: CastleRoomDef in destinations:
+		var label := Label.new()
+		label.add_theme_font_override("font", UITheme.font())
+		label.add_theme_font_size_override("font_size", 15)
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.visible = false
+		_exit_rows.add_child(label)
+		_destination_labels.append(label)
+	_refresh_selection()
 	resized.connect(_layout)
 	_layout()
+
+
+func toggle_destinations() -> void:
+	showing_destinations = not showing_destinations
+	_switch.text = "◀ Exit labels (Tab / click)" if showing_destinations else "▶ Visited rooms (Tab / click)"
+	_legend.text = "Cyan ring: you • Gold: exits\nLight ground: walkable\nDark ground: blocked\nM / Esc / RMB: close • Tab: exits\n↑/↓: select • Enter / click: go" if showing_destinations else "Cyan ring: you • Gold: exits\nLight ground: walkable\nDark ground: blocked\nM / Esc / RMB: close • Tab: travel\nExit list: ↑/↓ or wheel"
+	for label: Label in _exit_labels:
+		label.visible = not showing_destinations
+	for label: Label in _destination_labels:
+		label.visible = showing_destinations
+	_exits.scroll_vertical = 0
+	_refresh_selection()
+
+
+func _refresh_selection() -> void:
+	for i in range(destinations.size()):
+		_destination_labels[i].text = ("▶ " if selected == i else "   ") + destinations[i].display_name + (" (here)" if destinations[i].id == room.id else "")
+		_destination_labels[i].add_theme_color_override("font_color", UITheme.GOLD if selected == i else Color.WHITE)
+
+
+func navigate(direction: int) -> void:
+	if showing_destinations and not destinations.is_empty():
+		selected = posmod(selected + direction, destinations.size())
+		_refresh_selection()
+		_exits.ensure_control_visible.call_deferred(_destination_labels[selected])
+	else:
+		_exits.scroll_vertical += direction * 40
+
+
+func confirm_destination() -> void:
+	if showing_destinations and not destinations.is_empty():
+		travel_requested.emit(destinations[selected].id)
+
+
+func click_destination(point: Vector2) -> void:
+	if not _exits.get_global_rect().has_point(point):
+		return
+	if _switch.get_global_rect().has_point(point):
+		toggle_destinations()
+		return
+	if showing_destinations:
+		for i in range(_destination_labels.size()):
+			if _destination_labels[i].get_global_rect().has_point(point):
+				selected = i
+				_refresh_selection()
+				confirm_destination()
+				return
 
 
 func _fit_to_viewport() -> void:

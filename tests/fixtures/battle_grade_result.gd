@@ -36,6 +36,10 @@ func _run() -> void:
 		push_error("Result route did not reach " + target)
 		quit(1)
 		return
+	# GH-81: this fixture has never entered the academy before. Victory now
+	# earns campus on actual entry; every other captured field must stay exact.
+	if victory:
+		expected["academy_visits"] = ["campus"]
 	if campaign.to_dict() != expected:
 		push_error("Result dismissal changed captured campaign/grades")
 		quit(1)

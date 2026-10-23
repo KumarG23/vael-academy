@@ -185,3 +185,39 @@ func test_title_slot_callback_rejects_without_scheduling_a_transition() -> void:
 
 func test_journal_system_row_rejects_without_scheduling_a_transition() -> void:
 	_check_ui_rejection("journal")
+
+
+func test_academy_visit_collection_and_members_reject_atomically_on_all_campaign_routes():
+	for invalid: Variant in [null, {}, 1, false, "campus", [null], [1], [false], [{}], [[]], [""], ["../library"], ["Campus"]]:
+		for use_title: bool in [false, true]:
+			_seed_live(true, true)
+			Campaign.academy_visits = ["library"]
+			var saved := _different_save()
+			saved["academy_visits"] = invalid
+			assert_true(_sys.save_slot(0, {"campaign": saved}))
+			_assert_rejected(use_title)
+
+
+func test_academy_visits_slot_roundtrip_legacy_unknown_dedup_and_new_game():
+	var rooms := AcademyTravel.public_rooms()
+	Campaign.record_academy_entry(rooms["campus"])
+	Campaign.record_academy_entry(rooms["library"])
+	var expected := Campaign.academy_visits.duplicate()
+	assert_true(Campaign.save_to_slot(0, _sys))
+	Campaign.reset_new_game(false)
+	assert_eq(Campaign.academy_visits.size(), 0)
+	assert_true(_title.prepare_load(0, _sys))
+	assert_eq(Campaign.academy_visits, expected)
+	var payload := _sys.load_slot(0)
+	payload["campaign"]["academy_visits"] = ["library", "unknown_room", "grove", "vael_square", "library"]
+	assert_true(_sys.save_slot(0, payload))
+	assert_true(Campaign.load_from_slot(0, _sys))
+	assert_eq(Campaign.academy_visits, ["library"], "unknown and excluded IDs never expose destinations")
+	payload["campaign"].erase("academy_visits")
+	assert_true(_sys.save_slot(0, payload))
+	assert_true(_title.prepare_load(0, _sys))
+	assert_eq(Campaign.academy_visits.size(), 0, "legacy has no inferred unlocks")
+	Campaign.record_academy_entry(rooms["campus"])
+	assert_eq(Campaign.academy_visits, ["campus"], "normal entry earns only current room")
+	_title.prepare_new_game(false)
+	assert_eq(Campaign.academy_visits.size(), 0)

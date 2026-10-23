@@ -1157,8 +1157,7 @@ func load_from_slot(slot: int) -> bool:
 	var payload := _save_system.load_slot(slot)
 	if payload.is_empty():
 		return false
-	apply_save_payload(payload)
-	return true
+	return apply_save_payload(payload)
 
 
 func make_save_payload() -> Dictionary:
@@ -1200,7 +1199,11 @@ func make_save_payload() -> Dictionary:
 	}
 
 
-func apply_save_payload(payload: Dictionary) -> void:
+func apply_save_payload(payload: Dictionary) -> bool:
+	if not payload.get("campaign", {}) is Dictionary:
+		return false
+	if not AcademyTravel.valid_visits(payload.get("campaign", {}).get("academy_visits", [])):
+		return false
 	var campaign: Dictionary = payload.get("campaign", {})
 	var battle: Dictionary = payload.get("battle", {})
 	casual_mode = bool(campaign.get("casual_mode", casual_mode))
@@ -1240,6 +1243,7 @@ func apply_save_payload(payload: Dictionary) -> void:
 	if not _battle_over and not chapter.is_arena and _has_lord and not _lord_alive:
 		_check_objective()
 	_restore_post_load_ui()
+	return true
 
 
 func _roster_save_state() -> Array:
