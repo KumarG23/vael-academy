@@ -13,7 +13,7 @@ An occupied file holding `{broken`, `{}`, or a well-formed envelope with invalid
 
 ## Production change
 
-**`src/ui/title_screen.gd`** — `_choose_slot()` returns after the existing success route and otherwise calls `_report_load_failure(slot)`. That sets `_status`, plays the existing `cancel` SFX and redraws; the Load menu is left open and usable. `status_rect()` is a top-wide band measured from the live viewport (`clampf(vp.x - 80, 240, 720)`, 34 px tall) and drawn through `UITheme.draw_panel`, so the default and compact layouts are laid out from the same numbers the test asserts. `_status` is cleared in `_open_main`, `_open_dev`, `_open_new_game`, `_open_load` and at the start of `_choose_slot`, so ordinary navigation never leaves a stale rejection on screen.
+**`src/ui/title_screen.gd`** — `_choose_slot()` returns after the existing success route and otherwise calls `_report_load_failure(slot)`. That sets `_status`, plays the existing `cancel` SFX and redraws; the Load menu is left open and usable. `status_rect()` is a top-wide band measured from the live viewport (`clampf(vp.x - 80, 240, 720)`, 34 px tall) and drawn as a plain navy fill with a thin gold rule — the same treatment as the Journal toast. (The first real-window capture showed `UITheme.draw_panel`'s ornate nine-patch corners overrunning a 34 px band and cutting through the message, so the band uses the toast rule instead; both surfaces now read the same way.) `_status` is cleared in `_open_main`, `_open_dev`, `_open_new_game`, `_open_load` and at the start of `_choose_slot`, so ordinary navigation never leaves a stale rejection on screen.
 
 **`src/ui/academy_journal.gd`** — `_do_load()` returns after each existing success route (live-battle resume and campaign load) and otherwise calls `_report_load_failure(slot)`, which plays `cancel` and reuses the existing toast with a new `load_error` flag. The toast box computation is extracted from `_draw` into `_toast_rect()` so the layout test measures the real rectangle. `_switch_tab` clears a toast that is still the load rejection, so changing tabs does not carry it forward. Existing `_show_toast` callers are unchanged; the new parameter defaults to `false`.
 
@@ -28,14 +28,14 @@ Unchanged: slot count and paths, JSON envelope/version, `Campaign.load_from_slot
 
 ## Controlled headless coverage
 
-`tests/test_load_failure_feedback.gd` (10 tests, 126 assertions) drives the production `TitleScreen`, `ChoiceMenu` and `AcademyJournal` through real key events into a 1280×720 `SubViewport`. Slots are disposable `user://` files; nothing under a real player profile is read or written.
+`tests/test_load_failure_feedback.gd` (10 tests, 128 assertions) drives the production `TitleScreen`, `ChoiceMenu` and `AcademyJournal` through real key events into a 1280×720 `SubViewport`. Slots are disposable `user://` files; nothing under a real player profile is read or written.
 
 | Test | Assertions |
 | --- | --- |
 | `test_title_rejects_occupied_invalid_slots_and_keeps_the_menu_usable` | Malformed JSON and valid-JSON-with-invalid-types both report the failure; Load context, menu visibility and the slot listing survive; whole Campaign/roster/RNG/staged resume/prep/room/spawn snapshot unchanged; no scene change; source and neighbour bytes unchanged; retry on the same slot, move to the next slot, then Escape clears the feedback back to the main menu. |
 | `test_title_reports_a_slot_that_disappears_after_listing` | A slot removed between listing and selection reports `Slot 2 is empty.` truthfully and keeps the menu open. |
 | `test_title_retry_after_repair_loads_and_clears_feedback` | Failure → repaired file → retry takes the existing success route (recorded handoff), clears `_status`, makes the campaign live, and leaves the file byte-identical. |
-| `test_title_failure_feedback_fits_default_and_compact_layouts` | At 1280×720 and 640×360 the band stays inside the viewport, the measured text fits it, and it does not overlap the Load menu. |
+| `test_title_failure_feedback_fits_default_and_compact_layouts` | At 1280×720 and 640×360 the band stays inside the viewport, the measured text fits it, the band is tall enough for the 16 px text, and it does not overlap the Load menu. |
 | `test_journal_rejects_occupied_invalid_slots_and_stays_open` | Same two invalid files through real System rows: toast reports the one-based slot, tab and book stay open, state and both files unchanged; retry, next row, tab change clears the stale rejection, Escape closes without a scene change. |
 | `test_journal_reports_empty_invalid_and_missing_slots_truthfully` | Occupied file with no campaign reports the rejection; a slot that vanished after listing keeps the existing truthful empty message. |
 | `test_journal_live_battle_slot_with_invalid_campaign_is_rejected` | A live-battle payload with an invalid campaign is rejected before mutation; the previously staged battle, prep, room and spawn survive. |
@@ -49,44 +49,56 @@ Unchanged: slot count and paths, JSON envelope/version, `Campaign.load_from_slot
 
 With the two production files reverted to accepted main `241d947f` and the new test files present, the focused suite reports **2/10 passed, 8 failed**: Journal `_toast` stayed empty on both invalid occupied loads, and `TitleScreen._status`, `status_rect()` and `Journal._toast_rect()` did not exist. The two child-process success-routing tests already passed, confirming they describe existing behavior rather than the fix.
 
-With the production change: **10/10 passed, 126 assertions, exit 0**.
+With the production change: **10/10 passed, 128 assertions, exit 0**.
 
 ## Focused and full runs
 
 Accepted main `241d947fee9056d5f4f63f84dc5029ec5b3b4111`, then accepted #81/#82 integrated normally by fast-forward to `cd2af67c960fda359549e1bba0f4a62216a81c02`, then accepted #78/#76 integrated by ordinary merge to `c07617e24e84685263a748709b274d17dec5700c` before the final runs. #76 also edits `src/ui/academy_journal.gd` (adds the Supports tab) and its Journal tests; the automatic merge kept both changes with no production conflict, and only the HANDOFF bullet list was resolved by hand (both records retained). System remains tab 4 with Supports appended at index 6, so the existing four-right-press navigation and the tab-change assertion are unchanged.
 
-Affected Title/Journal/flow/campaign-load/save/resume groups on the integrated head: **155/155 tests, 9,286 assertions, 16 scripts**, exit 0 (`load_failure_feedback` 10, `title_flow` 8, `academy_journal` 23, `journal_close_input` 6, `resume` 21, `campaign_load_validation` 10, `save_system` 10, `battle_save_load` 5, `battle_save_menu` 8, `campaign_flow` 11, `studio_resume_validation` 12, `campaign` 31). Existing assertions are preserved; #81 added two resume tests and two load-validation tests, and #76 added five Journal/close-input tests, all passing unchanged.
+Affected Title/Journal/flow/campaign-load/save/resume groups re-run individually on the final tree: **155/155 tests, 9,288 assertions, 16 scripts**, exit 0 (`load_failure_feedback` 10, `title_flow` 8, `academy_journal` 23, `journal_close_input` 6, `resume` 21, `campaign_load_validation` 10, `save_system` 10, `battle_save_load` 5, `battle_save_menu` 8, `campaign_flow` 11, `studio_resume_validation` 12, `campaign` 31). Existing assertions are preserved; #81 added two resume tests and two load-validation tests, and #76 added five Journal/close-input tests, all passing unchanged.
 
 Clean Godot 4.7.2 `--headless --editor --import`: exit 0, no script-load errors.
 
-Full GUT on the integrated head with this change: **946/946 tests, 16,795 assertions, 115 scripts**, exit 0 (445.687 s), 55 inherited deprecations.
+Full GUT on the final tree: **946/946 tests, 16,797 assertions, 115 scripts**, exit 0, 55 inherited deprecations.
 
-For comparison, the earlier integrated head without the #83 files (`cd2af67c`, before #78/#76): **930/930 tests, 16,618 assertions, 114 scripts**, exit 0 (439.745 s). #76's merge accounts for the remaining 6 tests and 51 assertions (`academy_journal` 18→23 tests/60→96 assertions, `journal_close_input` 5→6/49→64); the #83 files account for exactly the other 10 tests, 126 assertions and one script. 930 + 6 + 10 = 946 and 16,618 + 51 + 126 = 16,795, so the same head without this change would report 936/936 with 16,669 assertions and 114 scripts.
+For comparison, the earlier integrated head without the #83 files (`cd2af67c`, before #78/#76): **930/930 tests, 16,618 assertions, 114 scripts**, exit 0 (439.745 s). #76's merge accounts for the remaining 6 tests and 51 assertions (`academy_journal` 18→23 tests/60→96 assertions, `journal_close_input` 5→6/49→64); the #83 files account for exactly the other 10 tests, 128 assertions and one script. 930 + 6 + 10 = 946 and 16,618 + 51 + 128 = 16,797, so the same head without this change would report 936/936 with 16,669 assertions and 114 scripts.
 
 Both runs serialize under the shared Git-common-directory `vael-godot-heavy.lock` with disposable `XDG_DATA_HOME`; no helper/Python suite applies because no Python changed.
 
 **Exit-time diagnostics are inherited.** One integrated run without #83 and one with #83 printed `2 ObjectDB instances were leaked at exit` plus `1 resources still in use at exit`; a verbose run identifies them as `AudioStreamWAV` / `AudioStreamPlaybackWAV` for `res://assets/audio/music/battle_theme.wav`, i.e. shared `AudioManager` music state still referenced by the audio server at shutdown. The identical diagnostic reproduces on unchanged `cd2af67c` with the #83 files removed, and the new suite alone reports none, so it is not introduced here. All runs still report 0 failures and exit 0.
 
-## Exact-head CI
+## Real-window acceptance
 
-`Verify` [run 39997461522](https://github.com/KumarG23/vael-academy/actions/runs/39997461522) passed on head `1aa44ed8`, the merge of `origin/main` `c07617e2` into this branch: team helper tests, clean import, and the full GUT step all succeeded.
+The engineering lead named #83 sole GUI controller (issue comments 6369409501 and 6369737389) after #81 ended its jobs and released the desktop. Confirmed no leftover game/input/capture process, then ran the original renderer — Godot 4.7.2, Vulkan 1.4.318 Forward+, llvmpipe LLVM 20.1.2 — on the 1280×720 X11 desktop, with native key input and a disposable `XDG_DATA_HOME`.
 
-An earlier push produced no `pull_request` run at all because the PR was `CONFLICTING` against main; GitHub cannot build the merge ref for a conflicted PR, so the workflow never starts. Integrating `origin/main` normally made the PR mergeable and the run above followed.
+Source under test: `8d7770435e3e377122ad87386f66ce0e6d61b400` (this branch, with the accepted siblings integrated). The disposable profile held three occupied slots: `slot_0` = `{broken` (7 B, malformed JSON), `slot_1` = a valid JSON envelope with invalid campaign types (`flags` array, 78 B), `slot_2` = a real campaign written by `tools/seed_fixture.gd` through `Campaign.save_to_slot(2)` (631 B). Fixture hashes are in `manifest.json`.
+
+| Capture | What it shows |
+| --- | --- |
+| `images/01-title-load-menu-invalid-slots.png` | Load Game lists all three occupied slots, including both invalid files. |
+| `images/02-title-reject-malformed-slot0.png` | Slot 0 rejected: `Slot 0 couldn't be loaded — choose another slot.` Menu open and usable, no scene change. |
+| `images/12-title-retry-same-slot.png` | Retry on the same slot: byte-identical frame (same SHA-256 as the first rejection), menu still usable. |
+| `images/03-title-reject-invalid-types-slot1.png` | Slot 1 (valid JSON, invalid types) rejected with its own label. |
+| `images/04-title-cancel-clears-feedback.png` | Escape returns to the main menu with no stale band. |
+| `images/05-title-valid-slot-continues.png` | Existing valid slot 2 still continues into the campus. |
+| `images/06-journal-reject-invalid-slot1.png` | Journal System rejects Load — Slot 1; book, tab and row stay open. |
+| `images/07-journal-reject-invalid-slot2.png` | Journal rejects Load — Slot 2 with one-based numbering. |
+| `images/08-journal-tab-change-clears.png` | Tab change clears the stale load rejection. |
+| `images/09-journal-repaired-slot-continues.png` | Repaired slot retried from Journal loads and continues normally. |
+| `images/10-compact-title-reject.png` | 640×360 Title band, fully inside the client and readable. |
+| `images/11-compact-journal-reject.png` | 640×360 Journal toast, readable with the book still open. |
+
+Captures are the exact 1280×720 screen (default is `--fullscreen`, borderless) and the exact 640×360 X11 client rectangle (windowed at absolute `+5,+56`). Every image's size and SHA-256 is in `manifest.json`; the step-by-step observations are in `results.json`. Both runs used the same original renderer and disposable profile; the game processes were closed afterwards.
 
 ## Byte preservation
 
-Every rejection case reads the source slot and its neighbour before and after the attempt and asserts `PackedByteArray` equality (`_file_bytes()` in both Title and Journal tests). The repair-and-retry test asserts the same for the successful re-load. No test writes outside its own disposable `user://test_load_feedback_*` directory, which is removed in `after_each`.
+Every rejection case in the automated suite reads the source slot and its neighbour before and after the attempt and asserts `PackedByteArray` equality (`_file_bytes()` in both Title and Journal tests). The repair-and-retry test asserts the same for the successful re-load. No test writes outside its own disposable `user://test_load_feedback_*` directory, which is removed in `after_each`.
 
-## Limits and pending real-window evidence
+In the real-window run, `slot_1` (rejected twice) and `slot_2` (loaded from both Title and Journal) were byte-identical before and after; `slot_0` changed only because the operator deliberately overwrote it with the valid campaign to exercise retry. A separate retry pass on the malformed file left all three files byte-identical (`results.json` → `byte_preservation.retry_run`).
 
-Automated coverage is production-code and production-input, but it is not a graphical acceptance: it does not prove font rendering, panel contrast or how the band reads to a player at 1280×720 and 640×360.
+## Limits
 
-#81 ended its GUI jobs and explicitly released the desktop, but the engineering lead has not yet named #83 for native input/capture. Under this issue's own gate, no game process, native input or capture was run. Real-window evidence is therefore **pending**, not waived:
-
-1. Seed a disposable profile with an occupied invalid slot (`{broken` and a valid envelope with invalid campaign types) plus one valid slot.
-2. Title → Load Game: select the invalid slot, confirm the band appears, the menu stays usable; retry the same slot, move to another, then Escape. Inspect default 1280×720 and compact 640×360.
-3. Start a real battle, save it, then corrupt only the campaign section of a copy; Journal → System → load it and confirm the toast, the still-open book, a retry and a tab change.
-4. Repair a disposable slot and confirm the existing success route still reaches the campaign/battle.
-5. Compare source and neighbour file bytes before and after every rejection and record the exact SHAs.
-
-This receipt is recorded so the gap is visible; it is not a claim that graphical acceptance happened.
+- Bounded rejection/retry evidence only: no full-school replay and no Neal taste or visual approval is claimed.
+- At 640×360 the Journal toast uses the existing toast rectangle and therefore sits over the last System rows; the load rows and the message stay legible. That placement is unchanged by this issue.
+- The ornate nine-patch corner artifacts on the Journal frame at compact sizes are pre-existing.
+- The Title band switched from the nine-patch to the toast rule after the first real-window capture; the layout test now also asserts the band is tall enough for its 16 px text.
