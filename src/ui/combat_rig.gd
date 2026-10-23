@@ -303,7 +303,7 @@ func _crit_beat() -> void:
 		return
 	_fx_items.append({"kind": "glint", "pos": _tip(), "age": 0.0, "life": _crit_hold + 0.1})
 	_body.modulate = Color(1.8, 1.8, 1.6)
-	var f := create_tween()
+	var f := pace.track(create_tween())
 	f.tween_property(_body, "modulate", Color.WHITE, _crit_hold)
 	await pace.wait(self, _crit_hold)
 
@@ -365,6 +365,7 @@ func set_weapon(weapon_type: int) -> void:
 
 
 func _process(delta: float) -> void:
+	delta *= pace.speed
 	if _fx_items.is_empty():
 		return
 	var alive := []
@@ -452,14 +453,14 @@ func _stab() -> void:
 	var reach := _lunge_reach(0.42, 0.6)
 	var aim := _aim_angle()
 	_pivot.rotation = _rest_rot + aim   # level the point at the target tile
-	var wind := create_tween().set_parallel(true)
+	var wind := pace.track(create_tween()).set_parallel(true)
 	wind.tween_property(_pivot, "rotation", _rest_rot + aim - 0.25, 0.18).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	wind.tween_property(_body, "rotation", 0.0 if _hires else -0.08, 0.18).set_trans(Tween.TRANS_SINE)
 	wind.tween_property(self, "position", home - dir * (reach * 0.22), 0.18)
 	await pace.tween(wind)
 	await _crit_beat()
 	set_pose(Pose.ACTION)
-	var hit := create_tween().set_parallel(true)
+	var hit := pace.track(create_tween()).set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + aim + 0.15, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.0 if _hires else 0.06, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(self, "position", home + dir * reach, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
@@ -480,14 +481,14 @@ func _swing(heavy: bool) -> void:
 	var reach := _lunge_reach(0.32 if heavy else 0.30, 0.5)
 	var aim := _aim_angle()
 	_pivot.rotation = _rest_rot + aim   # aim the swing at the target tile
-	var wind := create_tween().set_parallel(true)
+	var wind := pace.track(create_tween()).set_parallel(true)
 	wind.tween_property(_pivot, "rotation", _rest_rot + aim + back, 0.20).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	wind.tween_property(_body, "rotation", 0.0 if _hires else -0.22, 0.20).set_trans(Tween.TRANS_SINE)
 	wind.tween_property(self, "position", home - dir * (reach * 0.25), 0.20)
 	await pace.tween(wind)
 	await _crit_beat()
 	set_pose(Pose.ACTION)
-	var hit := create_tween().set_parallel(true)
+	var hit := pace.track(create_tween()).set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + aim + thru, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.0 if _hires else 0.24, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(self, "position", home + dir * reach, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
@@ -503,7 +504,7 @@ func _shoot(aim_global: Vector2) -> void:
 	# streaks to the target
 	var dest := _aim_local(aim_global)
 	var home := position
-	var w := create_tween().set_parallel(true)
+	var w := pace.track(create_tween()).set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.35, 0.26).set_trans(Tween.TRANS_SINE)
 	w.tween_property(_body, "rotation", 0.0 if _hires else -0.1, 0.26).set_trans(Tween.TRANS_SINE)
 	w.tween_property(self, "position", home - _lunge_dir() * 3.0 * absf(scale.x), 0.26)
@@ -531,7 +532,7 @@ func _magic(aim_global: Vector2) -> void:
 		set_pose(Pose.ACTION)  # raise the casting hand before the gather starts
 	var dest := _aim_local(aim_global)
 	var home := position
-	var w := create_tween().set_parallel(true)
+	var w := pace.track(create_tween()).set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.3, 0.28).set_trans(Tween.TRANS_SINE)
 	w.tween_property(_body, "rotation", 0.0 if _hires else -0.06, 0.28).set_trans(Tween.TRANS_SINE)
 	await pace.tween(w)
@@ -552,7 +553,7 @@ func _heal(aim_global := Vector2.INF) -> void:
 	if _hires:
 		set_pose(Pose.ACTION)
 	var home := position
-	var w := create_tween()
+	var w := pace.track(create_tween())
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.5, 0.26).set_trans(Tween.TRANS_SINE)
 	await pace.tween(w)
 	_cast_gather()
@@ -566,7 +567,7 @@ func _heal(aim_global := Vector2.INF) -> void:
 
 func _recover(home: Vector2) -> void:
 	set_pose(Pose.IDLE)
-	var r := create_tween().set_parallel(true)
+	var r := pace.track(create_tween()).set_parallel(true)
 	r.tween_property(_pivot, "rotation", _rest_rot, 0.26).set_trans(Tween.TRANS_SINE)
 	r.tween_property(_body, "rotation", 0.0, 0.26).set_trans(Tween.TRANS_SINE)
 	r.tween_property(self, "position", home, 0.26).set_trans(Tween.TRANS_SINE)

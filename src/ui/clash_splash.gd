@@ -27,7 +27,7 @@ func is_active() -> bool:
 
 
 ## Slam the splash in, hold, then fly out. Awaitable via the tween chain.
-func play(team: int, label: String, cfg: JuiceConfig) -> void:
+func play(team: int, label: String, cfg: JuiceConfig, pace: ExchangeSkip = null) -> void:
 	_accent = PLAYER_ACCENT if team == 0 else ENEMY_ACCENT
 	_label = label
 	_active = true
@@ -35,6 +35,8 @@ func play(team: int, label: String, cfg: JuiceConfig) -> void:
 	visible = true
 	_t = 0.0
 	var tw := create_tween()
+	if pace != null:
+		pace.track(tw)
 	_tween = tw
 	tw.tween_method(_set_t, 0.0, 1.0, cfg.splash_in).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_interval(cfg.splash_hold)
