@@ -39,6 +39,9 @@ var grade_samples: Dictionary = {
 	"quiz_scores": [], "battle_scores": [], "arena_best_wave": 0, "conduct_points": 0,
 }
 var report_cards: Array = []
+## GH-56: only cards closed by this version get receipts. Absence means historical,
+## with no evidence of prior payout. History indices remain stable and immutable.
+var report_card_deliveries: Array = []
 
 var _training_rng := CombatRNG.new(1)
 ## Set by load_from_slot so the first hub visit after loading keeps the saved
@@ -68,6 +71,7 @@ func reset_new_game(is_casual: bool, seed_value: int = 1) -> void:
 	semester = 1
 	grade_samples = {"quiz_scores": [], "battle_scores": [], "arena_best_wave": 0, "conduct_points": 0}
 	report_cards = []
+	report_card_deliveries = []
 	_skip_next_hub_reset = false
 	_training_rng = CombatRNG.new(seed_value)
 
@@ -143,6 +147,7 @@ func close_semester() -> void:
 	var g := running_grade()
 	report_cards.append({"semester": semester, "rank": g["rank"],
 		"rank_name": g["rank_name"], "score": g["score"]})
+	report_card_deliveries.append({"card_index": report_cards.size() - 1, "delivered": false})
 	semester += 1
 	grade_samples = {"quiz_scores": [], "battle_scores": [], "arena_best_wave": 0, "conduct_points": 0}
 
@@ -275,6 +280,7 @@ func to_dict() -> Dictionary:
 		"semester": semester,
 		"grade_samples": grade_samples.duplicate(true),
 		"report_cards": report_cards.duplicate(true),
+		"report_card_deliveries": report_card_deliveries.duplicate(true),
 	}
 
 
@@ -287,8 +293,85 @@ func restore_save(data: Dictionary) -> bool:
 			return false
 	if data.has("report_cards") and not (data["report_cards"] is Array):
 		return false
+	if not _valid_deliveries(data):
+		return false
 	from_dict(data)
 	return true
+
+
+## Validate the new collection, including every referenced card, before any live
+## campaign/roster/RNG mutation. JSON integers arrive as floats. Unknown keys are
+## ignored like other campaign fields; legacy history without receipts stays opaque.
+func _valid_deliveries(data: Dictionary) -> bool:
+	var receipts: Variant = data.get("report_card_deliveries", [])
+	if not receipts is Array:
+		return false
+	var cards: Array = data.get("report_cards", [])
+	var seen: Dictionary = {}
+	for receipt: Variant in receipts:
+		if not receipt is Dictionary or not receipt.get("delivered") is bool:
+			return false
+		var index: Variant = receipt.get("card_index")
+		if not (index is int or index is float):
+			return false
+		if not is_finite(float(index)) or float(index) != floor(float(index)):
+			return false
+		if index < 0 or index >= cards.size() or seen.has(int(index)):
+			return false
+		seen[int(index)] = true
+		var card: Variant = cards[int(index)]
+		if not card is Dictionary or not card.get("rank") in ["S", "A", "B", "C", "D"]:
+			return false
+		if not card.get("rank_name") is String:
+			return false
+		for key: String in ["semester", "score"]:
+			var value: Variant = card.get(key)
+			if not (value is int or value is float) or not is_finite(float(value)):
+				return false
+			if float(value) != floor(float(value)):
+				return false
+		if card["semester"] < 1 or card["semester"] > 2 or card["score"] < 0 or card["score"] > 100:
+			return false
+	return true
+
+
+func pending_report_cards() -> Array[int]:
+	var pending: Array[int] = []
+	for receipt: Dictionary in report_card_deliveries:
+		if not receipt["delivered"]:
+			pending.append(int(receipt["card_index"]))
+	pending.sort()
+	return pending
+
+
+## The caller commits on completed presentation, synchronously with the receipt.
+## A full inventory still forfeits the S seal (existing AW-64 behavior).
+func complete_report_card(index: int, gold: int) -> bool:
+	for receipt: Dictionary in report_card_deliveries:
+		if int(receipt["card_index"]) == index and not receipt["delivered"]:
+			flags["gold"] = int(flags.get("gold", 0)) + gold
+			if report_cards[index]["rank"] == "S":
+				grant_item("kai", "res://data/items/promotion_seal.tres")
+			flags["merchant_unlocked"] = true
+			receipt["delivered"] = true
+			return true
+	return false
+
+
+## Preview the unchanged full-inventory rule for the shipped reward line. Campus
+## input is held during presentation, so inventory cannot change between the line
+## and completion through normal player actions.
+func can_receive_item(id: String, reserved_slots: int = 0) -> bool:
+	var def := _roster_def(id)
+	if def == null:
+		return false
+	var unit := Unit.new()
+	unit.setup(def.duplicate(), Grid.new(1, 1), Vector2i.ZERO)
+	if has_unit_state(id):
+		unit.apply_progression_state(get_unit_state(id))
+	var available := unit.inventory.size() + reserved_slots < Inventory.MAX_SLOTS
+	unit.free()
+	return available
 
 
 func from_dict(data: Dictionary) -> void:
@@ -308,6 +391,7 @@ func from_dict(data: Dictionary) -> void:
 	grade_samples = (data.get("grade_samples",
 		{"quiz_scores": [], "battle_scores": [], "arena_best_wave": 0, "conduct_points": 0}) as Dictionary).duplicate(true)
 	report_cards = (data.get("report_cards", []) as Array).duplicate(true)
+	report_card_deliveries = (data.get("report_card_deliveries", []) as Array).duplicate(true)
 	_training_rng = CombatRNG.new(1)
 	if data.has("rng_state"):
 		_training_rng.set_state(int(str(data["rng_state"])))

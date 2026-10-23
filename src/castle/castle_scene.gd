@@ -667,20 +667,37 @@ func draw_occluders(canvas: CanvasItem) -> void:
 func _refresh_date() -> void:
 	var e := Campaign.current_event()
 	_date_label.text = "Week %d — %s" % [Campaign.week, e.label if e != null else "The year is done"]
-	_maybe_play_set_piece(e)
+	if _play_report_card():
+		_maybe_play_set_piece(e)
+
+
+## Scene-local reservations prevent repeated date refreshes from queueing the
+## same set-piece. Saved flags/side effects commit only after its own completion;
+## interrupted queued dialogue is eligible again on castle re-entry.
+var _scheduled_set_pieces: Dictionary = {}
 
 
 func _maybe_play_set_piece(e: CalendarEventDef) -> void:
-	if e != null and e.kind == CalendarEventDef.Kind.HOLIDAY \
-			and not bool(Campaign.flags.get("festival_seen", false)):
-		Campaign.flags["festival_seen"] = true
-		Campaign.flags["cooking_unlocked"] = true
-		Campaign.add_conduct(3)  # AW-54: attended the festival
-		_play_dialogue("res://data/dialogue/festival_founding.json")
-	elif e == null and Campaign.last_result == "victory" \
-			and not bool(Campaign.flags.get("feast_seen", false)):
-		Campaign.flags["feast_seen"] = true
-		_play_dialogue("res://data/dialogue/party_victory_feast.json")
+	var flag := ""
+	var path := ""
+	if e != null and e.kind == CalendarEventDef.Kind.HOLIDAY:
+		flag = "festival_seen"
+		path = "res://data/dialogue/festival_founding.json"
+	elif e == null and Campaign.last_result == "victory":
+		flag = "feast_seen"
+		path = "res://data/dialogue/party_victory_feast.json"
+	if flag == "" or bool(Campaign.flags.get(flag, false)) or _scheduled_set_pieces.has(flag):
+		return
+	_scheduled_set_pieces[flag] = true
+	var accepted := _play_dialogue(path, func() -> void:
+		if not bool(Campaign.flags.get(flag, false)):
+			Campaign.flags[flag] = true
+			if flag == "festival_seen":
+				Campaign.flags["cooking_unlocked"] = true
+				Campaign.add_conduct(3)
+		_scheduled_set_pieces.erase(flag))
+	if not accepted:
+		_scheduled_set_pieces.erase(flag)
 
 
 # --- room functions (WO-6.2a/b, 7.2, ported handler-for-handler) ----------------
@@ -834,13 +851,13 @@ func _rest_week() -> void:
 	if now != null and now.kind == CalendarEventDef.Kind.BATTLE:
 		_toast("%s awaits — the year holds its breath until you answer it." % now.label)
 		return
+	if busy():
+		return
 	var sem_before := Campaign.semester
 	Campaign.advance_week()
-	if Campaign.semester != sem_before:
-		_play_report_card()  # AW-64: the term closed — the ceremony, not a toast
-		_refresh_date()      # a set piece on the new week queues after it
-		return
 	_refresh_date()
+	if Campaign.semester != sem_before:
+		return  # the ceremony supplies the feedback for a term-closing rest
 	var e := Campaign.current_event()
 	if e != null and e.kind == CalendarEventDef.Kind.HOLIDAY:
 		_toast("It's %s! The whole castle is celebrating." % e.label)
@@ -850,18 +867,37 @@ func _rest_week() -> void:
 
 ## AW-64: the end-of-semester Report Card — your house's teacher delivers the
 ## rank in their own voice, and the reward chest lands (gold; a rare seal at S).
-func _play_report_card() -> void:
-	if Campaign.report_cards.is_empty():
-		return
-	var rc: Dictionary = Campaign.report_cards[-1]
+var _scheduled_report_cards: Dictionary = {}
+
+
+func _play_report_card() -> bool:
+	for index: int in Campaign.pending_report_cards():
+		if _scheduled_report_cards.has(index):
+			continue
+		_scheduled_report_cards[index] = true
+		if not _queue_report_card(index):
+			_scheduled_report_cards.erase(index)
+			return false
+	return true
+
+
+func _queue_report_card(index: int) -> bool:
+	var rc: Dictionary = Campaign.report_cards[index]
 	var rank := str(rc["rank"])
 	var t := _teacher()
 	var line: String = CEREMONY_LINES[t["id"]].get(rank, "The term is done.")
 	var expr := "happy" if rank in ["S", "A"] else ("neutral" if rank == "B" else ("worried" if rank == "C" else "angry"))
 	var gold: int = RANK_REWARD_GOLD.get(rank, 50)
-	Campaign.flags["gold"] = int(Campaign.flags.get("gold", 0)) + gold
 	var reward_text := "Kai received %d gold for the term." % gold
-	if rank == "S" and Campaign.grant_item("kai", "res://data/items/promotion_seal.tres"):
+	# Earlier pending S cards reserve their previewed seal slots in this queue.
+	var reserved_seals := 0
+	var merchant_queued := false
+	for earlier: int in _scheduled_report_cards:
+		if earlier < index:
+			merchant_queued = true
+			if Campaign.report_cards[earlier]["rank"] == "S":
+				reserved_seals += 1
+	if rank == "S" and Campaign.can_receive_item("kai", reserved_seals):
 		reward_text += "  And for an Ascendant year — a Promotion Seal."
 	var steps: Array = [
 		{"speaker": t["name"], "side": "right", "portrait": t["id"], "expression": expr,
@@ -872,11 +908,12 @@ func _play_report_card() -> void:
 	# AW-74: word of a graded cadet travels — a traveling merchant starts
 	# following the missions from the first term's close. (Co-write may move
 	# this unlock onto a story beat later.)
-	if not bool(Campaign.flags.get("merchant_unlocked", false)):
-		Campaign.flags["merchant_unlocked"] = true
+	if not bool(Campaign.flags.get("merchant_unlocked", false)) and not merchant_queued:
 		steps.append({"speaker": t["name"], "side": "right", "portrait": t["id"],
 			"text": "One more thing — a merchant has been asking after the cadet corps. Expect his cart at your next deployment."})
-	_play_dialogue_json(JSON.stringify(steps))
+	return _play_dialogue_json(JSON.stringify(steps), func() -> void:
+		Campaign.complete_report_card(index, gold)
+		_scheduled_report_cards.erase(index))
 
 
 func _open_hall_archive() -> void:
@@ -1254,6 +1291,8 @@ func _play_script(script: DialogueScript, on_complete := Callable()) -> bool:
 	scene.event_triggered.connect(_on_dialogue_event)
 	scene.heart_gate = _heart_available  # AW-57: ♥ options gate on the bond
 	scene.finished.connect(func():
+		if not is_inside_tree() or not scene.is_inside_tree():
+			return
 		scene.queue_free()
 		if _dialogue != scene:
 			return  # a late repeat signal never advances someone else's turn

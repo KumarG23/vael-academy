@@ -333,6 +333,8 @@ func test_semester_end_plays_the_ceremony_with_rewards():
 	_castle._rest_week()
 	assert_eq(Campaign.semester, 2, "the term closed")
 	assert_not_null(_castle._dialogue, "the ceremony plays")
+	assert_eq(int(Campaign.flags.get("gold", 0)), gold_before, "unfinished ceremony stays pending")
+	_castle._dialogue._finish()
 	assert_gt(int(Campaign.flags.get("gold", 0)), gold_before, "the chest paid out")
 	# rank S also grants the rare seal into Kai's persisted kit
 	var saved: Array = Campaign.get_unit_state("kai")["inventory"]

@@ -1,0 +1,43 @@
+{
+  "source": "55711c99b31003200cff45c1dd3ec9a5a3c1cab1",
+  "accepted_main": "7bee9bd07c1fe21d28d20394803c671b4e1fa8f0",
+  "engine": "Godot 4.7.2",
+  "renderer": "Vulkan Forward+ / llvmpipe",
+  "desktop": [
+    1280,
+    720
+  ],
+  "input_checkpoint_origin": "Native round-5 field UI save retained from accepted issue #54 graphical run on 3ea481805a22e1edc9eca04fab11863772537ebb; same run as docs/qa/issue-54-battle-grade-attribution.md",
+  "input_checkpoint_sha256": "d960e2b5a46918d0ef511197c9730fc8d9797e40e459578cfa87e091c02f380d",
+  "fixture_deltas": {},
+  "original_boundary_fixture": "Earned Emberwing Week-2 campus checkpoint with only week=6, semester=2, neutral grade_samples; declared by #54. Not an earned semester or new full-year run.",
+  "actions": "actions.md",
+  "battle_result": {
+    "round": 6,
+    "fielded": 7,
+    "living_allies": [
+      "kai",
+      "kael"
+    ],
+    "yielded_allies": [
+      "perrin",
+      "brenna",
+      "wren",
+      "dain",
+      "liora"
+    ],
+    "battle_score": 40,
+    "locked_score": 53,
+    "rank": "C"
+  },
+  "payout": {
+    "before_completion": 0,
+    "after_completion": 80,
+    "after_fresh_load": 80,
+    "seal": "No seal for rank C; S and full-inventory policy verified headlessly.",
+    "merchant_unlocked": true
+  },
+  "entire_campaign_equal_after_fresh_load_and_resave": true,
+  "card_or_feast_replayed_after_load": false,
+  "desktop_release": "https://github.com/KumarG23/vael-academy/issues/56#issuecomment-6363795304"
+}

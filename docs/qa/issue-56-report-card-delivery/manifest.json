@@ -1,0 +1,21 @@
+{
+  "README.md": "c6da45d2f17b71d86f04d93b445fbcfb01579bbf3b9260223155420c8a3f7956",
+  "actions.md": "086487a7d8541988d9c09e85cc855b1a45b0c622e712f4f3403e0a6d811edb7e",
+  "images/ceremony-merchant.png": "6ac3d059cd979d1ba4137b94d93eb27c6c534e8a84b327b4bb3bbd0d3739f39c",
+  "images/ceremony-reward.png": "b703bc9e7a46278eb7527ffb7f8c313e3f2ce0e569e20646c6a421c1a3108e2d",
+  "images/ceremony-standing.png": "821d90f936a94670f8dffa74da277d0ffa86ce8f6fcc4a71e77c6e5f36198068",
+  "images/feast-after-ceremony.png": "ce223937a3142092fc1c62422873bc134fc5cb9c536b040a4e485f29e2384187",
+  "images/fresh-load-campus.png": "a39d39ad8cd68683e2832d42d80ef0d95d3ba51b13a6ac0c7fd1e378cea45d37",
+  "images/fresh-title-load.png": "50cf597ef1ffe4aee3b58b7051498dbaa3af05ce5291ff39f557209e9dbcc296",
+  "images/grades-after-fresh-load.png": "8314e1527162181c63f8b91ea9da13ec0612d74042fa027df9b4a5e79caf0036",
+  "images/grades-before-save.png": "d9d5c78eec37c047ae004469f5c21c16e1704d080c9fd8a93d9123fd1b2ba7a5",
+  "images/resumed-late-battle.png": "d70fdde75e8cebfc1fa9d5a5204ed06ec5851377a8744e53c2b5fa2412bcaef1",
+  "images/system-save.png": "64d1c64218b97c527b30f8678426cb5387acb173480ccd73f712782401806fce",
+  "images/victory-pending.png": "f7a09f7c6ca7a2f02f7a2ec77cce3490c98911006715f2173602099fc1eb4b6f",
+  "observations.json": "7ee220955cc1859733bee7cf97090e9a57a708dd973bff5e7580d1b0a3d91e06",
+  "results.json": "0fc5a5c3d6c474ef002e0104fcd2dcfe8402781d84fe05a61310f946e5f2fa87",
+  "saves/delivered-campus.json": "c4a7a08bc610d05d975e3eb72e231c949eee02856a387a89dba5217deeff89e3",
+  "saves/late-native-battle.json": "d960e2b5a46918d0ef511197c9730fc8d9797e40e459578cfa87e091c02f380d",
+  "saves/pending-result-snapshot.json": "3c6e15c62c5d31eb6977b90d1a63586fb504e61e38d5db6ba9b8f99c04874a8c",
+  "saves/resaved-campus.json": "525115799b30ccf0170e72e19410cd5178f23576e82c32c7efe2717302380f31"
+}
