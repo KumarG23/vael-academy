@@ -25,15 +25,34 @@ New production-boundary suites (all pass):
 
 Results are recorded in the PR body and HANDOFF.
 
-## Pending: original-renderer real-input QA (GUI-gated)
+## Original-renderer real-input QA — complete, 2026-10-23
 
-Per #89 acceptance 6, the shared desktop order is **#83 → #85 → #89**. No graphical game/input/capture has been run for this issue: that waits for an explicit release naming #89. The planned run uses a disposable XDG data dir, the shipped Title → Dev Jump campus fixture, and the actual editor:
+The lead released the shared desktop to #89 after #85 ended its jobs. Before use, no game/input/capture process was running; afterwards all four game processes had exited normally and none remained.
 
-1. Configure a nonconflicting set (e.g. Up I, Down N, Left G, Right L, Confirm O, Cancel P) through real keys; capture default and compact (800×450) editor screenshots.
-2. Show an Esc-cancelled capture, a conflict message (J), and a successful retry.
-3. Academy walking, point interaction, system menu, Journal tabs/close and an existing dialogue choice/advance on the custom keys, then on the shipped keys.
-4. Tactical cursor/select/menu/forecast confirm/cancel on custom keys (Dev Jump mock battle).
-5. Normal quit → fresh process: keys still bound; Restore Defaults; quit → fresh process: none.
-6. Record source SHA, settings/save hashes before/after, actions and limits here.
+**Environment.** Godot 4.7.2, the project's own renderer (Vulkan 1.4.318 Forward+, llvmpipe LLVM 20.1.2), on the shared 1280×720 X11 desktop. Real X11 key events were sent with `xdotool` (key taps; 150 ms holds for battle-cursor directions); window captures used ImageMagick `import`. Game window at the project default 1152×648; compact checks resized it to 800×450. A newly created disposable `XDG_DATA_HOME` held no settings or saves at the start. No runtime inspector, state injection or handler call was used; every action came from the keyboard.
 
-No whole-year replay and no Neal taste approval are claimed.
+**Source.** Run 1 used PR head `3ba64efa`. It found two presentation defects in the editor: Journal rows showed faintly through the 0.99-alpha page, and the left-aligned footer hint ran under the bottom-left filigree ([before](images/02-editor-before-fix-bleed-footer.png)). Commit `0566e20e` fixes both: an opaque page and a centered footer, with the layout test extended (focused suites 18/18). Runs 2–4 used exactly that source.
+
+**Fixture.** Title → Dev Jump → Campus (the shipped preview route, not an earned campaign). Slot 1 was written once, through the ordinary Journal Save row, at the start of run 1. Slot file SHA-256 `ab46e527…eb7cadb` was **identical after every later step in all four processes**: editing, walking, menus, dialogue, map, battle and Restore Defaults. No other save file was created.
+
+| Run | Actions (all real keys) | Result |
+|---|---|---|
+| 1 | J → → → → (System) → Enter Save Slot 1 → ↑ (Keyboard Controls) → Enter. Up: Enter, Esc; Enter, J (rejected), I. Then Down N, Left G, Right L, Confirm O, Cancel P. I in the editor; P, P (editor, Journal). Hold L/I/N/G to walk to Warden Maren; O to talk and advance; Enter to talk again; P/N/P system menu; M/N/P map; J L L G P. Esc → Return to Title → Quit. | Discoverable row, capture prompt, cancel and conflict feedback, six keys assigned, live navigation. Settings became `[keyboard] up="I" down="N" left="G" right="L" confirm="O" cancel="P"` (SHA-256 `03b4e414…6e22db3c52e`). Walking, interaction, dialogue advance, system menu, room map and Journal all worked on the custom keys; the shipped Enter interaction still worked. |
+| 2 (fresh) | N N O at Title (Dev Jump) → O (Campus) → J L L L L I O → editor. Resize to 800×450: capture; Down Enter M; Esc; Esc. Restore 1152×648 → Dev Jump → Mock Battle: O through the intro, P (put down the unit O had picked up in prep), P (prep menu), N, I, O Begin battle; O select, P deselect, O O menu, N, P; hold L/G cursor; move Kael (O, L×5, I, O), I O Wait; T, N, O End Turn; next turn O, L, O, Attack O, weapon O → forecast, P back to menu, O O O commit, P during the exchange; PageDown, Enter, Esc. Alt+F4. | Keys were active from the first input of a fresh process. Default and compact editor/System captures fit. The M conflict was rejected and the map did not open. In battle the custom keys drove prep, selection, the command menu, cursor repeat, targeting/forecast, cancel and commit; T end-turn confirm, PageDown cycling, Enter and Esc were unchanged. Settings and save bytes were unchanged. |
+| 3 (fresh) | Dev Jump → Campus (shipped keys) → editor → Restore Defaults → Esc → Music ← (60%) → Return to Title → Quit. | "Additional keys removed. Default keys unchanged." `[keyboard]` gone; `[audio]` written with music 0.6 (SHA-256 `42a0d554…66abae34`). |
+| 4 (fresh) | N N O at Title, then ↓ ↓ Enter → Campus → J → System → editor → normal quit. | N/O did nothing (inert). The shipped keys worked, System read "Default keys" with Music 60%, and every additional key showed none. |
+
+**Captures** (all inspected at native size; SHA-256 in [manifest](manifest.sha256)):
+- **Editor:** [System row](images/01-system-row-default.png), [capture prompt](images/03-capture-prompt.png), [Esc cancelled](images/04-esc-cancelled.png), [J conflict](images/05-conflict-j.png), [six assigned](images/06-six-keys-assigned.png), [persisted after restart, fixed](images/15-editor-default-persisted-fixed.png), [compact](images/16-editor-compact.png), [compact M conflict](images/17-editor-compact-conflict-m.png), [compact System](images/18-system-compact.png).
+- **School:** [walk](images/07-walk-held-l-i.png), [system menu](images/08-system-menu-p-n.png), [room map](images/09-room-map-m-n.png), [interact O](images/10-maren-interact-o.png), [advance O](images/11-dialogue-advance-o.png), [shipped Enter](images/12-dialogue-shipped-enter.png), [Journal tabs](images/13-journal-tabs-l.png), [fresh Title by custom keys](images/14-fresh-process-title-n-o.png).
+- **Battle:** [prep menu](images/19-battle-prep-menu-p.png), [select](images/20-battle-select-o.png), [command menu](images/21-battle-command-menu-n.png), [held cursor](images/22-battle-cursor-held-l.png), [forecast](images/23-battle-forecast-o.png), [cancel](images/24-battle-forecast-cancel-p.png), [exchange hint](images/25-battle-exchange-hint.png), [after P](images/26-battle-after-p-skip.png), [shipped keys](images/27-battle-shipped-pagedown-enter.png).
+- **Restore and restart:** [Restore Defaults](images/28-restore-defaults.png), [cleared keys inert](images/29-fresh-process-cleared-keys-inert.png), [System defaults/Music 60%](images/30-fresh-process-system-defaults-music60.png), [editor none](images/31-fresh-process-editor-none.png).
+
+All four process logs contain no script/runtime errors or warnings. Renderer/raw logs and host paths are not published.
+
+**Observations and limits**
+- The battle cursor polls held state once per frame. On this slow software renderer, near-instant synthetic taps were sometimes missed for **both** shipped arrows (4 taps → 1 move) and custom keys (4 taps → 0), while 150 ms holds were reliable for both. This is existing behavior, not introduced here; ordinary human key presses are longer.
+- In the exchange, Kael was defeated partway through and P was pressed near its end. The capture shows the field back at idle with no stray menu or selection, but it can't prove how much presentation P skipped. The custom-Cancel skip and its identical outcome are asserted by `test_keyboard_controls_battle.gd`.
+- The editor title sits under the top-left corner ornament at both sizes, the same placement as the existing Journal title. The Journal footer's left end also runs under the bottom-left ornament on main. Both are left unchanged to avoid shared Journal edits; this is a presentation note, not a functional defect.
+- Not exercised graphically: travel to another room by custom Confirm (the fixture had no second visited room; covered in the automated tests), a real write failure (automated) and mouse capture rejection (automated).
+- Bounded Dev Jump fixture. No whole-year replay and no Neal taste/visual approval are claimed.
