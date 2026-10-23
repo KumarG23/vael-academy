@@ -53,15 +53,15 @@ With the production change: **10/10 passed, 126 assertions, exit 0**.
 
 ## Focused and full runs
 
-Accepted main `241d947fee9056d5f4f63f84dc5029ec5b3b4111`, then accepted #81/#82 integrated normally by fast-forward to `cd2af67c960fda359549e1bba0f4a62216a81c02` before the final runs; only HANDOFF/STATUS text was resolved, no production file conflicted.
+Accepted main `241d947fee9056d5f4f63f84dc5029ec5b3b4111`, then accepted #81/#82 integrated normally by fast-forward to `cd2af67c960fda359549e1bba0f4a62216a81c02`, then accepted #78/#76 integrated by ordinary merge to `c07617e24e84685263a748709b274d17dec5700c` before the final runs. #76 also edits `src/ui/academy_journal.gd` (adds the Supports tab) and its Journal tests; the automatic merge kept both changes with no production conflict, and only the HANDOFF bullet list was resolved by hand (both records retained). System remains tab 4 with Supports appended at index 6, so the existing four-right-press navigation and the tab-change assertion are unchanged.
 
-Affected Title/Journal/flow/campaign-load/save/resume groups on the integrated head: **149/149 tests, 9,235 assertions, 16 scripts**, exit 0 (`load_failure_feedback`, `title_flow`, `academy_journal`, `journal_close_input`, `resume`, `campaign_load_validation`, `save_system`, `battle_save_load`, `battle_save_menu`, `campaign_flow`, `studio_resume_validation`, `campaign`). Existing assertions are preserved; #81 added two resume tests and two load-validation tests that pass unchanged.
+Affected Title/Journal/flow/campaign-load/save/resume groups on the integrated head: **155/155 tests, 9,286 assertions, 16 scripts**, exit 0 (`load_failure_feedback` 10, `title_flow` 8, `academy_journal` 23, `journal_close_input` 6, `resume` 21, `campaign_load_validation` 10, `save_system` 10, `battle_save_load` 5, `battle_save_menu` 8, `campaign_flow` 11, `studio_resume_validation` 12, `campaign` 31). Existing assertions are preserved; #81 added two resume tests and two load-validation tests, and #76 added five Journal/close-input tests, all passing unchanged.
 
 Clean Godot 4.7.2 `--headless --editor --import`: exit 0, no script-load errors.
 
-Full GUT on the integrated head with this change: **940/940 tests, 16,744 assertions, 115 scripts**, exit 0 (442.304 s), 44 inherited deprecations.
+Full GUT on the integrated head with this change: **946/946 tests, 16,795 assertions, 115 scripts**, exit 0 (445.687 s), 55 inherited deprecations.
 
-For comparison, the same integrated head without the #83 files (pure `cd2af67c`): **930/930 tests, 16,618 assertions, 114 scripts**, exit 0 (439.745 s). The delta is exactly the 10 new tests, 126 new assertions and one new script.
+For comparison, the earlier integrated head without the #83 files (`cd2af67c`, before #78/#76): **930/930 tests, 16,618 assertions, 114 scripts**, exit 0 (439.745 s). #76's merge accounts for the remaining 6 tests and 51 assertions (`academy_journal` 18→23 tests/60→96 assertions, `journal_close_input` 5→6/49→64); the #83 files account for exactly the other 10 tests, 126 assertions and one script. 930 + 6 + 10 = 946 and 16,618 + 51 + 126 = 16,795, so the same head without this change would report 936/936 with 16,669 assertions and 114 scripts.
 
 Both runs serialize under the shared Git-common-directory `vael-godot-heavy.lock` with disposable `XDG_DATA_HOME`; no helper/Python suite applies because no Python changed.
 

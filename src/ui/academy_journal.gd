@@ -8,7 +8,7 @@ extends Control
 
 signal closed
 
-const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System", "Fish Log"]
+const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System", "Fish Log", "Supports"]
 const STAT_KEYS := ["hp", "str", "mag", "skl", "spd", "lck", "def", "res"]
 const STAT_LABELS := ["HP", "STR", "MAG", "SKL", "SPD", "LCK", "DEF", "RES"]
 const SLOTS := 3
@@ -25,6 +25,7 @@ var _tab := 0
 var _roster_i := 0
 var _sys_i := 0
 var _fish_i := 0
+var _support_i := 0
 var _snaps: Array = []       # per-unit data snapshots
 var _slot_info: Array = []   # save-slot summaries
 var _toast := ""
@@ -183,6 +184,10 @@ func _move_row(dir: int) -> void:
 			var catches := _fish_names()
 			if not catches.is_empty():
 				_fish_i = (_fish_i + dir + catches.size()) % catches.size()
+		6:
+			var supports := _support_entries()
+			if not supports.is_empty():
+				_support_i = (_support_i + dir + supports.size()) % supports.size()
 		_:
 			return
 	AudioManager.play_sfx("cursor")
@@ -424,6 +429,7 @@ func _draw() -> void:
 		3: _draw_grades(body, font)
 		4: _draw_system(body, font)
 		5: _draw_fish_log(body, font)
+		6: _draw_supports(body, font)
 	# footer
 	var hint := "←/→ tab      ↑/↓ move      Enter select      J / Esc close"
 	draw_string(font, Vector2(book.position.x + 34, book.position.y + book.size.y - 26), hint,
@@ -723,6 +729,95 @@ func _draw_fish_log(body: Rect2, font: Font) -> void:
 			HORIZONTAL_ALIGNMENT_RIGHT, 64.0, 16, Color(0.86, 0.78, 0.45))
 	draw_string(font, Vector2(x, body.position.y + body.size.y - 4.0), "↑/↓ browse catches",
 		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 13, Color(0.55, 0.58, 0.68))
+
+
+## Read the authored Kai chains through a throwaway SupportState. Applying the
+## campaign snapshot here keeps this reference page separate from live state.
+func _support_entries() -> Array:
+	var roster_names := {}
+	for def in Roster.player_units():
+		if def.id != "kai":
+			roster_names[def.id] = def.display_name
+	var state := SupportRegistry.build_state()
+	state.apply_save_state(Campaign.support_save)
+	var unlocked_by_pair := {}
+	for conversation: Dictionary in state.unlocked_conversations_for_unit("kai"):
+		var pair_id := str(conversation["pair_id"])
+		if not unlocked_by_pair.has(pair_id):
+			unlocked_by_pair[pair_id] = []
+		unlocked_by_pair[pair_id].append(conversation)
+	var entries: Array = []
+	for companion_id in roster_names:
+		var chain := state.chain_for_units("kai", str(companion_id))
+		if chain == null:
+			continue
+		entries.append({
+			"id": str(companion_id),
+			"name": str(roster_names[companion_id]),
+			"rank": state.rank_for_units("kai", str(companion_id)),
+			"conversations": unlocked_by_pair.get(chain.pair_id(), []),
+		})
+	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var a_folded := str(a["name"]).to_lower()
+		var b_folded := str(b["name"]).to_lower()
+		return a_folded < b_folded if a_folded != b_folded else str(a["name"]) < str(b["name"])
+	)
+	return entries
+
+
+func _draw_supports(body: Rect2, font: Font) -> void:
+	var x := body.position.x
+	var y := body.position.y + 8.0
+	draw_string(font, Vector2(x, y), "Kai's Support Record",
+		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 20, Color(0.86, 0.78, 0.45))
+	y += 38.0
+	var entries := _support_entries()
+	if entries.is_empty():
+		draw_string(font, Vector2(x, y), "No authored Kai support chains are available on the current roster.",
+			HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 15, Color(0.72, 0.75, 0.82))
+		return
+	_support_i = clampi(_support_i, 0, entries.size() - 1)
+	var visible_indices := _support_visible_indices(entries, body.size.y - 66.0)
+	for i in visible_indices:
+		var entry: Dictionary = entries[i]
+		var conversations: Array = entry["conversations"]
+		var row_height := 28.0 + maxf(1, conversations.size()) * 19.0
+		if i == _support_i:
+			draw_rect(Rect2(x - 6.0, y - 17.0, body.size.x - 8.0, row_height - 2.0),
+				Color(0.30, 0.45, 0.85, 0.30), true)
+		var rank: String = str(entry["rank"])
+		var rank_text := rank if rank != "" else "No rank earned"
+		draw_string(font, Vector2(x + 4.0, y), "%s  ·  Current rank: %s" % [entry["name"], rank_text],
+			HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 20.0, 16, Color(0.95, 0.94, 0.88))
+		y += 22.0
+		if conversations.is_empty():
+			draw_string(font, Vector2(x + 14.0, y), "No earned conversations.",
+				HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 28.0, 14, Color(0.62, 0.66, 0.76))
+			y += 19.0
+		else:
+			for conversation: Dictionary in conversations:
+				var status := "Viewed" if bool(conversation["viewed"]) else "Unviewed"
+				draw_string(font, Vector2(x + 14.0, y), "%s conversation  ·  %s" % [conversation["rank"], status],
+					HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 28.0, 14,
+					Color(0.75, 0.84, 0.92) if status == "Viewed" else Color(0.95, 0.80, 0.55))
+				y += 19.0
+		y += 6.0
+	if entries.size() > 1:
+		draw_string(font, Vector2(x, body.position.y + body.size.y - 4.0), "↑/↓ browse companions",
+			HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 13, Color(0.55, 0.58, 0.68))
+
+
+func _support_visible_indices(entries: Array, available_height: float) -> Array[int]:
+	var visible: Array[int] = []
+	var used := 0.0
+	for i in range(_support_i, entries.size()):
+		var conversations: Array = entries[i]["conversations"]
+		var row_height := 28.0 + maxf(1, conversations.size()) * 19.0
+		if not visible.is_empty() and used + row_height > available_height:
+			break
+		visible.append(i)
+		used += row_height
+	return visible
 
 
 func _tab_width(font: Font, label: String, font_size: int) -> float:

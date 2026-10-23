@@ -125,3 +125,31 @@ func test_fish_log_is_reachable_by_viewport_input_and_closes_without_leak():
 		"a newly opened Journal reads the current saved campaign count")
 	_press(KEY_ESCAPE)
 	_assert_back_to_exploration(reopened, "Esc from reopened Fish Log")
+
+
+func test_support_tracker_uses_real_viewport_navigation_and_preserves_campaign():
+	Campaign.support_save = {"points": {"kai_kael": 120, "kai_liora": 120},
+		"ranks": {"kai_kael": "A", "kai_liora": "A"},
+		"viewed": {"kai_kael:C": true, "kai_kael:B": false, "kai_liora:C": true}}
+	var before := Campaign.to_dict()
+	var journal := _open_journal()
+	for _i in range(6):
+		_press(KEY_RIGHT)
+	assert_eq(journal._tab, 6, "real right-arrow input reaches the appended Supports tab")
+	_press(KEY_DOWN)
+	assert_eq(journal._support_i, 1, "real down-arrow input moves among authored companions")
+	_viewport.size = Vector2i(800, 450)
+	journal.queue_redraw()
+	await wait_frames(1)
+	assert_eq(journal._support_entries().size(), 2, "compact viewport still renders the current roster pairs")
+	assert_eq(Campaign.to_dict(), before, "opening, navigating, and rendering do not change Campaign or RNG")
+	_press(KEY_ESCAPE)
+	_assert_back_to_exploration(journal, "Esc from the support tracker")
+	Campaign.support_save["ranks"]["kai_kael"] = "C"
+	var reopened := _open_journal()
+	for _i in range(6):
+		_press(KEY_RIGHT)
+	assert_eq(reopened._support_entries()[0]["rank"], "C",
+		"closing and reopening reflects the latest campaign support state")
+	_press(KEY_J)
+	_assert_back_to_exploration(reopened, "J from the reopened support tracker")
