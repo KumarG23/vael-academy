@@ -58,19 +58,103 @@ both halves and full concealment without sleep races. Existing travel tests also
 exercise ordinary engine-frame continuation. This is headless runtime evidence,
 not graphical evidence.
 
-## Pending acceptance gates
+## Native original-renderer acceptance — complete
+
+Tested source: **`e02a73d810fc4a4e11352ac5deed0d10c8b7d1cc`**. Original
+**Godot 4.7.2 Vulkan 1.4.318 Forward+ / llvmpipe LLVM 20.1.2 (256 bits)**.
+[Lead nomination after #92 release](https://github.com/KumarG23/vael-academy/issues/95#issuecomment-6373373082)
+was received before launch; inventory contained no graphical game/input/capture
+job. The normal Title → Load Game → Slot 0 route used the unchanged, previously
+earned [native Week-2 checkpoint](../issue-5-school-loop/emberwing-return-save.json),
+SHA-256 **`681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4`**,
+in disposable saves/settings. **No checkpoint field or visit was seeded/edited.**
+The only harness additions are the committed Title entry runner, initial window
+size and read-only observer. An external BFS over observed passable cells plans
+native X11 key holds; it never calls a game handler or writes avatar/world state.
+
+[Structured complete states/phase events/checks](results.json) and
+[SHA-256 manifest](manifest.json). All **18 retained captures** were inspected.
+Both original 3-second / 60 fps clips were inspected through complete 10 fps
+frame sequences plus original-resolution source/concealed/reveal frames and
+60 fps black detection:
+
+- [Default 1280×720 clip](clips/default-transition.mp4): map selection → source
+  fade → full concealment (0.5167–0.5500 s) → Entrance reveal/title and held-right
+  ordinary movement. [Source](images/clip-source.png),
+  [whole viewport concealed](images/clip-0.52.png),
+  [reveal](images/clip-0.66.png). The OS cursor is independent of the game cover.
+- [Compact 640×360 clip](clips/compact-transition.mp4): ordinary map navigation,
+  accepted travel → source fade → full concealment (1.4500–1.5500 s) → Campus
+  reveal/title. [Concealed](images/compact-concealed.png),
+  [revealed](images/compact-revealed.png). Native client pixels only; no image
+  synthesis, scaling or renderer substitution. Compact captures use the observed
+  client rectangle; full-size captures are the fullscreen native client.
+
+Actions and results:
+
+1. [Initial actual Campus entry](images/01-initial.png) earns only Campus;
+   [initial list](images/02-only-campus.png) has no undiscovered interiors.
+   Current-room Enter leaves the map/location/state unchanged; Escape closes
+   without opening System. Ordinary walking crosses Campus `(22,7)` →
+   [Entrance Hall](images/03-door-entrance.png), then back to Campus. Both trips
+   fade once, and authored spawns/camera/music/title/re-arm continue normally.
+2. Earned keyboard travel Campus → Entrance and
+   [pointer travel Entrance → Campus](images/06-pointer-travel.png) share the
+   concealed path. Further physical Entrance ↔ Common Hall trips work in both
+   directions and earn only Common Hall. Every observed room switch occurs with
+   cover alpha 1; phase events show one source/destination sequence per request. The viewport
+   test explicitly asserts one `room_changed` emission.
+3. A native accepted confirmation is followed immediately by held Right,
+   Enter, J, M, Esc and editor-grave keys plus left/right pointer input.
+   `07-input-blocked` samples source fade-out alpha 0.3407 with no overlay/menu/
+   dialogue. [After reveal](images/08-held-revealed.png), ordinary held movement
+   continues, without a bounce, activity or overlay. Keys are released normally;
+   no InputMap/time-scale mutation or injected game event is used. Headless
+   viewport tests additionally cover explicit echo/releases during both halves.
+4. At **640×360**, keyboard travel, [pointer travel](images/14-compact-pointer.png),
+   [current-room no-op](images/13-compact-current-map.png) and pointer cancel work.
+   A native **640×360 → 800×450 resize during fade-out** is recorded with phase 1
+   in `15-resize-during-fade`; [reveal](images/15-resized-reveal.png) is complete,
+   unobscured and usable. Invalid pointer confirmation outside destination rows
+   keeps the [open map](images/19-invalid-pointer.png), exact location and state.
+5. After reveal, existing physical doors remain usable, the existing
+   [Kael conversation](images/16-dialogue.png) starts/advances/completes using
+   native Enter, and [Journal](images/09-journal.png) opens/closes with close
+   consumption intact. Further ordinary door continuation returns to Entrance.
+   The only subsequent progression is the existing `read_kael_chat = true`
+   receipt from that deliberately activated conversation.
+
+Whole-state checks compare actual loaded Campus state with each subsequent trip:
+**all Campaign fields (including roster, support/grades/flags/calendar/training
+and training RNG) and live support state match except exactly the already-supported
+unique visit receipts**. Final visits are `campus`, `entrance`, `common_hall`;
+final state equals the initial complete state plus those receipts and the actual
+Kael-read flag. No training/hub/rest/save handler is called by presentation.
+Slot 0 retains the byte-identical checkpoint hash above; other manual slots,
+autosave and settings files remain absent. All 17 observed presentations settle;
+phase-observer elapsed times are **224–259 ms** (frame-sampled, not a fixed wall
+clock promise). One room rebuild occurs per accepted request. No runtime/script
+errors appear in the game log. The game exits normally with **code 0**.
+
+**All game/input/capture jobs ended; inventory is empty.**
+[Explicit GUI release](https://github.com/KumarG23/vael-academy/issues/95#issuecomment-6373539269).
+No control is retained.
+
+Limits: bounded three-room/native checkpoint acceptance, not a full-school replay
+or Neal taste/visual approval. Dynamic invalid destination/access/spawn and
+teardown cases are production viewport/lifecycle tests; native invalid checks
+cover unavailable destinations/current-room/blank-pointer/cancel without
+corrupting authored resources. Actual autosave-file/custom-key integration stays
+pending accepted #85/#89. Native Journal open/close passed, but its inherited
+compact **Roster** stats/gear overflow was observed separately and filed as
+[#96](https://github.com/KumarG23/vael-academy/issues/96), with default/compact
+captures; #95 does not claim that unrelated layout is fixed.
+
+## Remaining acceptance gates
 
 - Integrate #85 and #89 only after each is accepted/merged, by ordinary main merge;
   preserve #92 if accepted main contains it. Run proportional boundary checks,
   including the actual autosave checkpoint and custom keyboard controls.
-- Native original-renderer QA is **next**. [Lead release/nomination receipt](https://github.com/KumarG23/vael-academy/issues/95#issuecomment-6373373082) confirms #92 ended its jobs and names #95 sole controller. Process inventory confirms no remaining graphical game/input/capture job. No graphical run has started at this source commit.
-- Once released: record tested commit SHA, native checkpoint hash/provenance and
-  declared fixture deltas; use disposable saves/settings and the existing renderer.
-  Walk public doors both directions; keyboard/pointer earned travel; invalid,
-  current and cancel; held movement/interaction/overlay keys; 1280×720 and compact
-  resize; dialogue/Journal/door continuation. Inspect captures and a short clip
-  proving source → concealed switch → restored room; compare complete Campaign,
-  roster/support/grades/calendar/training/RNG and manual/autosave bytes with the
-  same ordinary trip. Record actions/timings/limits, end every job and explicitly
-  release the GUI. Do not turn bounded fixtures into natural-progression claims.
-- Exact final-head CI and engineering-lead acceptance before ready/merge.
+- Actual exact-final-head CI success and engineering-lead acceptance before
+  ready/merge. No draft sibling copying, unchanged full/native replays merely to
+  wait, direct-main push or self-merge.
