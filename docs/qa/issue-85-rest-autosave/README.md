@@ -34,7 +34,7 @@ The initial manual files 0, 1 and 2 were byte-identical copies of the existing [
 
 All twelve captures were inspected at native resolution. [State snapshots](states.json), [observations/fixture deltas/limits](results.json) and [artifact SHA-256 manifest](manifest.json) provide the complete comparison record. Live snapshots and saved payloads normalize JSON numeric types for equality. Renderer/model raw logs and private host paths are not included.
 
-Every graphical session exited normally through Return to Title/Quit; all game/input/capture/video jobs ended, process inventory was empty, and the desktop was explicitly released to #89 in [6372500082](https://github.com/KumarG23/vael-academy/issues/85#issuecomment-6372500082). #89 still needs lead naming. No full-year replay, S-rank native reward claim or Neal visual/taste approval. S/full-inventory/legacy/interruption/IO-failure boundaries retain automated coverage.
+Every graphical session exited normally through Return to Title/Quit; all game/input/capture/video jobs ended, process inventory was empty, and the desktop was explicitly released to #89 in [6372500082](https://github.com/KumarG23/vael-academy/issues/85#issuecomment-6372500082). The lead subsequently named #89, which retains sole control during this integration. No full-year replay, S-rank native reward claim or Neal visual/taste approval. S/full-inventory/legacy/interruption/IO-failure boundaries retain automated coverage.
 
 ## Accepted #83 integration — 2026-10-23
 
