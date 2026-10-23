@@ -14,6 +14,10 @@ var _numbers_root: Node2D
 var _splash: ClashSplash
 
 var _shake_amount := 0.0
+## WO-9.5 (#65): the current exchange's skippable clock (idle by default).
+var pace := ExchangeSkip.new()
+var _freeze_gen := 0
+var _frozen := false
 
 
 func setup(config: JuiceConfig, camera: Camera2D, numbers_root: Node2D, splash: ClashSplash) -> void:
@@ -54,14 +58,14 @@ func play_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: boo
 
 	var lunge := create_tween()
 	lunge.tween_property(striker, "position", contact, cfg.lunge_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	await lunge.finished
+	await pace.tween(lunge)
 	var reaction: Tween = null
 
 	if strike.connected:
 		target.set_hp(strike.defender_hp_after)  # white flash + hp bar
 		_spawn_number(target.position + target.combat_aim_offset(), strike)
 		_shake_amount = maxf(_shake_amount, cfg.shake_magnitude(strike.damage, strike.was_crit))
-		if cfg.wants_splash(strike.was_crit, is_kill):
+		if cfg.wants_splash(strike.was_crit, is_kill) and not pace.skipped:
 			var label := "CRIT" if strike.was_crit else "DOWN"
 			_splash.play(striker.team, label, cfg)
 		reaction = _react_target(target, toward, strike, is_kill)
@@ -72,9 +76,9 @@ func play_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: boo
 
 	var back := create_tween()
 	back.tween_property(striker, "position", home, cfg.recoil_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	await back.finished
+	await pace.tween(back)
 	if reaction != null and reaction.is_running():
-		await reaction.finished
+		await pace.tween(reaction)
 
 
 ## CP-6: a presentation may supply a specialized rig; map/CP-2 keep the default.
@@ -88,6 +92,7 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 	if toward == Vector2.ZERO:
 		toward = Vector2.RIGHT
 	var rig := _make_rig()
+	rig.pace = pace
 	striker.get_parent().add_child(rig)
 	# match the unit's on-map sprite exactly (same 32px source, same cell scale
 	# and offset) so swapping the rig in doesn't resize or shift the fighter.
@@ -112,22 +117,24 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 			return
 		fired[0] = true
 		if strike.connected:
-			AudioManager.play_sfx("crit" if strike.was_crit else "hit")  # AW-36
+			if not pace.skipped:
+				AudioManager.play_sfx("crit" if strike.was_crit else "hit")  # AW-36
 			target.set_hp(strike.defender_hp_after)
 			_spawn_number(target.position + target.combat_aim_offset(), strike)
 			_shake_amount = maxf(_shake_amount, cfg.shake_magnitude(strike.damage, strike.was_crit))
-			if cfg.wants_splash(strike.was_crit, is_kill):
+			if cfg.wants_splash(strike.was_crit, is_kill) and not pace.skipped:
 				_splash.play(striker.team, "CRIT" if strike.was_crit else "DOWN", cfg)
 			reactions.append(_react_target(target, toward, strike, is_kill))
 			_hitstop_fire(cfg.hitstop_duration(strike.was_crit, is_kill))
 		else:
-			AudioManager.play_sfx("miss")  # AW-36
+			if not pace.skipped:
+				AudioManager.play_sfx("miss")  # AW-36
 			_spawn_miss(target.position + target.combat_aim_offset())
 			reactions.append(_react_target(target, toward, strike, is_kill)))
 	# aim ranged attacks at the real target (diagonals included), not straight ahead
 	await rig.play_attack(wt, target.global_position, target.global_position + target.combat_aim_offset())
 	if not reactions.is_empty() and reactions[0] != null and reactions[0].is_running():
-		await reactions[0].finished
+		await pace.tween(reactions[0])
 	striker.visible = true
 	rig.queue_free()
 
@@ -139,6 +146,7 @@ func play_heal(healer: Unit, ally: Unit) -> bool:
 	if not CombatRig.has_rig(healer.sprite_id()):
 		return false
 	var rig := CombatRig.new()
+	rig.pace = pace
 	healer.get_parent().add_child(rig)
 	rig.position = healer.position + healer.map_sprite_offset()
 	var facing := _rig_facing(healer, ally.position)
@@ -173,11 +181,37 @@ func _rig_facing(actor: Unit, to: Vector2) -> int:
 ## Non-blocking hit-stop: freeze real time briefly (the rig's tweens pause too —
 ## the GBA crunch) and self-reset, without awaiting inside the impact callback.
 func _hitstop_fire(duration: float) -> void:
-	if duration <= 0.0:
+	if duration <= 0.0 or pace.skipped:
 		return
 	Engine.time_scale = 0.0
+	_frozen = true
+	_freeze_gen += 1
+	var gen := _freeze_gen
 	get_tree().create_timer(duration, true, false, true).timeout.connect(func() -> void:
-		Engine.time_scale = 1.0)
+		if gen == _freeze_gen:  # a skip may already have released this freeze
+			_release_hitstop())
+
+
+func _release_hitstop() -> void:
+	if not _frozen:
+		return
+	_frozen = false
+	_freeze_gen += 1
+	Engine.time_scale = 1.0
+
+
+## WO-9.5 (#65): after a skipped exchange, end the existing hit-stop freeze and
+## land this controller's leftover feedback, so nothing animates after return.
+func settle_skip() -> void:
+	if not pace.skipped:
+		return
+	_release_hitstop()
+	pace.settle()
+	_shake_amount = 0.0
+	if _camera != null:
+		_camera.offset = Vector2.ZERO
+	if _splash != null:
+		_splash.settle()
 
 
 ## Death dissolve: fade + shrink, then the caller frees the node.
@@ -186,7 +220,7 @@ func play_death(unit: Unit) -> void:
 	tw.set_parallel(true)
 	tw.tween_property(unit, "modulate:a", 0.0, cfg.dissolve_time)
 	tw.tween_property(unit, "scale", Vector2(0.5, 0.5), cfg.dissolve_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
-	await tw.finished
+	await pace.tween(tw)
 
 
 ## CP-1: Data-driven target hit reaction at impact (DODGE, FLINCH, STAGGER, KNOCKBACK)
@@ -243,10 +277,10 @@ func _recoil(target: Unit, toward: Vector2) -> void:
 
 ## Freeze the game briefly on connect (real-time, immune to the zeroed time scale).
 func _hitstop(duration: float) -> void:
-	if duration <= 0.0:
+	if duration <= 0.0 or pace.skipped:
 		return
 	Engine.time_scale = 0.0
-	await get_tree().create_timer(duration, true, false, true).timeout
+	await pace.wait(self, duration, true)
 	Engine.time_scale = 1.0
 
 
@@ -269,6 +303,7 @@ func _spawn_number(world_pos: Vector2, strike: StrikeResult) -> void:
 	tw.tween_property(label, "position:y", label.position.y - cfg.number_rise, cfg.number_time)
 	tw.tween_property(label, "modulate:a", 0.0, cfg.number_time).set_delay(cfg.number_time * 0.35)
 	tw.chain().tween_callback(label.queue_free)
+	pace.track(tw)
 
 
 func _spawn_miss(world_pos: Vector2) -> void:
@@ -286,3 +321,4 @@ func _spawn_miss(world_pos: Vector2) -> void:
 	tw.tween_property(label, "position:x", label.position.x + 40.0, cfg.number_time)  # slide/whiff
 	tw.tween_property(label, "modulate:a", 0.0, cfg.number_time)
 	tw.chain().tween_callback(label.queue_free)
+	pace.track(tw)

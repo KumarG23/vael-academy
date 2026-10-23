@@ -45,7 +45,7 @@ func _make_rig() -> CombatRig:
 
 func play_cue(event: String) -> void:
 	var cues: Dictionary = presentation_data.get("audio", {})
-	if not cues.has(event):
+	if not cues.has(event) or pace.skipped:
 		return
 	var name := str(cues[event])
 	AudioManager.play_sfx(name)
@@ -100,7 +100,7 @@ func play_death(unit: Unit) -> void:
 	var fade := create_tween()
 	fade.tween_interval(0.18)
 	fade.tween_property(unit, "modulate:a", 0.0, cfg.dissolve_time)
-	await fade.finished
+	await pace.tween(fade)
 
 
 var shake_layer: Node2D

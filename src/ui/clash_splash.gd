@@ -13,6 +13,7 @@ var _label := ""
 var _t := 0.0  # 0..1 slam-in progress, then held, then out (drives _draw)
 var _active := false
 var plays := 0  # total times played (observable for tests)
+var _tween: Tween
 
 
 func _ready() -> void:
@@ -34,11 +35,18 @@ func play(team: int, label: String, cfg: JuiceConfig) -> void:
 	visible = true
 	_t = 0.0
 	var tw := create_tween()
+	_tween = tw
 	tw.tween_method(_set_t, 0.0, 1.0, cfg.splash_in).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_interval(cfg.splash_hold)
 	tw.tween_method(_set_t, 1.0, 2.0, cfg.splash_out).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	tw.tween_callback(_finish)
 	await tw.finished
+
+
+## WO-9.5 (#65): a skipped exchange lands a playing splash at once.
+func settle() -> void:
+	ExchangeSkip.finish(_tween)
+	_tween = null
 
 
 func _set_t(v: float) -> void:
