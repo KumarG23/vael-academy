@@ -21,6 +21,10 @@ On the integrated issue #58 source with accepted #42 Castle prompt layout, both 
 
 [Escape menu before saving](images/escape-menu.png) shows the existing Save Game choice. On the failure captures, the failure toast is visible after the system menu closes / while the War Room prompt remains available.
 
+## Accepted-main integration (#55)
+
+Accepted main `7bee9bd07c1fe21d28d20394803c671b4e1fa8f0` includes #54 battle-grade attribution and its clock-isolated helper fixture. The integration preserves those BattleView changes, grading regression tests and helper-test repair, along with #42 prompt layout and its QA evidence. Incoming older CastleScene and `test_castle.gd` copies would have removed the #58 save-result handling and regression, so those overlapping files retain the reviewed #58 versions; the #54 grading implementation remains in its own production file and tests. The accepted #55 delta does not alter either observed castle-save route.
+
 ## Checks and scope
 
 - Regression-first production-handler tests failed on the unchanged accepted-main handlers at both induced failures (0/1 tests, 24/26 assertions). Repaired tests drive the actual War Room interaction and Escape-menu confirmation, use real disposable JSON IO, verify successful writes, deterministic `.tmp` open failures, prior and neighboring slot bytes, live Campaign state, menu behavior and successful retries.
