@@ -1,0 +1,565 @@
+{
+  "battle": {
+    "active_team": 0,
+    "arena_pending_wave": 0,
+    "arena_wave": 0,
+    "battle_over": false,
+    "battle_victory": false,
+    "boss_quote_played": false,
+    "chapter_id": "mock_battle_vs_emberwing",
+    "defeated_unit_ids": [
+      "vesper",
+      "dain",
+      "wren",
+      "rurik",
+      "kael",
+      "elowen",
+      "marlow",
+      "brenna",
+      "thessaly"
+    ],
+    "fielded": 8,
+    "lord_alive": true,
+    "objective": 0,
+    "permadead_unit_ids": [],
+    "rng_seed": "16711464",
+    "rng_state": "-705522499202121710",
+    "round_number": 5,
+    "seize_cell": {
+      "x": -1,
+      "y": -1
+    },
+    "visited_spot_ids": []
+  },
+  "campaign": {
+    "casual": true,
+    "casual_mode": true,
+    "chapter_id": "mock_battle",
+    "current_chapter_id": "mock_battle_vs_emberwing",
+    "fish_log": {},
+    "flags": {
+      "kai_awakened": true,
+      "opening_complete": true,
+      "opening_started": true,
+      "prologue_done": true,
+      "road_aftermath_seen": true,
+      "road_intro_seen": true
+    },
+    "grade_samples": {
+      "arena_best_wave": 0.0,
+      "battle_scores": [
+        88.0
+      ],
+      "conduct_points": 0.0,
+      "quiz_scores": []
+    },
+    "house_id": "thornrook",
+    "house_locked": true,
+    "last_result": "victory",
+    "report_cards": [],
+    "rng_state": "1612510189733646864",
+    "semester": 1,
+    "support_save": {
+      "consents": {},
+      "points": {
+        "kai_kael": 0.0,
+        "kai_liora": 0.0
+      },
+      "ranks": {
+        "kai_kael": "",
+        "kai_liora": ""
+      },
+      "romances": {},
+      "viewed": {}
+    },
+    "training_used": true,
+    "unit_states": {
+      "kai": {
+        "class_override": "",
+        "id": "kai",
+        "inventory": [
+          {
+            "id": "sig_kai",
+            "path": "res://data/weapons/sig_kai.tres",
+            "type": "weapon",
+            "uses": 37.0
+          },
+          {
+            "id": "crownspark",
+            "path": "res://data/weapons/crownspark.tres",
+            "type": "weapon",
+            "uses": 999.0
+          },
+          {
+            "id": "vulnerary",
+            "path": "res://data/items/vulnerary.tres",
+            "type": "item",
+            "uses": 3.0
+          }
+        ],
+        "level": 1.0,
+        "move_bonus": 0.0,
+        "stat_bonus": {
+          "def": 0.0,
+          "hp": 0.0,
+          "lck": 0.0,
+          "mag": 0.0,
+          "res": 0.0,
+          "skl": 0.0,
+          "spd": 0.0,
+          "str": 0.0
+        },
+        "xp": 78.0
+      },
+      "rina": {
+        "class_override": "",
+        "id": "rina",
+        "inventory": [
+          {
+            "id": "sig_rina",
+            "path": "res://data/weapons/sig_rina.tres",
+            "type": "weapon",
+            "uses": 39.0
+          }
+        ],
+        "level": 2.0,
+        "move_bonus": 0.0,
+        "stat_bonus": {
+          "def": 0.0,
+          "hp": 0.0,
+          "lck": 0.0,
+          "mag": 0.0,
+          "res": 0.0,
+          "skl": 0.0,
+          "spd": 0.0,
+          "str": 0.0
+        },
+        "xp": 37.0
+      },
+      "serra": {
+        "class_override": "",
+        "id": "serra",
+        "inventory": [
+          {
+            "id": "iron_lance",
+            "path": "res://data/weapons/iron_lance.tres",
+            "type": "weapon",
+            "uses": 38.0
+          }
+        ],
+        "level": 2.0,
+        "move_bonus": 0.0,
+        "stat_bonus": {
+          "def": 0.0,
+          "hp": 0.0,
+          "lck": 0.0,
+          "mag": 0.0,
+          "res": 0.0,
+          "skl": 0.0,
+          "spd": 0.0,
+          "str": 0.0
+        },
+        "xp": 18.0
+      }
+    },
+    "week": 1
+  },
+  "roster": [
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 4,
+        "y": 12
+      },
+      "class_override": "",
+      "current_hp": 20,
+      "has_acted": false,
+      "id": "rina",
+      "inventory": [
+        {
+          "id": "sig_rina",
+          "path": "res://data/weapons/sig_rina.tres",
+          "type": "weapon",
+          "uses": 39
+        }
+      ],
+      "level": 2,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 0,
+      "xp": 37
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 6,
+        "y": 13
+      },
+      "class_override": "",
+      "current_hp": 19,
+      "has_acted": false,
+      "id": "corvin",
+      "inventory": [
+        {
+          "id": "sig_corvin",
+          "path": "res://data/weapons/sig_corvin.tres",
+          "type": "weapon",
+          "uses": 40
+        }
+      ],
+      "level": 1,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 0,
+      "xp": 0
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 4,
+        "y": 11
+      },
+      "class_override": "",
+      "current_hp": 24,
+      "has_acted": false,
+      "id": "nilu",
+      "inventory": [
+        {
+          "id": "claw",
+          "path": "res://data/weapons/claw.tres",
+          "type": "weapon",
+          "uses": 999
+        }
+      ],
+      "level": 1,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 0,
+      "xp": 0
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 7,
+        "y": 10
+      },
+      "class_override": "",
+      "current_hp": 3,
+      "has_acted": true,
+      "id": "kai",
+      "inventory": [
+        {
+          "id": "sig_kai",
+          "path": "res://data/weapons/sig_kai.tres",
+          "type": "weapon",
+          "uses": 37
+        },
+        {
+          "id": "crownspark",
+          "path": "res://data/weapons/crownspark.tres",
+          "type": "weapon",
+          "uses": 999
+        },
+        {
+          "id": "vulnerary",
+          "path": "res://data/items/vulnerary.tres",
+          "type": "item",
+          "uses": 3
+        }
+      ],
+      "level": 1,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 0,
+      "xp": 78
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 7,
+        "y": 11
+      },
+      "class_override": "",
+      "current_hp": 18,
+      "has_acted": false,
+      "id": "liora",
+      "inventory": [
+        {
+          "id": "sig_liora",
+          "path": "res://data/weapons/sig_liora.tres",
+          "type": "weapon",
+          "uses": 36
+        }
+      ],
+      "level": 1,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 1,
+      "xp": 0
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 17,
+        "y": 2
+      },
+      "class_override": "",
+      "current_hp": 24,
+      "has_acted": false,
+      "id": "perrin",
+      "inventory": [
+        {
+          "id": "sig_perrin",
+          "path": "res://data/weapons/sig_perrin.tres",
+          "type": "weapon",
+          "uses": 40
+        },
+        {
+          "id": "heal",
+          "path": "res://data/weapons/heal.tres",
+          "type": "weapon",
+          "uses": 30
+        }
+      ],
+      "level": 2,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 1,
+      "xp": 0
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 12,
+        "y": 9
+      },
+      "class_override": "",
+      "current_hp": 25,
+      "has_acted": false,
+      "id": "osric",
+      "inventory": [
+        {
+          "id": "sig_osric",
+          "path": "res://data/weapons/sig_osric.tres",
+          "type": "weapon",
+          "uses": 39
+        }
+      ],
+      "level": 1,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 2,
+      "xp": 0
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 5,
+        "y": 9
+      },
+      "class_override": "",
+      "current_hp": 20,
+      "has_acted": false,
+      "id": "isolde",
+      "inventory": [
+        {
+          "id": "sig_isolde",
+          "path": "res://data/weapons/sig_isolde.tres",
+          "type": "weapon",
+          "uses": 36
+        }
+      ],
+      "level": 1,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 2,
+      "xp": 0
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 9,
+        "y": 9
+      },
+      "class_override": "",
+      "current_hp": 10,
+      "has_acted": false,
+      "id": "fenn",
+      "inventory": [
+        {
+          "id": "sig_fenn",
+          "path": "res://data/weapons/sig_fenn.tres",
+          "type": "weapon",
+          "uses": 35
+        }
+      ],
+      "level": 1,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 2,
+      "xp": 0
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 17,
+        "y": 10
+      },
+      "class_override": "",
+      "current_hp": 17,
+      "has_acted": false,
+      "id": "bertram",
+      "inventory": [
+        {
+          "id": "sig_bertram",
+          "path": "res://data/weapons/sig_bertram.tres",
+          "type": "weapon",
+          "uses": 36
+        }
+      ],
+      "level": 1,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 2,
+      "xp": 0
+    },
+    {
+      "ai_awake": true,
+      "cell": {
+        "x": 19,
+        "y": 12
+      },
+      "class_override": "",
+      "current_hp": 26,
+      "has_acted": false,
+      "id": "serra",
+      "inventory": [
+        {
+          "id": "iron_lance",
+          "path": "res://data/weapons/iron_lance.tres",
+          "type": "weapon",
+          "uses": 40
+        }
+      ],
+      "level": 2,
+      "move_bonus": 0,
+      "stat_bonus": {
+        "def": 0,
+        "hp": 0,
+        "lck": 0,
+        "mag": 0,
+        "res": 0,
+        "skl": 0,
+        "spd": 0,
+        "str": 0
+      },
+      "team": 2,
+      "xp": 0
+    }
+  ],
+  "slot": 1,
+  "supports": {
+    "consents": {},
+    "points": {
+      "kai_kael": 0,
+      "kai_liora": 0
+    },
+    "ranks": {
+      "kai_kael": "",
+      "kai_liora": ""
+    },
+    "romances": {},
+    "viewed": {}
+  },
+  "version": 1
+}
