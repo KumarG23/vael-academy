@@ -27,7 +27,7 @@ func _ready() -> void:
 	_fit_to_viewport()
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_title = _label(room.display_name + " — Map", 22)
-	_legend = _label("Cyan ring: you • Numbers: exits\nLight: walkable • Dark: blocked\nM / Esc: close • Read only\nExit list: ↑/↓ or wheel", 14)
+	_legend = _label("Cyan ring: you • Gold: exits\nLight ground: walkable\nDark ground: blocked\nM / Esc: close • Read only\nExit list: ↑/↓ or wheel", 14)
 	_exits = ScrollContainer.new()
 	_exits.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(_exits)
@@ -70,16 +70,16 @@ func _label(text: String, font_size: int) -> Label:
 func _layout() -> void:
 	if _title == null:
 		return
-	_title.position = Vector2(34, 24)
-	_title.size = Vector2(size.x - 68, 48)
+	_title.position = Vector2(34, 62)
+	_title.size = Vector2(size.x - 68, 32)
 	var list_width := clampf(size.x * 0.32, 216.0, 320.0)
-	var list_x := size.x - list_width - 24.0
-	_legend.position = Vector2(list_x, 80)
-	_legend.size = Vector2(list_width, 88)
-	_exits.position = Vector2(list_x, 178)
-	_exits.size = Vector2(list_width, maxf(1, size.y - 202))
+	var list_x := size.x - list_width - 34.0
+	_legend.position = Vector2(list_x, 112)
+	_legend.size = Vector2(list_width, 112)
+	_exits.position = Vector2(list_x, 236)
+	_exits.size = Vector2(list_width, maxf(1, size.y - 286))
 	# Reserve marker radius around every edge, including doors on boundary cells.
-	var area := Rect2(34, 82, maxf(1, list_x - 58), maxf(1, size.y - 116))
+	var area := Rect2(34, 112, maxf(1, list_x - 58), maxf(1, size.y - 162))
 	cell_size = minf(area.size.x / grid.width, area.size.y / grid.height)
 	var extent := Vector2(grid.width, grid.height) * cell_size
 	map_rect = Rect2(area.get_center() - extent * 0.5, extent)
