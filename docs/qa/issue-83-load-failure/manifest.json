@@ -1,0 +1,119 @@
+{
+  "issue": 83,
+  "captured_on_commit": "8d7770435e3e377122ad87386f66ce0e6d61b400",
+  "environment": {
+    "engine": "Godot 4.7.2.stable.official.ed1daf0bf",
+    "renderer": "Vulkan 1.4.318 - Forward+ - llvmpipe (LLVM 20.1.2, 256 bits)",
+    "display": "X11 :99, 1280x720, xfwm4",
+    "default_client": "1280x720 (fullscreen, borderless)",
+    "compact_client": "640x360 windowed at absolute +5,+56",
+    "profile": "disposable XDG_DATA_HOME=/tmp/opencode/issue83-gui (user://saves)"
+  },
+  "fixture": {
+    "seed": "tools/seed_fixture.gd writes one real campaign via Campaign.save_to_slot(2)",
+    "slot_0_before_repair": {
+      "file": "slot_0.json",
+      "bytes": 7,
+      "sha256": "be302461cda285db3ed2d45fb767b23e08ca8808b35a638009937df22b332d73",
+      "content": "{broken (malformed JSON)"
+    },
+    "slot_1": {
+      "file": "slot_1.json",
+      "bytes": 78,
+      "sha256": "07dbe1b3b4358a230f2f3934f7ba8a469ad9affd9bdc8c186aaaa4402eb569b8",
+      "content": "valid JSON envelope, invalid campaign types (flags is an array)"
+    },
+    "slot_2_valid": {
+      "file": "slot_2.json",
+      "bytes": 631,
+      "sha256": "68499c47912adf8d8dbfbeb8cc8ea6d41a38c5936bfa10ce7a8f9fe6c3dbbe3c",
+      "content": "Campaign.save_to_slot(2) through production code"
+    }
+  },
+  "images": [
+    {
+      "file": "images/01-title-load-menu-invalid-slots.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 39367,
+      "sha256": "075f6a4ffd427a4b972ca5aee702d7440995ab0ed8a0af45bbae2597f7c412a8"
+    },
+    {
+      "file": "images/02-title-reject-malformed-slot0.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 44490,
+      "sha256": "a7bccfbb48fccc6d32510a56b1a69300dd028de36a6bce43b1d391c1a3ac1f8b"
+    },
+    {
+      "file": "images/03-title-reject-invalid-types-slot1.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 44173,
+      "sha256": "f78e024d62f0923a4d3cb9ecffc7bbbd291b329be85faba6532743b507089b5d"
+    },
+    {
+      "file": "images/04-title-cancel-clears-feedback.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 32257,
+      "sha256": "d3971c4b18f4fe5b3e779fbca699e12021c4b30998bc5a42072acbde8fd16fa2"
+    },
+    {
+      "file": "images/05-title-valid-slot-continues.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 106323,
+      "sha256": "531d8fe8fe8c11f04e8fefa288ed775bc3cf91bc07e9e1c70c3e00467606eb80"
+    },
+    {
+      "file": "images/06-journal-reject-invalid-slot1.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 136950,
+      "sha256": "70bdc2b43822b5a7a28dfefb58cd0cf3cec75ee3d10b7e072ffadbf9f39dfa64"
+    },
+    {
+      "file": "images/07-journal-reject-invalid-slot2.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 136862,
+      "sha256": "e28d60b0a44176d8f0e1e533232786db6779858c3c7d68a4139d76fa15af749c"
+    },
+    {
+      "file": "images/08-journal-tab-change-clears.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 102507,
+      "sha256": "b85a2f6f000ccb4c8bea31d2768316e07803211d0a5ad15a541446e1560c4b40"
+    },
+    {
+      "file": "images/09-journal-repaired-slot-continues.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 106484,
+      "sha256": "2b3e5cd7bf803ca9a9e66fdfdcdeb0cbdaeff48f7a41feb073494a02b96c6355"
+    },
+    {
+      "file": "images/10-compact-title-reject.png",
+      "width": 640,
+      "height": 360,
+      "bytes": 30824,
+      "sha256": "82bdc69b80f1e350854af37479e3d0c299d1344de867ffb753e3a97bd12512cd"
+    },
+    {
+      "file": "images/11-compact-journal-reject.png",
+      "width": 640,
+      "height": 360,
+      "bytes": 61752,
+      "sha256": "e80c3d2d49f3e06bd8a0c70fec435bbc96a5206ee7631ba181f4d479c992da75"
+    },
+    {
+      "file": "images/12-title-retry-same-slot.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 44490,
+      "sha256": "a7bccfbb48fccc6d32510a56b1a69300dd028de36a6bce43b1d391c1a3ac1f8b"
+    }
+  ]
+}
