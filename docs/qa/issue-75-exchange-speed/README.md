@@ -1,0 +1,19 @@
+# Held battle fast-forward — GH-75 / WO-9.5
+
+Basis: MASTER_PLAN §§1–3 (deterministic combat, logic/presentation split, native formulas), §6 WO-9.5 (animation skip + fast-forward), §10 WO-4.9 / partial M9; HANDOFF CP-8 production integration and accepted GH-65 clock/presenter boundaries; ACADEMY_BIBLE §4 ordinary tactical school combat. No canon contradiction found. Parent milestone: [#74](https://github.com/KumarG23/vael-academy/issues/74).
+
+A fresh Space press during an armed attack/heal exchange runs its presentation at 2× until release. The themed hint switches from `Space Hold 2× / Esc Skip` to `Space 2× ACTIVE / Esc Skip`. Space edges and echoes are consumed while armed; idle Space retains its existing confirm binding. Each new exchange starts at 1× and ignores held echoes. Focus loss, teardown, skip and disarm restore the rate. Dialogue, level-up, results and the shared durability/XP/objective tail remain outside the clock.
+
+`ExchangeSkip` adjusts the remaining time of its existing native SceneTreeTimers, tracked tweens and registered sprite animations. Release changes active waits and motion in the input frame. Concurrent reactions, FX, damage numbers, splash, shake and camera transitions share the clock; the existing hit-stop release timer does too. An exchange that used acceleration settles leftover feedback when it ends. Normal playback retains its native waits/signals and feedback lifetime. Fast-forward does not set `Engine.time_scale`, alter audio pitch, re-resolve combat or modify saved data. The pre-existing hit-stop still briefly freezes as before.
+
+## Automated evidence
+
+Regression-first on accepted base `55c59f54`: the initial two production-path tests fail (163/169 assertions); Space does not shorten any route or affect release timing. Normal/held native state comparisons already pass there. With implementation: **11/11 tests, 621 assertions** in `tests/test_battle_exchange_speed.gd` (101.935 s). Existing skip suite **11/11** also passes in the combined run. Original assertions are preserved.
+
+Coverage: same-seed normal/held comparison on illustrated CP-8, map and declared popup attacks; HP transitions/contact order, RNG, Campaign and entire battle/roster/support save payload; early/mid release, release inside a popup animation and real map hit-stop; focus loss, teardown/disarm, held echoes into another exchange; acceleration → Escape; ordinary Space/Enter/pointer continuation; map and popup heal; enemy initiation/crit; map lethal yield; illustrated lethal yield/level-up/boss quote/yield/outro/victory; save → fresh view load; unrelated scene timer; default/compact hint bounds; no later mutation or presentation residue. Comparisons retain real motion with tolerant wall-clock lower and upper bounds, alongside state assertions.
+
+Focused measured normal/held durations: illustrated **4515/2323 ms**, map **2511/1260 ms**, popup **7992/3988 ms**. Headless popup readback diagnostics are explicitly asserted, as in GH-65. Existing ObjectDB/resource exit diagnostics remain.
+
+Declared headless fixtures follow GH-65: adjacent Kai/Serra or Kael/Osric on real Mock Battle; seed selected through the native resolver where a crit/lethal/counter is required. Popup heal clones only Wren's UnitDef and changes its art ID to `tm_mage` (kit present, map rig absent), preserving the staff/stats and driving the executor's real fallback branch. Final-rival fixture leaves Serra at 1 HP and Kai at 95 XP; dialogue advancement is fixture plumbing. No production scene opts into pixel popup.
+
+Clean import/full GUT/helpers and bounded real-input graphical acceptance are pending. No GUI was used before GH-72's named release. No full-school/year replay or Neal taste/visual approval is claimed.
