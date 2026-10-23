@@ -1,0 +1,650 @@
+{
+  "tested_sha": "20f14d66a845eedaaeadaf0c498dbe00064e1bef",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Original Vulkan 1.4.318 Forward+, llvmpipe (LLVM 20.1.2, 256 bits)",
+  "desktop_and_capture_size": [
+    1280,
+    720
+  ],
+  "fixture": {
+    "source": "docs/qa/issue-39-three-house-contests/saves/emberwing-opening.json",
+    "sha256": "c156c62b43e6d6f48002d50f787751e708ec03cdef3378ceadddcd806e99a4d3",
+    "changes": []
+  },
+  "entry": "Title \u2192 Load Game \u2192 Slot 1 (physical slot 0), byte-identical copied native battle snapshot",
+  "initial_round": 3,
+  "initial_eligible_order": [
+    "liora",
+    "kai",
+    "kael",
+    "dain",
+    "brenna",
+    "wren"
+  ],
+  "preexisting_acted_excluded": [
+    "perrin"
+  ],
+  "native_yielded_ids": [
+    "elowen",
+    "fenn",
+    "serra",
+    "corvin",
+    "bertram",
+    "osric",
+    "isolde"
+  ],
+  "cycles": [
+    {
+      "key": "Next",
+      "cursor": [
+        3,
+        12
+      ],
+      "hover": "kael",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        1,
+        13
+      ],
+      "hover": "dain",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        2,
+        13
+      ],
+      "hover": "brenna",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        3,
+        13
+      ],
+      "hover": "wren",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        2,
+        11
+      ],
+      "hover": "liora",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        2,
+        12
+      ],
+      "hover": "kai",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        3,
+        12
+      ],
+      "hover": "kael",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        1,
+        13
+      ],
+      "hover": "dain",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        2,
+        13
+      ],
+      "hover": "brenna",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        3,
+        13
+      ],
+      "hover": "wren",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        2,
+        11
+      ],
+      "hover": "liora",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Next",
+      "cursor": [
+        2,
+        12
+      ],
+      "hover": "kai",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        2,
+        11
+      ],
+      "hover": "liora",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        3,
+        13
+      ],
+      "hover": "wren",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        2,
+        13
+      ],
+      "hover": "brenna",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        1,
+        13
+      ],
+      "hover": "dain",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        3,
+        12
+      ],
+      "hover": "kael",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        2,
+        12
+      ],
+      "hover": "kai",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        2,
+        11
+      ],
+      "hover": "liora",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        3,
+        13
+      ],
+      "hover": "wren",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        2,
+        13
+      ],
+      "hover": "brenna",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        1,
+        13
+      ],
+      "hover": "dain",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        3,
+        12
+      ],
+      "hover": "kael",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    },
+    {
+      "key": "Prior",
+      "cursor": [
+        2,
+        12
+      ],
+      "hover": "kai",
+      "camera": {
+        "position": [
+          1137.77770996094,
+          1280.00012207031
+        ],
+        "zoom": [
+          0.5625,
+          0.5625
+        ]
+      },
+      "snapshot_unchanged": true
+    }
+  ],
+  "wait": {
+    "actor": "kai",
+    "cell": [
+      2,
+      12
+    ],
+    "acted_before": false,
+    "acted_after": true,
+    "previous_hover": "liora",
+    "next_hover": "kael",
+    "rng_unchanged": true,
+    "battle_before": {
+      "active_team": 0,
+      "arena_pending_wave": 0,
+      "arena_wave": 0,
+      "battle_over": false,
+      "battle_victory": false,
+      "boss_quote_played": true,
+      "chapter_id": "mock_battle",
+      "defeated_unit_ids": [
+        "elowen",
+        "fenn",
+        "serra",
+        "corvin",
+        "bertram",
+        "osric",
+        "isolde"
+      ],
+      "fielded": 7,
+      "lord_alive": true,
+      "objective": 0,
+      "permadead_unit_ids": [],
+      "rng_seed": "16603512",
+      "rng_state": "-5062308349469950056",
+      "round_number": 3,
+      "seize_cell": {
+        "x": -1,
+        "y": -1
+      },
+      "visited_spot_ids": []
+    },
+    "battle_after": {
+      "active_team": 0,
+      "arena_pending_wave": 0,
+      "arena_wave": 0,
+      "battle_over": false,
+      "battle_victory": false,
+      "boss_quote_played": true,
+      "chapter_id": "mock_battle",
+      "defeated_unit_ids": [
+        "elowen",
+        "fenn",
+        "serra",
+        "corvin",
+        "bertram",
+        "osric",
+        "isolde"
+      ],
+      "fielded": 7,
+      "lord_alive": true,
+      "objective": 0,
+      "permadead_unit_ids": [],
+      "rng_seed": "16603512",
+      "rng_state": "-5062308349469950056",
+      "round_number": 3,
+      "seize_cell": {
+        "x": -1,
+        "y": -1
+      },
+      "visited_spot_ids": []
+    },
+    "cycling_preserved_post_wait_snapshot": true
+  },
+  "ordinary_wait_delta": [
+    {
+      "path": "/roster/6/has_acted",
+      "before": false,
+      "after": true
+    },
+    {
+      "path": "/campaign/grade_samples/conduct_points",
+      "before": 2.0,
+      "after": 6
+    },
+    {
+      "path": "/supports/points/kai_liora",
+      "before": 0,
+      "after": 10
+    },
+    {
+      "path": "/supports/points/kai_kael",
+      "before": 10,
+      "after": 20
+    },
+    {
+      "path": "/supports/ranks/kai_kael",
+      "before": "",
+      "after": "C"
+    }
+  ],
+  "continuation": {
+    "empty_cell": [
+      3,
+      11
+    ],
+    "previous_hover": "liora",
+    "next_hover": "kael",
+    "camera_fixture": {
+      "position": [
+        1500,
+        900
+      ],
+      "zoom": [
+        0.8,
+        0.8
+      ],
+      "saved_state_changed": false
+    },
+    "post_fixture_next": "dain",
+    "pointer_hover": "wren",
+    "pointer_selected_range_tiles": 34,
+    "selection_cycle_gate_preserved": true,
+    "cancel_spent_no_action": true,
+    "keyboard_selected": "kael",
+    "end_turn_gate_preserved": true,
+    "entire_post_wait_snapshot_unchanged": true
+  },
+  "camera": {
+    "camera_position": [
+      800.000061035156,
+      1469.99987792969
+    ],
+    "distance": 0.00013647876039613,
+    "follow_target": [
+      800.0,
+      1470.0
+    ],
+    "threat_shown": false
+  },
+  "snapshot_sha256": {
+    "pre_wait": "b30af6754ab94d2c9818a4ee67fc0cd51a16143acd2aa617702a7874da9f9993",
+    "post_wait": "32247a7bdc1a0c526d79c44a5647cde304ea37f9bc88caf4abc858f44b878bb5"
+  },
+  "video": {
+    "path": "cycling-after-wait.mp4",
+    "duration_seconds": 8,
+    "fps": 15,
+    "bytes": 458634,
+    "inspection": "Decoded at fps=1/3; all three resulting frames inspected."
+  },
+  "gui_release": "https://github.com/KumarG23/vael-academy/issues/65#issuecomment-6364596137",
+  "limitations": [
+    "One existing Emberwing encounter resumed; all three routed houses are covered by automated viewport tests, not a new graphical replay.",
+    "Camera pan/zoom was a temporary inspector presentation fixture, not a new player binding. All gameplay actions used native X11 keys/pointer.",
+    "No whole-school replay or Neal visual/story approval."
+  ]
+}
