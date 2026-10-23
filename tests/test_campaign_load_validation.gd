@@ -84,9 +84,9 @@ func _assert_rejected(use_title: bool) -> void:
 
 
 func _check_malformed_collections(use_title: bool) -> void:
-	for key: String in ["unit_states", "support_save", "fish_log", "flags", "grade_samples", "report_cards"]:
+	for key: String in ["unit_states", "support_save", "fish_log", "flags", "grade_samples", "report_cards", "report_card_deliveries"]:
 		var invalid: Array = [null, [], "broken", 42, 1.5, false, true]
-		if key == "report_cards":
+		if key in ["report_cards", "report_card_deliveries"]:
 			invalid[1] = {}
 		for value: Variant in invalid:
 			for pending_load: bool in [false, true]:

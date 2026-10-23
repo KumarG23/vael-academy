@@ -12,6 +12,9 @@ The shortcuts are consumed before arbitrary-key overlay dismissal and operate on
 
 Accepted base: `9782c1b2` (includes #58). Godot 4.7.2 clean import exited 0 with no script-load errors. Focused cycling checks: **13/13 tests, 855 assertions**, exit 0 (5.212 s). Full GUT: **853/853 tests, 13,158 assertions across 107 scripts**, exit 0 (230.261 s), including existing mouse/cursor/camera, end-turn, save and three-house boundaries. Import and full GUT held the common Git-directory `vael-godot-heavy.lock`; all runs used disposable player data. Full GUT reported 22 existing deprecations and no script-load errors or exit-time ObjectDB/resource diagnostics; the focused run reported two ObjectDB instances and one resource-in-use exit diagnostic. No helper source changed, so local helper tests were not repeated. Exact-head CI is recorded in the PR.
 
+
+Normal accepted-main integration: #56 merge `5663ec2c` adds report-card delivery/receipt behavior and its tests. Only HANDOFF/STATUS insertion conflicts required resolution; both issues and the accepted GH-58 row are retained. Cycling code/tests are unchanged from `de92ee44`. Combined cycling, report-card delivery, grading, campaign load validation, battle-save, mouse and camera tests pass **77/77, 4,077 assertions / 7 scripts**, exit 0 (17.569 s), shared heavy lock/disposable data. This run reports three deprecations and two ObjectDB instances / one resource-in-use exit diagnostic. The earlier full-suite result is pre-integration; final exact-head CI validates the combined tree.
+
 ## Graphical dependency
 
 No game, desktop input or capture job has been started for this issue. Issue #62 owns the shared GUI until its explicit release. Real-window repeated forward/backward cycling, acting then skipping, camera/hover after pan/zoom, keyboard/pointer continuation and inspected captures are outstanding. Automated viewport input is not graphical acceptance or Neal's visual approval.
