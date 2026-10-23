@@ -6,6 +6,8 @@ extends RefCounted
 ## thin same-name delegates so tests and signal wiring are untouched.
 
 var _v  # BattleView (untyped to avoid a class_name reference cycle)
+## WO-9.5 (#65): Esc/cancel skips the rest of the exchange being presented.
+var _skip_input: ExchangeSkipInput
 
 
 func _init(view) -> void:
@@ -26,6 +28,9 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 	var atk_c: Combatant = _v._combatant_for(attacker, attacker.cell)
 	var def_c: Combatant = _v._combatant_for(defender, defender.cell)
 	var result := CombatResolver.resolve(atk_c, def_c, dist, _v._rng)
+	# Only presentation time is skippable: the result above is final, and the
+	# durability/XP/objective tail below runs identically either way.
+	var pace := _arm_skip()
 
 	# WO-4.9: FE-style combat cut-in when both sides have a hand-authored kit.
 	# Every combat unit is meant to have its own — see the kit rollout.
@@ -34,7 +39,9 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 			and _v._illustrated_combat.supports_exchange(attacker, defender):
 		# CP-8: replay the SAME result; contact applies real map HP. Progression,
 		# durability and chapter completion remain below, shared by all players.
+		_v._illustrated_combat.pace = pace
 		await _v._illustrated_combat.play_exchange(attacker, defender, result, _v._ui_layer)
+		_v._illustrated_combat.pace = ExchangeSkip.new()
 		for unit: Unit in [attacker, defender]:
 			if not unit.is_alive():
 				_v._kill(unit)
@@ -50,8 +57,10 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 		if attacker.team == 0:
 			atk_xp = CombatXP.award(attacker.level, def_level,
 				side_connected(result, false), result.defender_defeated())
+		_v._battle_popup.pace = pace
 		await _v._battle_popup.play_exchange(attacker, defender, result.strikes, ex, shot, dist,
 			attacker.xp, atk_xp)
+		_v._battle_popup.pace = ExchangeSkip.new()
 		for strike in result.strikes:
 			var target := attacker if strike.is_counter else defender
 			if strike.connected:
@@ -63,7 +72,8 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 		# play each strike on the tile via the juice controller, then pull back.
 		var cinematic: bool = _v.strike_delay > 0.0 and _v._juice != null
 		if cinematic:
-			await _v._begin_combat_cam(attacker, defender)
+			_v._juice.pace = pace
+			await _v._begin_combat_cam(attacker, defender, pace)
 		for strike in result.strikes:
 			# Route by the counter flag, not the display name (names aren't unique —
 			# e.g. multiple "Tidemark Soldier"). A counter strike hits the attacker.
@@ -80,7 +90,10 @@ func execute_attack(attacker: Unit, defender: Unit) -> void:
 					await _v._juice.play_death(target)
 				_v._kill(target)
 		if cinematic:
-			await _v._end_combat_cam()
+			await _v._end_combat_cam(pace)
+			_v._juice.settle_skip()
+			_v._juice.pace = ExchangeSkip.new()
+	_disarm_skip()
 
 	# Weapon durability: 1 use per combat per side that swung — GBA-accurate
 	# (a doubling unit still spends only one use, not one per strike). The attacker
@@ -118,15 +131,23 @@ func execute_heal(healer: Unit, ally: Unit) -> void:
 	# popup cut-in if that's still enabled, then to a floating "+N" (tests,
 	# strike_delay 0, un-rigged units).
 	if _v.strike_delay > 0.0 and _v._juice != null and CombatRig.has_rig(healer.unit_id()):
-		await _v._begin_combat_cam(healer, ally)
+		var pace := _arm_skip()
+		_v._juice.pace = pace
+		await _v._begin_combat_cam(healer, ally, pace)
 		await _v._juice.play_heal(healer, ally)
 		_v._pop_text(ally.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
-		await _v._end_combat_cam()
+		await _v._end_combat_cam(pace)
+		_v._juice.settle_skip()
+		_v._juice.pace = ExchangeSkip.new()
+		_disarm_skip()
 	elif _v.strike_delay > 0.0 and _v.battle_popups_enabled and _v._battle_popup != null \
 			and BattlePopup.has_kit(healer.unit_id()) and BattlePopup.has_kit(ally.unit_id()):
 		_v._battle_popup.stage_terrain = _v.chapter.get_terrain(ally.cell.x, ally.cell.y)
 		var shot := ImageTexture.create_from_image(_v.get_viewport().get_texture().get_image())
+		_v._battle_popup.pace = _arm_skip()
 		await _v._battle_popup.play_heal(healer, ally, hp_before, shot)
+		_v._battle_popup.pace = ExchangeSkip.new()
+		_disarm_skip()
 	else:
 		_v._pop_text(ally.position, "+%d" % healed, Color(0.4, 0.9, 0.5))
 	_v._accrue_support_points(healer, ally, SupportState.POINTS_HEAL)
@@ -134,6 +155,24 @@ func execute_heal(healer: Unit, ally: Unit) -> void:
 	await award_heal_xp(healer, healed)
 	_v._busy = was_busy
 	_v._check_objective()
+
+
+## WO-9.5 (#65): a fresh skip clock for one exchange, with Esc armed only while
+## its presentation plays. Instant (strike_delay 0) exchanges have none to skip.
+func _arm_skip() -> ExchangeSkip:
+	var pace := ExchangeSkip.new()
+	if _v.strike_delay <= 0.0:
+		return pace
+	if _skip_input == null or not is_instance_valid(_skip_input):
+		_skip_input = ExchangeSkipInput.new()
+		_v.add_child(_skip_input)
+	_skip_input.arm(pace)
+	return pace
+
+
+func _disarm_skip() -> void:
+	if _skip_input != null and is_instance_valid(_skip_input):
+		_skip_input.disarm()
 
 
 ## Spend one use of `unit`'s equipped weapon and announce a break.

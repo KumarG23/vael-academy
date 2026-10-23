@@ -1,0 +1,6948 @@
+{
+ "tested_sha": "6b118e31a13d0e9c8088a1f5f3636c59dfdaf8c7",
+ "godot": "4.7.2.stable.official.ed1daf0bf",
+ "renderer": "Original Vulkan 1.4.318 Forward+, llvmpipe (LLVM 20.1.2, 256 bits)",
+ "window": "1280x720 shared desktop; game started with Godot's --fullscreen window flag (no renderer/project change)",
+ "input": "native X11 keyboard/pointer via xdotool; read-only reporter (tools/qa_reporter.gd) never calls game handlers",
+ "routes": {
+  "map": {
+   "fixture": "none - docs/qa/issue-39-three-house-contests/saves/emberwing-opening.json copied byte-for-byte to slot 0 of a disposable profile, Title -> Load Game -> Slot 0",
+   "sha256": "c156c62b43e6d6f48002d50f787751e708ec03cdef3378ceadddcd806e99a4d3",
+   "note": "Native round-3 Mock Battle; Serra already yielded natively, so Kael vs Marlow uses the production map-strike path. Real heal: Wren -> Perrin.",
+   "sequence": "Kael (3,12)->(8,12) Attack Marlow; Wren (3,13)->(3,11) Heal Perrin; pointer click Liora, Esc cancel; PageDown"
+  },
+  "illustrated": {
+   "fixture": "CP-8 documented rehearsal (assets/art_review/cp8_integration/preview.gd placement): real Mock Battle, seed 1, Kai (8,12) / Serra (9,12) adjacent, intro dialogue skipped; boss quote, menus, XP, uses real",
+   "sequence": "Kai Attack Serra (boss quote first); Esc at the first 'contact' beat; Kael (3,12)->(4,12) Wait; pointer click Liora, Esc cancel"
+  },
+  "popup": {
+   "fixture": "Declared: real Mock Battle, seed 1, battle_popups_enabled=true (no production scene opts in), Kael (8,10) / Osric (9,10) adjacent",
+   "sequence": "Kael Attack Osric; Esc 0.5 s into the popup; Kai Wait"
+  }
+ },
+ "skip_vs_normal": {
+  "map": {
+   "settles": [
+    4,
+    4
+   ],
+   "settles_identical": true,
+   "contacts": [
+    0,
+    0
+   ],
+   "contacts_identical": true,
+   "skip_exchanges": [
+    {
+     "armed_ms": 718,
+     "esc_to_return_ms": 0
+    },
+    {
+     "armed_ms": 715,
+     "esc_to_return_ms": 0
+    }
+   ],
+   "normal_exchanges": [
+    {
+     "armed_ms": 1740,
+     "esc_to_return_ms": null
+    },
+    {
+     "armed_ms": 1560,
+     "esc_to_return_ms": null
+    }
+   ],
+   "final_rng": [
+    "-6426956736407991359",
+    "-6426956736407991359"
+   ],
+   "final_time_scale": [
+    1.0,
+    1.0
+   ],
+   "final_ui_layer": [
+    true,
+    true
+   ]
+  },
+  "ill": {
+   "settles": [
+    2,
+    2
+   ],
+   "settles_identical": true,
+   "contacts": [
+    3,
+    3
+   ],
+   "contacts_identical": true,
+   "skip_exchanges": [
+    {
+     "armed_ms": 961,
+     "esc_to_return_ms": 1
+    }
+   ],
+   "normal_exchanges": [
+    {
+     "armed_ms": 4374,
+     "esc_to_return_ms": null
+    }
+   ],
+   "final_rng": [
+    "8123836371601731482",
+    "8123836371601731482"
+   ],
+   "final_time_scale": [
+    1.0,
+    1.0
+   ],
+   "final_ui_layer": [
+    true,
+    true
+   ]
+  },
+  "pop": {
+   "settles": [
+    1,
+    1
+   ],
+   "settles_identical": true,
+   "contacts": [
+    0,
+    0
+   ],
+   "contacts_identical": true,
+   "skip_exchanges": [
+    {
+     "armed_ms": 882,
+     "esc_to_return_ms": 0
+    }
+   ],
+   "normal_exchanges": [
+    {
+     "armed_ms": 7910,
+     "esc_to_return_ms": null
+    }
+   ],
+   "final_rng": [
+    "8123836371601731482",
+    "8123836371601731482"
+   ],
+   "final_time_scale": [
+    1.0,
+    1.0
+   ],
+   "final_ui_layer": [
+    true,
+    true
+   ]
+  }
+ },
+ "timelines": {
+  "map-skip": [
+   {
+    "ms": 5837,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 8239,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 10137,
+    "armed": false,
+    "hint": false,
+    "busy": true,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 11126,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 11127,
+    "settled_rng": "-5062308349469950056",
+    "defeated": [
+     "elowen",
+     "fenn",
+     "serra",
+     "corvin",
+     "bertram",
+     "osric",
+     "isolde"
+    ]
+   },
+   {
+    "ms": 11877,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 12406,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": true,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 12920,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": true,
+    "time_scale": 0.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 0,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 13055,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": true,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 0,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 13124,
+    "escape": "down"
+   },
+   {
+    "ms": 13124,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 13124,
+    "settled_rng": "-6426956736407991359",
+    "defeated": [
+     "elowen",
+     "fenn",
+     "serra",
+     "corvin",
+     "bertram",
+     "osric",
+     "isolde",
+     "marlow"
+    ]
+   },
+   {
+    "ms": 13217,
+    "escape": "up"
+   },
+   {
+    "ms": 17062,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 18042,
+    "armed": false,
+    "hint": false,
+    "busy": true,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 18435,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 18435,
+    "settled_rng": "-6426956736407991359",
+    "defeated": [
+     "elowen",
+     "fenn",
+     "serra",
+     "corvin",
+     "bertram",
+     "osric",
+     "isolde",
+     "marlow"
+    ]
+   },
+   {
+    "ms": 18475,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 19342,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": true,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 20057,
+    "escape": "down"
+   },
+   {
+    "ms": 20057,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": true,
+      "xp": 24,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 20057,
+    "settled_rng": "-6426956736407991359",
+    "defeated": [
+     "elowen",
+     "fenn",
+     "serra",
+     "corvin",
+     "bertram",
+     "osric",
+     "isolde",
+     "marlow"
+    ]
+   },
+   {
+    "ms": 20150,
+    "escape": "up"
+   },
+   {
+    "ms": 22101,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": true,
+      "xp": 24,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 22823,
+    "escape": "down"
+   },
+   {
+    "ms": 22824,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": true,
+      "xp": 24,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 22917,
+    "escape": "up"
+   }
+  ],
+  "map-normal": [
+   {
+    "ms": 6006,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 8373,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 10270,
+    "armed": false,
+    "hint": false,
+    "busy": true,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 11279,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 11280,
+    "settled_rng": "-5062308349469950056",
+    "defeated": [
+     "elowen",
+     "fenn",
+     "serra",
+     "corvin",
+     "bertram",
+     "osric",
+     "isolde"
+    ]
+   },
+   {
+    "ms": 12024,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 12539,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": true,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 9,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 13064,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": true,
+    "time_scale": 0.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 0,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 13193,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": true,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     },
+     "marlow": {
+      "hp": 0,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 14279,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 14280,
+    "settled_rng": "-6426956736407991359",
+    "defeated": [
+     "elowen",
+     "fenn",
+     "serra",
+     "corvin",
+     "bertram",
+     "osric",
+     "isolde",
+     "marlow"
+    ]
+   },
+   {
+    "ms": 17941,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 18917,
+    "armed": false,
+    "hint": false,
+    "busy": true,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 19307,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 19308,
+    "settled_rng": "-6426956736407991359",
+    "defeated": [
+     "elowen",
+     "fenn",
+     "serra",
+     "corvin",
+     "bertram",
+     "osric",
+     "isolde",
+     "marlow"
+    ]
+   },
+   {
+    "ms": 19353,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 10,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 20211,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": true,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 21771,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": true,
+      "xp": 24,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 21771,
+    "settled_rng": "-6426956736407991359",
+    "defeated": [
+     "elowen",
+     "fenn",
+     "serra",
+     "corvin",
+     "bertram",
+     "osric",
+     "isolde",
+     "marlow"
+    ]
+   },
+   {
+    "ms": 23524,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": true,
+      "xp": 24,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 24275,
+    "escape": "down"
+   },
+   {
+    "ms": 24275,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       3,
+       10
+      ],
+      "acted": true,
+      "xp": 50,
+      "level": 3
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 30,
+      "level": 1
+     },
+     "wren": {
+      "hp": 6,
+      "cell": [
+       3,
+       11
+      ],
+      "acted": true,
+      "xp": 24,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 78,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 24376,
+    "escape": "up"
+   }
+  ],
+  "ill-skip": [
+   {
+    "ms": 1095,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 7443,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 7749,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 8061,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 9045,
+    "armed": false,
+    "hint": false,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 11378,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 11473,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": true,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": false,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 12255,
+    "contact": {
+     "hp": 20,
+     "strike": "Kai -> Serra: 6 dmg (26 -> 20)",
+     "unit": "serra"
+    }
+   },
+   {
+    "ms": 12311,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": true,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 0.0,
+    "map_ui": false,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 20,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 12333,
+    "contact": {
+     "hp": 15,
+     "strike": "Serra -> Kai: 11 dmg (26 -> 15)",
+     "unit": "kai"
+    }
+   },
+   {
+    "ms": 12335,
+    "contact": {
+     "hp": 14,
+     "strike": "Kai -> Serra: 6 dmg (20 -> 14)",
+     "unit": "serra"
+    }
+   },
+   {
+    "ms": 12338,
+    "escape": "down"
+   },
+   {
+    "ms": 12339,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 12339,
+    "settled_rng": "8123836371601731482",
+    "defeated": []
+   },
+   {
+    "ms": 12411,
+    "escape": "up"
+   },
+   {
+    "ms": 15741,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 16379,
+    "armed": false,
+    "hint": false,
+    "busy": true,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 16560,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       4,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 16561,
+    "settled_rng": "8123836371601731482",
+    "defeated": []
+   },
+   {
+    "ms": 17341,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       4,
+       12
+      ],
+      "acted": true,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 18767,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       4,
+       12
+      ],
+      "acted": true,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 19479,
+    "escape": "down"
+   },
+   {
+    "ms": 19480,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       4,
+       12
+      ],
+      "acted": true,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 19572,
+    "escape": "up"
+   }
+  ],
+  "ill-normal": [
+   {
+    "ms": 1069,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 7500,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 7814,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 8142,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 9106,
+    "armed": false,
+    "hint": false,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 11435,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 11517,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": true,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": false,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 12308,
+    "contact": {
+     "hp": 20,
+     "strike": "Kai -> Serra: 6 dmg (26 -> 20)",
+     "unit": "serra"
+    }
+   },
+   {
+    "ms": 12364,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": true,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 0.0,
+    "map_ui": false,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 20,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 12398,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": true,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": false,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 20,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 13369,
+    "contact": {
+     "hp": 15,
+     "strike": "Serra -> Kai: 11 dmg (26 -> 15)",
+     "unit": "kai"
+    }
+   },
+   {
+    "ms": 13386,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": true,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 0.0,
+    "map_ui": false,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 20,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 13451,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": true,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": false,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 20,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 14413,
+    "contact": {
+     "hp": 14,
+     "strike": "Kai -> Serra: 6 dmg (20 -> 14)",
+     "unit": "serra"
+    }
+   },
+   {
+    "ms": 14430,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": true,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 0.0,
+    "map_ui": false,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 14501,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": true,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": false,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 15638,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 15809,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 15809,
+    "settled_rng": "8123836371601731482",
+    "defeated": []
+   },
+   {
+    "ms": 18949,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 19589,
+    "armed": false,
+    "hint": false,
+    "busy": true,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       3,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 19781,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       4,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 19781,
+    "settled_rng": "8123836371601731482",
+    "defeated": []
+   },
+   {
+    "ms": 20537,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       4,
+       12
+      ],
+      "acted": true,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 21975,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       4,
+       12
+      ],
+      "acted": true,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 22699,
+    "escape": "down"
+   },
+   {
+    "ms": 22700,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       4,
+       12
+      ],
+      "acted": true,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 15,
+      "cell": [
+       8,
+       12
+      ],
+      "acted": true,
+      "xp": 11,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       9
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 14,
+      "cell": [
+       9,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 22787,
+    "escape": "up"
+   }
+  ],
+  "pop-skip": [
+   {
+    "ms": 1118,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 7872,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 8186,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 9226,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 9885,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": true,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 10767,
+    "escape": "down"
+   },
+   {
+    "ms": 10767,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 10,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": true,
+      "xp": 10,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 22,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 10768,
+    "settled_rng": "8123836371601731482",
+    "defeated": []
+   },
+   {
+    "ms": 10839,
+    "escape": "up"
+   },
+   {
+    "ms": 15108,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 10,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": true,
+      "xp": 10,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 22,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 15445,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 10,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": true,
+      "xp": 10,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 22,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 16726,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 10,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": true,
+      "xp": 10,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": true,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 22,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   }
+  ],
+  "pop-normal": [
+   {
+    "ms": 1097,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 7932,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 8278,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 9327,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 3,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 9990,
+    "armed": true,
+    "hint": true,
+    "busy": true,
+    "phase": 3,
+    "stage": false,
+    "popup": true,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 24,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 30,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 17900,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 10,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": true,
+      "xp": 10,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 22,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 17901,
+    "settled_rng": "8123836371601731482",
+    "defeated": []
+   },
+   {
+    "ms": 22105,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 1,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 10,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": true,
+      "xp": 10,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 22,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 22425,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 2,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 10,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": true,
+      "xp": 10,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 22,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   },
+   {
+    "ms": 23720,
+    "armed": false,
+    "hint": false,
+    "busy": false,
+    "phase": 0,
+    "stage": false,
+    "popup": false,
+    "combat_cam": false,
+    "time_scale": 1.0,
+    "map_ui": true,
+    "units": {
+     "perrin": {
+      "hp": 24,
+      "cell": [
+       1,
+       12
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "kael": {
+      "hp": 10,
+      "cell": [
+       8,
+       10
+      ],
+      "acted": true,
+      "xp": 10,
+      "level": 1
+     },
+     "wren": {
+      "hp": 20,
+      "cell": [
+       3,
+       13
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "kai": {
+      "hp": 26,
+      "cell": [
+       2,
+       12
+      ],
+      "acted": true,
+      "xp": 0,
+      "level": 1
+     },
+     "osric": {
+      "hp": 22,
+      "cell": [
+       9,
+       10
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     },
+     "serra": {
+      "hp": 26,
+      "cell": [
+       17,
+       2
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 2
+     },
+     "marlow": {
+      "hp": 20,
+      "cell": [
+       14,
+       14
+      ],
+      "acted": false,
+      "xp": 0,
+      "level": 1
+     }
+    }
+   }
+  ]
+ },
+ "defects_found": {
+  "fixed_in_pr": [
+   "hint ~40 px tall collapsed the noble frame into a band through the text (afa7444d)",
+   "bottom-right hint covered Serra's illustrated HP numbers (6b118e31)"
+  ],
+  "pre_existing_filed": [
+   "#72 hover box/header show stale HP after heal/attack until the cursor moves (identical in normal playback)"
+  ]
+ }
+}
