@@ -299,6 +299,10 @@ func _draw_terrain_tints() -> void:
 
 func unit_at(cell: Vector2i) -> Unit:
 	for u in _units:
+		# GH-72: a yielded unit can be queued for deletion (or already freed) while
+		# the hover readout is being refreshed; neither is a live occupant.
+		if not is_instance_valid(u) or u.is_queued_for_deletion():
+			continue
 		if u.is_alive() and u.cell == cell:
 			return u
 	return null
@@ -391,6 +395,17 @@ func _on_cell_changed(cell: Vector2i) -> void:
 			_show_forecast_for(enemy)
 
 
+## GH-72: re-read the cursor's current cell at action/phase boundaries. HP and
+## occupancy can change under a stationary cursor (heal, attack, yield, terrain
+## healing), and those paths never emit cell_changed. This is presentation only:
+## it issues no action, moves nothing and spends nothing.
+func _refresh_cursor_info() -> void:
+	if _cursor == null or _grid == null or not is_instance_valid(_cursor):
+		return
+	_update_debug(_cursor.cell)
+	_update_hover_info(_cursor.cell)
+
+
 ## FE-style: pointing the cursor at any living unit shows its stats box.
 func _update_hover_info(cell: Vector2i) -> void:
 	if _hover_info == null:
@@ -407,10 +422,11 @@ func _update_hover_info(cell: Vector2i) -> void:
 	else:
 		_hover_unit = null
 		_hover_info.visible = false
+		_hover_info.queue_redraw()
 
 
 func _draw_hover_info() -> void:
-	if _hover_unit == null:
+	if _hover_unit == null or not is_instance_valid(_hover_unit) or not _hover_unit.is_alive():
 		return
 	var u := _hover_unit
 	var font := UITheme.font()
@@ -774,6 +790,7 @@ func _finish_action() -> void:
 	_forecast_panel.hide_panel()
 	_deselect()
 	_check_objective()  # a move onto the seize tile can win here
+	_refresh_cursor_info()  # GH-72: heal/attack/removal may not have moved the cursor
 	if _battle_over:
 		return
 	if _turn.is_player_phase() and _all_player_units_acted():
@@ -835,6 +852,7 @@ func _begin_player_phase() -> void:
 	_apply_terrain_hazard(0)  # AW-29: Embers chip anyone who lingered
 	_recompute_auras()  # AW-27: keep aura stats fresh for overlays/inspection
 	_deselect()
+	_refresh_cursor_info()  # GH-72: phase-start terrain healing/hazards under the cursor
 	if _threat_overlay.is_shown():
 		_refresh_threat_overlay()  # enemies moved last phase
 	# AW-50: in the arena the banner counts WAVES — the turn counter reading
@@ -889,6 +907,7 @@ func _run_enemy_phase() -> void:
 		_apply_terrain_heal(t)
 		_apply_terrain_hazard(t)  # AW-29: Embers chip anyone who lingered
 	_recompute_auras()  # AW-27: AI reads aura-buffed stats when predicting combat
+	_refresh_cursor_info()  # GH-72: enemy-side phase terrain changes at the cursor
 	_turn_banner.announce("Enemy Phase", false)
 	# Every rival house acts this phase; deterministic acting order (§5) is a
 	# single stable sort across all of them by board position.
@@ -1275,6 +1294,7 @@ func _remove_unit_without_events(unit: Unit) -> void:
 
 func _restore_post_load_ui() -> void:
 	_deselect()
+	_refresh_cursor_info()  # GH-72: a restored HP/removal at the cursor must show now
 	if _threat_overlay.is_shown():
 		_refresh_threat_overlay()
 	if _battle_over:
