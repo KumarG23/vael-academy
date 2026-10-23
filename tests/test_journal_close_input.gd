@@ -102,3 +102,26 @@ func test_j_closes_from_inside_the_inventory_hub():
 	_press(KEY_J)
 	_assert_back_to_exploration(journal, "J inside the hub")
 	assert_eq(_ui_journals(), 0, "no replacement Journal")
+
+
+func test_fish_log_is_reachable_by_viewport_input_and_closes_without_leak():
+	Campaign.fish_log = {"Lakeperch": 2, "Warded Coin": 1, "Unknown Saved Catch": 5}
+	var before := Campaign.to_dict()
+	var journal := _open_journal()
+	for _i in range(5):
+		_press(KEY_RIGHT)
+	assert_eq(journal._tab, 5, "Fish Log is reachable after the existing tabs")
+	_press(KEY_UP)
+	assert_eq(journal._fish_i, 2, "real viewport input wraps to the last stable catch")
+	assert_eq(Campaign.to_dict(), before, "opening and navigating the log leaves campaign and RNG unchanged")
+	_press(KEY_J)
+	_assert_back_to_exploration(journal, "J from Fish Log")
+	assert_eq(_castle._menu_context, "", "the close key does not leak into exploration")
+	Campaign.fish_log["Lakeperch"] = 6
+	var reopened := _open_journal()
+	for _i in range(5):
+		_press(KEY_RIGHT)
+	assert_eq(reopened._fish_log_entries()[0]["count"], 6,
+		"a newly opened Journal reads the current saved campaign count")
+	_press(KEY_ESCAPE)
+	_assert_back_to_exploration(reopened, "Esc from reopened Fish Log")
