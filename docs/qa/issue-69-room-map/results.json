@@ -1,0 +1,43 @@
+{
+  "tested_sha": "81a41f41100416272d580718a95c2e853bac1c26",
+  "fixture_sha256": "681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4",
+  "renderer": "Godot 4.7.2 Vulkan 1.4.318 Forward+ / llvmpipe LLVM 20.1.2",
+  "campus_start": [
+    3008.0,
+    2112.0
+  ],
+  "interior_after_door": [
+    1472.0,
+    1375.16955566406
+  ],
+  "interior_after_walking": [
+    569.701843261719,
+    309.205078125
+  ],
+  "campaign_unchanged_through_map_walk_and_oath_wall": true,
+  "save_bytes_unchanged": true,
+  "map_blocks_movement_interaction_journal_editor_pointer": true,
+  "resize_preserves_camera_avatar_campaign_guard": true,
+  "escape_and_m_close_without_menu_leak": true,
+  "journal_and_pointer_menu_continuation": true,
+  "actual_door": "campus (22,7) -> entrance (11,11)",
+  "actual_interaction": "The Oath Wall -> existing sworn-house feedback",
+  "window_sizes": [
+    [
+      1280,
+      720
+    ],
+    [
+      640,
+      360
+    ],
+    [
+      800,
+      450
+    ],
+    [
+      1280,
+      720
+    ]
+  ]
+}

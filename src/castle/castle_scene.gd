@@ -47,6 +47,9 @@ var _toast_label: Label
 var _title_card: AreaTitleCard
 var _toast_left := 0.0
 var _dialogue: DialogueScene = null
+var _room_map: AcademyRoomMap = null
+var _map_hint: Label
+var _leaving := false  # deferred scene changes must gate map opening too
 var _journal: AcademyJournal = null  # AW-39: the J-key book UI
 var _editor: CampusEditor = null     # AW-44: the ` visual room editor
 var _occluder: Node2D = null         # AW-47: y-sort occlusion overlay
@@ -184,6 +187,15 @@ func _ready() -> void:
 	_menu.chosen.connect(_on_menu_chosen)
 	_menu.cancelled.connect(_close_menu)
 	_ui.add_child(_menu)
+	_map_hint = Label.new()
+	_map_hint.text = "M: Room map"
+	_map_hint.add_theme_font_size_override("font_size", 16)
+	_map_hint.add_theme_color_override("font_outline_color", Color.BLACK)
+	_map_hint.add_theme_constant_override("outline_size", 5)
+	_map_hint.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_map_hint.offset_left = 12
+	_map_hint.offset_top = -32
+	_ui.add_child(_map_hint)
 	_editor = CampusEditor.new()  # AW-44: the in-game visual room editor (` to toggle)
 	add_child(_editor)
 	_editor.setup(self)
@@ -264,6 +276,7 @@ func _build_avatar_frames(unit_id: String) -> SpriteFrames:
 func enter_room(room_id: String, spawn := Vector2i(-1, -1)) -> void:
 	if not _rooms.has(room_id):
 		return
+	_close_room_map()
 	room = _rooms[room_id]
 	AudioManager.play_music(_music_for_room(room_id))  # AW-47: per-area theme
 	_grid = room.chapter.make_grid()
@@ -358,11 +371,12 @@ func _point_available(p: CastlePoint) -> bool:
 
 
 func busy() -> bool:
-	return _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
+	return _room_map != null or _leaving or _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
 		or _quiz != null or (_editor != null and _editor.active)
 
 
 func _process(delta: float) -> void:
+	_map_hint.visible = not busy() and _map_available()
 	_door_pulse += delta
 	if _toast_left > 0.0:
 		_toast_left -= delta
@@ -424,6 +438,8 @@ func _face(move: Vector2) -> void:
 
 
 func _check_door() -> void:
+	if busy():
+		return
 	var cell := _grid.world_to_cell(_avatar.position)
 	var on_door := false
 	for d in room.doors:
@@ -494,6 +510,54 @@ func _layout_prompt(preferred: Vector2) -> void:
 	_prompt.position = Vector2(x, y)
 
 
+## Own map keys before GUI/unhandled dispatch. Closing cannot leak Escape to
+## the castle menu; all other input is modal while open (including the editor).
+func _input(event: InputEvent) -> void:
+	if _room_map != null:
+		if event is InputEventKey and event.pressed and not event.echo \
+				and event.keycode in [KEY_M, KEY_ESCAPE]:
+			get_viewport().set_input_as_handled()
+			_close_room_map()
+		elif event is InputEventKey and event.pressed and event.keycode in [KEY_UP, KEY_DOWN]:
+			get_viewport().set_input_as_handled()
+			_room_map._exits.scroll_vertical += 40 if event.keycode == KEY_DOWN else -40
+		elif event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			# The read-only exit list may scroll; it never issues a world command.
+			return
+		else:
+			get_viewport().set_input_as_handled()
+		return
+	if event is InputEventKey and event.keycode == KEY_M:
+		# M is reserved only in ordinary exploration; active overlays own their
+		# existing input. Echo/release are consumed without toggling.
+		if not busy():
+			get_viewport().set_input_as_handled()
+			if event.pressed and not event.echo and _map_available():
+				_open_room_map()
+
+
+func _map_available() -> bool:
+	# Public academy spaces only. Existing campus exit labels still appear,
+	# including the already-visible town/grove doors, without loading interiors.
+	return room != null and room.id != "grove" and not room.id.begins_with("vael_")
+
+
+func _open_room_map() -> void:
+	_room_map = AcademyRoomMap.new()
+	_room_map.room = room
+	_room_map.avatar = _avatar
+	_room_map.grid = _grid
+	_room_map.terrain_db = _terrain_db
+	_ui.add_child(_room_map)
+
+
+func _close_room_map() -> void:
+	if _room_map != null:
+		_room_map.hide()
+		_room_map.queue_free()
+		_room_map = null
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	# AW-44: backtick/tilde toggles the visual room editor; while it's on, it eats
 	# all input (no walking / journal / interacting).
@@ -532,7 +596,7 @@ func _open_journal() -> void:
 
 
 func activate_nearest() -> void:
-	if _nearest_point == null:
+	if busy() or _nearest_point == null:
 		return
 	var p := _nearest_point
 	spot_activated.emit(p.id)
@@ -744,6 +808,7 @@ func _open_function(fn: String) -> void:
 				Campaign.deploy()
 				# AW-49: deferred — swapping scenes synchronously inside an input
 				# callback de-trees this node mid-call (the arena-entry crash).
+				_leaving = true
 				get_tree().change_scene_to_file.call_deferred("res://scenes/battle/arena.tscn")
 		"fn_class":
 			_start_class()
@@ -813,6 +878,7 @@ func _do_mission(index: int) -> void:
 			return
 		Campaign.deploy()
 		BattleView.next_prep = true  # AW-74: missions open on preparations
+		_leaving = true
 		get_tree().change_scene_to_file.call_deferred(scene)
 
 
@@ -1256,6 +1322,7 @@ func _do_system(index: int) -> void:
 		0:
 			_toast_save_result(Campaign.save_to_slot(0))
 		1:
+			_leaving = true
 			get_tree().change_scene_to_file.call_deferred("res://scenes/title/title.tscn")
 
 
