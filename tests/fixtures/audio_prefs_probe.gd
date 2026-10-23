@@ -66,6 +66,7 @@ func _drive_journal() -> void:
 	await _press("cursor_left", 3)
 	await _press("cursor_down")       # Master Volume
 	await _press("cursor_left", 4)
+	await _press("cursor_down")       # Text Speed row, added by issue #62
 	await _press("cursor_down")       # Return to Title, real deferred scene change
 	await _press("cursor_confirm")
 	await process_frame

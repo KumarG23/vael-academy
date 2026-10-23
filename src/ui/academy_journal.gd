@@ -17,6 +17,7 @@ const SYS_ROWS := [
 	["Save — Slot 1", "save0"], ["Save — Slot 2", "save1"], ["Save — Slot 3", "save2"],
 	["Load — Slot 1", "load0"], ["Load — Slot 2", "load1"], ["Load — Slot 3", "load2"],
 	["Music Volume", "music"], ["SFX Volume", "sfx"], ["Master Volume", "master"],
+	["Text Speed", "text_speed"],
 	["Return to Title", "title"],
 ]
 
@@ -258,6 +259,15 @@ func _adjust_volume(dir: int) -> bool:
 	if _tab != 4:  # System (AW-54 slid it right for Grades)
 		return false
 	var kind: String = SYS_ROWS[_sys_i][1]
+	if kind == "text_speed":
+		var old_mode: String = DialoguePreferences.text_speed
+		var idx := DialoguePreferences.MODES.find(old_mode)
+		var next_mode: String = DialoguePreferences.MODES[wrapi(idx + dir, 0, DialoguePreferences.MODES.size())]
+		var err := DialoguePreferences.set_text_speed(next_mode)
+		_show_toast("Text speed: %s%s" % [DialoguePreferences.label(), " · save failed" if err != OK else ""])
+		AudioManager.play_sfx("cursor")
+		queue_redraw()
+		return true
 	var before := [AudioManager.master_volume, AudioManager.music_volume, AudioManager.sfx_volume]
 	match kind:
 		"music":
@@ -588,14 +598,18 @@ func _rank_color(rank: String) -> Color:
 
 
 func _draw_system(body: Rect2, font: Font) -> void:
-	var y := body.position.y + 6
+	# Fit every existing save/audio/title row plus Text Speed in compact supported
+	# windows. The old fixed 30 px spacing pushed the bottom controls off-screen.
+	var pitch := clampf((body.size.y - 8.0) / SYS_ROWS.size(), 16.0, 30.0)
+	var font_size := 13 if pitch < 23.0 else 16
+	var y := body.position.y + minf(20.0, pitch * 0.72)
 	for i in range(SYS_ROWS.size()):
 		var kind: String = SYS_ROWS[i][1]
 		var sel := i == _sys_i
 		if sel:
-			draw_rect(Rect2(body.position.x - 6, y - 18, body.size.x - 20, 26), Color(0.30, 0.45, 0.85, 0.45), true)
+			draw_rect(Rect2(body.position.x - 6, y - pitch * 0.62, body.size.x - 20, pitch * 0.88), Color(0.30, 0.45, 0.85, 0.45), true)
 		draw_string(font, Vector2(body.position.x + 6, y), SYS_ROWS[i][0],
-			HORIZONTAL_ALIGNMENT_LEFT, 300, 17, Color(0.96, 0.94, 0.86) if sel else Color(0.78, 0.8, 0.86))
+			HORIZONTAL_ALIGNMENT_LEFT, 300, font_size, Color(0.96, 0.94, 0.86) if sel else Color(0.78, 0.8, 0.86))
 		# right column: slot summary or a volume bar
 		var rx := body.position.x + 320
 		if kind.begins_with("save") or kind.begins_with("load"):
@@ -608,10 +622,13 @@ func _draw_system(body: Rect2, font: Font) -> void:
 			draw_rect(Rect2(rx, y - 12, 160 * v, 12), Color(0.5, 0.7, 1.0), true)
 			draw_string(font, Vector2(rx + 172, y), "%d%%" % roundi(v * 100),
 				HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.82, 0.9))
-		y += 30
-	# AW-70: the controls reference at the System tab's foot
-	draw_string(font, Vector2(body.position.x, body.position.y + body.size.y + 24), CONTROLS_REF,
-		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 13, Color(0.55, 0.6, 0.7))
+		elif kind == "text_speed":
+			draw_string(font, Vector2(rx, y), DialoguePreferences.label(),
+				HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 340, font_size, Color(0.8, 0.82, 0.9))
+		y += pitch
+	# The Journal-wide navigation hint already covers this tab. The older full
+	# castle controls reference exceeded the compact System panel and collided
+	# with that footer after adding the extra preference row.
 
 
 ## AW-70: everything on one line, always one J-press away.
