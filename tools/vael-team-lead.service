@@ -1,5 +1,5 @@
 [Unit]
-Description=Vael GitHub engineering lead
+Description=Dev Studio GitHub engineering lead
 Wants=network-online.target
 After=network-online.target
 
@@ -7,6 +7,6 @@ After=network-online.target
 Type=oneshot
 WorkingDirectory=%h/projects/vael-academy
 Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
-ExecStart=/usr/bin/python3 tools/team.py lead
+ExecStart=/usr/bin/python3 tools/team.py lead-all
 TimeoutStartSec=infinity
 Nice=5

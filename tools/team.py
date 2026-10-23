@@ -38,7 +38,117 @@ _schedule_spec.loader.exec_module(work_schedule)
 
 REPO = Path(os.environ.get('VAEL_REPO', Path.home() / 'projects/vael-academy'))
 STATE = Path(os.environ.get('VAEL_TEAM_STATE', Path.home() / '.local/state/vael-team'))
-SLUG = 'KumarG23/vael-academy'
+# Legacy Vael state and command syntax remain unchanged. Each additional project has
+# its own state, worktree namespace and receipts; provider quotas/analytics stay host-wide.
+PROJECT = os.environ.get('STUDIO_PROJECT', 'vael')
+SLUG = os.environ.get('STUDIO_SLUG', 'KumarG23/vael-academy')
+BASE = os.environ.get('STUDIO_BASE', 'main')
+GLOBAL_STATE = Path(os.environ.get('STUDIO_GLOBAL_STATE', Path.home() / '.local/state/vael-team'))
+REGISTRY = Path(__file__).with_name('team-projects.json')
+
+
+def issue_branch(number):
+    return f'team/issue-{number}' if PROJECT == 'vael' else f'team/{PROJECT}/issue-{number}'
+
+
+def session_name(number):
+    return f'vael-issue-{number}' if PROJECT == 'vael' else f'studio-{PROJECT}-issue-{number}'
+
+
+def allowed_issue(number):
+    if PROJECT == 'command' and number != 2:
+        raise RuntimeError('Command is M0-only: only issue #2 is authorized')
+
+
+def registry():
+    data = json.loads(REGISTRY.read_text())
+    for name, item in data.items():
+        if not re.fullmatch(r'[a-z][a-z0-9-]*', name):
+            raise ValueError('invalid project identity')
+        if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', item['slug']):
+            raise ValueError('invalid repo slug')
+        if not re.fullmatch(r'[A-Za-z0-9_./-]+', item['base']) or '..' in item['base']:
+            raise ValueError('invalid base branch')
+        for field in ('repo', 'state'):
+            item[field] = str(Path(item[field]).expanduser())
+            if not Path(item[field]).is_absolute():
+                raise ValueError('project paths must be absolute')
+    if len({v['state'] for v in data.values()}) != len(data):
+        raise ValueError('project states must be distinct')
+    return data
+
+
+def project_env(name, config):
+    env = os.environ.copy()
+    env.update(STUDIO_PROJECT=name, STUDIO_SLUG=config['slug'], STUDIO_BASE=config['base'],
+               VAEL_REPO=config['repo'], VAEL_TEAM_STATE=config['state'],
+               STUDIO_GLOBAL_STATE=registry()['vael']['state'])
+    return env
+
+
+def migrate_intake():
+    """Copy the preexisting Command intake event before removing it from Vael.
+
+    Both event locks are held, so a simultaneous event writer or lead consumer
+    cannot lose an arrival. This is idempotent and never acknowledges the event.
+    """
+    config = registry()
+    source = Path(config['vael']['state'])
+    target = Path(config['command']['state'])
+    target.mkdir(parents=True, exist_ok=True)
+    key = 'project-intake:https://github.com/KumarG23/jarvis-command/issues/2'
+    with (source / 'events.lock').open('w') as src_lock, (target / 'events.lock').open('w') as dst_lock:
+        fcntl.flock(src_lock, fcntl.LOCK_EX)
+        fcntl.flock(dst_lock, fcntl.LOCK_EX)
+        src_file, dst_file = source / 'pending-events.json', target / 'pending-events.json'
+        src = json.loads(src_file.read_text()) if src_file.exists() else {}
+        if key not in src:
+            return False
+        dst = json.loads(dst_file.read_text()) if dst_file.exists() else {}
+        dst.setdefault(key, src[key])
+        pending = dst_file.with_suffix('.pending')
+        pending.write_text(json.dumps(dst, indent=2, sort_keys=True))
+        pending.replace(dst_file)
+        if key not in json.loads(dst_file.read_text()):
+            raise RuntimeError('Intake migration readback failed; source retained')
+        del src[key]
+        pending = src_file.with_suffix('.pending')
+        pending.write_text(json.dumps(src, indent=2, sort_keys=True))
+        pending.replace(src_file)
+        return True
+
+
+def lead_all():
+    # One existing timer, deterministic rotating first choice, no extra inference on
+    # unchanged projects. Each pass still checks every project; a failed one cannot
+    # silently starve the others. The global lock also serializes manual invocations.
+    if not work_schedule.status()['open']:
+        return 0
+    projects = registry()
+    GLOBAL_STATE.mkdir(parents=True, exist_ok=True)
+    with (GLOBAL_STATE / 'projects.lock').open('w') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return 0
+        names = sorted(projects)
+        cursor = GLOBAL_STATE / 'projects-cursor.json'
+        try:
+            offset = int(json.loads(cursor.read_text())['offset']) % len(names)
+        except (OSError, ValueError, KeyError, TypeError):
+            offset = 0
+        outcomes = {}
+        for name in names[offset:] + names[:offset]:
+            config = projects[name]
+            if not Path(config['repo']).is_dir():
+                outcomes[name] = 'checkout_missing'
+                continue
+            res = subprocess.run([sys.executable, str(Path(__file__).resolve()), 'lead'],
+                                 cwd=config['repo'], env=project_env(name, config))
+            outcomes[name] = res.returncode
+        cursor.write_text(json.dumps({'offset': (offset + 1) % len(names)}))
+        print(json.dumps(outcomes, sort_keys=True))
+        return 0 if all(value == 0 for value in outcomes.values()) else 1
 PROFILES = {
     'sol': ('codex', 'gpt-6.1-sol', 'high'),
     'sol-dev': ('codex', 'gpt-6.1-sol', 'medium'),
@@ -94,7 +204,7 @@ REFRESH = 3600  # Full deterministic discussion rescan; elapsed time alone never
 
 
 def _analytics_db():
-    return Path(os.environ.get('VAEL_USAGE_DB', STATE / 'usage-analytics.sqlite3'))
+    return Path(os.environ.get('VAEL_USAGE_DB', GLOBAL_STATE / 'usage-analytics.sqlite3'))
 
 
 def _telemetry(fn, *args, **kwargs):
@@ -292,11 +402,11 @@ def _quota_scope_and_provider(target):
 def quota_file(target):
     _, scope, _ = _quota_scope_and_provider(target)
     safe_scope = scope.replace(':', '-')
-    return STATE / f'quota-{safe_scope}.json'
+    return GLOBAL_STATE / f'quota-{safe_scope}.json'
 
 
 def _legacy_quota_file(provider):
-    return STATE / f'quota-{provider}.json'
+    return GLOBAL_STATE / f'quota-{provider}.json'
 
 
 def record_provider_quota(profile, blocked_reason, reset_info, *, issue_number=None, run_id=None,
@@ -435,7 +545,7 @@ def quota_snapshot(now_ts=None):
     now_val = time.time() if now_ts is None else float(now_ts)
     items = []
     seen_scopes = set()
-    for f in sorted(STATE.glob('quota-*.json')):
+    for f in sorted(GLOBAL_STATE.glob('quota-*.json')):
         try:
             data = json.loads(f.read_text())
         except (OSError, ValueError):
@@ -590,10 +700,12 @@ def active():
     # Count preserved pre-scope sessions as well as the new owned server. Never
     # auto-start a server here, or inherit the calling pane's TMUX socket.
     sessions = set()
-    for socket in (['-L', 'default'], ['-S', str(STATE / 'tmux.sock')]):
+    sockets = [['-L', 'default'], ['-S', str(STATE / 'tmux.sock')]]
+    sockets += [['-S', str(Path(p['state']) / 'tmux.sock')] for n, p in registry().items() if n != PROJECT]
+    for socket in sockets:
         result = subprocess.run(['tmux', *socket, '-N', 'list-sessions', '-F', '#{session_name}'],
                                 capture_output=True, text=True)
-        sessions.update(s for s in result.stdout.splitlines() if s.startswith('vael-issue-'))
+        sessions.update(s for s in result.stdout.splitlines() if s.startswith(('vael-issue-', 'studio-')))
     return sorted(sessions)
 
 
@@ -609,7 +721,7 @@ def _pid_alive(pid):
 
 def confirm_worker_exited(number):
     """Confirm both tmux session and recorded worker PID have exited before transferring worktree ownership."""
-    if f'vael-issue-{number}' in active():
+    if session_name(number) in active():
         return False
     pid_file = STATE / f'issue-{number}.pid'
     if pid_file.exists():
@@ -639,10 +751,10 @@ def worktree_progress(worktree):
     try:
         info['branch'] = run('git', 'branch', '--show-current', cwd=wt)
         info['head'] = run('git', 'rev-parse', '--short', 'HEAD', cwd=wt)
-        log_proc = subprocess.run(['git', 'log', '--oneline', '-n', '5', 'origin/main..HEAD'],
+        log_proc = subprocess.run(['git', 'log', '--oneline', '-n', '5', 'origin/' + BASE + '..HEAD'],
                                   cwd=wt, capture_output=True, text=True)
         if log_proc.returncode != 0:
-            log_proc = subprocess.run(['git', 'log', '--oneline', '-n', '5', 'main..HEAD'],
+            log_proc = subprocess.run(['git', 'log', '--oneline', '-n', '5', BASE + '..HEAD'],
                                       cwd=wt, capture_output=True, text=True)
         info['commits'] = [line.strip()[:120] for line in (log_proc.stdout or '').splitlines() if line.strip()]
     except (OSError, subprocess.SubprocessError):
@@ -743,7 +855,7 @@ def decide_quota(number, decision, to_profile=None, now_ts=None):
     if prof in PROFILES:
         qf = quota_file(prof)
         if not qf.exists():
-            qf = STATE / f'quota-{PROFILES[prof][0]}.json'
+            qf = GLOBAL_STATE / f'quota-{PROFILES[prof][0]}.json'
         if qf.exists():
             try:
                 qdata = json.loads(qf.read_text())
@@ -781,13 +893,27 @@ def launch_worker(number, worktree):
     subprocess.run(['systemd-run', '--user', '--scope', '--quiet',
                     '--unit=vael-team-dispatch-' + str(time.time_ns()),
                     'tmux', '-S', str(STATE / 'tmux.sock'), '-f', '/dev/null',
-                    'new-session', '-d', '-s', f'vael-issue-{number}', '-c', str(worktree),
+                    'new-session', '-d', '-s', session_name(number), '-c', str(worktree),
                     '-e', 'VAEL_REPO=' + str(REPO), '-e', 'VAEL_TEAM_STATE=' + str(STATE),
+                    '-e', 'STUDIO_PROJECT=' + PROJECT, '-e', 'STUDIO_SLUG=' + SLUG,
+                    '-e', 'STUDIO_BASE=' + BASE, '-e', 'STUDIO_GLOBAL_STATE=' + str(GLOBAL_STATE),
                     shlex.join([sys.executable, str(Path(__file__).resolve()), '_worker', str(number)])],
                    check=True)
 
 
 def worker_prompt(issue, handoff_info=None):
+    if PROJECT == 'command':
+        allowed_issue(issue['number'])
+        return f'''You own only Jarvis Command M0 discovery, issue #{issue['number']}.
+Read `gh issue view 2 --repo {SLUG} --comments` and full blueprint from
+`git show origin/docs/jarvis-command-v2-plan:MASTER_PLAN.md` (PR #3 is unmerged),
+plus docs/plans/JARVIS_COMMAND_2_KICKOFF.md on that same branch. Base is
+`{BASE}` at the release candidate, NOT main. Verify live branch and capabilities
+read-only. Deliver honest findings on issue #2. No M1+ implementation, merge,
+deployment, auth/network/privilege change, or unsanctioned production operation.
+Do not claim unverified functionality. Prefix automated issue comments with
+`{lead_observation.AUTO_MARKER}`. Issue body: {issue['body']}
+'''
     base = f'''You own Vael GitHub issue #{issue['number']} through implementation and PR feedback.
 Read AGENTS.md, HANDOFF.md current state, MASTER_PLAN.md relevant status/sections, and the owning bibles.
 In the PR, cite the plan/bible sections that justify the change. Report contradictions, do not invent canon.
@@ -833,6 +959,7 @@ def require_work_hours():
 
 def start(number, profile):
     require_work_hours()
+    allowed_issue(number)
     if (STATE / 'paused').exists():
         raise RuntimeError('Team paused: no new assignments; existing sessions may finish.')
     if profile not in PROFILES:
@@ -846,7 +973,7 @@ def start(number, profile):
             f"Provider {qstatus['provider']} (`{profile}`) is quota-blocked ({qstatus['state']}); "
             "wait for cooldown expiry or use `handoff` to reassign to an eligible peer."
         )
-    session = f'vael-issue-{number}'
+    session = session_name(number)
     if session in active():
         print(session + ' already running')
         return
@@ -860,8 +987,8 @@ def start(number, profile):
                            '--json', 'number,title,body,state'))
     if issue['state'] != 'OPEN':
         raise RuntimeError('Issue is not open')
-    run('git', 'fetch', 'origin', 'main')
-    branch = f'team/issue-{number}'
+    run('git', 'fetch', 'origin', BASE)
+    branch = issue_branch(number)
     worktree = STATE / 'worktrees' / str(number)
     exists_on_disk = worktree.exists()
     if not exists_on_disk:
@@ -869,7 +996,7 @@ def start(number, profile):
         if exists:
             run('git', 'worktree', 'add', str(worktree), branch)
         else:
-            run('git', 'worktree', 'add', '-b', branch, str(worktree), 'origin/main')
+            run('git', 'worktree', 'add', '-b', branch, str(worktree), 'origin/' + BASE)
     validate_worktree(worktree, branch)
     assignment = STATE / f'issue-{number}.json'
     old = json.loads(assignment.read_text()) if assignment.exists() else {}
@@ -887,6 +1014,7 @@ def start(number, profile):
         'profile': profile,
         'session_id': native_id,
         'issue': issue,
+        'repo': SLUG,
         'worktree': str(worktree),
     })
     parent_run = os.environ.get('VAEL_PARENT_RUN_ID')
@@ -916,6 +1044,7 @@ def handoff(number, to_profile, now_ts=None):
     and suppresses duplicate handoff launches across restarts.
     """
     require_work_hours()
+    allowed_issue(number)
     if (STATE / 'paused').exists():
         raise RuntimeError('Team paused: no new assignments; existing sessions may finish.')
     if to_profile not in PROFILES or to_profile == LEAD:
@@ -932,13 +1061,15 @@ def handoff(number, to_profile, now_ts=None):
     if not assignment_file.exists():
         raise RuntimeError(f'No existing assignment for issue #{number}')
     old = json.loads(assignment_file.read_text())
+    if old.get('repo', SLUG) != SLUG:
+        raise RuntimeError('Handoff assignment repository mismatch')
     old_profile = old.get('profile')
     if not old_profile or old_profile not in PROFILES:
         raise RuntimeError('Existing assignment has no valid owner profile')
     blocked = old.get('blocked') or {}
     source_run_id = blocked.get('run_id') or old.get('last_run_id')
     existing_handoff = old.get('handoff_state') or {}
-    session_name = f'vael-issue-{number}'
+    session_label = session_name(number)
     # Idempotent duplicate suppression: if this exact source_run_id was already handed off to to_profile
     # and no new exit receipt was written after handoff dispatch, do not launch a duplicate worker.
     exit_file = STATE / f'issue-{number}.exit'
@@ -950,14 +1081,14 @@ def handoff(number, to_profile, now_ts=None):
             # A scoped _worker started after close but never launched a native turn.
             # Reuse this exact ownership/lineage, without another GitHub edit.
             worktree = Path(old.get('worktree') or (STATE / 'worktrees' / str(number)))
-            validate_worktree(worktree, f'team/issue-{number}')
+            validate_worktree(worktree, issue_branch(number))
             launch_worker(number, worktree)
             return existing_handoff
-        print(session_name + ' handoff already dispatched')
+        print(session_label + ' handoff already dispatched')
         return existing_handoff
     if len(active()) >= 3:
         raise RuntimeError('Three workers already running; review/finish one before adding load.')
-    branch = f'team/issue-{number}'
+    branch = issue_branch(number)
     worktree = Path(old.get('worktree') or (STATE / 'worktrees' / str(number)))
     validate_worktree(worktree, branch)
     old_provider = PROFILES[old_profile][0]
@@ -1043,13 +1174,16 @@ def handoff(number, to_profile, now_ts=None):
     except (OSError, subprocess.SubprocessError):
         block_issue(number, to_profile, 1)
         raise
-    print(session_name)
+    print(session_label)
     return handoff_entry
 
 
 def worker(number):
+    allowed_issue(number)
     assignment_path = STATE / f'issue-{number}.json'
     assignment = json.loads(assignment_path.read_text())
+    if assignment.get('repo', SLUG) != SLUG:
+        raise RuntimeError('Worker assignment repository mismatch')
     if not work_schedule.status()['open']:
         assignment['work_hours_deferred'] = True
         assignment_path.write_text(json.dumps(assignment, indent=2))
@@ -1322,6 +1456,27 @@ def observe_discussions(issues, prs):
 
 def lead_prompt(ready, prs, running, reasons, discussions=(), blocked=()):
     tool, model, effort = PROFILES[LEAD]
+    if PROJECT == 'command':
+        return f'''You are Sol, engineering lead of Jarvis Command M0 only.
+GitHub {SLUG} issue #2 is the only authorized work. Base branch `{BASE}` is
+advanced candidate dd102c5d94e4aca6c2318199879af38447ac32ba, NOT main.
+The complete blueprint is `MASTER_PLAN.md` on `origin/docs/jarvis-command-v2-plan`
+(commit 8df9b018ffcb2ab61088878faa66f5a5e950f195), unmerged PR #3;
+read it with `git show origin/docs/jarvis-command-v2-plan:MASTER_PLAN.md`, and
+read `docs/plans/JARVIS_COMMAND_2_KICKOFF.md` on that branch. Read issue #2
+and its comments. Refresh docs branch with git fetch if needed; do NOT merge
+or change the release checkout just to read the plan. Do M0 discovery only:
+verify deployed SHA/capabilities read-only, report gaps honestly, no implementation,
+M1+, merge, deployment, production modification, auth/privilege/network change.
+No model outside daily 07–17 ET; existing running turns may finish. One shared
+host capacity of three workers, shared provider quotas, shared graphical owner.
+Use `python3 {registry()['vael']['repo']}/tools/team.py --project command
+start 2 PROFILE` only if an independent M0 discovery worker is truly useful;
+no other issue may be dispatched. Mark issue #2 findings with the automation
+marker `{lead_observation.AUTO_MARKER}`. Never merge PR #3 (parent owns docs).
+Current ready: {json.dumps([i['number'] for i in ready])}; PRs: {json.dumps([p['number'] for p in prs])};
+running: {running}; reasons: {reasons}; discussions: {json.dumps(list(discussions))}.
+'''
     ready = [{'number': i['number'], 'title': i['title'], 'labels': [l['name'] for l in i['labels']]} for i in ready]
     prs = [{'number': p['number'], 'title': p['title'], 'head': p.get('headRefOid'),
             'mergeable': p.get('mergeable'), 'checks': checks(p)} for p in prs]
@@ -1434,13 +1589,19 @@ def lead_pass():
         _telemetry(usage_analytics.reconcile_running, _analytics_db(), STATE, running)
         issues = json.loads(run('gh', 'issue', 'list', '--repo', SLUG, '--state', 'open',
                                 '--limit', '1000', '--json', 'number,title,body,labels'))
+        issue_count = len(issues)
+        if PROJECT == 'command':
+            issues = [i for i in issues if i['number'] == 2]
         ready = [i for i in issues if any(l['name'] == 'team:ready' for l in i['labels'])
                  and not any(l['name'] == 'team:blocked' for l in i['labels'])]
         all_prs = json.loads(run('gh', 'pr', 'list', '--repo', SLUG, '--state', 'open', '--json',
                                  'number,title,isDraft,labels,headRefOid,mergeable,statusCheckRollup', '--limit', '1000'))
+        pr_count = len(all_prs)
+        if PROJECT == 'command':
+            all_prs = []  # M0 discovery never owns a Command PR or merge.
         prs = [p for p in all_prs if not p['isDraft'] and not any(l['name'] == 'team:blocked' for l in p['labels'])]
         try:
-            if len(issues) >= 1000 or len(all_prs) >= 1000:
+            if issue_count >= 1000 or pr_count >= 1000:
                 raise ValueError('GitHub result cap reached; full material scan unavailable')
             observation = observe_discussions(issues, all_prs)
         except (OSError, subprocess.SubprocessError, ValueError, KeyError, TypeError):
@@ -1449,13 +1610,14 @@ def lead_pass():
             return 0  # Retry incomplete read evidence next tick; don't pause healthy peers.
         discussion_keys = lead_observation.delta_keys(observation)
         planning = not ready and not prs and not quota_snapshot() and not pending_events_snapshot()
-        if run('git', 'branch', '--show-current') != 'main' or run('git', 'status', '--porcelain'):
-            (STATE / 'paused').write_text('Lead checkout is not clean main; preserve work and inspect.\n')
+        if run('git', 'branch', '--show-current') != BASE or run('git', 'status', '--porcelain'):
+            (STATE / 'paused').write_text('Lead checkout is not clean configured base; preserve work and inspect.\n')
             _telemetry(usage_analytics.record_poll, _analytics_db(), at=poll_start, outcome='error',
                        duration_ms=int((time.time() - poll_start) * 1000), lead_profile=LEAD)
             return 1
-        run('git', 'fetch', 'origin', 'main')
-        run('git', 'merge', '--ff-only', 'origin/main')
+        if PROJECT != 'command':
+            run('git', 'fetch', 'origin', BASE)
+            run('git', 'merge', '--ff-only', 'origin/' + BASE)
         head = run('git', 'rev-parse', 'HEAD')
         # Digest the state the lead is about to see, so changes made during the pass still wake.
         event_keys = pending_events_snapshot()
@@ -1472,7 +1634,9 @@ def lead_pass():
             trigger = 'recovery'
         baseline_human = observation['baseline'] and any(
             not entry.get('auto') for entry in observation['receipt']['entries'].values())
-        if planning and running and not discussion_keys and 'blocked' not in reasons and not baseline_human:
+        own_prefix = 'vael-issue-' if PROJECT == 'vael' else f'studio-{PROJECT}-issue-'
+        if (planning and any(s.startswith(own_prefix) for s in running)
+                and not discussion_keys and 'blocked' not in reasons and not baseline_human):
             lead_observation.commit(STATE / 'discussion-receipt.json', observation)
             _telemetry(usage_analytics.record_poll, _analytics_db(), at=poll_start,
                        outcome='deferred_workers_running',
@@ -1642,14 +1806,19 @@ def main():
     (STATE / 'worktrees').mkdir(exist_ok=True)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', choices=[
-        'start', 'handoff', 'quota', 'event', 'plan-exhausted',
+        'start', 'handoff', 'quota', 'event', 'plan-exhausted', 'lead-all', 'migrate-intake',
         '_worker', 'lead', 'wake', 'status', 'pause', 'resume',
     ])
     parser.add_argument('issue', nargs='?')
     parser.add_argument('profile', nargs='?')
+    parser.add_argument('--project', choices=registry())
     parser.add_argument('--decision', choices=['wait', 'reassign', 'escalate'])
     parser.add_argument('--to', dest='to_profile', choices=PROFILES)
     args = parser.parse_args()
+    if args.project and args.action != 'lead-all':
+        config = registry()[args.project]
+        cli = list(sys.argv[1:]); cli.remove('--project'); cli.remove(args.project)
+        os.execve(sys.executable, [sys.executable, str(Path(__file__).resolve()), *cli], project_env(args.project, config))
     if args.action in ('start', 'handoff', '_worker'):
         try:
             issue_num = int(args.issue)
@@ -1660,14 +1829,16 @@ def main():
     if args.action == 'start':
         if args.profile not in PROFILES:
             parser.error('profile required')
-        with (STATE / 'start.lock').open('w') as lock:
+        with (GLOBAL_STATE / 'host-start.lock').open('w') as host_lock, (STATE / 'start.lock').open('w') as lock:
+            fcntl.flock(host_lock, fcntl.LOCK_EX)
             fcntl.flock(lock, fcntl.LOCK_EX)
             start(issue_num, args.profile)
     elif args.action == 'handoff':
         target = args.profile or args.to_profile
         if target not in PROFILES:
             parser.error('profile required')
-        with (STATE / 'start.lock').open('w') as lock:
+        with (GLOBAL_STATE / 'host-start.lock').open('w') as host_lock, (STATE / 'start.lock').open('w') as lock:
+            fcntl.flock(host_lock, fcntl.LOCK_EX)
             fcntl.flock(lock, fcntl.LOCK_EX)
             handoff(issue_num, target)
     elif args.action == 'quota':
@@ -1676,7 +1847,8 @@ def main():
                 issue_num = int(args.issue)
             except ValueError:
                 parser.error('positive issue number required')
-            with (STATE / 'start.lock').open('w') as lock:
+            with (GLOBAL_STATE / 'host-start.lock').open('w') as host_lock, (STATE / 'start.lock').open('w') as lock:
+                fcntl.flock(host_lock, fcntl.LOCK_EX)
                 fcntl.flock(lock, fcntl.LOCK_EX)
                 res = decide_quota(issue_num, args.decision, to_profile=args.to_profile or args.profile)
             print(json.dumps(res, indent=2, sort_keys=True))
@@ -1696,6 +1868,10 @@ def main():
         mark_plan_exhausted(args.issue or 'all remaining plan items human-gated')
     elif args.action == '_worker':
         return worker(issue_num)
+    elif args.action == 'migrate-intake':
+        print(json.dumps({'migrated': migrate_intake()}))
+    elif args.action == 'lead-all':
+        return lead_all()
     elif args.action == 'lead':
         return lead()
     elif args.action == 'wake':
