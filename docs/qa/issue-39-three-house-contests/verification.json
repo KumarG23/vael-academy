@@ -1,0 +1,59 @@
+{
+  "source_sha": "11e08763abfd33b963b4c8e73732225b68b37fc8",
+  "checks": [
+    {
+      "check": "import",
+      "exit_code": 0,
+      "seconds": 54.08
+    },
+    {
+      "check": "gut",
+      "exit_code": 0,
+      "seconds": 226.6
+    }
+  ],
+  "gut": {
+    "scripts": 105,
+    "tests": 829,
+    "passing": 829,
+    "assertions": 12106,
+    "reported_seconds": 221.132,
+    "deprecations": 22
+  },
+  "disposable_player_data": true,
+  "shared_heavy_lock": true,
+  "diagnostics": {
+    "script_load_errors": 0,
+    "script_parse_errors": 0,
+    "objectdb_leak_warnings": 0,
+    "resource_in_use_exit_errors": 0,
+    "expected_test_fixture_diagnostics": [
+      "invalid audio preference values",
+      "malformed ConfigFile fixtures",
+      "missing or unwritable preference targets",
+      "malformed/empty dialogue fixtures"
+    ]
+  },
+  "graphical_sha": "2e96594e303d811a9d35dcfd7f7309069bdedc68",
+  "contest_source_diff_after_integration": "empty",
+  "production_integration_delta": [
+    "accepted audio preference persistence",
+    "Journal volume handling"
+  ],
+  "commands": [
+    [
+      "godot",
+      "--headless",
+      "--import"
+    ],
+    [
+      "godot",
+      "--headless",
+      "-s",
+      "addons/gut/gut_cmdln.gd",
+      "-gdir=res://tests",
+      "-ginclude_subdirs",
+      "-gexit"
+    ]
+  ]
+}

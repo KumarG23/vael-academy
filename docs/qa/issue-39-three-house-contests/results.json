@@ -1,0 +1,3372 @@
+{
+  "tested_game_sha": "2e96594e303d811a9d35dcfd7f7309069bdedc68",
+  "mechanics_merge_sha": "2c1698fe5d8524ddfa3e1a7e3f3e93c00fc9bac4",
+  "date": "2026-10-22",
+  "engine": "Godot 4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Vulkan Forward+ / llvmpipe (LLVM 20.1.2, 256 bits)",
+  "input": "OS keyboard and pointer; ordinary production menus and animations",
+  "routes": [
+    {
+      "house": "thornrook",
+      "event": "opening",
+      "scene": "res://scenes/battle/mock_battle_vs_emberwing.tscn",
+      "chapter_id": "mock_battle_vs_emberwing",
+      "week_at_entry": 1,
+      "casual": true,
+      "entry": "native campus checkpoint",
+      "initial_roster": [
+        {
+          "id": "rina",
+          "team": 0,
+          "cell": {
+            "x": 4,
+            "y": 12
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "thessaly",
+          "team": 0,
+          "cell": {
+            "x": 6,
+            "y": 12
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "corvin",
+          "team": 0,
+          "cell": {
+            "x": 6,
+            "y": 13
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "marlow",
+          "team": 0,
+          "cell": {
+            "x": 7,
+            "y": 12
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "vesper",
+          "team": 0,
+          "cell": {
+            "x": 7,
+            "y": 13
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "rurik",
+          "team": 0,
+          "cell": {
+            "x": 4,
+            "y": 10
+          },
+          "current_hp": 27
+        },
+        {
+          "id": "nilu",
+          "team": 0,
+          "cell": {
+            "x": 4,
+            "y": 11
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "kai",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 12
+          },
+          "current_hp": 26
+        },
+        {
+          "id": "kael",
+          "team": 1,
+          "cell": {
+            "x": 9,
+            "y": 9
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "dain",
+          "team": 1,
+          "cell": {
+            "x": 12,
+            "y": 11
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "liora",
+          "team": 1,
+          "cell": {
+            "x": 7,
+            "y": 6
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "brenna",
+          "team": 1,
+          "cell": {
+            "x": 11,
+            "y": 7
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "wren",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 5
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "perrin",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 2
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "osric",
+          "team": 2,
+          "cell": {
+            "x": 15,
+            "y": 13
+          },
+          "current_hp": 30
+        },
+        {
+          "id": "elowen",
+          "team": 2,
+          "cell": {
+            "x": 17,
+            "y": 12
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "isolde",
+          "team": 2,
+          "cell": {
+            "x": 13,
+            "y": 13
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "fenn",
+          "team": 2,
+          "cell": {
+            "x": 18,
+            "y": 10
+          },
+          "current_hp": 21
+        },
+        {
+          "id": "bertram",
+          "team": 2,
+          "cell": {
+            "x": 16,
+            "y": 11
+          },
+          "current_hp": 25
+        },
+        {
+          "id": "serra",
+          "team": 2,
+          "cell": {
+            "x": 19,
+            "y": 12
+          },
+          "current_hp": 26
+        }
+      ],
+      "initial_objective": "ROUT (0)",
+      "entry_image": "images/thornrook-opening-entry.png",
+      "resume_image": "images/thornrook-opening-resumed.png",
+      "save_comparison": {
+        "compared": [
+          "campaign",
+          "battle",
+          "roster",
+          "supports"
+        ],
+        "differences": {},
+        "canonical_payload_sha256": "6a369b9c68aee240185224aee4a455d2012d87755b4733815de0dfef379d35e5",
+        "round": 1,
+        "chapter_registry_scene": "res://scenes/battle/mock_battle_vs_emberwing.tscn"
+      },
+      "saved_ui_payload": "saves/thornrook-opening.json",
+      "victory": {
+        "round": 7,
+        "living_rivals": 0,
+        "lord_alive": true,
+        "campaign_week_after": 2,
+        "last_result": "victory",
+        "surviving_players": [
+          "rina",
+          "thessaly",
+          "corvin",
+          "nilu",
+          "kai"
+        ],
+        "image": "images/thornrook-opening-victory.png",
+        "defeated_ids": [
+          "dain",
+          "liora",
+          "kael",
+          "wren",
+          "elowen",
+          "isolde",
+          "brenna",
+          "osric",
+          "bertram",
+          "fenn",
+          "serra",
+          "perrin"
+        ]
+      },
+      "live_placement_checks": [
+        {
+          "cell": [
+            4,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "rina",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 43,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            6,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "thessaly",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 40,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            6,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "corvin",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "marlow",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 53,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 18,
+          "id": "vesper",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 37,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            4,
+            10
+          ],
+          "entry_cost": 1,
+          "hp": 27,
+          "id": "rurik",
+          "in_bounds": true,
+          "max_hp": 27,
+          "movement_type": 0,
+          "reachable_stop_count": 50,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            4,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "nilu",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 74,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 26,
+          "id": "kai",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 0,
+          "reachable_stop_count": 46,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            9,
+            9
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "kael",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 69,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            12,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "dain",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            6
+          ],
+          "entry_cost": 2,
+          "hp": 18,
+          "id": "liora",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 41,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            11,
+            7
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "brenna",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 1,
+          "reachable_stop_count": 46,
+          "team": 1,
+          "terrain": 6
+        },
+        {
+          "cell": [
+            17,
+            5
+          ],
+          "entry_cost": 2,
+          "hp": 20,
+          "id": "wren",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 33,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            17,
+            2
+          ],
+          "entry_cost": 2,
+          "hp": 24,
+          "id": "perrin",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 2,
+          "reachable_stop_count": 32,
+          "team": 1,
+          "terrain": 3
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 30,
+          "id": "osric",
+          "in_bounds": true,
+          "max_hp": 30,
+          "movement_type": 1,
+          "reachable_stop_count": 28,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            17,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "elowen",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            13,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "isolde",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 38,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            18,
+            10
+          ],
+          "entry_cost": 2,
+          "hp": 21,
+          "id": "fenn",
+          "in_bounds": true,
+          "max_hp": 21,
+          "movement_type": 0,
+          "reachable_stop_count": 39,
+          "team": 2,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            16,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 25,
+          "id": "bertram",
+          "in_bounds": true,
+          "max_hp": 25,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            19,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 26,
+          "id": "serra",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 1,
+          "reachable_stop_count": 18,
+          "team": 2,
+          "terrain": 0
+        }
+      ],
+      "placement_readback_origin": "Unchanged earned round-1 UI save replay; all cells compared against the fresh entry",
+      "rival_combat": {
+        "acting_unit": "fenn",
+        "acting_team": 2,
+        "damaged_rival": "dain",
+        "rival_team": 1,
+        "hp_before": 28,
+        "hp_after": 19,
+        "image": "images/thornrook-opening-rival-combat.png"
+      },
+      "player_forecast_image": "images/thornrook-opening-player-forecast.png",
+      "sampled_player_action": {
+        "id": "corvin",
+        "from": [
+          6,
+          13
+        ],
+        "to": [
+          7,
+          9
+        ],
+        "target_id": "kael"
+      }
+    },
+    {
+      "house": "thornrook",
+      "event": "closing",
+      "scene": "res://scenes/battle/closing_rite_thornrook.tscn",
+      "chapter_id": "closing_rite_thornrook",
+      "week_at_entry": 6,
+      "casual": true,
+      "entry": "explicit calendar fixture",
+      "initial_roster": [
+        {
+          "id": "rina",
+          "team": 0,
+          "cell": {
+            "x": 4,
+            "y": 12
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "thessaly",
+          "team": 0,
+          "cell": {
+            "x": 6,
+            "y": 12
+          },
+          "current_hp": 21
+        },
+        {
+          "id": "corvin",
+          "team": 0,
+          "cell": {
+            "x": 6,
+            "y": 13
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "marlow",
+          "team": 0,
+          "cell": {
+            "x": 7,
+            "y": 12
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "vesper",
+          "team": 0,
+          "cell": {
+            "x": 7,
+            "y": 13
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "rurik",
+          "team": 0,
+          "cell": {
+            "x": 4,
+            "y": 10
+          },
+          "current_hp": 27
+        },
+        {
+          "id": "nilu",
+          "team": 0,
+          "cell": {
+            "x": 4,
+            "y": 11
+          },
+          "current_hp": 25
+        },
+        {
+          "id": "kai",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 12
+          },
+          "current_hp": 26
+        },
+        {
+          "id": "kael",
+          "team": 1,
+          "cell": {
+            "x": 9,
+            "y": 9
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "dain",
+          "team": 1,
+          "cell": {
+            "x": 12,
+            "y": 11
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "liora",
+          "team": 1,
+          "cell": {
+            "x": 7,
+            "y": 6
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "brenna",
+          "team": 1,
+          "cell": {
+            "x": 11,
+            "y": 7
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "wren",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 5
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "perrin",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 2
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "osric",
+          "team": 2,
+          "cell": {
+            "x": 15,
+            "y": 13
+          },
+          "current_hp": 30
+        },
+        {
+          "id": "elowen",
+          "team": 2,
+          "cell": {
+            "x": 17,
+            "y": 12
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "isolde",
+          "team": 2,
+          "cell": {
+            "x": 13,
+            "y": 13
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "fenn",
+          "team": 2,
+          "cell": {
+            "x": 18,
+            "y": 10
+          },
+          "current_hp": 21
+        },
+        {
+          "id": "bertram",
+          "team": 2,
+          "cell": {
+            "x": 16,
+            "y": 11
+          },
+          "current_hp": 25
+        },
+        {
+          "id": "serra",
+          "team": 2,
+          "cell": {
+            "x": 19,
+            "y": 12
+          },
+          "current_hp": 26
+        }
+      ],
+      "initial_objective": "ROUT (0)",
+      "entry_image": "images/thornrook-closing-entry.png",
+      "resume_image": "images/thornrook-closing-resumed.png",
+      "save_comparison": {
+        "compared": [
+          "campaign",
+          "battle",
+          "roster",
+          "supports"
+        ],
+        "differences": {},
+        "canonical_payload_sha256": "cb8a440a41a5ff74b8d8c05cc36567fa972bbb9a0d6845c48622be5fea67a75d",
+        "round": 3,
+        "chapter_registry_scene": "res://scenes/battle/closing_rite_thornrook.tscn"
+      },
+      "saved_ui_payload": "saves/thornrook-closing.json",
+      "rival_combat": {
+        "acting_unit": "fenn",
+        "acting_team": 2,
+        "damaged_rival": "dain",
+        "rival_team": 1,
+        "hp_before": 28,
+        "hp_after": 19,
+        "image": "images/thornrook-closing-rival-combat.png"
+      },
+      "player_forecast_image": "images/thornrook-closing-player-forecast.png",
+      "live_placement_checks": [
+        {
+          "cell": [
+            4,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "rina",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 43,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            6,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 21,
+          "id": "thessaly",
+          "in_bounds": true,
+          "max_hp": 21,
+          "movement_type": 0,
+          "reachable_stop_count": 40,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            6,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "corvin",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "marlow",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 53,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 18,
+          "id": "vesper",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 37,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            4,
+            10
+          ],
+          "entry_cost": 1,
+          "hp": 27,
+          "id": "rurik",
+          "in_bounds": true,
+          "max_hp": 27,
+          "movement_type": 0,
+          "reachable_stop_count": 50,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            4,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 25,
+          "id": "nilu",
+          "in_bounds": true,
+          "max_hp": 25,
+          "movement_type": 0,
+          "reachable_stop_count": 74,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 26,
+          "id": "kai",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 0,
+          "reachable_stop_count": 46,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            9,
+            9
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "kael",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 69,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            12,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "dain",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            6
+          ],
+          "entry_cost": 2,
+          "hp": 18,
+          "id": "liora",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 41,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            11,
+            7
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "brenna",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 1,
+          "reachable_stop_count": 46,
+          "team": 1,
+          "terrain": 6
+        },
+        {
+          "cell": [
+            17,
+            5
+          ],
+          "entry_cost": 2,
+          "hp": 20,
+          "id": "wren",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 33,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            17,
+            2
+          ],
+          "entry_cost": 2,
+          "hp": 24,
+          "id": "perrin",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 2,
+          "reachable_stop_count": 32,
+          "team": 1,
+          "terrain": 3
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 30,
+          "id": "osric",
+          "in_bounds": true,
+          "max_hp": 30,
+          "movement_type": 1,
+          "reachable_stop_count": 28,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            17,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "elowen",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            13,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "isolde",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 38,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            18,
+            10
+          ],
+          "entry_cost": 2,
+          "hp": 21,
+          "id": "fenn",
+          "in_bounds": true,
+          "max_hp": 21,
+          "movement_type": 0,
+          "reachable_stop_count": 39,
+          "team": 2,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            16,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 25,
+          "id": "bertram",
+          "in_bounds": true,
+          "max_hp": 25,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            19,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 26,
+          "id": "serra",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 1,
+          "reachable_stop_count": 18,
+          "team": 2,
+          "terrain": 0
+        }
+      ],
+      "victory": {
+        "round": 10,
+        "living_rivals": 0,
+        "lord_alive": true,
+        "campaign_week_after": 7,
+        "last_result": "victory",
+        "surviving_players": [
+          "rina",
+          "kai"
+        ],
+        "image": "images/thornrook-closing-victory.png",
+        "defeated_ids": [
+          "dain",
+          "wren",
+          "isolde",
+          "liora",
+          "kael",
+          "fenn",
+          "brenna",
+          "bertram",
+          "elowen",
+          "osric",
+          "perrin",
+          "serra"
+        ]
+      },
+      "sampled_player_action": {
+        "id": "kai",
+        "from": [
+          2,
+          12
+        ],
+        "to": [
+          5,
+          10
+        ],
+        "target_id": "isolde"
+      }
+    },
+    {
+      "house": "emberwing",
+      "event": "opening",
+      "scene": "res://scenes/battle/mock_battle.tscn",
+      "chapter_id": "mock_battle",
+      "week_at_entry": 1,
+      "casual": true,
+      "entry": "explicit calendar fixture",
+      "initial_roster": [
+        {
+          "id": "perrin",
+          "team": 0,
+          "cell": {
+            "x": 1,
+            "y": 12
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "kael",
+          "team": 0,
+          "cell": {
+            "x": 3,
+            "y": 12
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "brenna",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 13
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "wren",
+          "team": 0,
+          "cell": {
+            "x": 3,
+            "y": 13
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "dain",
+          "team": 0,
+          "cell": {
+            "x": 1,
+            "y": 13
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "liora",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 11
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "kai",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 12
+          },
+          "current_hp": 26
+        },
+        {
+          "id": "osric",
+          "team": 1,
+          "cell": {
+            "x": 9,
+            "y": 9
+          },
+          "current_hp": 30
+        },
+        {
+          "id": "elowen",
+          "team": 1,
+          "cell": {
+            "x": 12,
+            "y": 11
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "isolde",
+          "team": 1,
+          "cell": {
+            "x": 7,
+            "y": 6
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "fenn",
+          "team": 1,
+          "cell": {
+            "x": 11,
+            "y": 7
+          },
+          "current_hp": 21
+        },
+        {
+          "id": "bertram",
+          "team": 1,
+          "cell": {
+            "x": 16,
+            "y": 2
+          },
+          "current_hp": 25
+        },
+        {
+          "id": "serra",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 2
+          },
+          "current_hp": 26
+        },
+        {
+          "id": "rina",
+          "team": 2,
+          "cell": {
+            "x": 15,
+            "y": 13
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "thessaly",
+          "team": 2,
+          "cell": {
+            "x": 14,
+            "y": 13
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "corvin",
+          "team": 2,
+          "cell": {
+            "x": 16,
+            "y": 13
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "marlow",
+          "team": 2,
+          "cell": {
+            "x": 14,
+            "y": 14
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "vesper",
+          "team": 2,
+          "cell": {
+            "x": 16,
+            "y": 14
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "rurik",
+          "team": 2,
+          "cell": {
+            "x": 17,
+            "y": 14
+          },
+          "current_hp": 27
+        },
+        {
+          "id": "nilu",
+          "team": 2,
+          "cell": {
+            "x": 15,
+            "y": 14
+          },
+          "current_hp": 24
+        }
+      ],
+      "initial_objective": "ROUT (0)",
+      "entry_image": "images/emberwing-opening-entry.png",
+      "resume_image": "images/emberwing-opening-resumed.png",
+      "save_comparison": {
+        "compared": [
+          "campaign",
+          "battle",
+          "roster",
+          "supports"
+        ],
+        "differences": {},
+        "canonical_payload_sha256": "328f41a02929d0db463a267da6b9b8eadea9d0b3b5f62206e7f52954d622d05d",
+        "round": 3,
+        "chapter_registry_scene": "res://scenes/battle/mock_battle.tscn"
+      },
+      "saved_ui_payload": "saves/emberwing-opening.json",
+      "rival_combat": {
+        "acting_unit": "thessaly",
+        "acting_team": 2,
+        "damaged_rival": "elowen",
+        "rival_team": 1,
+        "hp_before": 7,
+        "hp_after": 0,
+        "image": "images/emberwing-opening-rival-combat.png"
+      },
+      "player_forecast_image": "images/emberwing-opening-player-forecast.png",
+      "live_placement_checks": [
+        {
+          "cell": [
+            1,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "perrin",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 2,
+          "reachable_stop_count": 51,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            3,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "kael",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 53,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "brenna",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 1,
+          "reachable_stop_count": 31,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            3,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "wren",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            1,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "dain",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 0,
+          "reachable_stop_count": 26,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 18,
+          "id": "liora",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 41,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 26,
+          "id": "kai",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 0,
+          "reachable_stop_count": 47,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            9,
+            9
+          ],
+          "entry_cost": 1,
+          "hp": 30,
+          "id": "osric",
+          "in_bounds": true,
+          "max_hp": 30,
+          "movement_type": 1,
+          "reachable_stop_count": 22,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            12,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "elowen",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            6
+          ],
+          "entry_cost": 2,
+          "hp": 20,
+          "id": "isolde",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 40,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            11,
+            7
+          ],
+          "entry_cost": 1,
+          "hp": 21,
+          "id": "fenn",
+          "in_bounds": true,
+          "max_hp": 21,
+          "movement_type": 0,
+          "reachable_stop_count": 58,
+          "team": 1,
+          "terrain": 6
+        },
+        {
+          "cell": [
+            16,
+            2
+          ],
+          "entry_cost": 1,
+          "hp": 25,
+          "id": "bertram",
+          "in_bounds": true,
+          "max_hp": 25,
+          "movement_type": 0,
+          "reachable_stop_count": 25,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            17,
+            2
+          ],
+          "entry_cost": 2,
+          "hp": 26,
+          "id": "serra",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 1,
+          "reachable_stop_count": 20,
+          "team": 1,
+          "terrain": 3
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "rina",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            14,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "thessaly",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 35,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            16,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "corvin",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            14,
+            14
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "marlow",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 38,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            16,
+            14
+          ],
+          "entry_cost": 1,
+          "hp": 18,
+          "id": "vesper",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 25,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            17,
+            14
+          ],
+          "entry_cost": 1,
+          "hp": 27,
+          "id": "rurik",
+          "in_bounds": true,
+          "max_hp": 27,
+          "movement_type": 0,
+          "reachable_stop_count": 21,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            15,
+            14
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "nilu",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 46,
+          "team": 2,
+          "terrain": 0
+        }
+      ],
+      "victory": {
+        "round": 5,
+        "living_rivals": 0,
+        "lord_alive": true,
+        "campaign_week_after": 2,
+        "last_result": "victory",
+        "surviving_players": [
+          "brenna",
+          "dain",
+          "liora",
+          "kai"
+        ],
+        "image": "images/emberwing-opening-victory.png",
+        "defeated_ids": [
+          "elowen",
+          "fenn",
+          "serra",
+          "corvin",
+          "bertram",
+          "osric",
+          "isolde",
+          "marlow",
+          "vesper",
+          "rurik",
+          "thessaly",
+          "nilu",
+          "rina"
+        ]
+      },
+      "sampled_player_action": {
+        "id": "perrin",
+        "from": [
+          1,
+          12
+        ],
+        "to": [
+          3,
+          10
+        ],
+        "target_id": "isolde"
+      }
+    },
+    {
+      "house": "tidemark",
+      "event": "opening",
+      "scene": "res://scenes/battle/mock_battle_vs_thornrook.tscn",
+      "chapter_id": "mock_battle_vs_thornrook",
+      "week_at_entry": 1,
+      "casual": true,
+      "entry": "explicit calendar fixture",
+      "initial_roster": [
+        {
+          "id": "serra",
+          "team": 0,
+          "cell": {
+            "x": 3,
+            "y": 11
+          },
+          "current_hp": 26
+        },
+        {
+          "id": "osric",
+          "team": 0,
+          "cell": {
+            "x": 0,
+            "y": 12
+          },
+          "current_hp": 30
+        },
+        {
+          "id": "elowen",
+          "team": 0,
+          "cell": {
+            "x": 0,
+            "y": 13
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "isolde",
+          "team": 0,
+          "cell": {
+            "x": 1,
+            "y": 11
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "fenn",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 10
+          },
+          "current_hp": 21
+        },
+        {
+          "id": "bertram",
+          "team": 0,
+          "cell": {
+            "x": 3,
+            "y": 10
+          },
+          "current_hp": 25
+        },
+        {
+          "id": "kai",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 12
+          },
+          "current_hp": 27
+        },
+        {
+          "id": "marlow",
+          "team": 1,
+          "cell": {
+            "x": 9,
+            "y": 9
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "rurik",
+          "team": 1,
+          "cell": {
+            "x": 12,
+            "y": 11
+          },
+          "current_hp": 27
+        },
+        {
+          "id": "thessaly",
+          "team": 1,
+          "cell": {
+            "x": 7,
+            "y": 6
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "corvin",
+          "team": 1,
+          "cell": {
+            "x": 11,
+            "y": 7
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "vesper",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 5
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "rina",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 2
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "kael",
+          "team": 2,
+          "cell": {
+            "x": 15,
+            "y": 13
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "dain",
+          "team": 2,
+          "cell": {
+            "x": 17,
+            "y": 12
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "liora",
+          "team": 2,
+          "cell": {
+            "x": 13,
+            "y": 13
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "brenna",
+          "team": 2,
+          "cell": {
+            "x": 18,
+            "y": 10
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "wren",
+          "team": 2,
+          "cell": {
+            "x": 16,
+            "y": 11
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "perrin",
+          "team": 2,
+          "cell": {
+            "x": 19,
+            "y": 12
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "nilu",
+          "team": 1,
+          "cell": {
+            "x": 18,
+            "y": 2
+          },
+          "current_hp": 24
+        }
+      ],
+      "initial_objective": "ROUT (0)",
+      "entry_image": "images/tidemark-opening-entry.png",
+      "resume_image": "images/tidemark-opening-resumed.png",
+      "save_comparison": {
+        "compared": [
+          "campaign",
+          "battle",
+          "roster",
+          "supports"
+        ],
+        "differences": {},
+        "canonical_payload_sha256": "67dd8e4201e41ca6e1dee8597b8076ae430855c1ffac1f94ce32b9f68d10a76a",
+        "round": 3,
+        "chapter_registry_scene": "res://scenes/battle/mock_battle_vs_thornrook.tscn"
+      },
+      "saved_ui_payload": "saves/tidemark-opening.json",
+      "rival_combat": {
+        "acting_unit": "brenna",
+        "acting_team": 2,
+        "damaged_rival": "vesper",
+        "rival_team": 1,
+        "hp_before": 18,
+        "hp_after": 5,
+        "image": "images/tidemark-opening-rival-combat.png"
+      },
+      "player_forecast_image": "images/tidemark-opening-player-forecast.png",
+      "live_placement_checks": [
+        {
+          "cell": [
+            3,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 26,
+          "id": "serra",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 1,
+          "reachable_stop_count": 33,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            0,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 30,
+          "id": "osric",
+          "in_bounds": true,
+          "max_hp": 30,
+          "movement_type": 1,
+          "reachable_stop_count": 17,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            0,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "elowen",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 21,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            1,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "isolde",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            10
+          ],
+          "entry_cost": 1,
+          "hp": 21,
+          "id": "fenn",
+          "in_bounds": true,
+          "max_hp": 21,
+          "movement_type": 0,
+          "reachable_stop_count": 56,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            3,
+            10
+          ],
+          "entry_cost": 1,
+          "hp": 25,
+          "id": "bertram",
+          "in_bounds": true,
+          "max_hp": 25,
+          "movement_type": 0,
+          "reachable_stop_count": 48,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 27,
+          "id": "kai",
+          "in_bounds": true,
+          "max_hp": 27,
+          "movement_type": 0,
+          "reachable_stop_count": 47,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            9,
+            9
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "marlow",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 73,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            12,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 27,
+          "id": "rurik",
+          "in_bounds": true,
+          "max_hp": 27,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            6
+          ],
+          "entry_cost": 2,
+          "hp": 20,
+          "id": "thessaly",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 41,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            11,
+            7
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "corvin",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 46,
+          "team": 1,
+          "terrain": 6
+        },
+        {
+          "cell": [
+            17,
+            5
+          ],
+          "entry_cost": 2,
+          "hp": 18,
+          "id": "vesper",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 32,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            17,
+            2
+          ],
+          "entry_cost": 2,
+          "hp": 20,
+          "id": "rina",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 24,
+          "team": 1,
+          "terrain": 3
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "kael",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 46,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            17,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "dain",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            13,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 18,
+          "id": "liora",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 38,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            18,
+            10
+          ],
+          "entry_cost": 2,
+          "hp": 28,
+          "id": "brenna",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 1,
+          "reachable_stop_count": 31,
+          "team": 2,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            16,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "wren",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            19,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "perrin",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 2,
+          "reachable_stop_count": 41,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            18,
+            2
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "nilu",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 26,
+          "team": 1,
+          "terrain": 0
+        }
+      ],
+      "victory": {
+        "round": 10,
+        "living_rivals": 0,
+        "lord_alive": true,
+        "campaign_week_after": 2,
+        "last_result": "victory",
+        "surviving_players": [
+          "osric",
+          "isolde",
+          "kai"
+        ],
+        "image": "images/tidemark-opening-victory.png",
+        "defeated_ids": [
+          "rurik",
+          "kael",
+          "vesper",
+          "marlow",
+          "corvin",
+          "thessaly",
+          "dain",
+          "liora",
+          "nilu",
+          "brenna",
+          "wren",
+          "rina",
+          "perrin"
+        ]
+      },
+      "sampled_player_action": {
+        "id": "kai",
+        "from": [
+          2,
+          12
+        ],
+        "to": [
+          5,
+          10
+        ],
+        "target_id": "thessaly"
+      }
+    },
+    {
+      "house": "emberwing",
+      "event": "closing",
+      "scene": "res://scenes/battle/closing_rite_emberwing.tscn",
+      "chapter_id": "closing_rite_emberwing",
+      "week_at_entry": 6,
+      "casual": true,
+      "entry": "explicit calendar fixture",
+      "initial_roster": [
+        {
+          "id": "perrin",
+          "team": 0,
+          "cell": {
+            "x": 1,
+            "y": 12
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "kael",
+          "team": 0,
+          "cell": {
+            "x": 3,
+            "y": 12
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "brenna",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 13
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "wren",
+          "team": 0,
+          "cell": {
+            "x": 3,
+            "y": 13
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "dain",
+          "team": 0,
+          "cell": {
+            "x": 1,
+            "y": 13
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "liora",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 11
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "kai",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 12
+          },
+          "current_hp": 26
+        },
+        {
+          "id": "osric",
+          "team": 1,
+          "cell": {
+            "x": 9,
+            "y": 9
+          },
+          "current_hp": 30
+        },
+        {
+          "id": "elowen",
+          "team": 1,
+          "cell": {
+            "x": 12,
+            "y": 11
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "isolde",
+          "team": 1,
+          "cell": {
+            "x": 7,
+            "y": 6
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "fenn",
+          "team": 1,
+          "cell": {
+            "x": 11,
+            "y": 7
+          },
+          "current_hp": 21
+        },
+        {
+          "id": "bertram",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 5
+          },
+          "current_hp": 25
+        },
+        {
+          "id": "serra",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 2
+          },
+          "current_hp": 26
+        },
+        {
+          "id": "marlow",
+          "team": 2,
+          "cell": {
+            "x": 15,
+            "y": 13
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "rurik",
+          "team": 2,
+          "cell": {
+            "x": 17,
+            "y": 12
+          },
+          "current_hp": 27
+        },
+        {
+          "id": "thessaly",
+          "team": 2,
+          "cell": {
+            "x": 13,
+            "y": 13
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "corvin",
+          "team": 2,
+          "cell": {
+            "x": 18,
+            "y": 10
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "vesper",
+          "team": 2,
+          "cell": {
+            "x": 16,
+            "y": 11
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "rina",
+          "team": 2,
+          "cell": {
+            "x": 19,
+            "y": 12
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "nilu",
+          "team": 2,
+          "cell": {
+            "x": 19,
+            "y": 13
+          },
+          "current_hp": 24
+        }
+      ],
+      "initial_objective": "ROUT (0)",
+      "entry_image": "images/emberwing-closing-entry.png",
+      "resume_image": "images/emberwing-closing-resumed.png",
+      "save_comparison": {
+        "compared": [
+          "campaign",
+          "battle",
+          "roster",
+          "supports"
+        ],
+        "differences": {},
+        "canonical_payload_sha256": "55e06b388938db5c876a31268d26b488fa951b621d31becde0638fac268922ac",
+        "round": 3,
+        "chapter_registry_scene": "res://scenes/battle/closing_rite_emberwing.tscn"
+      },
+      "saved_ui_payload": "saves/emberwing-closing.json",
+      "rival_combat": {
+        "acting_unit": "corvin",
+        "acting_team": 2,
+        "damaged_rival": "fenn",
+        "rival_team": 1,
+        "hp_before": 11,
+        "hp_after": 0,
+        "image": "images/emberwing-closing-rival-combat.png"
+      },
+      "player_forecast_image": "images/emberwing-closing-player-forecast.png",
+      "live_placement_checks": [
+        {
+          "cell": [
+            1,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "perrin",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 2,
+          "reachable_stop_count": 51,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            3,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "kael",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 53,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "brenna",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 1,
+          "reachable_stop_count": 31,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            3,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "wren",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            1,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "dain",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 0,
+          "reachable_stop_count": 26,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 18,
+          "id": "liora",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 41,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 26,
+          "id": "kai",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 0,
+          "reachable_stop_count": 47,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            9,
+            9
+          ],
+          "entry_cost": 1,
+          "hp": 30,
+          "id": "osric",
+          "in_bounds": true,
+          "max_hp": 30,
+          "movement_type": 1,
+          "reachable_stop_count": 33,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            12,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "elowen",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            6
+          ],
+          "entry_cost": 2,
+          "hp": 20,
+          "id": "isolde",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 41,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            11,
+            7
+          ],
+          "entry_cost": 1,
+          "hp": 21,
+          "id": "fenn",
+          "in_bounds": true,
+          "max_hp": 21,
+          "movement_type": 0,
+          "reachable_stop_count": 62,
+          "team": 1,
+          "terrain": 6
+        },
+        {
+          "cell": [
+            17,
+            5
+          ],
+          "entry_cost": 2,
+          "hp": 25,
+          "id": "bertram",
+          "in_bounds": true,
+          "max_hp": 25,
+          "movement_type": 0,
+          "reachable_stop_count": 33,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            17,
+            2
+          ],
+          "entry_cost": 2,
+          "hp": 26,
+          "id": "serra",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 1,
+          "reachable_stop_count": 21,
+          "team": 1,
+          "terrain": 3
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "marlow",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 45,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            17,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 27,
+          "id": "rurik",
+          "in_bounds": true,
+          "max_hp": 27,
+          "movement_type": 0,
+          "reachable_stop_count": 33,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            13,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "thessaly",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 38,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            18,
+            10
+          ],
+          "entry_cost": 2,
+          "hp": 19,
+          "id": "corvin",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 30,
+          "team": 2,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            16,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 18,
+          "id": "vesper",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 41,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            19,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "rina",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 24,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            19,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "nilu",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 36,
+          "team": 2,
+          "terrain": 11
+        }
+      ],
+      "victory": {
+        "round": 9,
+        "living_rivals": 0,
+        "lord_alive": true,
+        "campaign_week_after": 7,
+        "last_result": "victory",
+        "surviving_players": [
+          "kael",
+          "brenna",
+          "dain",
+          "liora",
+          "kai"
+        ],
+        "image": "images/emberwing-closing-victory.png",
+        "defeated_ids": [
+          "fenn",
+          "elowen",
+          "nilu",
+          "bertram",
+          "osric",
+          "isolde",
+          "marlow",
+          "vesper",
+          "rurik",
+          "corvin",
+          "thessaly",
+          "serra",
+          "rina"
+        ]
+      },
+      "sampled_player_action": {
+        "id": "perrin",
+        "from": [
+          1,
+          12
+        ],
+        "to": [
+          3,
+          10
+        ],
+        "target_id": "isolde"
+      }
+    },
+    {
+      "house": "tidemark",
+      "event": "closing",
+      "scene": "res://scenes/battle/closing_rite_tidemark.tscn",
+      "chapter_id": "closing_rite_tidemark",
+      "week_at_entry": 6,
+      "casual": true,
+      "entry": "explicit calendar fixture",
+      "initial_roster": [
+        {
+          "id": "serra",
+          "team": 0,
+          "cell": {
+            "x": 3,
+            "y": 11
+          },
+          "current_hp": 26
+        },
+        {
+          "id": "osric",
+          "team": 0,
+          "cell": {
+            "x": 0,
+            "y": 12
+          },
+          "current_hp": 30
+        },
+        {
+          "id": "elowen",
+          "team": 0,
+          "cell": {
+            "x": 0,
+            "y": 13
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "isolde",
+          "team": 0,
+          "cell": {
+            "x": 1,
+            "y": 11
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "fenn",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 10
+          },
+          "current_hp": 21
+        },
+        {
+          "id": "bertram",
+          "team": 0,
+          "cell": {
+            "x": 3,
+            "y": 10
+          },
+          "current_hp": 25
+        },
+        {
+          "id": "kai",
+          "team": 0,
+          "cell": {
+            "x": 2,
+            "y": 12
+          },
+          "current_hp": 27
+        },
+        {
+          "id": "marlow",
+          "team": 1,
+          "cell": {
+            "x": 9,
+            "y": 9
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "rurik",
+          "team": 1,
+          "cell": {
+            "x": 12,
+            "y": 11
+          },
+          "current_hp": 27
+        },
+        {
+          "id": "thessaly",
+          "team": 1,
+          "cell": {
+            "x": 7,
+            "y": 6
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "corvin",
+          "team": 1,
+          "cell": {
+            "x": 11,
+            "y": 7
+          },
+          "current_hp": 19
+        },
+        {
+          "id": "vesper",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 5
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "rina",
+          "team": 1,
+          "cell": {
+            "x": 17,
+            "y": 2
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "kael",
+          "team": 2,
+          "cell": {
+            "x": 15,
+            "y": 13
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "dain",
+          "team": 2,
+          "cell": {
+            "x": 17,
+            "y": 12
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "liora",
+          "team": 2,
+          "cell": {
+            "x": 13,
+            "y": 13
+          },
+          "current_hp": 18
+        },
+        {
+          "id": "brenna",
+          "team": 2,
+          "cell": {
+            "x": 18,
+            "y": 10
+          },
+          "current_hp": 28
+        },
+        {
+          "id": "wren",
+          "team": 2,
+          "cell": {
+            "x": 16,
+            "y": 11
+          },
+          "current_hp": 20
+        },
+        {
+          "id": "perrin",
+          "team": 2,
+          "cell": {
+            "x": 19,
+            "y": 12
+          },
+          "current_hp": 24
+        },
+        {
+          "id": "nilu",
+          "team": 1,
+          "cell": {
+            "x": 18,
+            "y": 2
+          },
+          "current_hp": 24
+        }
+      ],
+      "initial_objective": "ROUT (0)",
+      "entry_image": "images/tidemark-closing-entry.png",
+      "resume_image": "images/tidemark-closing-resumed.png",
+      "save_comparison": {
+        "compared": [
+          "campaign",
+          "battle",
+          "roster",
+          "supports"
+        ],
+        "differences": {},
+        "canonical_payload_sha256": "dbb81c01541554ee6097aea07987d21215685eac3ded5913766b4c80970a2ad5",
+        "round": 3,
+        "chapter_registry_scene": "res://scenes/battle/closing_rite_tidemark.tscn"
+      },
+      "saved_ui_payload": "saves/tidemark-closing.json",
+      "rival_combat": {
+        "acting_unit": "brenna",
+        "acting_team": 2,
+        "damaged_rival": "vesper",
+        "rival_team": 1,
+        "hp_before": 18,
+        "hp_after": 5,
+        "image": "images/tidemark-closing-rival-combat.png"
+      },
+      "player_forecast_image": "images/tidemark-closing-player-forecast.png",
+      "live_placement_checks": [
+        {
+          "cell": [
+            3,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 26,
+          "id": "serra",
+          "in_bounds": true,
+          "max_hp": 26,
+          "movement_type": 1,
+          "reachable_stop_count": 33,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            0,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 30,
+          "id": "osric",
+          "in_bounds": true,
+          "max_hp": 30,
+          "movement_type": 1,
+          "reachable_stop_count": 17,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            0,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "elowen",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 21,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            1,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "isolde",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            10
+          ],
+          "entry_cost": 1,
+          "hp": 21,
+          "id": "fenn",
+          "in_bounds": true,
+          "max_hp": 21,
+          "movement_type": 0,
+          "reachable_stop_count": 56,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            3,
+            10
+          ],
+          "entry_cost": 1,
+          "hp": 25,
+          "id": "bertram",
+          "in_bounds": true,
+          "max_hp": 25,
+          "movement_type": 0,
+          "reachable_stop_count": 48,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            2,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 27,
+          "id": "kai",
+          "in_bounds": true,
+          "max_hp": 27,
+          "movement_type": 0,
+          "reachable_stop_count": 47,
+          "team": 0,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            9,
+            9
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "marlow",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 73,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            12,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 27,
+          "id": "rurik",
+          "in_bounds": true,
+          "max_hp": 27,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 1,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            7,
+            6
+          ],
+          "entry_cost": 2,
+          "hp": 20,
+          "id": "thessaly",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 41,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            11,
+            7
+          ],
+          "entry_cost": 1,
+          "hp": 19,
+          "id": "corvin",
+          "in_bounds": true,
+          "max_hp": 19,
+          "movement_type": 0,
+          "reachable_stop_count": 46,
+          "team": 1,
+          "terrain": 6
+        },
+        {
+          "cell": [
+            17,
+            5
+          ],
+          "entry_cost": 2,
+          "hp": 18,
+          "id": "vesper",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 32,
+          "team": 1,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            17,
+            2
+          ],
+          "entry_cost": 2,
+          "hp": 20,
+          "id": "rina",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 24,
+          "team": 1,
+          "terrain": 3
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "kael",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 46,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            17,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 28,
+          "id": "dain",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 0,
+          "reachable_stop_count": 34,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            13,
+            13
+          ],
+          "entry_cost": 1,
+          "hp": 18,
+          "id": "liora",
+          "in_bounds": true,
+          "max_hp": 18,
+          "movement_type": 0,
+          "reachable_stop_count": 38,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            18,
+            10
+          ],
+          "entry_cost": 2,
+          "hp": 28,
+          "id": "brenna",
+          "in_bounds": true,
+          "max_hp": 28,
+          "movement_type": 1,
+          "reachable_stop_count": 31,
+          "team": 2,
+          "terrain": 1
+        },
+        {
+          "cell": [
+            16,
+            11
+          ],
+          "entry_cost": 1,
+          "hp": 20,
+          "id": "wren",
+          "in_bounds": true,
+          "max_hp": 20,
+          "movement_type": 0,
+          "reachable_stop_count": 42,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            19,
+            12
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "perrin",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 2,
+          "reachable_stop_count": 41,
+          "team": 2,
+          "terrain": 0
+        },
+        {
+          "cell": [
+            18,
+            2
+          ],
+          "entry_cost": 1,
+          "hp": 24,
+          "id": "nilu",
+          "in_bounds": true,
+          "max_hp": 24,
+          "movement_type": 0,
+          "reachable_stop_count": 26,
+          "team": 1,
+          "terrain": 0
+        }
+      ],
+      "victory": {
+        "round": 9,
+        "living_rivals": 0,
+        "lord_alive": true,
+        "campaign_week_after": 7,
+        "last_result": "victory",
+        "surviving_players": [
+          "serra",
+          "osric",
+          "fenn",
+          "bertram",
+          "kai"
+        ],
+        "image": "images/tidemark-closing-victory.png",
+        "defeated_ids": [
+          "rurik",
+          "nilu",
+          "vesper",
+          "corvin",
+          "marlow",
+          "thessaly",
+          "dain",
+          "liora",
+          "kael",
+          "brenna",
+          "wren",
+          "rina",
+          "perrin"
+        ]
+      },
+      "sampled_player_action": {
+        "id": "kai",
+        "from": [
+          2,
+          12
+        ],
+        "to": [
+          5,
+          10
+        ],
+        "target_id": "thessaly"
+      }
+    }
+  ],
+  "accepted_main_integration_sha": "11e08763",
+  "integration_contest_source_diff": "empty",
+  "scope_note": "Existing six sample friendly contests; full-year authoring and separate closing-grade repair are outside this qualification"
+}
