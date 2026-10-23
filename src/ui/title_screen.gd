@@ -14,6 +14,7 @@ const MAX_SLOTS := 3
 var _menu: ChoiceMenu
 var _context := "main"
 var _slots: Array = []           # SaveSystem.list_slots() entries shown in Load
+var _status := ""                # Issue #83: truthful load-failure feedback
 var _houses: Array[HouseDef] = []
 var _save_system := SaveSystem.new()
 
@@ -57,12 +58,14 @@ const DEV_JUMPS := [
 
 func _open_main() -> void:
 	_context = "main"
+	_status = ""
 	_menu.open("", ["New Game", "Load Game", "Dev Jump ▶", "Quit"], _menu_pos())
 	queue_redraw()
 
 
 func _open_dev() -> void:
 	_context = "dev"
+	_status = ""
 	var labels: Array = []
 	for j in DEV_JUMPS:
 		labels.append(j[0])
@@ -128,11 +131,13 @@ func _dev_jump(kind: String) -> void:
 
 func _open_new_game() -> void:
 	_context = "new"
+	_status = ""
 	_menu.open("New Game", ["Classic (permadeath)", "Casual", "Back"], _menu_pos())
 
 
 func _open_load() -> void:
 	_context = "load"
+	_status = ""
 	_slots = _save_system.list_slots(MAX_SLOTS)
 	if _save_system.has_autosave():
 		_slots.append(_save_system.autosave_entry())
@@ -191,6 +196,8 @@ func _start_new_game(casual: bool) -> void:
 
 
 func _choose_slot(index: int) -> void:
+	_status = ""
+	queue_redraw()  # erase a prior manual error when choosing Autosave too
 	if index >= _slots.size():
 		# The "(no saves found)" placeholder or "Back".
 		if index == _slot_labels().size() - 1:
@@ -206,6 +213,10 @@ func _choose_slot(index: int) -> void:
 			_menu._index = index
 			_menu._keep_selection_visible()
 		return
+	# An Autosave rejection temporarily names the menu; manual feedback uses
+	# the accepted #83 status band and the ordinary Load Game heading.
+	_menu._title = "Load Game"
+	_menu.queue_redraw()
 	var slot := int(_slots[index]["slot"])
 	# AW-75: a slot holding a live battle resumes INTO the battle, mid-fight.
 	if bool(_slots[index].get("in_battle", false)):
@@ -215,6 +226,26 @@ func _choose_slot(index: int) -> void:
 			return
 	if prepare_load(slot):
 		_enter_campaign()
+		return
+	_report_load_failure(slot)
+
+
+## Issue #83: an occupied file the existing loader rejects must say so instead
+## of silently doing nothing. The Load menu stays open for another slot or Back.
+func _report_load_failure(slot: int) -> void:
+	if not _save_system.has_slot(slot):
+		_status = "Slot %d is empty." % slot
+	else:
+		_status = "Slot %d couldn't be loaded — choose another slot." % slot
+	AudioManager.play_sfx("cancel")
+	queue_redraw()
+
+
+## Top-wide feedback band, measured so it stays readable at compact sizes.
+func status_rect() -> Rect2:
+	var vp := get_viewport_rect().size
+	var width := clampf(vp.x - 80.0, 240.0, 720.0)
+	return Rect2((vp.x - width) * 0.5, 14.0, width, 34.0)
 
 
 func prepare_autosave(save_system: SaveSystem = null) -> bool:
@@ -282,5 +313,15 @@ func _draw() -> void:
 	var ss := font.get_string_size(sub, HORIZONTAL_ALIGNMENT_CENTER, -1, 22)
 	draw_string(font, Vector2(vp.x * 0.5 - ss.x * 0.5, vp.y * 0.34 + 40), sub,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(0.65, 0.62, 0.68))
+	if _status != "":
+		var sr := status_rect()
+		# Issue #83: a 34 px band is too short for UITheme.draw_panel's ornate
+		# nine-patch corners — the filigree overruns the message. This transient
+		# band therefore uses the same plain navy fill + gold rule as the Journal
+		# toast, so both load-failure messages read the same way.
+		draw_rect(sr, Color(0.1, 0.11, 0.16, 0.95), true)
+		draw_rect(sr, Color(0.86, 0.78, 0.45, 0.8), false, 1.5)
+		draw_string(font, Vector2(sr.position.x + 16, sr.position.y + 23), _status,
+			HORIZONTAL_ALIGNMENT_CENTER, sr.size.x - 32.0, 16, Color(0.95, 0.87, 0.70))
 	var hint := "working title"
 	draw_string(font, Vector2(16, vp.y - 16), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.4, 0.4, 0.45))

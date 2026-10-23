@@ -23,7 +23,7 @@
     "Keyboard input only; read-only inspector snapshots and external path planning never call game action/save/load handlers.",
     "Success after deliberate invalid-fixture repair was loaded through reopened Title Load.",
     "No Neal taste or visual approval.",
-    "Accepted #83 integration and final exact-head CI/lead review remain pending."
+    "Native captures precede accepted-#83 integration; the integration-only feedback clearing transition has viewport-key and engine draw-signal regression coverage."
   ],
   "native_checkpoint": {
     "deltas": "None. Initial files slot_0, slot_1, slot_2 are byte-identical copies; no campaign field, location or visit was seeded.",

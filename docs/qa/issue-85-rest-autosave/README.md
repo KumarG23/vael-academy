@@ -36,6 +36,16 @@ All twelve captures were inspected at native resolution. [State snapshots](state
 
 Every graphical session exited normally through Return to Title/Quit; all game/input/capture/video jobs ended, process inventory was empty, and the desktop was explicitly released to #89 in [6372500082](https://github.com/KumarG23/vael-academy/issues/85#issuecomment-6372500082). #89 still needs lead naming. No full-year replay, S-rank native reward claim or Neal visual/taste approval. S/full-inventory/legacy/interruption/IO-failure boundaries retain automated coverage.
 
-## Remaining integration gate
+## Accepted #83 integration — 2026-10-23
 
-Final accepted-main fetch remains `c07617e2`. #83 / draft #88 is still unaccepted, so its source was not copied. Keep #86 draft pending normal accepted-#83 integration, proportional affected checks, final exact-head Verify and engineering-lead review. The prior full baseline and current native evidence are not repeated solely to wait for that dependency. Same owner retains revisions; no self-merge or worker/CI polling.
+Accepted #83 / PR #88 main `9f76561e5ae471396635c6e3babff2432a495502` was merged normally after the lead's dependency release. HANDOFF/STATUS conflicts were only concurrent insertions; both sibling records are retained. Incoming Journal code and all #83/#76 assertions are preserved. The shared writer, rest/queue logic, campaign restore, Autosave labels and Autosave failure layout/wording are unchanged from their recorded runtime sources.
+
+One combined transition needed repair. A rejected manual slot draws #83's status band; selecting Autosave cleared the backing status but did not redraw the parent, leaving the old manual band visibly stale. Returning from Autosave failure to a manual failure retained the Autosave-specific menu heading. A new production viewport-key test observes Title's **draw signal** as well as menu/status values: on the automatic merge **10/11 tests, 238/240 assertions** pass, with precisely those two stale-feedback assertions failing. Three clearing statements queue the Title redraw and restore/redraw the ordinary Load Game heading on manual selection. No geometry, wording, source/load/write semantics or rest behavior changes.
+
+Final combined rest/autosave, accepted load-failure feedback, SaveSystem, report-card delivery, Title, Journal/input, campaign-load, travel, resume and campaign-flow checks pass **123/123 tests, 4,340 assertions / 11 scripts**, exit 0 (35.572 s), common heavy lock and disposable data. There are 47 inherited wait-frame deprecations, no script-load errors or exit-time resource errors. The new transition test also retains complete Campaign/source/manual byte assertions. All original assertions remain. No unchanged local full baseline or native audit was repeated solely for integration; final-head CI supplies the clean import/full GUT/helpers gate.
+
+Native captures remain attributed to `42476315` for the unchanged rest/recovery/Autosave layout. Accepted #83's original-renderer manual-band/Journal feedback evidence is recorded under its own exact source in [its QA record](../issue-83-load-failure/README.md). The integration-only clearing transition is verified through actual viewport input and engine draw signals, not claimed as a new graphical capture. No GUI/input/capture was launched for integration; #89 retains sole desktop control.
+
+## Remaining review gate
+
+All accepted sibling dependencies are integrated. Keep #86 draft until actual final exact-head Verify passes, then obtain engineering-lead review. Same owner retains revisions; no self-merge, worker/CI polling, full-year replay or Neal approval claim.

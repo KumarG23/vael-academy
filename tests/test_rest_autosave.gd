@@ -320,3 +320,45 @@ func test_unplayable_ceremony_keeps_previous_checkpoint() -> void:
 	assert_eq(FileAccess.get_file_as_bytes(_sys.autosave_path()), bytes)
 	assert_eq(_sys.writes, 1)
 	assert_false(_castle.busy(), "unavailable presentation doesn't lock live play")
+
+func test_title_switching_manual_and_autosave_failures_clears_other_feedback() -> void:
+	# Actual viewport input crosses both accepted feedback paths. The draw signal
+	# observes what Title rendered, not only the backing status string.
+	assert_true(_sys.save_slot(2, {"campaign": {"flags": []}}))
+	_manual[2] = FileAccess.get_file_as_bytes(_sys.slot_path(2))
+	assert_true(_sys.save_autosave({"campaign": {}}))
+	var auto_bytes := FileAccess.get_file_as_bytes(_sys.autosave_path())
+	var before := Campaign.to_dict()
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(1280, 720)
+	viewport.handle_input_locally = true
+	add_child(viewport)
+	var title := TitleScreen.new()
+	title._save_system = _sys
+	viewport.add_child(title)
+	var drawn_status: Array[String] = []
+	title.draw.connect(func() -> void: drawn_status.append(title._status))
+	title._open_load()
+	title._menu._index = 2
+	for key: Key in [KEY_ENTER, KEY_DOWN, KEY_ENTER, KEY_UP, KEY_ENTER]:
+		for pressed: bool in [true, false]:
+			var event := InputEventKey.new()
+			event.keycode = key
+			event.physical_keycode = key
+			event.pressed = pressed
+			viewport.push_input(event, true)
+		await wait_process_frames(2)
+		if key == KEY_DOWN or key == KEY_UP:
+			continue
+		if title._menu._index == 3:
+			assert_eq(title._status, "")
+			assert_false(drawn_status.is_empty(), "Title rendered the prior manual failure")
+			if not drawn_status.is_empty():
+				assert_eq(drawn_status[-1], "", "old manual error band was redrawn away")
+			assert_string_contains(title._menu._title, "Autosave unavailable")
+		else:
+			assert_string_contains(title._status, "Slot 2 couldn't be loaded")
+			assert_eq(title._menu._title, "Load Game", "manual rejection must not keep Autosave's heading")
+	assert_eq(Campaign.to_dict(), before)
+	assert_eq(FileAccess.get_file_as_bytes(_sys.autosave_path()), auto_bytes)
+	viewport.free()
