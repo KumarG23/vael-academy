@@ -20,7 +20,9 @@ signal finished
 ## Auto-play this script on _ready if set (for standalone testing of scenes/dialogue).
 @export var script_path: String = ""
 ## Characters revealed per second. <= 0 shows the whole line instantly.
-@export var typewriter_speed: float = 48.0
+## Explicit per-instance override in characters/second. Negative follows the
+## installation preference; 0 keeps the historical instant-reveal override.
+@export var typewriter_speed: float = -1.0
 
 const LEFT_COLOR := Color(0.55, 0.20, 0.20)
 const RIGHT_COLOR := Color(0.20, 0.30, 0.55)
@@ -49,6 +51,10 @@ var _portrait_layout: String = "standard"
 # Held in members so the textures survive redraws (gotcha #11).
 var _backdrop_tex: Texture2D = null
 var _backdrop_flat := Color(0, 0, 0, 0)  # a=0 means "no flat backdrop"
+
+
+func _effective_typewriter_speed() -> float:
+	return DialoguePreferences.characters_per_second() if typewriter_speed < 0.0 else typewriter_speed
 
 
 func _ready() -> void:
@@ -218,7 +224,7 @@ func _advance_logical() -> void:
 		else:
 			_left_portrait = step.portrait
 			_left_expr = step.expression
-		_revealed = 0.0 if typewriter_speed > 0.0 else float(step.text.length())
+		_revealed = 0.0 if _effective_typewriter_speed() > 0.0 else float(step.text.length())
 		queue_redraw()
 		line_shown.emit(step)
 		return
@@ -253,7 +259,11 @@ func _finish() -> void:
 
 func _process(delta: float) -> void:
 	if is_revealing():
-		_revealed = minf(float(_current.text.length()), _revealed + typewriter_speed * delta)
+		var speed := _effective_typewriter_speed()
+		if speed <= 0.0:
+			_revealed = float(_current.text.length())
+		else:
+			_revealed = minf(float(_current.text.length()), _revealed + speed * delta)
 		queue_redraw()
 
 
