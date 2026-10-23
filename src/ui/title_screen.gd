@@ -134,12 +134,21 @@ func _open_new_game() -> void:
 func _open_load() -> void:
 	_context = "load"
 	_slots = _save_system.list_slots(MAX_SLOTS)
+	if _save_system.has_autosave():
+		_slots.append(_save_system.autosave_entry())
 	_menu.open("Load Game", _slot_labels(), _menu_pos())
 
 
 func _slot_labels() -> Array:
 	var labels: Array = []
 	for s in _slots:
+		if bool(s.get("autosave", false)):
+			if str(s["chapter_id"]) == "" or int(s["week"]) < 1:
+				labels.append("Autosave (unavailable)")
+				continue
+			labels.append("Autosave — %s W%d (%s)" % [str(s["chapter_id"]),
+				int(s["week"]), "Casual" if bool(s["casual_mode"]) else "Classic"])
+			continue
 		var battle_tag := "  ⚔ mid-battle" if bool(s.get("in_battle", false)) else ""
 		labels.append("Slot %d — %s (%s)%s" % [
 			int(s["slot"]), str(s["chapter_id"]),
@@ -187,6 +196,16 @@ func _choose_slot(index: int) -> void:
 		if index == _slot_labels().size() - 1:
 			_open_main()
 		return
+	if bool(_slots[index].get("autosave", false)):
+		if prepare_autosave():
+			_enter_campaign()
+		else:
+			# Keep the same occupied entry, even if removed after browsing, so
+			# retry never changes the player's selection to a different save.
+			_menu.open("Autosave unavailable. Retry or Back.", _slot_labels(), _menu_pos())
+			_menu._index = index
+			_menu._keep_selection_visible()
+		return
 	var slot := int(_slots[index]["slot"])
 	# AW-75: a slot holding a live battle resumes INTO the battle, mid-fight.
 	if bool(_slots[index].get("in_battle", false)):
@@ -196,6 +215,13 @@ func _choose_slot(index: int) -> void:
 			return
 	if prepare_load(slot):
 		_enter_campaign()
+
+
+func prepare_autosave(save_system: SaveSystem = null) -> bool:
+	if not Campaign.load_autosave(save_system if save_system != null else _save_system):
+		return false
+	Campaign.active = true
+	return true
 
 
 ## Reset the campaign for a fresh run. Split from the scene change so tests can

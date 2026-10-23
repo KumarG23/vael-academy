@@ -421,8 +421,25 @@ func save_to_slot(slot: int, save_system: SaveSystem = null) -> bool:
 	return _sys(save_system).save_slot(slot, {"campaign": to_dict()})
 
 
+func save_autosave(save_system: SaveSystem = null) -> bool:
+	return _sys(save_system).save_autosave({"campaign": to_dict()})
+
+
+func load_autosave(save_system: SaveSystem = null) -> bool:
+	var data := _sys(save_system).load_autosave()
+	# This checkpoint is campaign-only. Never convert a battle payload or accept
+	# an empty envelope as a new campaign, and never try a manual slot instead.
+	if data.has("battle") or not Resume.has_campaign(data):
+		return false
+	return _restore_campaign_envelope(data)
+
+
 func load_from_slot(slot: int, save_system: SaveSystem = null) -> bool:
 	var data := _sys(save_system).load_slot(slot)
+	return _restore_campaign_envelope(data)
+
+
+func _restore_campaign_envelope(data: Dictionary) -> bool:
 	if not (data.get("campaign") is Dictionary):
 		return false
 	if not restore_save(data["campaign"]):

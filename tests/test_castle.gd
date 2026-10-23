@@ -10,7 +10,8 @@ var _castle_save_system: SaveSystem
 
 func before_each() -> void:
 	_save_override_before = Campaign.save_system_override
-	_castle_save_system = null
+	_castle_save_system = SaveSystem.new("user://test_castle_rest_%d" % Time.get_ticks_usec())
+	Campaign.save_system_override = _castle_save_system
 	CastleScene.next_room = ""
 	CastleScene.next_spawn = Vector2i(-1, -1)
 	_castle = (load("res://scenes/castle/castle.tscn") as PackedScene).instantiate()
@@ -18,6 +19,7 @@ func before_each() -> void:
 
 
 func after_each() -> void:
+	_castle._rest_checkpoint_pending = false
 	Campaign.save_system_override = _save_override_before
 	if _castle_save_system != null:
 		var dir := DirAccess.open(_castle_save_system.save_dir)

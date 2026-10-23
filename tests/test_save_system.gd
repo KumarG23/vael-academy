@@ -233,3 +233,56 @@ func test_list_slots_tolerates_wrongly_typed_metadata():
 		assert_false(slots[0]["casual_mode"])
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(saves.slot_path(0)))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(saves.save_dir))
+
+
+func test_autosave_uses_independent_atomic_file_and_preserves_all_manual_bytes() -> void:
+	var saves := _new_regression_saves()
+	var manual: Array[PackedByteArray] = []
+	for slot in range(3):
+		assert_true(saves.save_slot(slot, {"campaign": {"marker": slot}}))
+		manual.append(FileAccess.get_file_as_bytes(saves.slot_path(slot)))
+	var payload := {"campaign": {"week": 3, "house_id": "emberwing", "flags": {"gold": 80}}}
+	var before := payload.duplicate(true)
+	assert_true(saves.save_autosave(payload))
+	assert_eq(payload, before)
+	var prior := FileAccess.get_file_as_bytes(saves.autosave_path())
+	var tmp := ProjectSettings.globalize_path(saves.autosave_path() + ".tmp")
+	assert_eq(DirAccess.make_dir_absolute(tmp), OK)
+	assert_false(saves.save_autosave({"campaign": {"week": 4}}), "temp open failure")
+	assert_eq(FileAccess.get_file_as_bytes(saves.autosave_path()), prior)
+	assert_eq(DirAccess.remove_absolute(tmp), OK)
+	assert_true(saves.save_autosave(payload), "later write retries")
+	for slot in range(3):
+		assert_eq(FileAccess.get_file_as_bytes(saves.slot_path(slot)), manual[slot])
+	assert_eq(saves.list_slots().size(), 3, "manual listing excludes autosave")
+	assert_false(saves.load_autosave().has("slot"))
+
+
+func test_autosave_failed_rename_preserves_destination_and_manual_files() -> void:
+	var saves := _new_regression_saves()
+	assert_true(saves.save_slot(2, {"campaign": {"marker": "neighbor"}}))
+	var bytes := FileAccess.get_file_as_bytes(saves.slot_path(2))
+	var path := saves.autosave_path()
+	assert_eq(DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(path)), OK)
+	var marker := FileAccess.open(path.path_join("keep.txt"), FileAccess.WRITE)
+	marker.store_string("keep")
+	marker.close()
+	assert_false(saves.save_autosave({"campaign": {"week": 2}}))
+	assert_eq(FileAccess.get_file_as_string(path.path_join("keep.txt")), "keep")
+	assert_false(FileAccess.file_exists(path + ".tmp"))
+	assert_eq(FileAccess.get_file_as_bytes(saves.slot_path(2)), bytes)
+
+
+func test_actual_autosave_write_failure_preserves_previous_and_retries() -> void:
+	if OS.get_name() != "Linux":
+		pending("POSIX file-size fault fixture requires Linux")
+		return
+	var output: Array = []
+	var wrapper := "import os,resource,signal,sys; signal.signal(signal.SIGXFSZ,signal.SIG_IGN); resource.setrlimit(resource.RLIMIT_FSIZE,(1024,1024)); os.execv(sys.argv[1],sys.argv[1:])"
+	var code := OS.execute("python3", PackedStringArray([
+		"-c", wrapper, OS.get_executable_path(), "--headless", "--path",
+		ProjectSettings.globalize_path("res://"), "-s", "res://tests/fixtures/autosave_write_failure.gd",
+	]), output, true)
+	assert_eq(code, 0, str(output))
+	assert_string_contains(str(output), "Autosave real write failure and retry passed")
+	assert_false(str(output).contains("SCRIPT ERROR"))
