@@ -411,8 +411,8 @@ func test_focus_loss_disarm_echo_and_acceleration_to_skip():
 
 func test_hint_fits_compact_and_default_with_clear_active_state_and_teardown():
 	for size in [Vector2i(1280, 720), Vector2i(640, 360)]:
-		var view := _kitted(false)
-		_command_attack(view, view.unit_by_id("kael"), view.unit_by_id("osric"))
+		var view := _illustrated()
+		_command_attack(view, view.unit_by_id("kai"), view._boss_unit)
 		var layer = view._combat_exec._skip_input
 		view.get_viewport().size = size
 		await get_tree().process_frame
@@ -420,6 +420,14 @@ func test_hint_fits_compact_and_default_with_clear_active_state_and_teardown():
 		assert_true(layer.hint_visible())
 		assert_true(view.get_viewport().get_visible_rect().encloses(layer.hint_rect()))
 		assert_eq(layer._pace.speed, 2.0)
+		# Approved CP-8 right actor's head region in the 1280×720 stage,
+		# projected at the actual presentation scale. The hint must clear it.
+		var stage := view._illustrated_combat._stage
+		var head := Rect2(stage.position + Vector2(800, 160) * stage.scale, Vector2(120, 140) * stage.scale)
+		assert_false(layer.hint_rect().intersects(head), "active hint clears Serra's face")
+		_key(view, KEY_SPACE, false)
+		assert_false(layer.hint_rect().intersects(head), "hold instruction clears Serra's face")
+		_key(view, KEY_SPACE, true)
 		var old = layer._pace
 		layer.disarm()
 		assert_eq(old.speed, 1.0, "disarm resets active effects")

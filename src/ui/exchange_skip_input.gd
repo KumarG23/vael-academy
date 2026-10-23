@@ -21,6 +21,9 @@ const MIN_HEIGHT := 2.0 * UITheme.DST_MARGIN + 18.0
 
 var _pace: ExchangeSkip = null
 var _hint: Control
+var _compact := false
+var _font_size := FONT_SIZE
+var _padding := PAD.x
 
 
 func _ready() -> void:
@@ -92,22 +95,40 @@ func _input(event: InputEvent) -> void:
 	_pace.request.call_deferred()
 
 
+## Compact stages scale the actors down, but the hint stays at readable UI
+## size. Stack its controls to avoid spreading across the right actor's face.
+func _hint_lines(active: bool) -> PackedStringArray:
+	if _compact:
+		return PackedStringArray(["2× ACTIVE" if active else "Hold Space 2×", "Esc  Skip"])
+	return PackedStringArray([ACTIVE_HINT if active else HINT])
+
+
 func _place_hint() -> void:
 	if _hint == null:
 		return
-	var font := UITheme.font()
-	var text_size := font.get_string_size(ACTIVE_HINT, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE)
-	_hint.size = Vector2(text_size.x + PAD.x * 2.0, maxf(MIN_HEIGHT, text_size.y)).ceil()
 	var viewport := get_viewport().get_visible_rect().size
+	_compact = viewport.x < 1000.0
+	_font_size = 16 if _compact else FONT_SIZE
+	_padding = UITheme.DST_MARGIN if _compact else PAD.x
+	var font := UITheme.font()
+	var width := 0.0
+	for active: bool in [false, true]:
+		for line: String in _hint_lines(active):
+			width = maxf(width, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size).x)
+	var height := font.get_height(_font_size) * _hint_lines(false).size()
+	_hint.size = Vector2(width + _padding * 2.0, maxf(MIN_HEIGHT, height + 12.0)).ceil()
 	_hint.position = Vector2(viewport.x - _hint.size.x - MARGIN, TOP).floor()
 	_hint.queue_redraw()
 
 
 func _draw_hint() -> void:
-	var text := ACTIVE_HINT if _pace != null and _pace.speed > 1.0 else HINT
+	var lines := _hint_lines(_pace != null and _pace.speed > 1.0)
 	var rect := Rect2(Vector2.ZERO, _hint.size)
 	UITheme.draw_panel(_hint, rect)
 	var font := UITheme.font()
-	var baseline := (_hint.size.y - font.get_height(FONT_SIZE)) * 0.5 + font.get_ascent(FONT_SIZE)
-	_hint.draw_string_outline(font, Vector2(PAD.x, baseline), text, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, 4, Color.BLACK)
-	_hint.draw_string(font, Vector2(PAD.x, baseline), text, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, UITheme.GOLD)
+	var line_height := font.get_height(_font_size)
+	var baseline := (_hint.size.y - line_height * lines.size()) * 0.5 + font.get_ascent(_font_size)
+	for line: String in lines:
+		_hint.draw_string_outline(font, Vector2(_padding, baseline), line, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size, 4, Color.BLACK)
+		_hint.draw_string(font, Vector2(_padding, baseline), line, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size, UITheme.GOLD)
+		baseline += line_height

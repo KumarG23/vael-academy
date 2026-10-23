@@ -8,11 +8,15 @@ import json, os, subprocess, sys, time
 G, RUN, MODE = sys.argv[1:4]
 J = f"{G}/{RUN}.jsonl"
 ENV = dict(os.environ)
-def x(*a): subprocess.run(["xdotool", *a], env=ENV, check=True)
+ORIGIN = tuple(map(int, ENV.get("QA_CAPTURE_ORIGIN", "0,0").split(",")))
+def x(*a):
+    if a[0] == "mousemove":
+        a = (a[0], str(int(a[1]) + ORIGIN[0]), str(int(a[2]) + ORIGIN[1]))
+    subprocess.run(["xdotool", *a], env=ENV, check=True)
 def key(k, hold=0.08, gap=0.2):
     x("keydown", k); time.sleep(hold); x("keyup", k); time.sleep(gap)
 def shot(name):
-    subprocess.run(["ffmpeg","-loglevel","error","-y","-f","x11grab","-video_size","1280x720","-i",ENV["DISPLAY"],"-frames:v","1",f"{G}/{RUN}-{name}.png"], env=ENV, check=True)
+    subprocess.run(["ffmpeg","-loglevel","error","-y","-f","x11grab","-video_size",ENV.get("QA_CAPTURE_SIZE", "1280x720"),"-i",ENV["DISPLAY"] + "+" + str(ORIGIN[0]) + "," + str(ORIGIN[1]),"-frames:v","1",f"{G}/{RUN}-{name}.png"], env=ENV, check=True)
 def records():
     try: return [json.loads(l) for l in open(J)]
     except FileNotFoundError: return []
@@ -36,6 +40,18 @@ def choose(action):
     s = wait(lambda s: s["menu"] and action in s["menu_actions"], 10)
     for _ in range(s["menu_actions"].index(action)): key("Down")
     key("Return")
+def click_unit(uid):
+    # A compact window can pan the camera after pointer hover. Follow the live
+    # screen position until it settles before the native click, as a player can.
+    for _ in range(30):
+        before = unit(state(), uid)[9]
+        x("mousemove", str(before[0]), str(before[1])); time.sleep(0.1)
+        after = unit(state(), uid)[9]
+        if max(abs(after[i] - before[i]) for i in (0, 1)) <= 2:
+            x("click", "1")
+            return
+    raise SystemExit("camera did not settle for pointer continuation")
+
 def playback(label):
     wait(lambda s: s["armed"], 15)
     if MODE != "normal":
@@ -77,8 +93,7 @@ if ROUTE == 'map':
     wait(lambda s: s["cursor"] == [3, 10], 5); shot("03-heal-target")
     exchange("04-heal")
     # 3) Pointer then keyboard continuation: click Liora (selects + range), Esc cancels
-    s = state(); lx, ly = unit(s, "liora")[9]
-    x("mousemove", str(lx), str(ly)); time.sleep(0.3); x("click", "1")
+    click_unit("liora")
     wait(lambda s: s["selected"] == "liora" and s["phase"] == 1, 5); time.sleep(0.4); shot("05-pointer-select")
     key("Escape"); wait(lambda s: s["phase"] == 0 and s["selected"] == "", 5)
     key("Next"); time.sleep(0.6); shot("06-keyboard-continue")
@@ -104,8 +119,7 @@ elif ROUTE == 'illustrated':
     cursor_to((3, 12)); key("Return"); wait(lambda s: s["selected"] == "kael", 5)
     cursor_to((4, 12)); key("Return"); choose("wait")
     wait(lambda s: s["phase"] == 0 and not s["busy"], 10); time.sleep(0.6); shot("04-next-command")
-    s = state(); lx, ly = unit(s, "liora")[9]
-    x("mousemove", str(lx), str(ly)); time.sleep(0.3); x("click", "1")
+    click_unit("liora")
     wait(lambda s: s["selected"] == "liora", 5); time.sleep(0.4); shot("05-pointer-select")
     key("Escape"); wait(lambda s: s["phase"] == 0, 5)
     print("done", RUN)
@@ -121,4 +135,7 @@ elif ROUTE == 'popup':
     playback("02-popup")
     cursor_to((2, 12)); key("Return"); wait(lambda s: s["selected"] == "kai", 5)
     key("Return"); choose("wait"); wait(lambda s: s["phase"] == 0 and not s["busy"], 10); time.sleep(0.5); shot("04-next-command")
+    click_unit("liora")
+    wait(lambda s: s["selected"] == "liora", 5); shot("05-pointer-select")
+    key("Escape"); wait(lambda s: s["phase"] == 0, 5)
     print("done", RUN)
