@@ -1,0 +1,22 @@
+{
+ "README.md": "4177f302f7e1633d5d50b744f49ac50ef0fac8b53d5d036dc692a1c1afb54ce5",
+ "ill-skip.mp4": "210a7e683a612931fb73a5f028bc5de3c82dd38afe51389d78fe0e936f96b6fd",
+ "images/defect-hint-frame-band-zoom.png": "2e5d2775dbba9f87ed9ea4c8eeda19351a84f7dac4dd39797269db6c8f094837",
+ "images/defect-hint-over-hp-plate.png": "734215672692aa51044e37a23663558febfae5bcd1a0d2acae495e1af01c29b9",
+ "images/ill-skip-02-stage-hint.png": "aa3c76f65ce4373954fdcd8964c86e558d11639046177b43dc4e508a50801822",
+ "images/ill-skip-03-after.png": "83f7d4715be9d1f1857f67bd87374d6ebd88fc45b163d85bae00f06e9da4d17d",
+ "images/ill-skip-04-next-command.png": "11089d576756c6e0d923bab3a070616915f371714e10405087f97ac6b88ea9e3",
+ "images/map-normal-04-heal-after.png": "0c5a84e81542a754b64e252e9b9372675c73641ac2140a2f61078ad0a12fe23f",
+ "images/map-skip-02-attack-after.png": "e0a55ffc443e965acd6688e35f8f40dc8a9fade667c88d70fd85f9139c4246e2",
+ "images/map-skip-02-attack-armed.png": "0df3d23470691d2ae1702390a1240a9c73684312a1812fed8f79e7859b11a303",
+ "images/map-skip-04-heal-after.png": "2355d7e226ae056c3c89ddecce4f9ac861aa4c9f0a31e630de8a85dbbdb4d6e1",
+ "images/map-skip-04-heal-armed.png": "79f65fc253f7456e5f36710329e9cc1ab2ece9982b68c1f9b65bcf8a379c2246",
+ "images/map-skip-05-pointer-select.png": "96100d9f6cbb9ad6a3f327b4ef445695fd81a267358c6326c36642fd6f612754",
+ "images/pop-skip-02-popup-hint.png": "0a753ca03d650e0ad8038e405da7237d64a546e5ee3c0572f5fc7fa5eb4729c3",
+ "images/pop-skip-03-after.png": "5112f0555431e255d51da6977c9896c25b74e17f53509e0696a26e72afa89692",
+ "map-skip.mp4": "00ea497103c7d48a6778b485545b0873aaffb63ba1894e668a2aae0709a8d331",
+ "pop-skip.mp4": "1fca37b0c7675394c431f97450efc60fd16771a66826ba24f26d9540fd9ea7fc",
+ "results.json": "2ce5e943a7e6a1161cd077ff1da058a5d810dc5ebc3f6a823ba7b469d59ed969",
+ "tools/qa_reporter.gd": "fb93651555fe4e3823ae4622860df8d49313eed3355afcc3ad90b994b6de3fbf",
+ "tools/qa_runner.gd": "454a62e76ec6552479fd9848d2287f02b17030e41654d136a8fbb0da5f9943c8"
+}
