@@ -532,8 +532,9 @@ func _draw_calendar(body: Rect2, font: Font) -> void:
 		draw_string(font, Vector2(row["week_x"], baseline_y), "Week %d" % e.week,
 			HORIZONTAL_ALIGNMENT_LEFT, row["week_width"], 16,
 			Color(0.98, 0.79, 0.34) if now else Color(0.7, 0.73, 0.82))
+		var label_color := Color(0.98, 0.87, 0.62) if now else Color(0.82, 0.84, 0.9)
 		draw_multiline_string(font, Vector2(row["label_x"], rect.position.y + 5), e.label,
-			HORIZONTAL_ALIGNMENT_LEFT, row["label_width"], 16, -1, TextServer.BREAK_WORD_BOUND)
+			HORIZONTAL_ALIGNMENT_LEFT, row["label_width"], 16, -1, label_color)
 		draw_string(font, Vector2(row["kind_x"], baseline_y), _kind_name(e.kind),
 			HORIZONTAL_ALIGNMENT_RIGHT, row["kind_width"], 14, _kind_color(e.kind))
 	if events.size() > layout["rows"].size():
