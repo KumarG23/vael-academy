@@ -86,6 +86,10 @@ func test_tabs_cycle():
 	for i in range(_journal.TAB_NAMES.size()):
 		_journal._switch_tab(1)
 	assert_eq(_journal._tab, 0, "a full cycle of tabs wraps to the start")
+	assert_eq(_journal.TAB_NAMES.slice(0, 6),
+		["Roster", "Calendar", "Inventory", "Grades", "System", "Fish Log"],
+		"the existing tab indices and order stay fixed")
+	assert_eq(_journal.TAB_NAMES[6], "Supports", "the support reference is appended")
 
 
 func test_roster_selection_moves_and_wraps():
@@ -199,6 +203,108 @@ func test_fish_log_read_and_navigation_preserve_campaign_and_rng():
 	_journal._move_row(-1)
 	assert_eq(Campaign.to_dict(), before,
 		"reading and navigating catches do not mutate campaign values or its saved RNG state")
+
+
+func test_support_page_shows_only_current_roster_chains_and_explicit_empty_state():
+	var before := Campaign.to_dict()
+	var entries: Array = _journal._support_entries()
+	assert_eq(entries.size(), 2, "Emberwing shows its two authored Kai chains")
+	assert_eq([entries[0]["name"], entries[1]["name"]], ["Kael", "Liora"],
+		"companions use current roster names in stable order")
+	for entry: Dictionary in entries:
+		assert_eq(entry["rank"], "", "unset pairs have no achieved rank")
+		assert_true(entry["conversations"].is_empty(), "zero-rank pairs expose no conversations")
+	Roster.active_house = "tidemark"
+	assert_true(_journal._support_entries().is_empty(),
+		"the page excludes authored chains whose companion is not on the current roster")
+	_journal._tab = 6
+	_journal.queue_redraw()
+	await wait_frames(1)
+	assert_eq(Campaign.to_dict(), before, "temporary state and empty rendering leave the whole Campaign unchanged")
+	Roster.active_house = "emberwing"
+
+
+func test_support_page_shows_earned_ranks_and_only_unlocked_viewed_states():
+	Campaign.support_save = {
+		"points": {"kai_kael": 60, "kai_liora": 20},
+		"ranks": {"kai_kael": "B", "kai_liora": "C"},
+		"viewed": {"kai_kael:C": true, "kai_kael:B": false, "kai_liora:C": true},
+	}
+	var entries: Array = _journal._support_entries()
+	var kael: Dictionary = _entry_for_support(entries, "kael")
+	var liora: Dictionary = _entry_for_support(entries, "liora")
+	assert_eq(kael["rank"], "B", "earned rank comes from the current campaign snapshot")
+	assert_eq(liora["rank"], "C", "multiple current roster pairs are shown")
+	assert_eq(kael["conversations"].size(), 2, "only C and B are unlocked for Kael")
+	assert_eq(kael["conversations"][0]["rank"], "C")
+	assert_true(kael["conversations"][0]["viewed"])
+	assert_eq(kael["conversations"][1]["rank"], "B")
+	assert_false(kael["conversations"][1]["viewed"])
+	assert_eq(liora["conversations"].size(), 1, "Liora's locked future ranks are omitted")
+	assert_eq(liora["conversations"][0]["rank"], "C")
+	assert_true(liora["conversations"][0]["viewed"])
+	var before := Campaign.to_dict()
+	_journal._tab = 6
+	_journal.queue_redraw()
+	await wait_frames(1)
+	_journal._support_i = 1
+	_journal.queue_redraw()
+	await wait_frames(1)
+	assert_eq(Campaign.to_dict(), before, "default/compact page rendering is read-only")
+
+
+func test_support_page_reopen_reads_latest_campaign_state():
+	Campaign.support_save = {"points": {"kai_kael": 20}, "ranks": {"kai_kael": "C"}, "viewed": {}}
+	assert_eq(_entry_for_support(_journal._support_entries(), "kael")["rank"], "C")
+	Campaign.support_save = {"points": {"kai_kael": 60}, "ranks": {"kai_kael": "B"},
+		"viewed": {"kai_kael:C": true, "kai_kael:B": false}}
+	_journal.hide()
+	var reopened: AcademyJournal = load("res://src/ui/academy_journal.gd").new()
+	reopened._save = SaveSystem.new("user://test_journal_saves_%d" % Time.get_ticks_usec())
+	add_child_autofree(reopened)
+	await wait_frames(1)
+	var kael := _entry_for_support(reopened._support_entries(), "kael")
+	assert_eq(kael["rank"], "B", "a new Journal reads current earned rank")
+	assert_eq(kael["conversations"].size(), 2, "a new Journal reads current unlocked conversations")
+	assert_true(kael["conversations"][0]["viewed"])
+	assert_false(kael["conversations"][1]["viewed"])
+
+
+func test_support_rows_scroll_when_conversation_statuses_fill_compact_page():
+	Campaign.support_save = {"points": {"kai_kael": 120, "kai_liora": 120},
+		"ranks": {"kai_kael": "A", "kai_liora": "A"}, "viewed": {}}
+	var entries: Array = _journal._support_entries()
+	assert_eq(entries.size(), 2, "layout uses the two authored roster pairs")
+	assert_eq(_journal._support_visible_indices(entries, 400.0), [0, 1],
+		"default Journal height fits both companion records")
+	assert_eq(_journal._support_visible_indices(entries, 162.0), [0],
+		"compact Journal height scrolls the longer support records")
+	_journal._support_i = 1
+	assert_eq(_journal._support_visible_indices(entries, 162.0), [1],
+		"down navigation scrolls the selected companion into the compact viewport")
+
+
+func test_support_rank_and_viewed_state_survive_journal_save_load_round_trip():
+	Campaign.support_save = {"points": {"kai_kael": 60}, "ranks": {"kai_kael": "B"},
+		"viewed": {"kai_kael:C": true, "kai_kael:B": false}}
+	var expected := Campaign.support_save.duplicate(true)
+	_journal._do_save(TEST_SLOT)
+	Campaign.reset_new_game(false)
+	assert_true(Campaign.load_from_slot(TEST_SLOT, _journal._save), "ordinary Campaign/SaveSystem load succeeds")
+	var kael := _entry_for_support(_journal._support_entries(), "kael")
+	assert_eq(kael["rank"], "B", "the earned rank survives the real save round-trip")
+	assert_true(kael["conversations"][0]["viewed"], "viewed receipt survives the real save round-trip")
+	assert_false(kael["conversations"][1]["viewed"], "unviewed state survives the real save round-trip")
+	assert_eq(int(Campaign.support_save["points"]["kai_kael"]), int(expected["points"]["kai_kael"]),
+		"the earned points survive JSON's numeric normalization")
+	assert_eq(Campaign.support_save["ranks"]["kai_kael"], expected["ranks"]["kai_kael"])
+
+
+func _entry_for_support(entries: Array, companion_id: String) -> Dictionary:
+	for entry: Dictionary in entries:
+		if str(entry["id"]) == companion_id:
+			return entry
+	return {}
 
 
 # --- AW-52: the Inventory hub ---------------------------------------------------
