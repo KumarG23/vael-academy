@@ -67,6 +67,12 @@ Both runs serialize under the shared Git-common-directory `vael-godot-heavy.lock
 
 **Exit-time diagnostics are inherited.** One integrated run without #83 and one with #83 printed `2 ObjectDB instances were leaked at exit` plus `1 resources still in use at exit`; a verbose run identifies them as `AudioStreamWAV` / `AudioStreamPlaybackWAV` for `res://assets/audio/music/battle_theme.wav`, i.e. shared `AudioManager` music state still referenced by the audio server at shutdown. The identical diagnostic reproduces on unchanged `cd2af67c` with the #83 files removed, and the new suite alone reports none, so it is not introduced here. All runs still report 0 failures and exit 0.
 
+## Exact-head CI
+
+`Verify` [run 39997461522](https://github.com/KumarG23/vael-academy/actions/runs/39997461522) passed on head `1aa44ed8`, the merge of `origin/main` `c07617e2` into this branch: team helper tests, clean import, and the full GUT step all succeeded.
+
+An earlier push produced no `pull_request` run at all because the PR was `CONFLICTING` against main; GitHub cannot build the merge ref for a conflicted PR, so the workflow never starts. Integrating `origin/main` normally made the PR mergeable and the run above followed.
+
 ## Byte preservation
 
 Every rejection case reads the source slot and its neighbour before and after the attempt and asserts `PackedByteArray` equality (`_file_bytes()` in both Title and Journal tests). The repair-and-retry test asserts the same for the successful re-load. No test writes outside its own disposable `user://test_load_feedback_*` directory, which is removed in `after_each`.
