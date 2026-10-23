@@ -1,0 +1,4342 @@
+{
+  "source": "32d900b8d687e8d1ab6acd662c685410e283e676",
+  "date": "2026-10-23",
+  "renderer": "Godot 4.7.2 Vulkan 1.4.318 Forward+, llvmpipe LLVM 20.1.2 (256 bits)",
+  "fixture": {
+    "source": "docs/qa/issue-5-school-loop/emberwing-return-save.json",
+    "sha256": "681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4",
+    "entry": "byte-identical disposable slot 0; ordinary Title Load Game / Slot 1",
+    "seeded_visits": false
+  },
+  "save_sha256": "5e81abd99ca1b2df1077b9b7a55af01268e93179ff661655fa0bcb2293c9bb0f",
+  "input": "native X11 keyboard and pointer; existing inspector used only read-only script queries; no game/action/room-entry/save handlers called",
+  "checks": {
+    "legacy_fixture_omits_visits": true,
+    "first_entry_only_campus": true,
+    "first_door_discovers_entrance": true,
+    "two_doors_earn_exactly_three": true,
+    "cancel_preserves_location_and_campaign": true,
+    "travel_and_activity_preserve_entire_campaign": true,
+    "supports_unchanged": true,
+    "keyboard_arrival_exact": true,
+    "pointer_arrival_exact": true,
+    "fresh_load_and_travel": true,
+    "compact_scroll_preserves_campaign": true
+  },
+  "states": {
+    "initial": {
+      "armed": false,
+      "camera": [
+        3008.0,
+        2112.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "dialogue": false,
+      "journal": false,
+      "map": false,
+      "menu": "",
+      "nearest": "",
+      "position": [
+        3008.0,
+        2112.0
+      ],
+      "room": "campus",
+      "scene": "Castle",
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "first-map": {
+      "armed": false,
+      "camera": [
+        3008.0,
+        2112.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          926.0,
+          264.0,
+          320.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        66.9375,
+        112.0,
+        802.125,
+        558.0
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        3008.0,
+        2112.0
+      ],
+      "room": "campus",
+      "scene": "Castle",
+      "scroll": 0,
+      "selected": 0,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "cancel": {
+      "armed": false,
+      "camera": [
+        3008.0,
+        2112.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "dialogue": false,
+      "journal": false,
+      "map": false,
+      "menu": "",
+      "nearest": "",
+      "position": [
+        3008.0,
+        2112.0
+      ],
+      "room": "campus",
+      "scene": "Castle",
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "entrance-map": {
+      "armed": true,
+      "camera": [
+        1402.703125,
+        1057.68420410156
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          926.0,
+          264.0,
+          320.0,
+          22.0
+        ],
+        [
+          926.0,
+          294.0,
+          320.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "entrance",
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        34.0,
+        134.545471191406,
+        868.0,
+        512.909057617188
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        1397.80322265625,
+        1472.0
+      ],
+      "room": "entrance",
+      "scene": "Castle",
+      "scroll": 0,
+      "selected": 0,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "three-map": {
+      "armed": true,
+      "camera": [
+        1077.89477539062,
+        832.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          926.0,
+          264.0,
+          320.0,
+          22.0
+        ],
+        [
+          926.0,
+          294.0,
+          320.0,
+          22.0
+        ],
+        [
+          926.0,
+          324.0,
+          320.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "common_hall",
+        "entrance",
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        34.0,
+        155.916656494141,
+        868.0,
+        470.166687011719
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        389.052124023438,
+        832.0
+      ],
+      "room": "common_hall",
+      "scene": "Castle",
+      "scroll": 0,
+      "selected": 0,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "compact-top": {
+      "armed": true,
+      "camera": [
+        1077.89477539062,
+        832.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          390.0,
+          264.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          294.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          324.0,
+          208.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "common_hall",
+        "entrance",
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        34.0,
+        121.083335876465,
+        332.0,
+        179.83332824707
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        389.052124023438,
+        832.0
+      ],
+      "room": "common_hall",
+      "scene": "Castle",
+      "scroll": 0,
+      "selected": 0,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        640.0,
+        360.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "compact-bottom": {
+      "armed": true,
+      "camera": [
+        1077.89477539062,
+        832.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          390.0,
+          228.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          258.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          288.0,
+          208.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "common_hall",
+        "entrance",
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        34.0,
+        121.083335876465,
+        332.0,
+        179.83332824707
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        389.052124023438,
+        832.0
+      ],
+      "room": "common_hall",
+      "scene": "Castle",
+      "scroll": 36,
+      "selected": 2,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        640.0,
+        360.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "travel-campus": {
+      "armed": false,
+      "camera": [
+        2880.0,
+        1088.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "dialogue": false,
+      "journal": false,
+      "map": false,
+      "menu": "",
+      "nearest": "",
+      "position": [
+        2880.0,
+        1088.0
+      ],
+      "room": "campus",
+      "scene": "Castle",
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        640.0,
+        360.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "campus-compact": {
+      "armed": false,
+      "camera": [
+        2880.0,
+        1088.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          390.0,
+          264.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          294.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          324.0,
+          208.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "common_hall",
+        "entrance",
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        57.6875,
+        112.0,
+        284.625,
+        198.0
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        2880.0,
+        1088.0
+      ],
+      "room": "campus",
+      "scene": "Castle",
+      "scroll": 0,
+      "selected": 0,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        640.0,
+        360.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "pointer-travel-entrance": {
+      "armed": false,
+      "camera": [
+        1472.0,
+        1057.68420410156
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "dialogue": false,
+      "journal": false,
+      "map": false,
+      "menu": "",
+      "nearest": "",
+      "position": [
+        1472.0,
+        1472.0
+      ],
+      "room": "entrance",
+      "scene": "Castle",
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "door-continuation": {
+      "armed": true,
+      "camera": [
+        1738.10522460938,
+        832.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "dialogue": false,
+      "journal": false,
+      "map": false,
+      "menu": "",
+      "nearest": "",
+      "position": [
+        2546.87963867188,
+        832.0
+      ],
+      "room": "entrance",
+      "scene": "Castle",
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "activity-continuation": {
+      "armed": true,
+      "camera": [
+        1077.89489746094,
+        401.515991210938
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "dialogue": false,
+      "journal": false,
+      "map": false,
+      "menu": "",
+      "nearest": "fn_house",
+      "position": [
+        566.208190917969,
+        315.180511474609
+      ],
+      "room": "entrance",
+      "scene": "Castle",
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "saved": {
+      "armed": true,
+      "camera": [
+        1077.89489746094,
+        401.515869140625
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "dialogue": false,
+      "journal": true,
+      "map": false,
+      "menu": "",
+      "nearest": "fn_house",
+      "position": [
+        566.208190917969,
+        315.180511474609
+      ],
+      "room": "entrance",
+      "scene": "Castle",
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "fresh-load": {
+      "armed": false,
+      "camera": [
+        3008.0,
+        2112.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "dialogue": false,
+      "journal": false,
+      "map": false,
+      "menu": "",
+      "nearest": "",
+      "position": [
+        3008.0,
+        2112.0
+      ],
+      "room": "campus",
+      "scene": "Castle",
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "fresh-map": {
+      "armed": false,
+      "camera": [
+        3008.0,
+        2112.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          926.0,
+          264.0,
+          320.0,
+          22.0
+        ],
+        [
+          926.0,
+          294.0,
+          320.0,
+          22.0
+        ],
+        [
+          926.0,
+          324.0,
+          320.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "common_hall",
+        "entrance",
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        66.9375,
+        112.0,
+        802.125,
+        558.0
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        3008.0,
+        2112.0
+      ],
+      "room": "campus",
+      "scene": "Castle",
+      "scroll": 0,
+      "selected": 0,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "fresh-travel-common-hall": {
+      "armed": false,
+      "camera": [
+        1077.89477539062,
+        832.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "dialogue": false,
+      "journal": false,
+      "map": false,
+      "menu": "",
+      "nearest": "",
+      "position": [
+        320.0,
+        832.0
+      ],
+      "room": "common_hall",
+      "scene": "Castle",
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        1280.0,
+        720.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "final-compact-top": {
+      "armed": false,
+      "camera": [
+        1077.89477539062,
+        832.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          390.0,
+          264.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          294.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          324.0,
+          208.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "common_hall",
+        "entrance",
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        34.0,
+        121.083335876465,
+        332.0,
+        179.83332824707
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        320.0,
+        832.0
+      ],
+      "room": "common_hall",
+      "scene": "Castle",
+      "scroll": 0,
+      "selected": 0,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        640.0,
+        360.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "final-compact-bottom": {
+      "armed": false,
+      "camera": [
+        1077.89477539062,
+        832.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          390.0,
+          228.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          258.0,
+          208.0,
+          22.0
+        ],
+        [
+          390.0,
+          288.0,
+          208.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "common_hall",
+        "entrance",
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        34.0,
+        121.083335876465,
+        332.0,
+        179.83332824707
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        320.0,
+        832.0
+      ],
+      "room": "common_hall",
+      "scene": "Castle",
+      "scroll": 36,
+      "selected": 2,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        640.0,
+        360.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    },
+    "medium-layout": {
+      "armed": false,
+      "camera": [
+        1077.89477539062,
+        832.0
+      ],
+      "campaign": {
+        "academy_visits": [
+          "campus",
+          "entrance",
+          "common_hall"
+        ],
+        "casual": true,
+        "chapter_id": "mock_battle",
+        "fish_log": {
+          "Warded Coin": 1.0
+        },
+        "flags": {
+          "kai_awakened": true,
+          "opening_complete": true,
+          "opening_started": true,
+          "prologue_done": true,
+          "road_aftermath_seen": true,
+          "road_intro_seen": true
+        },
+        "grade_samples": {
+          "arena_best_wave": 0.0,
+          "battle_scores": [
+            88.0,
+            40.0
+          ],
+          "conduct_points": 2.0,
+          "quiz_scores": []
+        },
+        "house_id": "emberwing",
+        "house_locked": true,
+        "last_result": "victory",
+        "report_card_deliveries": [],
+        "report_cards": [],
+        "rng_state": "1612510189733646864",
+        "semester": 1,
+        "support_save": {
+          "consents": {},
+          "points": {
+            "kai_kael": 10.0,
+            "kai_liora": 0.0
+          },
+          "ranks": {
+            "kai_kael": "",
+            "kai_liora": ""
+          },
+          "romances": {},
+          "viewed": {}
+        },
+        "training_used": false,
+        "unit_states": {
+          "kai": {
+            "class_override": "",
+            "id": "kai",
+            "inventory": [
+              {
+                "id": "sig_kai",
+                "path": "res://data/weapons/sig_kai.tres",
+                "type": "weapon",
+                "uses": 37.0
+              },
+              {
+                "id": "crownspark",
+                "path": "res://data/weapons/crownspark.tres",
+                "type": "weapon",
+                "uses": 999.0
+              },
+              {
+                "id": "vulnerary",
+                "path": "res://data/items/vulnerary.tres",
+                "type": "item",
+                "uses": 3.0
+              }
+            ],
+            "level": 1.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 78.0
+          },
+          "perrin": {
+            "class_override": "",
+            "id": "perrin",
+            "inventory": [
+              {
+                "id": "sig_perrin",
+                "path": "res://data/weapons/sig_perrin.tres",
+                "type": "weapon",
+                "uses": 34.0
+              },
+              {
+                "id": "heal",
+                "path": "res://data/weapons/heal.tres",
+                "type": "weapon",
+                "uses": 30.0
+              }
+            ],
+            "level": 3.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 1.0,
+              "mag": 1.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 1.0,
+              "str": 1.0
+            },
+            "xp": 26.0
+          },
+          "rina": {
+            "class_override": "",
+            "id": "rina",
+            "inventory": [
+              {
+                "id": "sig_rina",
+                "path": "res://data/weapons/sig_rina.tres",
+                "type": "weapon",
+                "uses": 39.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 27.0
+          },
+          "serra": {
+            "class_override": "",
+            "id": "serra",
+            "inventory": [
+              {
+                "id": "iron_lance",
+                "path": "res://data/weapons/iron_lance.tres",
+                "type": "weapon",
+                "uses": 38.0
+              }
+            ],
+            "level": 2.0,
+            "move_bonus": 0.0,
+            "stat_bonus": {
+              "def": 0.0,
+              "hp": 0.0,
+              "lck": 0.0,
+              "mag": 0.0,
+              "res": 0.0,
+              "skl": 0.0,
+              "spd": 0.0,
+              "str": 0.0
+            },
+            "xp": 18.0
+          }
+        },
+        "week": 2
+      },
+      "destination_mode": true,
+      "destination_rows": [
+        [
+          510.0,
+          264.0,
+          256.0,
+          22.0
+        ],
+        [
+          510.0,
+          294.0,
+          256.0,
+          22.0
+        ],
+        [
+          510.0,
+          324.0,
+          256.0,
+          22.0
+        ]
+      ],
+      "destinations": [
+        "common_hall",
+        "entrance",
+        "campus"
+      ],
+      "dialogue": false,
+      "journal": false,
+      "map": true,
+      "map_rect": [
+        34.0,
+        133.58332824707,
+        452.0,
+        244.833343505859
+      ],
+      "menu": "",
+      "nearest": "",
+      "position": [
+        320.0,
+        832.0
+      ],
+      "room": "common_hall",
+      "scene": "Castle",
+      "scroll": 0,
+      "selected": 2,
+      "supports": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10,
+          "kai_liora": 0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "viewport": [
+        800.0,
+        450.0
+      ],
+      "zoom": [
+        0.59375,
+        0.59375
+      ]
+    }
+  },
+  "processes": {
+    "first_exit_code": 0,
+    "relaunch_exit_code": 0,
+    "script_or_runtime_errors": 0,
+    "all_gui_input_capture_jobs_ended": true
+  },
+  "limits": [
+    "bounded three-room route",
+    "existing Week-2 checkpoint state was earned previously, not replayed in this check",
+    "no full-school replay or Neal visual/taste approval",
+    "runtime source precedes accepted #75 battle-only integration; academy source unchanged"
+  ]
+}
