@@ -90,6 +90,12 @@ Source under test: `8d7770435e3e377122ad87386f66ce0e6d61b400` (this branch, with
 
 Captures are the exact 1280×720 screen (default is `--fullscreen`, borderless) and the exact 640×360 X11 client rectangle (windowed at absolute `+5,+56`). Every image's size and SHA-256 is in `manifest.json`; the step-by-step observations are in `results.json`. Both runs used the same original renderer and disposable profile; the game processes were closed afterwards.
 
+## Exact-head CI
+
+`Verify` [run 40006030112](https://github.com/KumarG23/vael-academy/actions/runs/40006030112) passed on head `fe7dde57881858dd4b13301f1d1f22d534686633`: team helper tests, clean import and the full GUT step all succeeded. An earlier `Verify` [run 39999468463](https://github.com/KumarG23/vael-academy/actions/runs/39999468463) passed on `7d21eb22`.
+
+An early push produced no `pull_request` run at all because the PR was `CONFLICTING` against main; GitHub cannot build the merge ref for a conflicted PR, so the workflow never starts. Integrating `origin/main` normally made the PR mergeable and runs followed.
+
 ## Byte preservation
 
 Every rejection case in the automated suite reads the source slot and its neighbour before and after the attempt and asserts `PackedByteArray` equality (`_file_bytes()` in both Title and Journal tests). The repair-and-retry test asserts the same for the successful re-load. No test writes outside its own disposable `user://test_load_feedback_*` directory, which is removed in `after_each`.
