@@ -4,6 +4,7 @@ extends Node2D
 const RECOLOR := preload("res://src/ui/illustrated_combat/fx_tint.gdshader")
 const FLARE := preload("res://assets/art/hybrid_fx/kenney/flare_01.png")
 const SPARK := preload("res://assets/art/hybrid_fx/kenney/spark_01.png")
+var pace := ExchangeSkip.new()
 var rings: Array[Dictionary] = []
 var blades: Array[Dictionary] = []
 
@@ -32,7 +33,7 @@ func gleam(at: Vector2, color: Color, duration: float, size: float = 0.22) -> vo
 	sprite.modulate = color
 	sprite.scale = Vector2.ONE * 0.015
 	add_child(sprite)
-	var tween := sprite.create_tween().set_parallel(true)
+	var tween := pace.track(sprite.create_tween()).set_parallel(true)
 	tween.tween_property(sprite, "scale", Vector2.ONE * size, duration * 0.7).set_trans(Tween.TRANS_QUAD)
 	tween.tween_property(sprite, "rotation", 0.7, duration)
 	tween.tween_property(sprite, "modulate:a", 0.0, duration * 0.3).set_delay(duration * 0.7)
@@ -49,7 +50,7 @@ func gather(at: Vector2, color: Color, duration: float) -> void:
 		mote.scale = Vector2.ONE * 0.045
 		mote.position = to_local(at) + Vector2.from_angle(TAU * index / 7.0) * 58.0
 		add_child(mote)
-		var pull := mote.create_tween().set_parallel(true)
+		var pull := pace.track(mote.create_tween()).set_parallel(true)
 		pull.tween_property(mote, "position", to_local(at), duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 		pull.tween_property(mote, "modulate:a", 0.0, duration * 0.25).set_delay(duration * 0.75)
 		pull.chain().tween_callback(mote.queue_free)
@@ -62,10 +63,12 @@ func blade_light(body: Sprite2D, base: Vector2, tip: Vector2, color: Color, dura
 func burst(at: Vector2, color: Color, critical: bool, magical: bool) -> void:
 	if magical:
 		var bloom := SpellFX.spawn(self, "arcane_impact", at)
+		pace.animation(bloom)
 		bloom.scale = Vector2.ONE * 0.85
 		tint(bloom, color)
 	else:
 		var hit := CombatFX.spawn(self, "gold_crit" if critical else "white_hit", at)
+		pace.animation(hit)
 		hit.scale = Vector2.ONE * (0.78 if critical else 0.48)
 		if not critical:
 			tint(hit, color.lerp(Color.WHITE, 0.25))
@@ -80,13 +83,14 @@ func burst(at: Vector2, color: Color, critical: bool, magical: bool) -> void:
 		spark.scale = Vector2(0.08, 0.025)
 		add_child(spark)
 		var end := spark.position + Vector2.from_angle(spark.rotation) * (48.0 + index * 9.0)
-		var tween := spark.create_tween().set_parallel(true)
+		var tween := pace.track(spark.create_tween()).set_parallel(true)
 		tween.tween_property(spark, "position", end, 0.28).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		tween.tween_property(spark, "modulate:a", 0.0, 0.28)
 		tween.chain().tween_callback(spark.queue_free)
 
 
 func _process(delta: float) -> void:
+	delta *= pace.speed
 	for ring: Dictionary in rings:
 		ring["age"] += delta
 	rings = rings.filter(func(ring: Dictionary) -> bool: return ring["age"] < ring["life"])

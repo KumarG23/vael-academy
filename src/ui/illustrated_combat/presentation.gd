@@ -227,6 +227,7 @@ func play_exchange(attacker: Unit, defender: Unit, result: CombatResult, map_ui:
 		return
 	busy = true
 	juice.pace = pace
+	effects.pace = pace
 	_map_layer = map_ui
 	# Player remains left even for an enemy-initiated exchange; Kai never needs
 	# an invented reverse-side face/Crown-mark view in this pilot.
