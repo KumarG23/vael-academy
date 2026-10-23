@@ -11,6 +11,8 @@ var presentation_data: Dictionary
 var comparison_labels := true
 var stage_title := "THE SUNLIT CLOISTER"
 var busy := false
+## WO-9.5 (#65): the playing exchange's skippable clock; idle unless armed.
+var pace := ExchangeSkip.new()
 var world: Node2D
 var juice: IllustratedCombatJuice
 var effects: IllustratedCombatFX
@@ -157,7 +159,7 @@ func _contact(target: Unit, strike: StrikeResult) -> void:
 	var index := actors.find(target)
 	if strike.connected:
 		sources[index].set_hp(strike.defender_hp_after)
-		var drain := create_tween()
+		var drain := pace.track(create_tween())
 		drain.tween_property(_hp_bars[index], "value", float(strike.defender_hp_after), 0.22)
 		_hp_labels[index].text = "%02d / %02d" % [strike.defender_hp_after, target.max_hp()]
 	impact_applied.emit(sources[index], strike)
@@ -224,6 +226,7 @@ func play_exchange(attacker: Unit, defender: Unit, result: CombatResult, map_ui:
 	if busy:
 		return
 	busy = true
+	juice.pace = pace
 	_map_layer = map_ui
 	# Player remains left even for an enemy-initiated exchange; Kai never needs
 	# an invented reverse-side face/Crown-mark view in this pilot.
@@ -239,7 +242,7 @@ func play_exchange(attacker: Unit, defender: Unit, result: CombatResult, map_ui:
 	_stage.visible = true
 	await _fade(0.0, 0.18)
 	_beat("establish")
-	await get_tree().create_timer(0.28).timeout
+	await pace.wait(self, 0.28)
 	for strike: StrikeResult in result.strikes:
 		var striker_source := defender if strike.is_counter else attacker
 		var target_source := attacker if strike.is_counter else defender
@@ -251,10 +254,12 @@ func play_exchange(attacker: Unit, defender: Unit, result: CombatResult, map_ui:
 		await juice.play_strike(striker, target, strike, strike.connected and strike.defender_hp_after <= 0)
 		if not target.is_alive():
 			await juice.play_death(target)
-		await get_tree().create_timer(0.16).timeout
+		await pace.wait(self, 0.16)
 	_beat("settle")
-	await get_tree().create_timer(0.32).timeout
+	await pace.wait(self, 0.32)
 	await _fade(1.0, 0.18)
+	juice.settle_skip()
+	pace.settle()
 	_stage.visible = false
 	if _map_layer != null:
 		_map_layer.visible = true
@@ -292,4 +297,4 @@ func _process(_delta: float) -> void:
 func _fade(alpha: float, duration: float) -> void:
 	var tween := create_tween()
 	tween.tween_property(_veil, "color:a", alpha, duration).set_trans(Tween.TRANS_SINE)
-	await tween.finished
+	await pace.tween(tween)

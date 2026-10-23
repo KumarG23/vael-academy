@@ -1591,7 +1591,7 @@ func _camera_clamp(focus: Vector2) -> Vector2:
 
 ## Cinematic push-in on a clash: frame the midpoint of attacker + defender and
 ## zoom in. The follow-lerp is suspended until _end_combat_cam.
-func _begin_combat_cam(a: Unit, b: Unit) -> void:
+func _begin_combat_cam(a: Unit, b: Unit, pace: ExchangeSkip = null) -> void:
 	if _camera == null or _grid == null:
 		return
 	_combat_cam_active = true
@@ -1607,15 +1607,15 @@ func _begin_combat_cam(a: Unit, b: Unit) -> void:
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(_camera, "zoom", Vector2.ONE * target_zoom, 0.22).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(_camera, "position", mid, 0.22).set_trans(Tween.TRANS_SINE)
-	await tw.finished
+	await (pace if pace != null else ExchangeSkip.new()).tween(tw)
 
 
-func _end_combat_cam() -> void:
+func _end_combat_cam(pace: ExchangeSkip = null) -> void:
 	if _camera == null:
 		return
 	var tw := create_tween()
 	tw.tween_property(_camera, "zoom", Vector2.ONE * _combat_base_zoom, 0.26).set_trans(Tween.TRANS_SINE)
-	await tw.finished
+	await (pace if pace != null else ExchangeSkip.new()).tween(tw)
 	_combat_cam_active = false
 
 
