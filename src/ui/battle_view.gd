@@ -986,13 +986,14 @@ func _end_battle(victory: bool) -> void:
 		_apply_casual_post_chapter_revival()
 	# Carry the roster's progression + supports back to the campaign (WO-3.5).
 	if Campaign.active:
-		Campaign.capture(_captured_roster_progression(), _support_state.save_state(),
-			"victory" if victory else "defeat")
+		# Grade before capture can advance the week and lock/reset this semester.
 		# AW-54: graded battles feed the Battlefield mark (the arena grades itself)
 		if not chapter.is_arena:
 			var fielded := maxi(_fielded_at_start, _living_units_on_team(0).size())
 			var lost := fielded - _living_units_on_team(0).size()
 			Campaign.record_battle_score(Grading.battle_score(victory, lost, _turn.round_number))
+		Campaign.capture(_captured_roster_progression(), _support_state.save_state(),
+			"victory" if victory else "defeat")
 	if victory:
 		EventBus.battle_won.emit()
 		# Boss yield + chapter outro (WO-4.1) play before the result screen.

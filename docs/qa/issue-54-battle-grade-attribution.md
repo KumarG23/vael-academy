@@ -1,0 +1,62 @@
+# Issue #54 — closing-battle grade attribution
+
+This is a bounded repair of newly completed battles. Basis: GRADING_SYSTEM §§1–2, 4–5; MASTER_PLAN §§1–2, §6 WO-4.4/7.1/7.4 and §10 AW-54/64/76; ACADEMY_BIBLE §4. The six-entry calendar and its 3→4 / 6→7 boundaries remain implementation scaffolding, not an authored school year. #30 owns the authored map/staging; #56 now owns existing new-card ceremony/reward delivery and idempotence.
+
+## Production change
+
+`BattleView._end_battle()` records an eligible non-arena battle score before `Campaign.capture()` can advance the week and lock/reset the semester. The existing `_battle_over` guard still protects completion. Scoring remains after Casual defeat-bookkeeping cleanup, using the same living/fielded counts and rounds. Campaign activity/arena eligibility, pre-oath behavior, capture of roster/supports, result presentation, progression, RNG and save representation are unchanged. Locked legacy cards are preserved; no regrading or migration.
+
+## Controlled headless runtime coverage
+
+`tests/test_battle_grade_attribution.gd` uses actual registry-routed scenes and production objective/end/capture code. Fixture wins route the existing forces; they do not claim earned graphical playthroughs. Dialogues are disabled only in these automated fixtures.
+
+| Boundary | Assertions |
+| --- | --- |
+| Emberwing, Tidemark, Thornrook closing encounters; post-oath Week 6, semester 2; neutral inputs; clean win within par | Existing semester-1 card remains unchanged in value; semester 2 locks 74 / B / Accomplished; Week 7, semester 3 under unchanged scaffold arithmetic; all new samples empty; roster/support capture preserved; completion consumes no RNG. |
+| First scaffold close, Week 3 semester 1 | 74/B locks in semester 1, next samples empty, one advancement. |
+| Week 2 non-boundary victory with prior battle score 60 | Samples [60,100], running score 67, no card, one week advance. |
+| Boundary defeat in Classic and Casual with prior score 90 | Samples [90,30], no close or advancement; defeat result retained. Existing lord-loss routing/lifetime tests remain in the focused run. |
+| Downed ally, round 12, both modes | Existing loss and over-par math gives 80; Casual defeat bookkeeping cleanup remains distinct from living-unit score counting. |
+| Pre-oath prologue victory | Score 100 retained, Week 1 / semester 1 unchanged. |
+| Arena / inactive standalone | No non-arena campaign battle sample. |
+| Live JSON slot → `Resume.stage()` → exact routed scene → victory | Prior samples, round and HP restored; one closing card, empty next samples. |
+| Completed payload through normal routing and defensive direct result restoration | No live battle staged; saved campaign restores locked history; duplicate completion/objective/result restoration does not score, close or advance again. |
+| Child-process real result input twice → deferred castle/title return | Correct destination and identical captured campaign/grades after victory and defeat; second dismissal inert. A declared `feast_seen` fixture flag isolates this boundary from unrelated year-end dialogue. |
+
+Regression-first on unchanged main `11e08763`: **4/8 pass, 4/8 fail (118/131 assertions)**, including all three closing routes, first boundary, resumed/completed history and actual victory return. With score-before-capture: **8/8 pass, 131 assertions**, exit 0. No script errors. The isolated GUT run retains exit-time ObjectDB/resource diagnostics; it does not substitute for the full-suite check.
+
+Focused grading/calendar/campaign/three-house/lord-lifetime/resume/load-validation checks: **94/94, 4,769 assertions, nine scripts**, exit 0, no script errors or exit-time resource diagnostics. Clean first import and final editor import: exit 0, no script-load errors (Godot 4.7.2).
+
+Full GUT: **837/837, 12,237 assertions, 106 scripts**, exit 0 (226.451 s), 22 inherited deprecation notices, no script-load errors or exit-time ObjectDB/resource diagnostics.
+
+All runs use disposable player data. Clean import/full GUT serialize under the shared Git-common-directory heavy lock. Existing tests are preserved.
+
+## Real-window boundary verification — complete
+
+Executed on `3ea481805a22e1edc9eca04fab11863772537ebb`, whose game/test source is identical to accepted green `62d2562e19abbe72d21283b647cb487fb604351f`. The intervening merge retains accepted #39 evidence. Godot 4.7.2, unchanged Vulkan Forward+ / llvmpipe renderer, existing 1280×720 shared desktop, disposable player data. #39 and #42 explicitly released before the #54 claim. All eight retained screenshots are unaltered and visually inspected.
+
+The fixture copies the earned [Emberwing campus return](issue-5-school-loop/emberwing-return-save.json). Only `campaign.week` **2→6**, `campaign.semester` **1→2**, and `campaign.grade_samples` **prior inputs→neutral/empty** change. Mode stays Casual; roster, progression, inventory, flags, report-card history and RNG are preserved. [Exact deltas and expected/actual result](issue-54-battle-grade-attribution/results.json), [input fixture](issue-54-battle-grade-attribution/saves/boundary-campus.json). This is a declared boundary fixture, not a fresh semester/year playthrough.
+
+Title → Load campus → walk to [Mission Board](issue-54-battle-grade-attribution/images/mission-board.png) → Deploy → authored intro → preparations → Begin battle freshly enters [the routed closing encounter](issue-54-battle-grade-attribution/images/fresh-closing.png). Read-only inspection supplies observations/tactical suggestions; every movement, [forecast/attack](issue-54-battle-grade-attribution/images/player-forecast.png), Wait, End Turn, dialogue advancement and save/load uses OS keyboard/pointer input and ordinary menus. No HP, damage, actor removal, result or progression is injected. [24 actual player choices](issue-54-battle-grade-attribution/actions.md), [fresh UI battle save](issue-54-battle-grade-attribution/saves/fresh-battle.json).
+
+The real encounter reaches [Victory in round 6](issue-54-battle-grade-attribution/images/victory.png). Five allies yield: Perrin, Brenna, Wren, Dain and Liora. Kai (26 HP) and Kael (1 HP) survive; all rivals are routed and no permanent losses occur. The existing math gives `max(40, 100 − 5×12 − 0 over-par penalty) = 40` for the battle. With neutral other marks, `0.35×60 + 0.35×40 + 0.20×60 + 0.10×60 = 53`: **semester 2 locks C / Passing / 53**, and all next-term samples are empty. [Actual terminal snapshot](issue-54-battle-grade-attribution/victory.json). The clean-win 74/B fixture remains covered headlessly; this graphical run reports its actual losses instead. The old order would lock 60/C and leave a stray 40 in next-term battle samples.
+
+Dismiss Victory normally, advance the existing Victory Feast dialogue, then open **Journal → Grades**. [Before saving](issue-54-battle-grade-attribution/images/grades-before-save.png), the history line reads **Semester 2 — C (Passing, 53)** and Battlefield reads **60 (no marks yet)**. The upper 60/C is the neutral *new-term running grade*, not the locked card. Week 7 / semester 3 and the next-report Week 6 display remain the unchanged scaffold arithmetic; no authored-map or ceremony fix is implied.
+
+Use [Journal → System](issue-54-battle-grade-attribution/images/system-save.png) → Save Slot 3; close the window normally; launch a fresh game process; [Title → Load](issue-54-battle-grade-attribution/images/fresh-title-load.png) → physical third slot (Title labels it Slot 2 under existing zero-based numbering). [Journal after fresh load](issue-54-battle-grade-attribution/images/grades-after-fresh-load.png) shows the same locked card and empty next-term marks. Resave via the real System row. The entire campaign dictionary matches before save, after fresh load and after resave, including grade samples, locked history, week/semester, roster/support progression, inventory, flags and RNG. [Earned campus save](issue-54-battle-grade-attribution/saves/earned-campus.json), [resaved campus](issue-54-battle-grade-attribution/saves/resaved-campus.json). Both graphical processes exit normally without script errors.
+
+The desktop was explicitly [released to #56](https://github.com/KumarG23/vael-academy/issues/54#issuecomment-6351207799) after both games and the input/capture driver ended; no further GUI use. #39's accepted six-route evidence remains attributed to its actual older source; this packet independently qualifies the changed grading boundary. Existing new-card ceremony/reward delivery/idempotence is now tracked in **#56**, with authored calendar/staging and remaining compatibility decisions in **#30**. No new canon, full-year delivery or Neal visual approval is claimed.
+
+## Accepted-main integration after graphical execution
+
+Merged accepted main `f64d2522` (#42 prompt/toast layout and its evidence) normally at `410d93c3`. Inspected delta: CastleScene prompt wrapping/positioning/resize handling and existing layout tests only; no change to BattleView completion, Campaign grading/progression, Journal grades/load, Grading, SaveSystem or Resume. The graphical captures remain attributed to their actual `3ea48180` source. Focused integration grade/result + castle prompt/toast/date layout: **15/15, 299 assertions**, exit 0 (8.004 s), no script errors; inherited isolated-run exit-time resource diagnostics remain. Retain the accepted 837/837 full GUT/clean imports and original-head successful CI; do not repeat settled six-route QA or full GUT for evidence curation. Current-head CI and engineering lead delta review remain required. [Artifact hashes](issue-54-battle-grade-attribution/manifest.json).
+
+## Review follow-up — isolate helper fixtures from the launch clock (2026-10-23)
+
+Lead review accepted the original source and bounded graphical evidence, then identified a blocking inherited CI fixture defect in [Verify 39854095704](https://github.com/KumarG23/vael-academy/actions/runs/39854095704): at 21:04 UTC / 17:04 Eastern, `UsageAnalyticsAndQuotaRecoveryTests` reached the real closed-window gate instead of its intended quota/analytics branches. Five failures and one error occurred; import/GUT were skipped. This was a test-isolation failure, not a provider quota incident. The [lead's bounded repair request](https://github.com/KumarG23/vael-academy/pull/55#issuecomment-6363454579) authorizes the test-only fix here under MASTER_PLAN §2 testing rules and `docs/TEAM_WORKFLOW.md`'s existing launch-window contract.
+
+The class's existing temporary-state/environment setup now also pins its own `team.work_schedule.status()` to open, with cleanup after each test. Audit of related fixtures found `TeamTests` and the automation-marker fixtures already pin open, while completion/discussion tests only parse isolated state. Dedicated work-schedule tests retain the actual status function and explicit open/closed, boundary, weekend, DST, preflight-race and in-flight-completion assertions. No production clock, launch gate, provider command, timer/service, game source, test assertion or GUI evidence changes.
+
+Regression-first: discover the full helper suite, freeze `datetime.now()` in each of its four imported work-schedule modules to **2026-10-22T21:04:00Z** (17:04 Eastern), and run the suite. Unchanged code reproduces the same **five failures + one error**, with two opt-in lifecycle skips. After the fixture repair, run that same discovered suite under both **2026-10-22T16:00:00Z** (noon Eastern, open) and **2026-10-22T21:04:00Z** (closed): each reports **104 discovered / 102 pass / two unchanged opt-in skips**. Only the external `now()` source is frozen; schedule calls with explicit aware datetime inputs still use their original logic, so schedule/DST assertions run normally. The ordinary `python3 -m unittest discover -s tools/team_tests -v` run also reports **104 / 102 pass / two skips**. All state/provider/GitHub boundaries remain the existing fixture mocks and temporary directories; no live launch or external call is performed by this verification.
+
+No duplicate local Godot import/GUT or graphical replay for this Python-test-only follow-up. The final exact-head CI must still pass its helper, clean import and GUT steps before lead delta review/merge. The already-accepted source/runtime receipts above retain their exact provenance. #54 performs no GUI work during this follow-up; the lead's current desktop order is #58 then #56.

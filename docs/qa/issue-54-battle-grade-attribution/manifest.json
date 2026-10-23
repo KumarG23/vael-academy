@@ -1,0 +1,17 @@
+{
+  "actions.md": "a7910d48001aca829d3aa1c267020bc521c7dac9b8817d81451c406105b8b5c7",
+  "images/fresh-closing.png": "c2e1f55a6f91a00e189a86b26770469ef54ab491ec130f65393f2e0af278f3c0",
+  "images/fresh-title-load.png": "cb753ad9e414285971ce3ca6da1d03dc7cbb25ee2e5d13ca7f53e36f03cac88a",
+  "images/grades-after-fresh-load.png": "8ed4d70fd74c5ece37a8718e9625e368c6a9ccd5c9c3a55c3a7919eabb62eb81",
+  "images/grades-before-save.png": "5c2a3140297d589a092468178db64c142441feb6a46ab217c0732f8f5975bb10",
+  "images/mission-board.png": "792ba48147e33b562b78f4a132d98f3459eb3ca2c9085c07ae9ac8effca0cad7",
+  "images/player-forecast.png": "9f6c0a1c8f00aec5128bf4815373343e52f0478aa881f367a6f7f609c7f36e55",
+  "images/system-save.png": "b9eae9e0cffd06be7e6a66af1a461d2ae068cda55434a1aa402c6b750b299e35",
+  "images/victory.png": "170a43047faf258edda8a2c4131d107c2b0a72ce57d70f58f4de5d35d0514b0d",
+  "results.json": "8dd423c97309ed1f7f68706cd42e46d0350b9d4b7fc2a79ca293f1ba599d34cc",
+  "saves/boundary-campus.json": "c56e62b29012f63464c4308e13220a08d2bb9cc5ae79aac5bccb803c08a97855",
+  "saves/earned-campus.json": "f7dd3edb19e654d402ce399f710657beba85c84d90f3c5125b671087b2d7d34c",
+  "saves/fresh-battle.json": "ae3999d61c512c9ab56d043d8091818dc690a32d5c9dbbbde69b4b3d38d8d0e8",
+  "saves/resaved-campus.json": "2d0b0a80a319240dd842d6fe8ff02a34ae1d00ae1ae6a69bfcafb8bb6ac9cc7e",
+  "victory.json": "ff8e674cc8a0c35e634cd1f0afc1bb644b4da2c3988357919763d525707c6cb6"
+}
