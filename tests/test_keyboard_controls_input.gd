@@ -345,6 +345,8 @@ func test_editor_fits_default_and_compact_windows() -> void:
 		assert_gte(g["pitch"], 16.0, "%s rows readable" % size)
 		assert_lte(g["rows_bottom"], g["status_top"], "%s rows clear the feedback line" % size)
 		assert_lte(g["footer_y"], book.end.y, "%s footer inside the book" % size)
+		# Two wrapped status lines (~1.4 × font each) still end above the footer text.
+		assert_lte(g["status_top"] + 4.0 + g["small"] * 3.0, g["footer_y"] - g["small"], "%s status clears footer" % size)
 		assert_gt(g["rows_top"], g["header_y"])
 	_viewport.size = Vector2i(800, 450)
 	await wait_process_frames(2)

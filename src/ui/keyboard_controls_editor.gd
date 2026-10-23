@@ -183,7 +183,7 @@ func layout(vp: Vector2) -> Dictionary:
 	var note_y := title_y + (20.0 if compact else 28.0)
 	var header_y := note_y + (22.0 if compact else 30.0)
 	var rows_top := header_y + 4.0
-	var footer_h := 24.0 if compact else 34.0
+	var footer_h := 30.0 if compact else 40.0
 	var status_h := 40.0 if compact else 46.0
 	var status_top := book.end.y - footer_h - status_h
 	var pitch := clampf((status_top - rows_top) / _row_count(), 16.0, 36.0)
@@ -191,7 +191,9 @@ func layout(vp: Vector2) -> Dictionary:
 		"book": book, "compact": compact, "x": x, "width": width, "title_y": title_y,
 		"note_y": note_y, "header_y": header_y, "rows_top": rows_top, "pitch": pitch,
 		"rows_bottom": rows_top + pitch * _row_count(), "status_top": status_top,
-		"footer_y": book.end.y - footer_h * 0.45,
+		# Centered between the frame's bottom corner ornaments (QA: a left-aligned
+		# hint ran under the bottom-left filigree).
+		"footer_y": book.end.y - (20.0 if compact else 26.0),
 		"fs": 12 if compact else 16, "small": 11 if compact else 14,
 	}
 
@@ -199,7 +201,8 @@ func layout(vp: Vector2) -> Dictionary:
 func _draw() -> void:
 	var g := layout(get_viewport_rect().size)
 	var book: Rect2 = g["book"]
-	UITheme.draw_panel(self, book, Color(0.11, 0.12, 0.17, 0.99))
+	# Opaque: the Journal page underneath must not show through this page.
+	UITheme.draw_panel(self, book, Color(0.11, 0.12, 0.17, 1.0))
 	var font := UITheme.font()
 	var fs: int = g["fs"]
 	var small: int = g["small"]
@@ -249,5 +252,5 @@ func _draw() -> void:
 	var status_col := Color(1.0, 0.62, 0.5) if _status_error else Color(0.95, 0.9, 0.7)
 	draw_multiline_string(font, Vector2(x, sy + small), _status, HORIZONTAL_ALIGNMENT_LEFT, width, small, 2, status_col)
 	var hint := "↑/↓ choose   ←/→ Change/Clear   Enter select   Del clear   Esc back"
-	draw_string(font, Vector2(x, g["footer_y"]), hint, HORIZONTAL_ALIGNMENT_LEFT, width, small,
+	draw_string(font, Vector2(x, g["footer_y"]), hint, HORIZONTAL_ALIGNMENT_CENTER, width, small,
 		Color(0.55, 0.58, 0.68))
