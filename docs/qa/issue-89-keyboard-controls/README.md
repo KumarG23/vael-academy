@@ -53,10 +53,25 @@ All four process logs contain no script/runtime errors or warnings. Renderer/raw
 **Observations and limits**
 - The battle cursor polls held state once per frame. On this slow software renderer, near-instant synthetic taps were sometimes missed for **both** shipped arrows (4 taps → 1 move) and custom keys (4 taps → 0), while 150 ms holds were reliable for both. This is existing behavior, not introduced here; ordinary human key presses are longer.
 - In the exchange, Kael was defeated partway through and P was pressed near its end. The capture shows the field back at idle with no stray menu or selection, but it can't prove how much presentation P skipped. The custom-Cancel skip and its identical outcome are asserted by `test_keyboard_controls_battle.gd`.
-- The editor title sits under the top-left corner ornament at both sizes, the same placement as the existing Journal title. The Journal footer's left end also runs under the bottom-left ornament on main. Both are left unchanged to avoid shared Journal edits; this is a presentation note, not a functional defect.
+- The original editor title/footer overlap was returned by lead review as P3 and is corrected by the bounded follow-up below. The earlier captures remain historical evidence.
 - Not exercised graphically: travel to another room by custom Confirm (the fixture had no second visited room; covered in the automated tests), a real write failure (automated) and mouse capture rejection (automated).
 - Bounded Dev Jump fixture. No whole-year replay and no Neal taste/visual approval are claimed.
 
 ## Accepted-sibling integration — 2026-10-23
 
 Accepted main `6d11efdd` (#83 / PR #88 and #85 / PR #86) was merged normally after the QA above. Source merged without conflicts; HANDOFF and §10 records from all three issues are kept. The siblings add no hard-coded key shortcut, and the Keyboard Controls row stays last in System. #83's Journal load-failure toast draws under the opaque editor page while the editor is open. Integrated checks: clean import exit 0 with no script errors, and the proportional affected group (see HANDOFF #89) passes apart from the 2 known ordering failures filed as #98, with `test_audio_preferences` alone 15/15. The graphical QA above was not repeated for this conflict-free integration; it stays attributed to its recorded sources.
+
+## Lead P3 correction — 2026-10-23
+
+The core acceptance receipt on `0cb02881` remains applicable. This follow-up only changes the Keyboard Controls page geometry: full font ascent/descent bounds sit inside a 30 px frame inset, with measured space for the heading, note, column headings, eight rows, two feedback lines and complete navigation hint. The opaque page and input behavior remain intact. No shared Journal edit or canon change.
+
+Focused headless runtime checks: keyboard preferences, live castle/editor input and Journal close input **24/24, 458 assertions**, disposable data. The layout test checks complete font rectangles against the frame inset at 1280×720, default 1152×648 and compact 800×450; row and feedback separation assertions remain. No unchanged full baseline or school/battle/persistence QA was repeated, as requested by the lead. Exact-head CI supplies the final full-suite gate.
+
+Narrow native QA: no leftover graphical/input/capture process before launch; one fresh disposable data profile, Godot 4.7.2 original Vulkan Forward+ / llvmpipe, native X11 keys. Title → Down Down Enter (Dev Jump) → Enter (Campus) → J → Right ×4 → Up → Enter (Keyboard Controls). At default 1152×648 and resized 800×450, inspected normal, Enter capture and J/M conflict states; Esc cancelled capture with editor/Journal still usable. All six captures show readable heading, rows, feedback and complete hint clear of the frame. Captures contain only the client window (X11 absolute client bounds). No keys were assigned or saves written in this run. Normal quit ended the process; all graphical/input/capture jobs ended and the shared GUI is released for lead allocation.
+
+| Size | Normal | Capture | Conflict |
+|---|---|---|---|
+| 1152×648 | [normal](correction/default-normal.png) | [capture](correction/default-capture.png) | [J conflict](correction/default-conflict.png) |
+| 800×450 | [normal](correction/compact-normal.png) | [capture](correction/compact-capture.png) | [M conflict](correction/compact-conflict.png) |
+
+Source: accepted `0cb02881` plus the local page/test delta committed with this record. Production script SHA-256 `f7c602807d7a31f56575fe5df87037358f49b39489c819791268b9975e1c7a35`; test SHA-256 `dee0fca5f0a1dd403bb29a304f796ff5acb2877d55f436c7c6611756917e118c`. One extra blank line was removed after game startup; executable source was identical. Capture hashes are appended to the manifest. Prior evidence retains its actual source attribution and limits. No Neal visual approval claimed.

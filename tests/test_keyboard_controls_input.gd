@@ -338,15 +338,23 @@ func test_extra_keys_drive_dialogue_choices_and_advance_only() -> void:
 
 func test_editor_fits_default_and_compact_windows() -> void:
 	var editor := _open_editor()
-	for size in [Vector2(1280, 720), Vector2(800, 450)]:
+	for size in [Vector2(1280, 720), Vector2(1152, 648), Vector2(800, 450)]:
 		var g := editor.layout(size)
 		var book: Rect2 = g["book"]
 		assert_true(Rect2(Vector2.ZERO, size).encloses(book), "%s book inside window" % size)
 		assert_gte(g["pitch"], 16.0, "%s rows readable" % size)
 		assert_lte(g["rows_bottom"], g["status_top"], "%s rows clear the feedback line" % size)
-		assert_lte(g["footer_y"], book.end.y, "%s footer inside the book" % size)
-		# Two wrapped status lines (~1.4 × font each) still end above the footer text.
-		assert_lte(g["status_top"] + 4.0 + g["small"] * 3.0, g["footer_y"] - g["small"], "%s status clears footer" % size)
+		var font := UITheme.font()
+		var safe := book.grow(-(UITheme.DST_MARGIN + 8.0))
+		var title_size := font.get_string_size("Keyboard Controls", HORIZONTAL_ALIGNMENT_LEFT, -1, g["title_fs"])
+		var title := Rect2(Vector2(g["x"], g["title_y"] - font.get_ascent(g["title_fs"])), title_size)
+		var hint_size := font.get_string_size(KeyboardControlsEditor.FOOTER_HINT, HORIZONTAL_ALIGNMENT_LEFT, -1, g["small"])
+		var hint := Rect2(Vector2(g["x"] + (g["width"] - hint_size.x) * 0.5,
+			g["footer_y"] - font.get_ascent(g["small"])), hint_size)
+		assert_true(safe.encloses(title), "%s complete heading clears frame ornament" % size)
+		assert_true(safe.encloses(hint), "%s complete navigation hint clears frame" % size)
+		assert_lte(g["status_top"] + font.get_height(g["small"]) * 2.0,
+			hint.position.y - 8.0, "%s two feedback lines clear the hint" % size)
 		assert_gt(g["rows_top"], g["header_y"])
 	_viewport.size = Vector2i(800, 450)
 	await wait_process_frames(2)

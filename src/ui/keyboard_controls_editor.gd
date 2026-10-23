@@ -8,6 +8,8 @@ extends Control
 
 signal closed
 
+const FOOTER_HINT := "↑/↓ choose   ←/→ Change/Clear   Enter select   Del clear   Esc back"
+
 const ROWS_AFTER_ACTIONS := ["restore", "back"]
 
 var _row := 0
@@ -177,24 +179,28 @@ func layout(vp: Vector2) -> Dictionary:
 	var m := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
 	var book := Rect2(m, vp - m * 2.0)
 	var compact := vp.x < 1000.0 or vp.y < 600.0
-	var x := book.position.x + (22.0 if compact else 34.0)
-	var width := book.size.x - (44.0 if compact else 68.0)
-	var title_y := book.position.y + (30.0 if compact else 46.0)
-	var note_y := title_y + (20.0 if compact else 28.0)
-	var header_y := note_y + (22.0 if compact else 30.0)
-	var rows_top := header_y + 4.0
-	var footer_h := 30.0 if compact else 40.0
-	var status_h := 40.0 if compact else 46.0
-	var status_top := book.end.y - footer_h - status_h
-	var pitch := clampf((status_top - rows_top) / _row_count(), 16.0, 36.0)
+	# The nine-patch ornament reaches 22 px inward. Keep the complete font
+	# ascent/descent inside a further 8 px inset, including at compact sizes.
+	var content := book.grow(-(UITheme.DST_MARGIN + 8.0))
+	var font := UITheme.font()
+	var fs := 12 if compact else 16
+	var small := 11 if compact else 14
+	var title_fs := 20 if compact else 26
+	var title_y := content.position.y + font.get_ascent(title_fs)
+	var note_y := title_y + font.get_descent(title_fs) + 6.0 + font.get_ascent(small)
+	var header_y := note_y + font.get_height(small) + 6.0
+	var rows_top := header_y + font.get_descent(small) + 4.0
+	var footer_y := content.end.y - font.get_descent(small)
+	var footer_top := footer_y - font.get_ascent(small)
+	var status_top := footer_top - 8.0 - font.get_height(small) * 2.0
+	var pitch := minf((status_top - rows_top) / _row_count(), 36.0)
 	return {
-		"book": book, "compact": compact, "x": x, "width": width, "title_y": title_y,
-		"note_y": note_y, "header_y": header_y, "rows_top": rows_top, "pitch": pitch,
+		"book": book, "content": content, "compact": compact,
+		"x": content.position.x, "width": content.size.x, "title_y": title_y,
+		"title_fs": title_fs, "note_y": note_y, "header_y": header_y,
+		"rows_top": rows_top, "pitch": pitch,
 		"rows_bottom": rows_top + pitch * _row_count(), "status_top": status_top,
-		# Centered between the frame's bottom corner ornaments (QA: a left-aligned
-		# hint ran under the bottom-left filigree).
-		"footer_y": book.end.y - (20.0 if compact else 26.0),
-		"fs": 12 if compact else 16, "small": 11 if compact else 14,
+		"footer_y": footer_y, "fs": fs, "small": small,
 	}
 
 
@@ -209,7 +215,7 @@ func _draw() -> void:
 	var x: float = g["x"]
 	var width: float = g["width"]
 	draw_string(font, Vector2(x, g["title_y"]), "Keyboard Controls", HORIZONTAL_ALIGNMENT_LEFT, -1,
-		20 if g["compact"] else 26, Color(0.86, 0.78, 0.45))
+		g["title_fs"], Color(0.86, 0.78, 0.45))
 	draw_string(font, Vector2(x, g["note_y"]), "Default keys always work. Other shortcuts are not changed here.",
 		HORIZONTAL_ALIGNMENT_LEFT, width, small, Color(0.62, 0.65, 0.74))
 	# columns: action · default keys · additional key · buttons
@@ -248,9 +254,9 @@ func _draw() -> void:
 			var label := "Restore Defaults (remove additional keys)" if kind == "restore" else "Back to System"
 			draw_string(font, Vector2(x + 6, base), label, HORIZONTAL_ALIGNMENT_LEFT, width - 12, fs, text_col)
 	# feedback line (wraps to two lines in compact windows)
-	var sy: float = g["status_top"] + 4.0
+	var sy: float = g["status_top"]
 	var status_col := Color(1.0, 0.62, 0.5) if _status_error else Color(0.95, 0.9, 0.7)
-	draw_multiline_string(font, Vector2(x, sy + small), _status, HORIZONTAL_ALIGNMENT_LEFT, width, small, 2, status_col)
-	var hint := "↑/↓ choose   ←/→ Change/Clear   Enter select   Del clear   Esc back"
+	draw_multiline_string(font, Vector2(x, sy + font.get_ascent(small)), _status, HORIZONTAL_ALIGNMENT_LEFT, width, small, 2, status_col)
+	var hint := FOOTER_HINT
 	draw_string(font, Vector2(x, g["footer_y"]), hint, HORIZONTAL_ALIGNMENT_CENTER, width, small,
 		Color(0.55, 0.58, 0.68))
