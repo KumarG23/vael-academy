@@ -6,7 +6,7 @@ On the integrated issue #58 source with accepted #42 Castle prompt layout, both 
 
 ## Runtime and fixture provenance
 
-- Godot 4.7.2, the project's Forward+ renderer, a real X11 game window, and keyboard input sent to that window. The client capture size was 1280×669.
+- Tested source commit: `0b42639f2d2b4c34ccf6fcaf4e3504f65b697b84` (issue #58 implementation integrated with accepted #42). Godot 4.7.2, the project's Forward+ renderer, a real X11 game window, and keyboard input sent to that window. The client capture size was 1280×669.
 - All game data used a fresh disposable `XDG_DATA_HOME`. Slot 0 and slot 1 began as copies of the checked-in [Emberwing Week 2 return fixture](../issue-5-school-loop/emberwing-return-save.json), SHA-256 `681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4`.
 - Title → Load Game → Slot 0 entered the campus at Week 2. Escape → Save Game exercised `_do_system(0)`. Then ordinary keyboard movement through the campus and Entrance Hall reached the War Room's “Record the day's log” point; `ui_accept` exercised the actual interaction handler.
 - After a successful write, the sibling `slot_0.json.tmp` path was made a directory to produce a deterministic real open failure. The slot 0 bytes remained SHA-256 `3f022dcfccd56c912df7f72dd2fa0fed358daf91cdc3c8291c5cd27fb0f91fd6` through the failure and subsequent successful retry; slot 1 remained byte-for-byte unchanged at `681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4`. The directory was removed before each retry. The saved envelope remained version 1 / slot 0 with the Week 2, semester 1 Emberwing campaign; the live Week 2 HUD and player position remained in the castle.
