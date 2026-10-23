@@ -10,6 +10,9 @@ extends Node2D
 
 signal impact
 
+## WO-9.5 (#65): the exchange's skippable clock, set by the juice controller.
+var pace := ExchangeSkip.new()
+
 ## Which way the fighter faces during the action. EAST/WEST use the side sprite
 ## (WEST is flipped); NORTH/SOUTH use dedicated back/front bodies when the unit
 ## has them (else they fall back to the side body).
@@ -302,12 +305,12 @@ func _crit_beat() -> void:
 	_body.modulate = Color(1.8, 1.8, 1.6)
 	var f := create_tween()
 	f.tween_property(_body, "modulate", Color.WHITE, _crit_hold)
-	await get_tree().create_timer(_crit_hold).timeout
+	await pace.wait(self, _crit_hold)
 
 
 ## Post-impact hold, stretched on a killing blow so the finisher reads.
 func _follow_through(base: float) -> void:
-	await get_tree().create_timer(base * (_kill_mult if _kill else 1.0)).timeout
+	await pace.wait(self, base * (_kill_mult if _kill else 1.0))
 
 
 func set_weapon(weapon_type: int) -> void:
@@ -453,14 +456,14 @@ func _stab() -> void:
 	wind.tween_property(_pivot, "rotation", _rest_rot + aim - 0.25, 0.18).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	wind.tween_property(_body, "rotation", 0.0 if _hires else -0.08, 0.18).set_trans(Tween.TRANS_SINE)
 	wind.tween_property(self, "position", home - dir * (reach * 0.22), 0.18)
-	await wind.finished
+	await pace.tween(wind)
 	await _crit_beat()
 	set_pose(Pose.ACTION)
 	var hit := create_tween().set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + aim + 0.15, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.0 if _hires else 0.06, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(self, "position", home + dir * reach, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	await hit.finished
+	await pace.tween(hit)
 	_thrust_streak()
 	impact.emit()
 	await _follow_through(0.09)
@@ -481,14 +484,14 @@ func _swing(heavy: bool) -> void:
 	wind.tween_property(_pivot, "rotation", _rest_rot + aim + back, 0.20).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	wind.tween_property(_body, "rotation", 0.0 if _hires else -0.22, 0.20).set_trans(Tween.TRANS_SINE)
 	wind.tween_property(self, "position", home - dir * (reach * 0.25), 0.20)
-	await wind.finished
+	await pace.tween(wind)
 	await _crit_beat()
 	set_pose(Pose.ACTION)
 	var hit := create_tween().set_parallel(true)
 	hit.tween_property(_pivot, "rotation", _rest_rot + aim + thru, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(_body, "rotation", 0.0 if _hires else 0.24, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hit.tween_property(self, "position", home + dir * reach, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	await hit.finished
+	await pace.tween(hit)
 	_slash_trail(heavy or _crit or _kill)
 	impact.emit()
 	await _follow_through(0.12 if heavy else 0.08)
@@ -504,20 +507,20 @@ func _shoot(aim_global: Vector2) -> void:
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.35, 0.26).set_trans(Tween.TRANS_SINE)
 	w.tween_property(_body, "rotation", 0.0 if _hires else -0.1, 0.26).set_trans(Tween.TRANS_SINE)
 	w.tween_property(self, "position", home - _lunge_dir() * 3.0 * absf(scale.x), 0.26)
-	await w.finished
-	await get_tree().create_timer(0.14).timeout
+	await pace.tween(w)
+	await pace.wait(self, 0.14)
 	await _crit_beat()
 	set_pose(Pose.ACTION)
 	_pivot.rotation = _rest_rot
 	if _fx_profile.ranged_style == "beam":
 		_beam(dest)  # spellbow: a green energy beam, not a plain arrow
-		await get_tree().create_timer(0.07).timeout
+		await pace.wait(self, 0.07)
 		impact.emit()
 		_beam_burst(dest)
 		await _follow_through(0.18)
 	else:
 		_projectile(dest, "arrow")
-		await get_tree().create_timer(PROJ_TIME).timeout
+		await pace.wait(self, PROJ_TIME)
 		impact.emit()
 		await _follow_through(0.08)
 	await _recover(home)
@@ -531,14 +534,14 @@ func _magic(aim_global: Vector2) -> void:
 	var w := create_tween().set_parallel(true)
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.3, 0.28).set_trans(Tween.TRANS_SINE)
 	w.tween_property(_body, "rotation", 0.0 if _hires else -0.06, 0.28).set_trans(Tween.TRANS_SINE)
-	await w.finished
+	await pace.tween(w)
 	_cast_gather()
-	await get_tree().create_timer(0.26).timeout
+	await pace.wait(self, 0.26)
 	await _crit_beat()
 	set_pose(Pose.ACTION)
 	_pivot.rotation = _rest_rot
 	_projectile(dest, _magic_style())
-	await get_tree().create_timer(PROJ_TIME).timeout
+	await pace.wait(self, PROJ_TIME)
 	impact.emit()
 	_cast_burst_at(dest)
 	await _follow_through(0.14)
@@ -551,13 +554,13 @@ func _heal(aim_global := Vector2.INF) -> void:
 	var home := position
 	var w := create_tween()
 	w.tween_property(_pivot, "rotation", _rest_rot - 0.5, 0.26).set_trans(Tween.TRANS_SINE)
-	await w.finished
+	await pace.tween(w)
 	_cast_gather()
-	await get_tree().create_timer(0.26).timeout
+	await pace.wait(self, 0.26)
 	set_pose(Pose.ACTION)
 	impact.emit()
 	_heal_bloom(aim_global)
-	await get_tree().create_timer(0.3).timeout
+	await pace.wait(self, 0.3)
 	await _recover(home)
 
 
@@ -567,7 +570,7 @@ func _recover(home: Vector2) -> void:
 	r.tween_property(_pivot, "rotation", _rest_rot, 0.26).set_trans(Tween.TRANS_SINE)
 	r.tween_property(_body, "rotation", 0.0, 0.26).set_trans(Tween.TRANS_SINE)
 	r.tween_property(self, "position", home, 0.26).set_trans(Tween.TRANS_SINE)
-	await r.finished
+	await pace.tween(r)
 
 
 # --- fx ---------------------------------------------------------------------

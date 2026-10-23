@@ -8,7 +8,7 @@ extends Control
 
 signal closed
 
-const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System"]
+const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System", "Fish Log"]
 const STAT_KEYS := ["hp", "str", "mag", "skl", "spd", "lck", "def", "res"]
 const STAT_LABELS := ["HP", "STR", "MAG", "SKL", "SPD", "LCK", "DEF", "RES"]
 const SLOTS := 3
@@ -24,6 +24,7 @@ const SYS_ROWS := [
 var _tab := 0
 var _roster_i := 0
 var _sys_i := 0
+var _fish_i := 0
 var _snaps: Array = []       # per-unit data snapshots
 var _slot_info: Array = []   # save-slot summaries
 var _toast := ""
@@ -172,6 +173,10 @@ func _move_row(dir: int) -> void:
 			_inv_move(dir)
 		4:
 			_sys_i = (_sys_i + dir + SYS_ROWS.size()) % SYS_ROWS.size()
+		5:
+			var catches := _fish_names()
+			if not catches.is_empty():
+				_fish_i = (_fish_i + dir + catches.size()) % catches.size()
 		_:
 			return
 	AudioManager.play_sfx("cursor")
@@ -374,23 +379,34 @@ func _draw() -> void:
 		HORIZONTAL_ALIGNMENT_RIGHT, 190, 18, Color(0.95, 0.85, 0.5))
 	var tx := book.position.x + 34.0
 	var ty := book.position.y + 78.0
+	var tab_font_size := 16
+	var tab_rows := _tab_row_count(font, book.size.x - 68.0, tab_font_size)
+	var tab_row := 0
 	for i in range(TAB_NAMES.size()):
+		var tw := _tab_width(font, TAB_NAMES[i], tab_font_size)
+		if tx + tw > book.position.x + book.size.x - 34.0 and tx > book.position.x + 34.0:
+			tab_row += 1
+			tx = book.position.x + 34.0
+		var row_y := ty + tab_row * 22.0
 		var sel := i == _tab
-		var tw := font.get_string_size(TAB_NAMES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x + 26
 		if sel:
-			draw_rect(Rect2(tx - 8, ty - 20, tw, 28), Color(0.30, 0.45, 0.85, 0.5), true)
-		draw_string(font, Vector2(tx, ty), TAB_NAMES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 18,
+			draw_rect(Rect2(tx - 8, row_y - 17, tw, 21), Color(0.30, 0.45, 0.85, 0.5), true)
+		draw_string(font, Vector2(tx, row_y), TAB_NAMES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, tab_font_size,
 			Color(1, 1, 1) if sel else Color(0.62, 0.65, 0.74))
 		tx += tw + 10
-	draw_line(book.position + Vector2(30, 92), Vector2(book.position.x + book.size.x - 30, book.position.y + 92),
+	var tabs_height := 92.0 + (tab_rows - 1) * 22.0
+	draw_line(book.position + Vector2(30, tabs_height), Vector2(book.position.x + book.size.x - 30, book.position.y + tabs_height),
 		Color(0.3, 0.33, 0.44), 1.0)
-	var body := Rect2(book.position + Vector2(34, 108), book.size - Vector2(68, 150))
+	var body_top := tabs_height + 16.0
+	var body := Rect2(book.position + Vector2(34, body_top),
+		Vector2(book.size.x - 68.0, book.size.y - body_top - 42.0))
 	match _tab:
 		0: _draw_roster(body, font)
 		1: _draw_calendar(body, font)
 		2: _draw_items(body, font)
 		3: _draw_grades(body, font)
 		4: _draw_system(body, font)
+		5: _draw_fish_log(body, font)
 	# footer
 	var hint := "←/→ tab      ↑/↓ move      Enter select      J / Esc close"
 	draw_string(font, Vector2(book.position.x + 34, book.position.y + book.size.y - 26), hint,
@@ -600,8 +616,8 @@ func _rank_color(rank: String) -> Color:
 func _draw_system(body: Rect2, font: Font) -> void:
 	# Fit every existing save/audio/title row plus Text Speed in compact supported
 	# windows. The old fixed 30 px spacing pushed the bottom controls off-screen.
-	var pitch := clampf((body.size.y - 8.0) / SYS_ROWS.size(), 16.0, 30.0)
-	var font_size := 13 if pitch < 23.0 else 16
+	var pitch := clampf((body.size.y - 8.0) / SYS_ROWS.size(), 10.0, 30.0)
+	var font_size := 10 if pitch < 13.0 else (12 if pitch < 17.0 else (13 if pitch < 23.0 else 16))
 	var y := body.position.y + minf(20.0, pitch * 0.72)
 	for i in range(SYS_ROWS.size()):
 		var kind: String = SYS_ROWS[i][1]
@@ -609,7 +625,7 @@ func _draw_system(body: Rect2, font: Font) -> void:
 		if sel:
 			draw_rect(Rect2(body.position.x - 6, y - pitch * 0.62, body.size.x - 20, pitch * 0.88), Color(0.30, 0.45, 0.85, 0.45), true)
 		draw_string(font, Vector2(body.position.x + 6, y), SYS_ROWS[i][0],
-			HORIZONTAL_ALIGNMENT_LEFT, 300, font_size, Color(0.96, 0.94, 0.86) if sel else Color(0.78, 0.8, 0.86))
+			HORIZONTAL_ALIGNMENT_LEFT, minf(300.0, body.size.x * 0.48), font_size, Color(0.96, 0.94, 0.86) if sel else Color(0.78, 0.8, 0.86))
 		# right column: slot summary or a volume bar
 		var rx := body.position.x + 320
 		if kind.begins_with("save") or kind.begins_with("load"):
@@ -629,6 +645,73 @@ func _draw_system(body: Rect2, font: Font) -> void:
 	# The Journal-wide navigation hint already covers this tab. The older full
 	# castle controls reference exceeded the compact System panel and collided
 	# with that footer after adding the extra preference row.
+
+
+## Show the saved catch dictionary as-is, in a stable name order. Reading this
+## view never rolls, grants, normalizes, or writes a catch.
+func _fish_names() -> Array:
+	var names: Array = Campaign.fish_log.keys()
+	names.sort_custom(func(a: Variant, b: Variant) -> bool:
+		var a_name := str(a)
+		var b_name := str(b)
+		var a_folded := a_name.to_lower()
+		var b_folded := b_name.to_lower()
+		return a_folded < b_folded if a_folded != b_folded else a_name < b_name
+	)
+	return names
+
+
+func _fish_log_entries() -> Array:
+	var entries: Array = []
+	for key in _fish_names():
+		entries.append({"name": str(key), "count": Campaign.fish_log[key]})
+	return entries
+
+
+func _draw_fish_log(body: Rect2, font: Font) -> void:
+	var x := body.position.x
+	var y := body.position.y + 10.0
+	draw_string(font, Vector2(x, y), "Fishing Catch Log",
+		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 20, Color(0.86, 0.78, 0.45))
+	y += 38.0
+	var entries := _fish_log_entries()
+	if entries.is_empty():
+		draw_string(font, Vector2(x, y), "No catches yet. Visit the waterside to try fishing.",
+			HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 16, Color(0.72, 0.75, 0.82))
+		return
+	var row_pitch := 30.0
+	var visible_rows := maxi(1, floori((body.size.y - 50.0) / row_pitch))
+	_fish_i = clampi(_fish_i, 0, entries.size() - 1)
+	var first := clampi(_fish_i - visible_rows + 1, 0, maxi(0, entries.size() - visible_rows))
+	var last := mini(entries.size(), first + visible_rows)
+	for i in range(first, last):
+		var row_y := y + (i - first) * row_pitch
+		if i == _fish_i:
+			draw_rect(Rect2(x - 6, row_y - 18, body.size.x - 8, 25), Color(0.30, 0.45, 0.85, 0.35), true)
+		var entry: Dictionary = entries[i]
+		draw_string(font, Vector2(x + 8, row_y), str(entry["name"]),
+			HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 100.0, 16,
+			Color(0.95, 0.94, 0.88) if i == _fish_i else Color(0.78, 0.8, 0.86))
+		draw_string(font, Vector2(x + body.size.x - 78.0, row_y), "×%d" % int(entry["count"]),
+			HORIZONTAL_ALIGNMENT_RIGHT, 64.0, 16, Color(0.86, 0.78, 0.45))
+	draw_string(font, Vector2(x, body.position.y + body.size.y - 4.0), "↑/↓ browse catches",
+		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 13, Color(0.55, 0.58, 0.68))
+
+
+func _tab_width(font: Font, label: String, font_size: int) -> float:
+	return font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x + 20.0
+
+
+func _tab_row_count(font: Font, available_width: float, font_size: int) -> int:
+	var rows := 1
+	var used := 0.0
+	for label in TAB_NAMES:
+		var width := _tab_width(font, label, font_size)
+		if used > 0.0 and used + width + 10.0 > available_width:
+			rows += 1
+			used = 0.0
+		used += width + 10.0
+	return rows
 
 
 ## AW-70: everything on one line, always one J-press away.

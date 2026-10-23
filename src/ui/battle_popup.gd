@@ -81,6 +81,8 @@ var _crit_flash: ColorRect
 var _fx: Control
 var _miss_label: Label
 var _bursts: Array = []  # active starbursts: {pos, age, life, big}
+## WO-9.5 (#65): the playing exchange's skippable clock; idle unless armed.
+var pace := ExchangeSkip.new()
 ## Projectile style per side for this exchange: "" melee, "arrow" bow, "magic"
 ## tome. Ranged attackers don't run in — they loose/cast from where they stand.
 var _left_proj := ""
@@ -434,33 +436,34 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 	_right_sprite.play("idle")
 	_root.visible = true
 	_root.modulate.a = 0.0
-	var tw := create_tween()
+	var tw := pace.track(create_tween())
 	tw.tween_property(_root, "modulate:a", 1.0, 0.18)
-	await tw.finished
+	await pace.tween(tw)
 
 	for strike in strikes:
 		await _play_strike(strike)
-		await get_tree().create_timer(0.28).timeout
+		await pace.wait(self, 0.28)
 
 	# XP earned: fill the attacker's bar right here in the popup (Neal's ask)
 	if _xp_gain > 0:
 		_xp_panel.visible = true
 		_xp_panel.queue_redraw()
-		await get_tree().create_timer(0.25).timeout
+		await pace.wait(self, 0.25)
 		var target := _xp_shown + float(_xp_gain)
-		var fill := create_tween()
+		var fill := pace.track(create_tween())
 		fill.tween_property(self, "_xp_shown", target, 0.55).set_trans(Tween.TRANS_SINE)
-		await fill.finished
+		await pace.tween(fill)
 		if target >= 100.0:
 			_xp_leveled = true
 			_screen_flash(0.5)
 			_xp_panel.queue_redraw()
-			await get_tree().create_timer(0.5).timeout
+			await pace.wait(self, 0.5)
 
-	await get_tree().create_timer(0.4).timeout
-	var out := create_tween()
+	await pace.wait(self, 0.4)
+	var out := pace.track(create_tween())
 	out.tween_property(_root, "modulate:a", 0.0, 0.16)
-	await out.finished
+	await pace.tween(out)
+	_settle_skip()
 	_root.visible = false
 	_xp_panel.visible = false
 	for s in [_left_sprite, _right_sprite]:
@@ -481,31 +484,32 @@ func play_heal(healer: Unit, ally: Unit, hp_before: int, map_shot: Texture2D = n
 	_right_sprite.play("idle")
 	_root.visible = true
 	_root.modulate.a = 0.0
-	var tin := create_tween()
+	var tin := pace.track(create_tween())
 	tin.tween_property(_root, "modulate:a", 1.0, 0.18)
-	await tin.finished
+	await pace.tween(tin)
 	# the healer raises the staff — a lift and a soft glint
 	_flash_sprite(_left_sprite, 0.55, 0.45)
 	var home_y := _left_holder.position.y
-	var lift := create_tween()
+	var lift := pace.track(create_tween())
 	lift.tween_property(_left_holder, "position:y", home_y - 26.0, 0.24).set_trans(Tween.TRANS_SINE)
 	lift.tween_property(_left_holder, "position:y", home_y, 0.24).set_trans(Tween.TRANS_SINE)
-	await get_tree().create_timer(0.42).timeout
+	await pace.wait(self, 0.42)
 	# green light blooms over the ally
 	await _heal_glow(_right_holder.position)
 	_ally_heal_flash(_right_sprite)
 	_shake(0.12)
 	if _right_hp != null:
-		var fill := create_tween()
+		var fill := pace.track(create_tween())
 		fill.tween_property(_right_hp, "shown_hp", float(ally.current_hp), 0.5).set_trans(Tween.TRANS_SINE)
-	var bob := create_tween()
+	var bob := pace.track(create_tween())
 	var ay := _right_holder.position.y
 	bob.tween_property(_right_holder, "position:y", ay - 16.0, 0.18).set_trans(Tween.TRANS_SINE)
 	bob.tween_property(_right_holder, "position:y", ay, 0.2).set_trans(Tween.TRANS_SINE)
-	await get_tree().create_timer(0.75).timeout
-	var out := create_tween()
+	await pace.wait(self, 0.75)
+	var out := pace.track(create_tween())
 	out.tween_property(_root, "modulate:a", 0.0, 0.16)
-	await out.finished
+	await pace.tween(out)
+	_settle_skip()
 	_root.visible = false
 	for s in [_left_sprite, _right_sprite]:
 		s.modulate = Color(1, 1, 1, 1)
@@ -543,12 +547,12 @@ func _build_heal_chrome(healer: Unit, ally: Unit, hp_before: int) -> void:
 func _heal_glow(pos: Vector2) -> void:
 	_bursts.append({"pos": pos, "age": 0.0, "life": 0.6, "big": false, "kind": "heal"})
 	_fx.queue_redraw()
-	await get_tree().create_timer(0.55).timeout
+	await pace.wait(self, 0.55)
 
 
 func _ally_heal_flash(spr: AnimatedSprite2D) -> void:
 	spr.modulate = Color(0.5, 1.0, 0.62)
-	var tw := create_tween()
+	var tw := pace.track(create_tween())
 	tw.tween_property(spr, "modulate", Color(1, 1, 1, 1), 0.6).set_trans(Tween.TRANS_SINE)
 
 
@@ -627,10 +631,12 @@ func _ghost_trail(actor: AnimatedSprite2D, holder: Control, count: int) -> void:
 		ghost.position = holder.position
 		ghost.modulate = Color(0.7, 0.85, 1.0, 0.45)
 		_root.add_child(ghost)
-		var tw := create_tween()
+		var tw := pace.track(create_tween())
 		tw.tween_property(ghost, "modulate:a", 0.0, 0.28)
 		tw.tween_callback(ghost.queue_free)
-		await get_tree().create_timer(0.05).timeout
+		await pace.wait(self, 0.05)
+		if pace.skipped:
+			return
 
 
 ## One strike, GBA style: run in, land the blow mid-swing (starburst, flash,
@@ -660,17 +666,17 @@ func _play_strike(strike) -> void:
 	# crits stage themselves: a beat of stillness, then a BLUR dash
 	if strike.was_crit:
 		_flash_sprite(actor, 0.5, 0.35)
-		await get_tree().create_timer(0.3).timeout
-	var run := create_tween()
+		await pace.wait(self, 0.3)
+	var run := pace.track(create_tween())
 	run.tween_property(actor_holder, "position", contact, 0.10 if strike.was_crit else 0.16) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if proj == "":
 		_ghost_trail(actor, actor_holder, 4 if strike.was_crit else 2)
-	await run.finished
+	await pace.tween(run)
 	actor.play(anim)
 	if strike.was_crit and not paired and proj == "":
 		# over-the-top: the crit rides an aerial arc onto the target
-		var arc := create_tween()
+		var arc := pace.track(create_tween())
 		arc.tween_property(actor_holder, "position:y", contact.y - 110.0, 0.22) \
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		arc.tween_property(actor_holder, "position:y", contact.y, 0.16) \
@@ -678,18 +684,18 @@ func _play_strike(strike) -> void:
 		_ghost_trail(actor, actor_holder, 5)
 	if paired:
 		# the wind-up runs to its final frame; impact fires AT the seam
-		await actor.animation_finished
+		await pace.until(actor.animation_finished)
 		actor.play(base + "_strike")
 	else:
 		# single-segment kits: impact lands late in the swing
-		await get_tree().create_timer(maxf(swing * 0.78, 0.18)).timeout
+		await pace.wait(self, maxf(swing * 0.78, 0.18))
 
 	var impact_pos := Vector2(target_holder.position.x - dir * 40.0,
 		target_holder.position.y - 40.0)
 	# ranged: the arrow/bolt crosses the gap and lands the hit on arrival
 	if proj != "":
 		_projectile(actor_holder.position + Vector2(dir * 70.0, -46.0), impact_pos, dir, proj)
-		await get_tree().create_timer(0.16).timeout
+		await pace.wait(self, 0.16)
 	if strike.connected:
 		var lethal: bool = strike.defender_hp_after <= 0
 		target.play("ko" if lethal and target.sprite_frames.has_animation("ko") else "hit")
@@ -699,20 +705,20 @@ func _play_strike(strike) -> void:
 		# hit-stop: the whole scene bites for a beat (GBA crunch)
 		actor.pause()
 		target.pause()
-		await get_tree().create_timer(0.14 if strike.was_crit else 0.09).timeout
+		await pace.wait(self, 0.14 if strike.was_crit else 0.09)
 		actor.play()
 		target.play()
 		_flash_sprite(target, 1.0, 0.32)
 		_knockback(target_holder, dir)
 		_shake(0.6 if strike.was_crit else 0.32)
 		if target_bar != null:
-			var drain := create_tween()
+			var drain := pace.track(create_tween())
 			drain.tween_property(target_bar, "shown_hp", float(strike.defender_hp_after), 0.4) \
 				.set_trans(Tween.TRANS_SINE)
 		if lethal:
 			# white-silhouette dissolve, FE death style
 			var mat := target.material as ShaderMaterial
-			var die := create_tween()
+			var die := pace.track(create_tween())
 			die.tween_method(func(v): mat.set_shader_parameter("flash", v), 0.0, 1.0, 0.35) \
 				.set_delay(0.3)
 			die.tween_property(target, "modulate:a", 0.0, 0.6)
@@ -724,7 +730,7 @@ func _play_strike(strike) -> void:
 		_miss_label.visible = true
 		_miss_label.scale = Vector2.ONE * 1.6
 		_miss_label.pivot_offset = _miss_label.size / 2.0
-		var mt := create_tween()
+		var mt := pace.track(create_tween())
 		mt.tween_property(_miss_label, "scale", Vector2.ONE, 0.16) \
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		mt.tween_interval(0.4)
@@ -733,14 +739,24 @@ func _play_strike(strike) -> void:
 	# Projectile travel and the impact delay can outlast a short animation.
 	# A finished one-shot will not emit animation_finished again.
 	if actor.is_playing():
-		await actor.animation_finished
+		await pace.until(actor.animation_finished)
 	actor.play("idle")
-	var back := create_tween()
+	var back := pace.track(create_tween())
 	back.tween_property(actor_holder, "position", home, 0.18) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	await back.finished
+	await pace.tween(back)
 	if strike.connected and strike.defender_hp_after > 0 and target.animation != "idle":
 		target.play("idle")
+
+
+## After a skip: land leftover tweens and drop live bursts before closing.
+func _settle_skip() -> void:
+	if not pace.skipped:
+		return
+	pace.settle()
+	_bursts.clear()
+	_fx.queue_redraw()
+	_miss_label.visible = false
 
 
 # --- effects --------------------------------------------------------------------
@@ -748,20 +764,20 @@ func _play_strike(strike) -> void:
 func _flash_sprite(sprite: AnimatedSprite2D, strength: float, time: float) -> void:
 	var mat := sprite.material as ShaderMaterial
 	mat.set_shader_parameter("flash", strength)
-	var tw := create_tween()
+	var tw := pace.track(create_tween())
 	tw.tween_method(func(v): mat.set_shader_parameter("flash", v), strength, 0.0, time)
 
 
 func _knockback(holder: Control, dir: float) -> void:
 	var home := holder.position
-	var tw := create_tween()
+	var tw := pace.track(create_tween())
 	tw.tween_property(holder, "position:x", home.x + dir * 42.0, 0.05)
 	tw.tween_property(holder, "position:x", home.x, 0.22) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
 func _shake(strength: float) -> void:
-	var tw := create_tween()
+	var tw := pace.track(create_tween())
 	for i in range(6):
 		var off := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * 30.0 * strength
 		tw.tween_property(_root, "position", off, 0.03)
@@ -770,7 +786,7 @@ func _shake(strength: float) -> void:
 
 func _screen_flash(strength := 0.85) -> void:
 	_crit_flash.color = Color(1, 1, 1, strength)
-	var tw := create_tween()
+	var tw := pace.track(create_tween())
 	tw.tween_property(_crit_flash, "color:a", 0.0, 0.22 + strength * 0.1)
 
 

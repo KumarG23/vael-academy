@@ -26,11 +26,11 @@ func _pose_thrust() -> void:
 	beat.emit("windup")
 	var wind := create_tween()
 	wind.tween_property(self, "position", home - direction * 10.0, float(timing["windup"])).set_trans(Tween.TRANS_SINE)
-	await wind.finished
+	await pace.tween(wind)
 	if _crit:
 		effects.gleam(_body.to_global(guard_tip + _body.offset), Color(1.0, 0.82, 0.38), float(timing["critical_hold"]), 0.35)
 		beat.emit("critical_hold")
-		await get_tree().create_timer(float(timing["critical_hold"])).timeout
+		await pace.wait(self, float(timing["critical_hold"]))
 	# The existing action is a thrust. Align its painted blade with the target;
 	# don't simulate a broad swing by rotating a whole illustration.
 	var kit := _illustrated_kit
@@ -43,21 +43,21 @@ func _pose_thrust() -> void:
 	beat.emit("commit")
 	var forward := create_tween()
 	forward.tween_property(self, "position", home + direction * reach, float(timing["commit"])).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	await forward.finished
+	await pace.tween(forward)
 	var trail := CombatFX.spawn(effects, "white_slash", _body.to_global(strike_tip + _body.offset))
 	trail.scale = Vector2(0.7, 0.24) * _power()
 	trail.modulate = _fx_profile.melee_color.lerp(Color.WHITE, 0.15)
 	trail.modulate.a = 0.35 if not _connected else 0.8
 	impact.emit()
 	beat.emit("contact")
-	await get_tree().create_timer(float(timing["contact_hold"]) * (_kill_mult if _kill else 1.0)).timeout
+	await pace.wait(self, float(timing["contact_hold"]) * (_kill_mult if _kill else 1.0))
 	set_pose(Pose.PARRY_HIT)
 	beat.emit("recovery")
 	var back := create_tween()
 	back.tween_property(self, "position", home, float(timing["recovery"])).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	await back.finished
+	await pace.tween(back)
 	set_pose(Pose.IDLE)
-	await get_tree().create_timer(0.08).timeout
+	await pace.wait(self, 0.08)
 
 
 func _magic(_aim_global: Vector2) -> void:
@@ -66,7 +66,7 @@ func _magic(_aim_global: Vector2) -> void:
 	var origin := _pivot.global_position
 	var destination := _fx.to_global(_aim_fx)
 	effects.gather(origin, _fx_profile.magic_color, float(timing["cast_gather"]))
-	await get_tree().create_timer(float(timing["cast_gather"])).timeout
+	await pace.wait(self, float(timing["cast_gather"]))
 	committing.emit()
 	beat.emit("release")
 	var bolt := SpellFX.spawn(effects, "arcane_bolt", origin)
@@ -75,11 +75,11 @@ func _magic(_aim_global: Vector2) -> void:
 	bolt.rotation = (destination - origin).angle()
 	var flight := bolt.create_tween()
 	flight.tween_property(bolt, "global_position", destination, float(timing["projectile"]))
-	await flight.finished
+	await pace.tween(flight)
 	bolt.queue_free()
 	impact.emit()
 	beat.emit("contact")
-	await get_tree().create_timer(0.26).timeout
+	await pace.wait(self, 0.26)
 	set_pose(Pose.IDLE)
 	beat.emit("recovery")
-	await get_tree().create_timer(float(timing["recovery"])).timeout
+	await pace.wait(self, float(timing["recovery"]))
