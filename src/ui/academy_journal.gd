@@ -26,6 +26,8 @@ var _roster_i := 0
 var _sys_i := 0
 var _fish_i := 0
 var _support_i := 0
+var _calendar_i := -1
+var _calendar_scroll := 0
 var _snaps: Array = []       # per-unit data snapshots
 var _slot_info: Array = []   # save-slot summaries
 var _toast := ""
@@ -48,6 +50,7 @@ func _ready() -> void:
 	_build_inv_units()
 	_build_snaps()
 	_refresh_slots()
+	_calendar_i = _calendar_current_index()
 	queue_redraw()
 
 
@@ -182,6 +185,12 @@ func _move_row(dir: int) -> void:
 			var supports := _support_entries()
 			if not supports.is_empty():
 				_support_i = (_support_i + dir + supports.size()) % supports.size()
+		1:
+			var events := Campaign.calendar()
+			if not events.is_empty():
+				_calendar_i = clampi(_calendar_i + dir, 0, events.size() - 1)
+				# Keep ordinary one-row browsing linear; the view clamps at both ends.
+				_calendar_scroll = clampi(_calendar_scroll, 0, events.size() - 1)
 		_:
 			return
 	AudioManager.play_sfx("cursor")
@@ -402,9 +411,7 @@ func _draw() -> void:
 	var tabs_height := 92.0 + (tab_rows - 1) * 22.0
 	draw_line(book.position + Vector2(30, tabs_height), Vector2(book.position.x + book.size.x - 30, book.position.y + tabs_height),
 		Color(0.3, 0.33, 0.44), 1.0)
-	var body_top := tabs_height + 16.0
-	var body := Rect2(book.position + Vector2(34, body_top),
-		Vector2(book.size.x - 68.0, book.size.y - body_top - 42.0))
+	var body := _body_rect()
 	match _tab:
 		0: _draw_roster(body, font)
 		1: _draw_calendar(body, font)
@@ -479,22 +486,114 @@ func _draw_calendar(body: Rect2, font: Font) -> void:
 	var events := Campaign.calendar()
 	draw_string(font, body.position + Vector2(0, 4), "Year One  ·  Week %d" % Campaign.week,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.86, 0.78, 0.45))
-	var y := body.position.y + 40
-	for e in events:
+	draw_string(font, Vector2(body.end.x, body.position.y + 4), "Blue: selected   Gold: current",
+		HORIZONTAL_ALIGNMENT_RIGHT, body.size.x * 0.55, 13, Color(0.72, 0.76, 0.88))
+	var layout := _calendar_layout(body, font, events)
+	for row: Dictionary in layout["rows"]:
+		var e: CalendarEventDef = events[row["index"]]
+		var rect: Rect2 = row["rect"]
+		var selected: bool = row["index"] == _calendar_i
 		var now := e.week == Campaign.week
+		if selected:
+			draw_rect(rect, Color(0.25, 0.42, 0.78, 0.48), true)
+			draw_rect(rect, Color(0.55, 0.68, 1.0, 0.72), false, 1.0)
 		if now:
-			draw_rect(Rect2(body.position.x - 6, y - 18, body.size.x - 20, 28), Color(0.30, 0.45, 0.85, 0.4), true)
-		draw_string(font, Vector2(body.position.x + 6, y), "Week %d" % e.week,
-			HORIZONTAL_ALIGNMENT_LEFT, 90, 16, Color(0.7, 0.73, 0.82))
-		draw_string(font, Vector2(body.position.x + 100, y), e.label,
-			HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 220, 16,
-			Color(0.96, 0.92, 0.78) if now else Color(0.82, 0.84, 0.9))
-		var kind_txt := _kind_name(e.kind)
-		draw_string(font, Vector2(body.position.x + body.size.x - 130, y), kind_txt,
-			HORIZONTAL_ALIGNMENT_RIGHT, 110, 14, _kind_color(e.kind))
-		y += 32
-		if y > body.position.y + body.size.y - 20:
+			# Gold bar marks the saved current week independently of blue selection.
+			draw_rect(Rect2(rect.position.x, rect.position.y + 3, 4, rect.size.y - 6),
+				Color(0.96, 0.75, 0.27), true)
+		var baseline_y: float = rect.position.y + 19
+		draw_string(font, Vector2(row["week_x"], baseline_y), "Week %d" % e.week,
+			HORIZONTAL_ALIGNMENT_LEFT, row["week_width"], 16,
+			Color(0.98, 0.79, 0.34) if now else Color(0.7, 0.73, 0.82))
+		draw_multiline_string(font, Vector2(row["label_x"], rect.position.y + 5), e.label,
+			HORIZONTAL_ALIGNMENT_LEFT, row["label_width"], 16, 0, TextServer.BREAK_WORD_BOUND)
+		draw_string(font, Vector2(row["kind_x"], baseline_y), _kind_name(e.kind),
+			HORIZONTAL_ALIGNMENT_RIGHT, row["kind_width"], 14, _kind_color(e.kind))
+	if events.size() > layout["rows"].size():
+		var first: int = layout["visible_indices"][0]
+		var last: int = layout["visible_indices"][-1]
+		var feedback := "↑/↓ browse   %d–%d of %d" % [first + 1, last + 1, events.size()]
+		draw_string(font, Vector2(body.position.x, body.end.y - 2), feedback,
+			HORIZONTAL_ALIGNMENT_RIGHT, body.size.x, 13, Color(0.72, 0.76, 0.88))
+
+
+func _calendar_current_index(events: Array = Campaign.calendar()) -> int:
+	for i in range(events.size()):
+		if events[i].week == Campaign.week:
+			return i
+	return 0 if not events.is_empty() else -1
+
+
+func _body_rect() -> Rect2:
+	var vp := get_viewport_rect().size
+	var margin := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
+	var book := Rect2(margin, vp - margin * 2.0)
+	var font := UITheme.font()
+	var tab_rows := _tab_row_count(font, book.size.x - 68.0, 16)
+	var tabs_height := 92.0 + (tab_rows - 1) * 22.0
+	var body_top := tabs_height + 16.0
+	return Rect2(book.position + Vector2(34, body_top),
+		Vector2(book.size.x - 68.0, book.size.y - body_top - 42.0))
+
+
+func _calendar_layout(body: Rect2, font: Font, events: Array = Campaign.calendar()) -> Dictionary:
+	if events.is_empty():
+		_calendar_i = -1
+		_calendar_scroll = 0
+		return {"rows": [], "visible_indices": [], "content_rect": Rect2()}
+	_calendar_i = clampi(_calendar_i, 0, events.size() - 1)
+	_calendar_scroll = clampi(_calendar_scroll, 0, events.size() - 1)
+	var week_width := clampf(body.size.x * 0.20, 76.0, 96.0)
+	var kind_width := clampf(body.size.x * 0.20, 82.0, 112.0)
+	var week_x := body.position.x + 8.0
+	var kind_x := body.end.x - kind_width - 4.0
+	var label_x := week_x + week_width + 8.0
+	var label_width := maxf(72.0, kind_x - label_x - 8.0)
+	var content_rect := Rect2(body.position.x, body.position.y + 35.0,
+		body.size.x, maxf(0.0, body.size.y - 58.0))
+	var heights: Array[float] = []
+	for e: CalendarEventDef in events:
+		var measured := font.get_multiline_string_size(e.label, HORIZONTAL_ALIGNMENT_LEFT,
+			label_width, 16, -1, TextServer.BREAK_WORD_BOUND).y
+		heights.append(maxf(28.0, measured + 8.0))
+	var start := _calendar_scroll
+	var selected_visible := false
+	while start < events.size():
+		var used := 0.0
+		var end_index := start
+		while end_index < events.size() and used + heights[end_index] <= content_rect.size.y:
+			used += heights[end_index]
+			end_index += 1
+		if end_index == start:
+			end_index = start + 1
+		selected_visible = _calendar_i >= start and _calendar_i < end_index
+		if selected_visible:
 			break
+		start = _calendar_i
+	# When a resize creates room, fill upward again while keeping the selected row
+	# visible. Compact layouts therefore do not strand earlier rows after restore.
+	var filled := 0.0
+	var filled_end := start
+	while filled_end < events.size() and filled + heights[filled_end] <= content_rect.size.y:
+		filled += heights[filled_end]
+		filled_end += 1
+	while start > 0 and filled + heights[start - 1] <= content_rect.size.y:
+		start -= 1
+		filled += heights[start]
+	_calendar_scroll = start
+	var rows: Array[Dictionary] = []
+	var visible: Array[int] = []
+	var y := content_rect.position.y
+	for i in range(start, events.size()):
+		var h: float = heights[i]
+		if not rows.is_empty() and y + h > content_rect.end.y:
+			break
+		var rect := Rect2(body.position.x, y, body.size.x, minf(h, content_rect.size.y))
+		rows.append({"index": i, "rect": rect, "week_x": week_x, "week_width": week_width,
+			"label_x": label_x, "label_width": label_width, "kind_x": kind_x, "kind_width": kind_width})
+		visible.append(i)
+		y += h
+	return {"rows": rows, "visible_indices": visible, "content_rect": content_rect}
 
 
 ## AW-52: the Inventory HUB — left: students; right: the selected pack. Enter
