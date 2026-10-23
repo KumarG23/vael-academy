@@ -14,6 +14,7 @@ const MAX_SLOTS := 3
 var _menu: ChoiceMenu
 var _context := "main"
 var _slots: Array = []           # SaveSystem.list_slots() entries shown in Load
+var _status := ""                # Issue #83: truthful load-failure feedback
 var _houses: Array[HouseDef] = []
 var _save_system := SaveSystem.new()
 
@@ -57,12 +58,14 @@ const DEV_JUMPS := [
 
 func _open_main() -> void:
 	_context = "main"
+	_status = ""
 	_menu.open("", ["New Game", "Load Game", "Dev Jump ▶", "Quit"], _menu_pos())
 	queue_redraw()
 
 
 func _open_dev() -> void:
 	_context = "dev"
+	_status = ""
 	var labels: Array = []
 	for j in DEV_JUMPS:
 		labels.append(j[0])
@@ -128,11 +131,13 @@ func _dev_jump(kind: String) -> void:
 
 func _open_new_game() -> void:
 	_context = "new"
+	_status = ""
 	_menu.open("New Game", ["Classic (permadeath)", "Casual", "Back"], _menu_pos())
 
 
 func _open_load() -> void:
 	_context = "load"
+	_status = ""
 	_slots = _save_system.list_slots(MAX_SLOTS)
 	_menu.open("Load Game", _slot_labels(), _menu_pos())
 
@@ -182,6 +187,7 @@ func _start_new_game(casual: bool) -> void:
 
 
 func _choose_slot(index: int) -> void:
+	_status = ""
 	if index >= _slots.size():
 		# The "(no saves found)" placeholder or "Back".
 		if index == _slot_labels().size() - 1:
@@ -196,6 +202,26 @@ func _choose_slot(index: int) -> void:
 			return
 	if prepare_load(slot):
 		_enter_campaign()
+		return
+	_report_load_failure(slot)
+
+
+## Issue #83: an occupied file the existing loader rejects must say so instead
+## of silently doing nothing. The Load menu stays open for another slot or Back.
+func _report_load_failure(slot: int) -> void:
+	if not _save_system.has_slot(slot):
+		_status = "Slot %d is empty." % slot
+	else:
+		_status = "Slot %d couldn't be loaded — choose another slot." % slot
+	AudioManager.play_sfx("cancel")
+	queue_redraw()
+
+
+## Top-wide feedback band, measured so it stays readable at compact sizes.
+func status_rect() -> Rect2:
+	var vp := get_viewport_rect().size
+	var width := clampf(vp.x - 80.0, 240.0, 720.0)
+	return Rect2((vp.x - width) * 0.5, 14.0, width, 34.0)
 
 
 ## Reset the campaign for a fresh run. Split from the scene change so tests can
@@ -256,5 +282,10 @@ func _draw() -> void:
 	var ss := font.get_string_size(sub, HORIZONTAL_ALIGNMENT_CENTER, -1, 22)
 	draw_string(font, Vector2(vp.x * 0.5 - ss.x * 0.5, vp.y * 0.34 + 40), sub,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(0.65, 0.62, 0.68))
+	if _status != "":
+		var sr := status_rect()
+		UITheme.draw_panel(self, sr)
+		draw_string(font, Vector2(sr.position.x + 16, sr.position.y + 23), _status,
+			HORIZONTAL_ALIGNMENT_CENTER, sr.size.x - 32.0, 16, Color(0.95, 0.87, 0.70))
 	var hint := "working title"
 	draw_string(font, Vector2(16, vp.y - 16), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.4, 0.4, 0.45))
