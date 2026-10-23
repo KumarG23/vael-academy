@@ -511,10 +511,13 @@ func _draw_unit_detail(s: Dictionary, r: Rect2, font: Font) -> void:
 
 func _draw_calendar(body: Rect2, font: Font) -> void:
 	var events := Campaign.calendar()
-	draw_string(font, body.position + Vector2(0, 4), "Year One  ·  Week %d" % Campaign.week,
+	var heading := "Year One  ·  Week %d" % Campaign.week
+	var heading_width := font.get_string_size(heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x
+	var legend_rect := _calendar_legend_rect(body, font, heading_width)
+	draw_string(font, body.position + Vector2(0, 4), heading,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.86, 0.78, 0.45))
-	draw_string(font, Vector2(body.end.x, body.position.y + 4), "Blue: selected   Gold: current",
-		HORIZONTAL_ALIGNMENT_RIGHT, body.size.x * 0.55, 13, Color(0.72, 0.76, 0.88))
+	draw_string(font, legend_rect.position + Vector2(0, 4), "Blue: selected   Gold: current",
+		HORIZONTAL_ALIGNMENT_LEFT, legend_rect.size.x, 13, Color(0.72, 0.76, 0.88))
 	var layout := _calendar_layout(body, font, events)
 	for row: Dictionary in layout["rows"]:
 		var e: CalendarEventDef = events[row["index"]]
@@ -543,6 +546,11 @@ func _draw_calendar(body: Rect2, font: Font) -> void:
 		var feedback := "↑/↓ browse   %d–%d of %d" % [first + 1, last + 1, events.size()]
 		draw_string(font, Vector2(body.position.x, body.end.y - 2), feedback,
 			HORIZONTAL_ALIGNMENT_RIGHT, body.size.x, 13, Color(0.72, 0.76, 0.88))
+
+
+func _calendar_legend_rect(body: Rect2, font: Font, heading_width: float) -> Rect2:
+	var legend_x := body.position.x + heading_width + 12.0
+	return Rect2(legend_x, body.position.y, maxf(0.0, body.end.x - legend_x), 18.0)
 
 
 func _calendar_current_index(events: Array = Campaign.calendar()) -> int:

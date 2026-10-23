@@ -75,6 +75,7 @@ func test_calendar_selects_current_week_and_live_input_scrolls_to_both_ends():
 		return
 	var body: Rect2 = _journal.call("_body_rect")
 	var layout: Dictionary = _journal.call("_calendar_layout", body, UITheme.font())
+	_assert_calendar_header_fits(body)
 	assert_eq(layout["visible_indices"][-1], events.size() - 1,
 		"selected final event is inside the measured body")
 	for row: Dictionary in layout["rows"]:
@@ -110,6 +111,7 @@ func test_calendar_layout_clamps_for_default_and_compact_resizes_and_keeps_curre
 		await wait_frames(1)
 		body = _journal.call("_body_rect")
 		layout = _journal.call("_calendar_layout", body, UITheme.font())
+		_assert_calendar_header_fits(body)
 		assert_true(layout["visible_indices"].has(5), "current week remains visible at %s" % size)
 		var last_rect: Rect2 = layout["rows"][-1]["rect"]
 		assert_true(last_rect.end.y <= body.end.y, "final visible row fits at %s" % size)
@@ -132,6 +134,21 @@ func test_calendar_layout_clamps_for_default_and_compact_resizes_and_keeps_curre
 	assert_eq(_journal.get("_calendar_i"), 2, "selection clamps when a shorter calendar is supplied")
 	assert_true(layout["visible_indices"].has(2), "clamped selection remains visible")
 	assert_lte(_journal.get("_calendar_scroll"), 2, "scroll clamps to the shorter calendar")
+
+
+func _assert_calendar_header_fits(body: Rect2) -> void:
+	var font := UITheme.font()
+	var heading := "Year One  ·  Week %d" % Campaign.week
+	var heading_width := font.get_string_size(heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x
+	var legend_text := "Blue: selected   Gold: current"
+	var legend_rect: Rect2 = _journal.call("_calendar_legend_rect", body, font, heading_width)
+	var legend_width := font.get_string_size(legend_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
+	assert_true(legend_rect.position.x >= body.position.x + heading_width + 12.0,
+		"legend starts after measured Year/Week heading")
+	assert_true(legend_rect.end.x <= body.end.x,
+		"Calendar selection/current legend stays inside the book body")
+	assert_true(legend_rect.size.x >= legend_width,
+		"complete Calendar legend fits at this viewport width")
 
 
 func test_calendar_empty_and_out_of_range_week_is_safe_and_read_only():
