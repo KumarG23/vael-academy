@@ -19,6 +19,8 @@ const SYS_ROWS := [
 	["Music Volume", "music"], ["SFX Volume", "sfx"], ["Master Volume", "master"],
 	["Text Speed", "text_speed"],
 	["Return to Title", "title"],
+	# Issue #89: appended so existing row indices stay put.
+	["Keyboard Controls", "keyboard"],
 ]
 
 var _tab := 0
@@ -31,6 +33,7 @@ var _slot_info: Array = []   # save-slot summaries
 var _toast := ""
 var _toast_t := 0.0
 var _save := SaveSystem.new()
+var _keys_editor: KeyboardControlsEditor = null  # issue #89 modal sub-page
 
 ## AW-52: the Inventory HUB — live scratch Units (real inventories, campaign
 ## state applied) so items can be MOVED between students, not just listed.
@@ -116,7 +119,7 @@ func _refresh_slots() -> void:
 # --- input -------------------------------------------------------------------
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not visible:
+	if not visible or _keys_editor != null:
 		return
 	if event.is_action_pressed("cursor_cancel") or _is_journal_key(event):
 		# AW-52: inside the Inventory hub, cancel backs out one level (give →
@@ -308,10 +311,21 @@ func _activate() -> void:
 		_do_save(int(kind.substr(4)))
 	elif kind.begins_with("load"):
 		_do_load(int(kind.substr(4)))
+	elif kind == "keyboard":
+		_open_keys_editor()
 	elif kind == "title":
 		AudioManager.play_sfx("confirm")
 		# AW-49: deferred — never swap scenes synchronously inside an input callback
 		get_tree().change_scene_to_file.call_deferred("res://scenes/title/title.tscn")
+
+
+func _open_keys_editor() -> void:
+	AudioManager.play_sfx("confirm")
+	_keys_editor = KeyboardControlsEditor.new()
+	_keys_editor.closed.connect(func() -> void:
+		_keys_editor = null
+		queue_redraw())
+	add_child(_keys_editor)
 
 
 func _do_save(slot: int) -> void:
@@ -647,10 +661,21 @@ func _draw_system(body: Rect2, font: Font) -> void:
 		elif kind == "text_speed":
 			draw_string(font, Vector2(rx, y), DialoguePreferences.label(),
 				HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 340, font_size, Color(0.8, 0.82, 0.9))
+		elif kind == "keyboard":
+			draw_string(font, Vector2(rx, y), _keys_summary(),
+				HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 340, font_size, Color(0.8, 0.82, 0.9))
 		y += pitch
 	# The Journal-wide navigation hint already covers this tab. The older full
 	# castle controls reference exceeded the compact System panel and collided
 	# with that footer after adding the extra preference row.
+
+
+func _keys_summary() -> String:
+	var n := 0
+	for action: String in KeyboardPreferences.ACTIONS:
+		if KeyboardPreferences.extra_key(action) != KEY_NONE:
+			n += 1
+	return "Default keys" if n == 0 else "Default + %d additional" % n
 
 
 ## Show the saved catch dictionary as-is, in a stable name order. Reading this
