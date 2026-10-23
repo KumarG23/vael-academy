@@ -436,6 +436,8 @@ func play_exchange(attacker: Unit, defender: Unit, strikes: Array,
 	_right_sprite.play("idle")
 	_root.visible = true
 	_root.modulate.a = 0.0
+	pace.animation(_left_sprite)
+	pace.animation(_right_sprite)
 	var tw := pace.track(create_tween())
 	tw.tween_property(_root, "modulate:a", 1.0, 0.18)
 	await pace.tween(tw)
@@ -484,6 +486,8 @@ func play_heal(healer: Unit, ally: Unit, hp_before: int, map_shot: Texture2D = n
 	_right_sprite.play("idle")
 	_root.visible = true
 	_root.modulate.a = 0.0
+	pace.animation(_left_sprite)
+	pace.animation(_right_sprite)
 	var tin := pace.track(create_tween())
 	tin.tween_property(_root, "modulate:a", 1.0, 0.18)
 	await pace.tween(tin)
@@ -751,7 +755,7 @@ func _play_strike(strike) -> void:
 
 ## After a skip: land leftover tweens and drop live bursts before closing.
 func _settle_skip() -> void:
-	if not pace.skipped:
+	if not pace.skipped and not pace.was_fast:
 		return
 	pace.settle()
 	_bursts.clear()
@@ -811,6 +815,7 @@ func _slash_arc(pos: Vector2, dir: float, big: bool) -> void:
 
 
 func _process(delta: float) -> void:
+	delta *= pace.speed
 	if _xp_panel != null and _xp_panel.visible:
 		_xp_panel.queue_redraw()
 	if _bursts.is_empty():

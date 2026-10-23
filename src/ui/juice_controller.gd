@@ -33,6 +33,7 @@ func _exit_tree() -> void:
 
 
 func _process(delta: float) -> void:
+	delta *= pace.speed
 	if _shake_amount <= 0.0 or _camera == null:
 		return
 	_camera.offset = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * _shake_amount
@@ -56,7 +57,7 @@ func play_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: boo
 	var reach := cfg.whiff_distance if not strike.connected else cfg.lunge_distance
 	var contact := home + toward * reach
 
-	var lunge := create_tween()
+	var lunge := pace.track(create_tween())
 	lunge.tween_property(striker, "position", contact, cfg.lunge_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await pace.tween(lunge)
 	var reaction: Tween = null
@@ -67,14 +68,14 @@ func play_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill: boo
 		_shake_amount = maxf(_shake_amount, cfg.shake_magnitude(strike.damage, strike.was_crit))
 		if cfg.wants_splash(strike.was_crit, is_kill) and not pace.skipped:
 			var label := "CRIT" if strike.was_crit else "DOWN"
-			_splash.play(striker.team, label, cfg)
+			_splash.play(striker.team, label, cfg, pace)
 		reaction = _react_target(target, toward, strike, is_kill)
 		await _hitstop(cfg.hitstop_duration(strike.was_crit, is_kill))
 	else:
 		_spawn_miss(target.position + target.combat_aim_offset())
 		reaction = _react_target(target, toward, strike, is_kill)
 
-	var back := create_tween()
+	var back := pace.track(create_tween())
 	back.tween_property(striker, "position", home, cfg.recoil_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	await pace.tween(back)
 	if reaction != null and reaction.is_running():
@@ -123,7 +124,7 @@ func _play_rig_strike(striker: Unit, target: Unit, strike: StrikeResult, is_kill
 			_spawn_number(target.position + target.combat_aim_offset(), strike)
 			_shake_amount = maxf(_shake_amount, cfg.shake_magnitude(strike.damage, strike.was_crit))
 			if cfg.wants_splash(strike.was_crit, is_kill) and not pace.skipped:
-				_splash.play(striker.team, "CRIT" if strike.was_crit else "DOWN", cfg)
+				_splash.play(striker.team, "CRIT" if strike.was_crit else "DOWN", cfg, pace)
 			reactions.append(_react_target(target, toward, strike, is_kill))
 			_hitstop_fire(cfg.hitstop_duration(strike.was_crit, is_kill))
 		else:
@@ -187,9 +188,9 @@ func _hitstop_fire(duration: float) -> void:
 	_frozen = true
 	_freeze_gen += 1
 	var gen := _freeze_gen
-	get_tree().create_timer(duration, true, false, true).timeout.connect(func() -> void:
-		if gen == _freeze_gen:  # a skip may already have released this freeze
-			_release_hitstop())
+	await pace.wait(self, duration, true)
+	if gen == _freeze_gen:  # a skip may already have released this freeze
+		_release_hitstop()
 
 
 func _release_hitstop() -> void:
@@ -203,7 +204,7 @@ func _release_hitstop() -> void:
 ## WO-9.5 (#65): after a skipped exchange, end the existing hit-stop freeze and
 ## land this controller's leftover feedback, so nothing animates after return.
 func settle_skip() -> void:
-	if not pace.skipped:
+	if not pace.skipped and not pace.was_fast:
 		return
 	_release_hitstop()
 	pace.settle()
@@ -216,7 +217,7 @@ func settle_skip() -> void:
 
 ## Death dissolve: fade + shrink, then the caller frees the node.
 func play_death(unit: Unit) -> void:
-	var tw := create_tween()
+	var tw := pace.track(create_tween())
 	tw.set_parallel(true)
 	tw.tween_property(unit, "modulate:a", 0.0, cfg.dissolve_time)
 	tw.tween_property(unit, "scale", Vector2(0.5, 0.5), cfg.dissolve_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
@@ -234,7 +235,7 @@ func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill:
 	var home := target.position
 	var r_out := cfg.reaction_out
 	var r_back := cfg.reaction_back
-	var tw := target.create_tween()
+	var tw := pace.track(target.create_tween())
 	match kind:
 		HitReaction.Kind.DODGE:
 			var perp := toward.orthogonal()
@@ -270,7 +271,7 @@ func _recoil(target: Unit, toward: Vector2) -> void:
 	if target == null or not is_instance_valid(target) or cfg == null:
 		return
 	var home := target.position
-	var tw := target.create_tween()
+	var tw := pace.track(target.create_tween())
 	tw.tween_property(target, "position", home + toward * cfg.target_recoil, cfg.hitstop_hit)
 	tw.tween_property(target, "position", home, cfg.recoil_time)
 
@@ -297,7 +298,7 @@ func _spawn_number(world_pos: Vector2, strike: StrikeResult) -> void:
 	label.pivot_offset = Vector2(18, 12)
 	label.scale = Vector2.ZERO
 	_numbers_root.add_child(label)
-	var tw := create_tween()
+	var tw := pace.track(create_tween())
 	tw.set_parallel(true)
 	tw.tween_property(label, "scale", Vector2.ONE, 0.16).from(Vector2(cfg.number_pop_scale, cfg.number_pop_scale)).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_property(label, "position:y", label.position.y - cfg.number_rise, cfg.number_time)
@@ -316,7 +317,7 @@ func _spawn_miss(world_pos: Vector2) -> void:
 	label.position = world_pos + Vector2(-16, -56)
 	label.z_index = 200
 	_numbers_root.add_child(label)
-	var tw := create_tween()
+	var tw := pace.track(create_tween())
 	tw.set_parallel(true)
 	tw.tween_property(label, "position:x", label.position.x + 40.0, cfg.number_time)  # slide/whiff
 	tw.tween_property(label, "modulate:a", 0.0, cfg.number_time)

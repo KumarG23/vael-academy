@@ -1,0 +1,110 @@
+{
+  "production_source_shas": {
+    "comparisons": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05",
+    "compact_hint": "548fdd15bb56b0965cbfd431bc7a840ffdc08079",
+    "accepted_72_integration": "5bc0f8255f6b59204a23cc97b7a3461fb97ae61f"
+  },
+  "artifacts": {
+    "images/map-default-instruction.png": {
+      "sha256": "823f0ba3c2f2471e9b9f8a3dc1ad37fa1a92ac131cb3b3ba2fca05bcab378160",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05"
+    },
+    "images/map-default-active.png": {
+      "sha256": "4d808ccfbeeb18d72cf51d0c9dd6f2bd8c8007c95c7a62d6141c6c32c2913877",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05"
+    },
+    "images/heal-default-active.png": {
+      "sha256": "45ea223f77b4c3ff5ee4c21168bcf62023c3cbc75fcf676cafd0017000a7a539",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05"
+    },
+    "images/heal-default-released.png": {
+      "sha256": "9708d53477b5f53ebca47609b663d0a5cf849bced7cc7df832da83bec2b56088",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05"
+    },
+    "images/illustrated-default-active.png": {
+      "sha256": "77d8ff63531e74ac59fbd67a15738046643579c8ffd3fbe20d9559932cbe8265",
+      "tested_sha": "19ae15139ccca94d51b5a106e3dd0201255337f3"
+    },
+    "images/illustrated-default-released.png": {
+      "sha256": "3171b9d43ee2afc8a243463e94e2641f5587edf43fc5dd77c5c9d387a29f4e8b",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05"
+    },
+    "images/popup-default-active.png": {
+      "sha256": "642a86e0fa825d15d53f4b462d10254817cf951857f802ed28b2bf6dc32be727",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05"
+    },
+    "images/popup-default-released.png": {
+      "sha256": "7ec8b5d5b3dff8e8c9d3b95ffa3fbe9a153a7bfd83edf74d2e99bb97b7a3be1e",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05"
+    },
+    "images/heal-compact-active.png": {
+      "sha256": "a7cf4d07c12014619d4ebc1f32a5913dd9f56070665d4c33733ac26f0fc9d41f",
+      "tested_sha": "548fdd15bb56b0965cbfd431bc7a840ffdc08079"
+    },
+    "images/illustrated-compact-active.png": {
+      "sha256": "0b9396520dc63ea8e5ef0555e02728b5443d40c799c53826e2d2783885ff5ec1",
+      "tested_sha": "548fdd15bb56b0965cbfd431bc7a840ffdc08079"
+    },
+    "images/popup-compact-active.png": {
+      "sha256": "6094f5bcc34633bf58c025f52eae0ed3c462eab8ba59accab3cf894f1c950996",
+      "tested_sha": "548fdd15bb56b0965cbfd431bc7a840ffdc08079"
+    },
+    "images/popup-compact-pointer.png": {
+      "sha256": "e6db3dd728dbc7d881e4b6d9b76a18d759edadc16a60d08c70ed8dc876bd1182",
+      "tested_sha": "548fdd15bb56b0965cbfd431bc7a840ffdc08079"
+    },
+    "images/integrated-attack-after.png": {
+      "sha256": "a99f9c4f1b7d2120ab01e9f3ec3090bfc47e64272fa48b9ada51d65b490f4c70",
+      "tested_sha": "5bc0f8255f6b59204a23cc97b7a3461fb97ae61f"
+    },
+    "images/integrated-heal-after.png": {
+      "sha256": "dfb378fc15dbed8c364443b2cfb5cf571f7f7a84f8454ea03f0a556f75adfa43",
+      "tested_sha": "5bc0f8255f6b59204a23cc97b7a3461fb97ae61f"
+    },
+    "images/integrated-pointer.png": {
+      "sha256": "077b862325f6f1898defc432497860d18688e52f207271818481f8b93a8e713b",
+      "tested_sha": "5bc0f8255f6b59204a23cc97b7a3461fb97ae61f"
+    },
+    "images/motion-illustrated-contact.png": {
+      "sha256": "642d76002672be1125d14150723c7681c7d0ecaeb6521fe40d636f4bde0f3f97",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05"
+    },
+    "images/motion-illustrated-follow-up.png": {
+      "sha256": "988650871a3d91caeead9bf756daf01a2e72cdd302c1378a9867829155bfe664",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05"
+    },
+    "motion-map.mp4": {
+      "sha256": "06ab3928ede6f245906fc95a9d93e29c64c4e29d9580e6f6d4e453ee53e87cdc",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05",
+      "duration_seconds": 4.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": 30
+    },
+    "motion-illustrated.mp4": {
+      "sha256": "d36cccdadda00745bf7867562fa6be78e07b33772c3b99dacd59d102a9ce4b1d",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05",
+      "duration_seconds": 4.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": 30
+    },
+    "motion-popup.mp4": {
+      "sha256": "8746311bd59a340f0b6b494f45df6ed82d61cc0fec7bfa745acd39a231fc4790",
+      "tested_sha": "c9536fd9520ac4f20fc7ebf0a322899daf13ed05",
+      "duration_seconds": 4.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": 30
+    },
+    "results.json": {
+      "sha256": "b4e055c276f22378460647f392038ee63a5e6c5f34e767ae9d0bc263d0690231"
+    }
+  }
+}

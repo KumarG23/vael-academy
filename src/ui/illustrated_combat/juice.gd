@@ -59,7 +59,7 @@ func _prepare_dodge() -> void:
 	# This is an evasion translation of a whole pose, never limb deformation.
 	var away := signf(active_target.position.x - active_striker.position.x)
 	active_target.set_illustrated_pose("parry_hit")
-	_dodge = active_target.create_tween()
+	_dodge = pace.track(active_target.create_tween())
 	_dodge.tween_property(active_target, "position", _target_home + Vector2(away * 90.0, 0), 0.075).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_dodge.tween_interval(0.34)
 	_dodge.tween_property(active_target, "position", _target_home, 0.22).set_trans(Tween.TRANS_SINE)
@@ -83,7 +83,7 @@ func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill:
 		# HP still changes at contact; only the visual collapse is delayed.
 		target.set_illustrated_pose("parry_hit")
 		var home := target.position
-		var reaction := target.create_tween()
+		var reaction := pace.track(target.create_tween())
 		reaction.tween_property(target, "position", home + toward * cfg.flinch_distance, cfg.reaction_out * 1.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		reaction.tween_interval(float(presentation_data["timing"]["defeat_hit_hold"]))
 		reaction.tween_callback(func() -> void:
@@ -97,7 +97,7 @@ func _react_target(target: Unit, toward: Vector2, strike: StrikeResult, is_kill:
 
 func play_death(unit: Unit) -> void:
 	unit.set_illustrated_pose("defeat")
-	var fade := create_tween()
+	var fade := pace.track(create_tween())
 	fade.tween_interval(0.18)
 	fade.tween_property(unit, "modulate:a", 0.0, cfg.dissolve_time)
 	await pace.tween(fade)
@@ -108,6 +108,7 @@ var _shake_clock := 0.0
 
 
 func _process(delta: float) -> void:
+	delta *= pace.speed
 	if shake_layer == null:
 		return
 	_shake_clock += delta
