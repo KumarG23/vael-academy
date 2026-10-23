@@ -292,6 +292,9 @@ func test_held_speed_preserves_native_results_all_attack_routes():
 			var log := _record_contacts(view)
 			view._rng = CombatRNG.new(1)
 			runs.append(await _run_speed(view, attacker, defender, fast))
+			assert_eq(view._cursor.cell, defender.cell, "stationary target after exchange")
+			assert_eq(view._hover_unit, defender, "accepted #72 hover follows current occupant")
+			assert_true(view._debug_label.text.contains("%d/%d" % [defender.current_hp, defender.max_hp()]), "header reflects post-exchange HP")
 			logs.append(str(log))
 		print("GH-75 ", route, " normal/held ms: ", runs[0]["ms"], "/", runs[1]["ms"])
 		assert_lt(runs[1]["ms"], int(runs[0]["ms"] * 0.78), route + ": held playback is substantially faster")
@@ -659,3 +662,38 @@ func test_map_strike_lethal_yield_fast_matches_normal():
 		if fast:
 			await _assert_settled(view, "map lethal")
 	_assert_same(states[1], states[0], "map lethal yield")
+
+
+func test_accelerated_production_heal_returns_through_accepted_hover_refresh():
+	var states := []
+	for fast in [false, true]:
+		var view := _mock()
+		var healer := view.unit_by_id("wren")
+		var ally := view.unit_by_id("kael")
+		_place(view, healer, Vector2i(5, 12))
+		_place(view, ally, Vector2i(6, 12))
+		ally.current_hp = 5
+		view._cursor.move_to(healer.cell)
+		_tap(view, KEY_ENTER)
+		_tap(view, KEY_ENTER)
+		assert_eq(view._phase, BattleView.Phase.MENU)
+		view._menu._index = view._menu_actions.find("heal")
+		assert_gte(view._menu._index, 0)
+		_tap(view, KEY_ENTER)
+		view._cursor.move_to(ally.cell)
+		_tap(view, KEY_ENTER)
+		assert_true(_armed(view), "real Heal command armed presentation")
+		if fast:
+			_key(view, KEY_SPACE, true)
+		var deadline := _now() + 10000
+		while (view._busy or _armed(view) or not healer.has_acted) and _now() < deadline:
+			await get_tree().process_frame
+		_key(view, KEY_SPACE, false)
+		assert_false(view._busy)
+		assert_true(healer.has_acted)
+		assert_gt(ally.current_hp, 5)
+		assert_eq(view._cursor.cell, ally.cell)
+		assert_eq(view._hover_unit, ally)
+		assert_true(view._debug_label.text.contains("%d/%d" % [ally.current_hp, ally.max_hp()]), "stationary heal header matches actual HP")
+		states.append(_state(view))
+	_assert_same(states[1], states[0], "normal/accelerated heal and hover boundary")
