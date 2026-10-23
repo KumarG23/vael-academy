@@ -259,6 +259,8 @@ func _assert_title_status_readable(font: Font, label: String) -> void:
 	var measured := font.get_string_size(_title._status, HORIZONTAL_ALIGNMENT_LEFT, -1, 16)
 	assert_lte(measured.x, rect.size.x - 32.0 + 0.5,
 		"%s: measured text %.1f fits the feedback box %.1f" % [label, measured.x, rect.size.x])
+	assert_gte(rect.size.y, font.get_height(16) + 8.0,
+		"%s: feedback band %.1f is tall enough for 16 px text" % [label, rect.size.y])
 	assert_false(rect.intersects(_title._menu.get_global_rect()),
 		"%s: feedback %s does not cover the Load menu %s" % [label, rect, _title._menu.get_global_rect()])
 

@@ -284,7 +284,12 @@ func _draw() -> void:
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(0.65, 0.62, 0.68))
 	if _status != "":
 		var sr := status_rect()
-		UITheme.draw_panel(self, sr)
+		# Issue #83: a 34 px band is too short for UITheme.draw_panel's ornate
+		# nine-patch corners — the filigree overruns the message. This transient
+		# band therefore uses the same plain navy fill + gold rule as the Journal
+		# toast, so both load-failure messages read the same way.
+		draw_rect(sr, Color(0.1, 0.11, 0.16, 0.95), true)
+		draw_rect(sr, Color(0.86, 0.78, 0.45, 0.8), false, 1.5)
 		draw_string(font, Vector2(sr.position.x + 16, sr.position.y + 23), _status,
 			HORIZONTAL_ALIGNMENT_CENTER, sr.size.x - 32.0, 16, Color(0.95, 0.87, 0.70))
 	var hint := "working title"
