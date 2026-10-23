@@ -41,6 +41,8 @@ static func stage(payload: Dictionary) -> String:
 	# An explicit malformed section cannot be consumed by the battle scene.
 	if payload.has("campaign") and not (payload["campaign"] is Dictionary):
 		return ""
+	if not AcademyTravel.valid_visits(payload.get("campaign", {}).get("academy_visits", [])):
+		return ""
 	var scene := battle_scene(payload)
 	if scene == "":
 		return ""

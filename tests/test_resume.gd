@@ -120,3 +120,49 @@ func test_slot_list_marks_live_battles():
 	var slots := saves.list_slots(3)
 	assert_eq(slots.size(), 1)
 	assert_true(bool(slots[0]["in_battle"]), "a live fight is flagged for the ⚔ label")
+
+
+func test_earned_academy_visits_survive_real_battle_save_and_fresh_resume():
+	var rooms := AcademyTravel.public_rooms()
+	Campaign.record_academy_entry(rooms["campus"])
+	Campaign.record_academy_entry(rooms["entrance"])
+	_view = _mock()
+	var saves := SaveSystem.new("user://travel_resume")
+	_view._save_system = saves
+	assert_true(_view.save_to_slot(0))
+	var payload := saves.load_slot(0)
+	Campaign.reset_new_game(false)
+	assert_eq(Campaign.academy_visits.size(), 0)
+	assert_eq(Resume.stage(payload), MOCK)
+	var loaded := _mock()
+	assert_eq(Campaign.academy_visits, ["campus", "entrance"])
+	assert_eq(loaded._rng.state_value(), _view._rng.state_value())
+	assert_eq(loaded.make_save_payload()["campaign"]["academy_visits"], ["campus", "entrance"])
+	DirAccess.remove_absolute(saves.slot_path(0))
+	DirAccess.remove_absolute(saves.save_dir)
+
+
+func test_malformed_academy_visits_reject_battle_stage_and_direct_load_atomically():
+	_view = _mock()
+	for invalid: Variant in [{}, null, [1], ["../library"]]:
+		var payload: Dictionary = _view.make_save_payload()
+		payload["campaign"]["academy_visits"] = invalid
+		var before := Campaign.to_dict().duplicate(true)
+		var battle_before: Dictionary = _view.make_save_payload().duplicate(true)
+		BattleView.next_resume = {"unchanged": true}
+		assert_eq(Resume.stage(payload), "")
+		assert_eq(Campaign.to_dict(), before)
+		assert_eq(BattleView.next_resume, {"unchanged": true})
+		assert_false(_view.apply_save_payload(payload))
+		assert_eq(_view.make_save_payload(), battle_before)
+		var saves := SaveSystem.new("user://travel_bad_battle")
+		_view._save_system = saves
+		assert_true(saves.save_slot(0, payload))
+		assert_false(_view.load_from_slot(0))
+		assert_eq(_view.make_save_payload(), battle_before)
+		DirAccess.remove_absolute(saves.slot_path(0))
+		DirAccess.remove_absolute(saves.save_dir)
+		# Thin legacy battle headers also cannot smuggle malformed new metadata.
+		payload["campaign"] = {"academy_visits": invalid}
+		assert_eq(Resume.stage(payload), "")
+		assert_eq(BattleView.next_resume, {"unchanged": true})

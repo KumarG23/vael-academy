@@ -19,6 +19,8 @@ var house_id: String = "emberwing"
 var house_locked: bool = false
 ## WO-6.4: the waterside fish log (fish name -> count), part of the save.
 var fish_log: Dictionary = {}
+## GH-81: actual public academy entries in this campaign, never inferred.
+var academy_visits: Array[String] = []
 ## WO-7.1: the academy year, week by week (saved). The calendar data lives in
 ## data/calendar/year_one.tres; this is just the cursor.
 var week: int = 1
@@ -60,6 +62,7 @@ func reset_new_game(is_casual: bool, seed_value: int = 1) -> void:
 	house_locked = false
 	set_house("emberwing")  # the prologue precedes the choice; 5.3b flows it
 	fish_log = {}
+	academy_visits = []
 	week = 1
 	flags = {}
 	unit_states = {}
@@ -271,6 +274,7 @@ func to_dict() -> Dictionary:
 		"chapter_id": chapter_id,
 		"house_id": house_id,
 		"fish_log": fish_log.duplicate(true),
+		"academy_visits": academy_visits.duplicate(),
 		"week": week,
 		"flags": flags.duplicate(true),
 		"house_locked": house_locked,
@@ -292,6 +296,8 @@ func restore_save(data: Dictionary) -> bool:
 		if data.has(key) and not (data[key] is Dictionary):
 			return false
 	if data.has("report_cards") and not (data["report_cards"] is Array):
+		return false
+	if not AcademyTravel.valid_visits(data.get("academy_visits", [])):
 		return false
 	if not _valid_deliveries(data):
 		return false
@@ -374,7 +380,17 @@ func can_receive_item(id: String, reserved_slots: int = 0) -> bool:
 	return available
 
 
+func record_academy_entry(entered: CastleRoomDef) -> void:
+	if AcademyTravel.is_public(entered) and not academy_visits.has(entered.id):
+		academy_visits.append(entered.id)
+
+
 func from_dict(data: Dictionary) -> void:
+	academy_visits = []
+	var known := AcademyTravel.public_rooms()
+	for id: String in data.get("academy_visits", []):
+		if known.has(id) and not academy_visits.has(id):
+			academy_visits.append(id)
 	unit_states = (data.get("unit_states", {}) as Dictionary).duplicate(true)
 	support_save = (data.get("support_save", {}) as Dictionary).duplicate(true)
 	casual = bool(data.get("casual", false))
