@@ -1,0 +1,81 @@
+{
+  "tested_sha": "7d88bf1a65e6f17c05f6cbd774b99d5e31693e13",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Vulkan 1.4.318 - Forward+ - llvmpipe (LLVM 20.1.2, 256 bits), project renderer unchanged",
+  "desktop_and_capture_size": [
+    1280,
+    720
+  ],
+  "fixture": {
+    "source": "docs/qa/issue-39-three-house-contests/saves/emberwing-opening.json",
+    "sha256": "c156c62b43e6d6f48002d50f787751e708ec03cdef3378ceadddcd806e99a4d3",
+    "placement": "byte-for-byte copy in physical slot 0 of a fresh disposable XDG profile",
+    "changes": []
+  },
+  "entry": "Title → Load Game → Slot 0 (live battle resume), all input real X11 keyboard/pointer",
+  "checks": [
+    {
+      "name": "pre-attack stationary target",
+      "cursor": [9, 12],
+      "header": "<Marlow 9/20>",
+      "hover": "Marlow, HP 9/20",
+      "forecast": "Kael 24/24 vs Marlow 9/20 (Dmg 11, Hit 90%)",
+      "screenshot": "images/01-pre-attack-marlow-9-20.png"
+    },
+    {
+      "name": "post-attack removal at the same cursor",
+      "cursor": [9, 12],
+      "header": "(9, 12) Plains [move 1, def +0, avoid +0] — no occupant",
+      "hover": "hidden",
+      "observed": "Marlow yielded and was removed; neither readout retained the pre-attack <Marlow 9/20>",
+      "screenshot": "images/02-post-attack-removed.png"
+    },
+    {
+      "name": "pre-heal stationary target",
+      "cursor": [3, 10],
+      "header": "<Perrin 10/24>",
+      "hover": "Perrin, HP 10/24",
+      "screenshot": "images/03-pre-heal-perrin-10-24.png"
+    },
+    {
+      "name": "post-heal at the same cursor",
+      "cursor": [3, 10],
+      "header": "<Perrin 24/24>",
+      "hover": "Perrin, HP 24/24",
+      "observed": "Actual unit HP and both visible readouts showed 24/24 without moving the cursor",
+      "screenshot": "images/04-post-heal-perrin-24-24.png"
+    },
+    {
+      "name": "keyboard continuation",
+      "input": "PageDown",
+      "cursor": [2, 11],
+      "header": "<Liora 18/18>",
+      "screenshot": "images/05-keyboard-continuation.png"
+    },
+    {
+      "name": "pointer continuation",
+      "input": "real pointer move to screen (260, 400)",
+      "cursor": [3, 10],
+      "header": "<Perrin 24/24>",
+      "screenshot": "images/06-pointer-continuation.png"
+    }
+  ],
+  "action_path": [
+    "Cursor moved from (1,12) to Kael (3,12); Enter selected him.",
+    "Five real Right presses moved the destination cursor to (8,12); Enter confirmed the move and opened the action menu.",
+    "Attack → Ashwind Saber → target selection parked the cursor on Marlow at (9,12).",
+    "Enter confirmed the ordinary combat; Marlow yielded. The cursor stayed at (9,12).",
+    "Three PageDown presses reached Wren at (3,13); Enter selected her.",
+    "Two Up presses moved to (3,11); Enter confirmed the move and opened the action menu.",
+    "Heal parked the cursor on Perrin at (3,10); Enter confirmed the ordinary heal.",
+    "PageDown and a pointer move then exercised normal continuation."
+  ],
+  "limits": [
+    "One bounded disposable native checkpoint and one attack/heal scenario; no full-school replay.",
+    "No direct action, result, turn or combat handler was invoked; all gameplay used real X11 input.",
+    "No post-action save was written or inspected during this graphical run; the automated production tests assert HP/action/resource/state boundaries.",
+    "The desktop was started only after #68's named release and the lead's handoff; no other game/input/capture job owned it.",
+    "This is functional acceptance, not Neal's visual or taste approval.",
+    "Accepted #65 was still an open PR and was not integrated or copied."
+  ]
+}
