@@ -4,13 +4,55 @@ extends GutTest
 ## functions carried over from v1.
 
 var _castle: CastleScene
+var _save_override_before: SaveSystem
+var _castle_save_system: SaveSystem
 
 
 func before_each() -> void:
+	_save_override_before = Campaign.save_system_override
+	_castle_save_system = null
 	CastleScene.next_room = ""
 	CastleScene.next_spawn = Vector2i(-1, -1)
 	_castle = (load("res://scenes/castle/castle.tscn") as PackedScene).instantiate()
 	add_child_autofree(_castle)
+
+
+func after_each() -> void:
+	Campaign.save_system_override = _save_override_before
+	if _castle_save_system != null:
+		var dir := DirAccess.open(_castle_save_system.save_dir)
+		if dir != null:
+			for file_name in dir.get_files():
+				dir.remove(file_name)
+			for child_name in dir.get_directories():
+				DirAccess.remove_absolute(ProjectSettings.globalize_path(
+					_castle_save_system.save_dir.path_join(child_name)))
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(_castle_save_system.save_dir))
+
+
+func _choose_escape_save() -> void:
+	var escape := InputEventAction.new()
+	escape.action = "ui_cancel"
+	escape.pressed = true
+	_castle._unhandled_input(escape)
+	assert_eq(_castle._menu_context, "system", "Escape opens the system menu")
+	var confirm := InputEventAction.new()
+	confirm.action = "cursor_confirm"
+	confirm.pressed = true
+	_castle._menu._unhandled_input(confirm)
+
+
+func _activate_war_room_save() -> void:
+	_castle.enter_room("war_room")
+	for point in _castle.room.points:
+		if point.id == "fn_save":
+			_castle._avatar.position = _castle._grid.cell_center(point.cell)
+			_castle._update_prompt()
+			var interact := InputEventAction.new()
+			interact.action = "ui_accept"
+			interact.pressed = true
+			_castle._unhandled_input(interact)
+			return
 
 
 func test_starts_on_the_campus():
@@ -242,6 +284,61 @@ func test_mission_menu_and_system_menu():
 	_castle._open_system_menu()
 	_castle._do_system(2)
 	assert_eq(_castle._menu_context, "")
+
+
+func test_castle_save_entry_points_report_real_io_and_allow_retry():
+	_castle_save_system = SaveSystem.new("user://test_castle_saves_%d" % Time.get_ticks_usec())
+	Campaign.save_system_override = _castle_save_system
+	# The War Room save point goes through the castle's nearest-interaction input.
+	_activate_war_room_save()
+	assert_eq(_castle._toast_label.text, "Game saved.", "successful interaction confirms the write")
+	assert_eq(_castle._menu_context, "", "the save point does not open a menu")
+
+	# Retain ordinary JSON IO and byte-for-byte existing-save semantics. A directory
+	# at the sibling .tmp path deterministically prevents opening the temp file.
+	assert_true(_castle_save_system.save_slot(0, {"campaign": {"marker": "prior"}}))
+	assert_true(_castle_save_system.save_slot(1, {"campaign": {"marker": "neighbor"}}))
+	var prior_bytes := FileAccess.get_file_as_bytes(_castle_save_system.slot_path(0))
+	var neighbor_bytes := FileAccess.get_file_as_bytes(_castle_save_system.slot_path(1))
+	var live_campaign := Campaign.to_dict().duplicate(true)
+	var stored_live_campaign: Dictionary = JSON.parse_string(JSON.stringify(live_campaign))
+	var blocked_tmp := ProjectSettings.globalize_path(_castle_save_system.slot_path(0) + ".tmp")
+	assert_eq(DirAccess.make_dir_recursive_absolute(blocked_tmp), OK)
+	_activate_war_room_save()
+	assert_eq(_castle._toast_label.text, "Save failed. Please try again.",
+		"the War Room reports a failed ordinary slot write")
+	assert_eq(FileAccess.get_file_as_bytes(_castle_save_system.slot_path(0)), prior_bytes,
+		"failed save preserves slot 0 byte-for-byte")
+	assert_eq(FileAccess.get_file_as_bytes(_castle_save_system.slot_path(1)), neighbor_bytes,
+		"failed save leaves neighboring slots unchanged")
+	assert_eq(Campaign.to_dict(), live_campaign, "failed save leaves live campaign state unchanged")
+	DirAccess.remove_absolute(blocked_tmp)
+	_activate_war_room_save()
+	assert_eq(_castle._toast_label.text, "Game saved.", "the War Room save succeeds after retry")
+	assert_eq(_castle_save_system.load_slot(0).get("campaign"), stored_live_campaign,
+		"retry stores the current live campaign")
+	assert_eq(FileAccess.get_file_as_bytes(_castle_save_system.slot_path(1)), neighbor_bytes)
+
+	# Escape → system menu → its actual confirm input reaches the second handler.
+	_choose_escape_save()
+	assert_eq(_castle._menu_context, "", "the save choice dismisses the system menu")
+	assert_eq(_castle._toast_label.text, "Game saved.", "the Escape save reports success")
+	prior_bytes = FileAccess.get_file_as_bytes(_castle_save_system.slot_path(0))
+	blocked_tmp = ProjectSettings.globalize_path(_castle_save_system.slot_path(0) + ".tmp")
+	assert_eq(DirAccess.make_dir_recursive_absolute(blocked_tmp), OK)
+	_choose_escape_save()
+	assert_eq(_castle._toast_label.text, "Save failed. Please try again.",
+		"the Escape save reports the failed ordinary slot write")
+	assert_eq(_castle._menu_context, "", "failure still dismisses the system menu")
+	assert_eq(FileAccess.get_file_as_bytes(_castle_save_system.slot_path(0)), prior_bytes,
+		"failed Escape save preserves slot 0 byte-for-byte")
+	assert_eq(FileAccess.get_file_as_bytes(_castle_save_system.slot_path(1)), neighbor_bytes)
+	assert_eq(Campaign.to_dict(), live_campaign)
+	DirAccess.remove_absolute(blocked_tmp)
+	_choose_escape_save()
+	assert_eq(_castle._toast_label.text, "Game saved.", "Escape save can be retried successfully")
+	assert_eq(_castle_save_system.load_slot(0).get("campaign"), stored_live_campaign)
+	assert_eq(FileAccess.get_file_as_bytes(_castle_save_system.slot_path(1)), neighbor_bytes)
 
 
 func test_quartermaster_and_house_oath():
