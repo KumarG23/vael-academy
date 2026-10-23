@@ -278,6 +278,7 @@ func enter_room(room_id: String, spawn := Vector2i(-1, -1)) -> void:
 		return
 	_close_room_map()
 	room = _rooms[room_id]
+	Campaign.record_academy_entry(room)
 	AudioManager.play_music(_music_for_room(room_id))  # AW-47: per-area theme
 	_grid = room.chapter.make_grid()
 	_ceiling = float(_grid.cell_size) * 1.6 if room.chapter.base_terrain == Terrain.Type.FLOOR else 0.0
@@ -287,6 +288,9 @@ func enter_room(room_id: String, spawn := Vector2i(-1, -1)) -> void:
 		cell = Vector2i(room.chapter.width / 2, room.chapter.height / 2)
 	_avatar.position = _grid.cell_center(cell)
 	_door_armed = false
+	# Entry invalidates the previous room's interaction before any fresh input.
+	_nearest_point = null
+	_prompt.hide()
 	_spawn_npcs()
 	_setup_camera()
 	queue_redraw()
@@ -520,7 +524,21 @@ func _input(event: InputEvent) -> void:
 			_close_room_map()
 		elif event is InputEventKey and event.pressed and event.keycode in [KEY_UP, KEY_DOWN]:
 			get_viewport().set_input_as_handled()
-			_room_map._exits.scroll_vertical += 40 if event.keycode == KEY_DOWN else -40
+			_room_map.navigate(1 if event.keycode == KEY_DOWN else -1)
+		elif event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_TAB, KEY_ENTER, KEY_KP_ENTER, KEY_SPACE]:
+			get_viewport().set_input_as_handled()
+			if event.keycode == KEY_TAB:
+				_room_map.toggle_destinations()
+			else:
+				_room_map.confirm_destination()
+		elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+			get_viewport().set_input_as_handled()
+			if event.pressed:
+				_close_room_map()
+		elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+			get_viewport().set_input_as_handled()
+			if event.pressed:
+				_room_map.click_destination(event.position)
 		elif event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			# The read-only exit list may scroll; it never issues a world command.
 			return
@@ -539,7 +557,7 @@ func _input(event: InputEvent) -> void:
 func _map_available() -> bool:
 	# Public academy spaces only. Existing campus exit labels still appear,
 	# including the already-visible town/grove doors, without loading interiors.
-	return room != null and room.id != "grove" and not room.id.begins_with("vael_")
+	return AcademyTravel.is_public(room)
 
 
 func _open_room_map() -> void:
@@ -548,7 +566,31 @@ func _open_room_map() -> void:
 	_room_map.avatar = _avatar
 	_room_map.grid = _grid
 	_room_map.terrain_db = _terrain_db
+	_room_map.destinations = _travel_destinations()
+	_room_map.travel_requested.connect(_travel_to)
 	_ui.add_child(_room_map)
+
+
+func _travel_destinations() -> Array[CastleRoomDef]:
+	var destinations: Array[CastleRoomDef] = []
+	for id: String in Campaign.academy_visits:
+		if _rooms.has(id) and AcademyTravel.is_public(_rooms[id]) \
+				and AcademyTravel.arrival(_rooms, room.id, id, _terrain_db) != Vector2i(-1, -1):
+			destinations.append(_rooms[id])
+	destinations.sort_custom(func(a: CastleRoomDef, b: CastleRoomDef) -> bool: return a.display_name.naturalnocasecmp_to(b.display_name) < 0)
+	return destinations
+
+
+func _travel_to(id: String) -> void:
+	if _room_map == null or not _map_available() or not Campaign.academy_visits.has(id):
+		return
+	if id == room.id:
+		return
+	# Revalidate at confirmation before closing the map or touching live location.
+	var spawn := AcademyTravel.arrival(_rooms, room.id, id, _terrain_db)
+	if spawn == Vector2i(-1, -1):
+		return
+	enter_room(id, spawn)
 
 
 func _close_room_map() -> void:

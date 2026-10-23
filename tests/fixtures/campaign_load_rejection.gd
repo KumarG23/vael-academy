@@ -15,7 +15,7 @@ func _run() -> void:
 	var roster_script: Script = load("res://src/core/roster.gd")
 	var route: String = OS.get_cmdline_user_args()[0]
 	var saves: SaveSystem = SaveSystem.new("user://test_campaign_ui_rejection_%s" % route)
-	for field: String in ["flags", "report_cards", "report_card_deliveries"]:
+	for field: String in ["flags", "report_cards", "report_card_deliveries", "academy_visits", "academy_visit_member"]:
 		campaign.reset_new_game(true, 17)
 		campaign.set_house("tidemark")
 		campaign.week = 3
@@ -30,7 +30,10 @@ func _run() -> void:
 		saved["unit_states"] = {}
 		saved["week"] = 8
 		saved["house_id"] = "thornrook"
-		saved[field] = [] if field == "flags" else {}
+		if field == "academy_visit_member":
+			saved["academy_visits"] = [7]
+		else:
+			saved[field] = [] if field == "flags" else {}
 		if not saves.save_slot(0, {"campaign": saved}):
 			quit(1)
 			return
