@@ -20,5 +20,17 @@
     "09-calendar-restored-1280x720.png": "3d9dd40c95bf8a65f6b53656545101ebe2ff451fdccba8702de2ba7e361bd162",
     "10-campus-after-close-and-walk.png": "5e325bba96a973516f2752c646778138c9bf4c985ecff98b83932662920995f1",
     "11-calendar-reopened-current-week.png": "d8bffd1eda842f1164053e9ddf7fdff21f637023bdb01f63af7946f9be0e9e77"
+  },
+  "lead_review_correction": {
+    "corrected_source": "11a1aaadef6c72e4aedf1e9ad53ae6229f2a4c87",
+    "accepted_main_integration": "6d11efdd32a9a8ca9fd2c9b3c01e35deb64fc4ae",
+    "integration_merge": "db55dcd1",
+    "renderer": "Godot 4.7.2 Vulkan 1.4.318 Forward+ on llvmpipe LLVM 20.1.2",
+    "input_route": "Native X11 keyboard: Title \u2192 Campus Dev Jump \u2192 Journal (J) \u2192 Calendar (Right); resize to 640\u00d7360.",
+    "profile": "Fresh disposable XDG user-data profile; no save/checkpoint/Campaign fixture writes. The earlier Week-2 checkpoint was not mounted during this narrow correction pass.",
+    "screenshots": {
+      "12-calendar-header-default-corrected.png": "9d0e685b171f5c05b74d0c07e4f0af56bca4a9fea8c714184d7d2aca73ecf81e",
+      "13-calendar-header-640x360-corrected.png": "8df93865a18ef9993789fc2a4758c318beffcbd5ed5c6723c8c634c90c684d2c"
+    }
   }
 }
