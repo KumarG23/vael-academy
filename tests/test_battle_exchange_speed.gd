@@ -425,6 +425,11 @@ func test_hint_fits_compact_and_default_with_clear_active_state_and_teardown():
 		var stage := view._illustrated_combat._stage
 		var head := Rect2(stage.position + Vector2(800, 160) * stage.scale, Vector2(120, 140) * stage.scale)
 		assert_false(layer.hint_rect().intersects(head), "active hint clears Serra's face")
+		if size.x == 640:
+			var names := Rect2(size.x - 266, 22, 240, 40)
+			var forecast := Rect2(size.x - 380, size.y - 198, 364, 182)
+			assert_false(layer.hint_rect().intersects(names), "compact hint clears popup name plate")
+			assert_false(layer.hint_rect().intersects(forecast), "compact hint clears map forecast")
 		_key(view, KEY_SPACE, false)
 		assert_false(layer.hint_rect().intersects(head), "hold instruction clears Serra's face")
 		_key(view, KEY_SPACE, true)

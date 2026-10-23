@@ -116,8 +116,8 @@ func _place_hint() -> void:
 		for line: String in _hint_lines(active):
 			width = maxf(width, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size).x)
 	var height := font.get_height(_font_size) * _hint_lines(false).size()
-	_hint.size = Vector2(width + _padding * 2.0, maxf(MIN_HEIGHT, height + 12.0)).ceil()
-	_hint.position = Vector2(viewport.x - _hint.size.x - MARGIN, TOP).floor()
+	_hint.size = Vector2(width + _padding * 2.0, maxf(96.0 if _compact else MIN_HEIGHT, height + 12.0)).ceil()
+	_hint.position = Vector2(viewport.x - _hint.size.x - MARGIN, 64.0 if _compact else TOP).floor()
 	_hint.queue_redraw()
 
 
