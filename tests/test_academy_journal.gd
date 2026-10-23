@@ -143,6 +143,64 @@ func test_journal_saves_round_trip_through_campaign_load():
 	assert_eq(Campaign.week, 2)
 
 
+func test_fish_log_has_clear_empty_state_and_stable_exact_entries():
+	Campaign.fish_log = {}
+	assert_true(_journal._fish_log_entries().is_empty(), "empty saves produce the empty state")
+	Campaign.fish_log = {
+		"Vael Kingfish": 2,
+		"Warded Coin": 1,
+		"Silver Dace": 4,
+		"Old Unknown Catch": 7,
+		"Lakeperch": 3,
+	}
+	var before := Campaign.fish_log.duplicate(true)
+	var entries: Array = _journal._fish_log_entries()
+	var names: Array = []
+	var counts := {}
+	for entry: Dictionary in entries:
+		names.append(entry["name"])
+		counts[entry["name"]] = entry["count"]
+	assert_eq(names, ["Lakeperch", "Old Unknown Catch", "Silver Dace", "Vael Kingfish", "Warded Coin"],
+		"known and unknown saved names have stable readable order")
+	assert_eq(counts, {
+		"Lakeperch": 3, "Old Unknown Catch": 7, "Silver Dace": 4,
+		"Vael Kingfish": 2, "Warded Coin": 1,
+	}, "all exact quantities are shown without renaming unknown data")
+	assert_eq(Campaign.fish_log, before, "building the display never changes saved data")
+
+
+func test_normal_fishing_then_journal_save_and_campaign_reload_keeps_catches():
+	Campaign.fish_log = {}
+	var fishing := FishingGame.new(41)
+	add_child_autofree(fishing)
+	fishing.tick(5.0)
+	fishing.strike()
+	assert_eq(fishing.phase, FishingGame.Phase.DONE, "the normal fishing state machine resolves")
+	assert_eq(Campaign.fish_log.size(), 1, "a normal catch is earned into the campaign")
+	var earned_log := Campaign.fish_log.duplicate(true)
+	_journal._do_save(TEST_SLOT)
+	Campaign.reset_new_game(false)
+	assert_true(Campaign.load_from_slot(TEST_SLOT, _journal._save), "ordinary Journal System save reloads")
+	_journal.hide()  # keep input owned by the fresh Journal only
+	var reopened: AcademyJournal = load("res://src/ui/academy_journal.gd").new()
+	add_child_autofree(reopened)
+	await wait_frames(1)
+	assert_eq(reopened._fish_log_entries().size(), 1, "fresh Journal reads the loaded catch")
+	assert_eq(JSON.parse_string(JSON.stringify(Campaign.fish_log)),
+		JSON.parse_string(JSON.stringify(earned_log)), "the earned count survives the normal save round-trip")
+
+
+func test_fish_log_read_and_navigation_preserve_campaign_and_rng():
+	Campaign.fish_log = {"Lakeperch": 2, "Warded Coin": 1, "Unknown Saved Catch": 5}
+	var before := Campaign.to_dict()
+	_journal._tab = 5
+	_journal._move_row(1)
+	_journal._fish_log_entries()
+	_journal._move_row(-1)
+	assert_eq(Campaign.to_dict(), before,
+		"reading and navigating catches do not mutate campaign values or its saved RNG state")
+
+
 # --- AW-52: the Inventory hub ---------------------------------------------------
 
 func test_inventory_hub_trades_an_item_and_persists():
