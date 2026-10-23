@@ -64,6 +64,7 @@ var _threat_overlay: ThreatOverlay
 var _units_root: Node2D
 var _cursor: BattleCursor
 var _ui_layer: CanvasLayer
+var _input_hint: Label
 var _debug_label: Label
 var _forecast_panel: CombatForecastPanel
 var _rng: CombatRNG
@@ -433,6 +434,49 @@ func _draw_hover_info() -> void:
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.95, 0.9, 0.55))
 	_hover_info.draw_rect(Rect2(120, 92, 118, 12), Color(0.15, 0.13, 0.05), true)
 	_hover_info.draw_rect(Rect2(120, 92, 118 * (float(u.xp % 100) / 100.0), 12), Color(0.95, 0.82, 0.35), true)
+
+
+## Field-only shortcuts use the same gate for input and discoverability.
+func _can_cycle_unit() -> bool:
+	return (_phase == Phase.IDLE and not _prep_active and not _busy
+		and not _battle_over and not _dialogue_playing and not _combat_cam_active
+		and _turn.is_player_phase()
+		and _cursor.active and _selected == null
+		and not _menu.visible and not _stats_panel.is_shown()
+		and not _forecast_panel.visible and next_resume.is_empty())
+
+
+## Row-major board order (top to bottom, left to right). Off-unit cursors use
+## the strict successor/predecessor of their cell, wrapping at either edge.
+func _cycle_unit(direction: int) -> void:
+	var cells: Array[int] = []
+	for unit in _units:
+		if (is_instance_valid(unit) and not unit.is_queued_for_deletion()
+			and unit.is_inside_tree() and unit.team == 0 and unit.is_alive()
+			and not unit.has_acted):
+			cells.append(unit.cell.y * _grid.width + unit.cell.x)
+	if cells.is_empty():
+		return
+	cells.sort()
+	var origin := _cursor.cell.y * _grid.width + _cursor.cell.x
+	var target: int = cells[0] if direction > 0 else cells[-1]
+	if direction < 0:
+		cells.reverse()
+	for cell in cells:
+		if (cell - origin) * direction > 0:
+			target = cell
+			break
+	_cursor.move_to(Vector2i(target % _grid.width, floori(float(target) / _grid.width)))
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.keycode in [KEY_PAGEDOWN, KEY_PAGEUP]:
+		# Consume these independently of confirm/end-turn, including echoes and
+		# releases, before overlays interpret an arbitrary key as dismissal.
+		get_viewport().set_input_as_handled()
+		if event.pressed and not event.echo and _can_cycle_unit():
+			_cycle_unit(1 if event.keycode == KEY_PAGEDOWN else -1)
+		return
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -1576,6 +1620,7 @@ func _end_combat_cam() -> void:
 
 
 func _process(delta: float) -> void:
+	_input_hint.visible = _can_cycle_unit()
 	if not chapter.visits.is_empty():
 		queue_redraw()  # visit markers pulse
 	if _camera == null or _grid == null or _combat_cam_active:
@@ -1601,6 +1646,19 @@ func _setup_ui() -> void:
 	_debug_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	_debug_label.add_theme_constant_override("outline_size", 6)
 	_ui_layer.add_child(_debug_label)
+	_input_hint = Label.new()
+	_input_hint.text = "Arrows/WASD: cursor   Enter/Space: select\nClick: select   Esc/Right-click: menu/cancel\nT/Tab: end turn   H: danger zones\nPageDown: Next Unit   PageUp: Previous Unit"
+	_input_hint.add_theme_font_size_override("font_size", 14)
+	_input_hint.add_theme_color_override("font_outline_color", Color.BLACK)
+	_input_hint.add_theme_constant_override("outline_size", 6)
+	_input_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_input_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_input_hint.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	_input_hint.offset_left = -370
+	_input_hint.offset_top = -90
+	_input_hint.offset_right = -12
+	_input_hint.offset_bottom = -12
+	_ui_layer.add_child(_input_hint)
 	# Persistent objective readout so a first-time player knows what to do (WO-4.1).
 	_objective_label = Label.new()
 	_objective_label.text = _objective_text()
