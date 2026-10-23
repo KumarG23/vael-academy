@@ -10,7 +10,9 @@ extends CanvasLayer
 const HINT := "Esc  Skip"
 const FONT_SIZE := 18
 const MARGIN := 16.0
-const PAD := Vector2(22, 12)
+const PAD := Vector2(28, 0)
+## The noble frame needs room for both 22 px corners plus a middle row.
+const MIN_HEIGHT := 2.0 * UITheme.DST_MARGIN + 18.0
 
 var _pace: ExchangeSkip = null
 var _hint: Control
@@ -67,7 +69,7 @@ func _place_hint() -> void:
 		return
 	var font := UITheme.font()
 	var text_size := font.get_string_size(HINT, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE)
-	_hint.size = (text_size + PAD * 2.0).ceil()
+	_hint.size = Vector2(text_size.x + PAD.x * 2.0, maxf(MIN_HEIGHT, text_size.y)).ceil()
 	var viewport := get_viewport().get_visible_rect().size
 	_hint.position = (viewport - _hint.size - Vector2(MARGIN, MARGIN)).floor()
 	_hint.queue_redraw()
@@ -77,6 +79,6 @@ func _draw_hint() -> void:
 	var rect := Rect2(Vector2.ZERO, _hint.size)
 	UITheme.draw_panel(_hint, rect)
 	var font := UITheme.font()
-	var baseline := PAD.y + font.get_ascent(FONT_SIZE)
+	var baseline := (_hint.size.y - font.get_height(FONT_SIZE)) * 0.5 + font.get_ascent(FONT_SIZE)
 	_hint.draw_string_outline(font, Vector2(PAD.x, baseline), HINT, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, 4, Color.BLACK)
 	_hint.draw_string(font, Vector2(PAD.x, baseline), HINT, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, UITheme.GOLD)
