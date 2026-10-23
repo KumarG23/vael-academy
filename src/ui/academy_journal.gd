@@ -32,6 +32,7 @@ var _snaps: Array = []       # per-unit data snapshots
 var _slot_info: Array = []   # save-slot summaries
 var _toast := ""
 var _toast_t := 0.0
+var _toast_is_load_error := false  # Issue #83: clear stale reject feedback on navigation
 var _save := SaveSystem.new()
 var _keys_editor: KeyboardControlsEditor = null  # issue #89 modal sub-page
 
@@ -164,6 +165,11 @@ func _handled() -> void:
 
 func _switch_tab(dir: int) -> void:
 	_tab = (_tab + dir + TAB_NAMES.size()) % TAB_NAMES.size()
+	# Issue #83: don't leave a stale load rejection on an unrelated tab.
+	if _toast_is_load_error:
+		_toast = ""
+		_toast_t = 0.0
+		_toast_is_load_error = false
 	AudioManager.play_sfx("cursor")
 	queue_redraw()
 
@@ -360,11 +366,22 @@ func _do_load(slot: int) -> void:
 		AudioManager.play_sfx("confirm")
 		# reload the castle so the loaded state takes hold (deferred — AW-49)
 		get_tree().change_scene_to_file.call_deferred("res://scenes/castle/castle.tscn")
+		return
+	# Issue #83: an occupied file the existing loader rejects stays open for
+	# another row, Escape/J, or a retry — it never pretends to have loaded.
+	_report_load_failure(slot)
 
 
-func _show_toast(msg: String) -> void:
+func _report_load_failure(slot: int) -> void:
+	AudioManager.play_sfx("cancel")
+	_show_toast("Slot %d couldn't be loaded — choose another slot." % (slot + 1), true)
+	queue_redraw()
+
+
+func _show_toast(msg: String, load_error := false) -> void:
 	_toast = msg
 	_toast_t = 2.2
+	_toast_is_load_error = load_error
 
 
 func _close() -> void:
@@ -432,12 +449,22 @@ func _draw() -> void:
 	draw_string(font, Vector2(book.position.x + 34, book.position.y + book.size.y - 26), hint,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
 	if _toast_t > 0.0:
-		var ts := font.get_string_size(_toast, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x
-		var tr := Rect2(book.position.x + (book.size.x - ts) * 0.5 - 16, book.position.y + book.size.y - 70, ts + 32, 30)
+		var tr := _toast_rect()
 		draw_rect(tr, Color(0.1, 0.11, 0.16, 0.95), true)
 		draw_rect(tr, Color(0.86, 0.78, 0.45, 0.8), false, 1.5)
 		draw_string(font, Vector2(tr.position.x + 16, tr.position.y + 20), _toast,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.95, 0.9, 0.7))
+
+
+## The toast box, measured once so the layout test can verify both default and
+## compact books without rendering a capture.
+func _toast_rect() -> Rect2:
+	var vp := get_viewport_rect().size
+	var m := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
+	var book := Rect2(m, vp - m * 2.0)
+	var ts := UITheme.font().get_string_size(_toast, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x
+	return Rect2(book.position.x + (book.size.x - ts) * 0.5 - 16,
+		book.position.y + book.size.y - 70, ts + 32, 30)
 
 
 func _draw_roster(body: Rect2, font: Font) -> void:

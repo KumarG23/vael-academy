@@ -375,7 +375,7 @@ func _point_available(p: CastlePoint) -> bool:
 
 
 func busy() -> bool:
-	return _room_map != null or _leaving or _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
+	return _rest_checkpoint_pending or _room_map != null or _leaving or _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
 		or _quiz != null or (_editor != null and _editor.active)
 
 
@@ -960,6 +960,27 @@ const CEREMONY_LINES := {
 }
 
 
+# A rest owns one checkpoint request until its presentation queue settles.
+# Deferred once at completion so the finishing input cannot reach live play.
+var _rest_checkpoint_pending := false
+
+
+func _exit_tree() -> void:
+	_rest_checkpoint_pending = false
+
+
+func _finish_rest_checkpoint() -> void:
+	if not _rest_checkpoint_pending:
+		return
+	_rest_checkpoint_pending = false
+	if not is_inside_tree() or is_queued_for_deletion() or busy() or not _dialogue_queue.is_empty():
+		return
+	# Failed/unplayable ceremonies must not persist a half-delivered rest.
+	if not Campaign.pending_report_cards().is_empty() or not _scheduled_set_pieces.is_empty():
+		return
+	_toast("Autosaved." if Campaign.save_autosave() else "Autosave failed. Progress kept in play; next rest retries.")
+
+
 func _rest_week() -> void:
 	# AW-76 (Codex finding #2): a battle week doesn't pass by sleeping through
 	# it — winning the mission is what advances the calendar (Campaign.capture).
@@ -969,9 +990,12 @@ func _rest_week() -> void:
 		return
 	if busy():
 		return
+	_rest_checkpoint_pending = true
 	var sem_before := Campaign.semester
 	Campaign.advance_week()
 	_refresh_date()
+	if _dialogue == null and _dialogue_queue.is_empty():
+		_finish_rest_checkpoint.call_deferred()
 	if Campaign.semester != sem_before:
 		return  # the ceremony supplies the feedback for a term-closing rest
 	var e := Campaign.current_event()
@@ -1396,6 +1420,7 @@ var _dialogue_queue: Array[Dictionary] = []
 ## script — not a queued neighbour — finishes.
 func _play_script(script: DialogueScript, on_complete := Callable()) -> bool:
 	if not script.is_playable():
+		_rest_checkpoint_pending = false
 		var why := script.error if script.error != "" else "empty script"
 		push_warning("castle dialogue skipped: %s" % why)
 		return false
@@ -1418,7 +1443,9 @@ func _play_script(script: DialogueScript, on_complete := Callable()) -> bool:
 			on_complete.call()
 		if not _dialogue_queue.is_empty():
 			var next: Dictionary = _dialogue_queue.pop_front()
-			_play_script(next["script"], next["on_complete"]))
+			_play_script(next["script"], next["on_complete"])
+		elif _rest_checkpoint_pending:
+			_finish_rest_checkpoint.call_deferred())
 	scene.play(script)
 	return true
 

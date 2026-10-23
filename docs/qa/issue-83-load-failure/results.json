@@ -1,0 +1,153 @@
+{
+  "issue": 83,
+  "title": "Report rejected occupied-slot loads in Title and Journal with usable retry",
+  "captured_on_commit": "8d7770435e3e377122ad87386f66ce0e6d61b400",
+  "date": "2026-10-23",
+  "environment": {
+    "engine": "Godot 4.7.2.stable.official.ed1daf0bf",
+    "renderer": "Vulkan 1.4.318 - Forward+ - llvmpipe (LLVM 20.1.2, 256 bits)",
+    "display": "X11 :99, 1280x720, xfwm4",
+    "default_client": "1280x720 (--fullscreen, borderless)",
+    "compact_client": "640x360 windowed at absolute +5,+56",
+    "profile": "disposable XDG_DATA_HOME=/tmp/opencode/issue83-gui (user://saves)",
+    "input": "native X11 key events (xdotool) into the real game window"
+  },
+  "fixture": {
+    "seed": "docs/qa/issue-83-load-failure/tools/seed_fixture.gd writes one real campaign through Campaign.save_to_slot(2); slots 0/1 are then written by the shell.",
+    "slot_0": {
+      "bytes": 7,
+      "sha256_before": "be302461cda285db3ed2d45fb767b23e08ca8808b35a638009937df22b332d73",
+      "content": "{broken (malformed JSON)"
+    },
+    "slot_1": {
+      "bytes": 78,
+      "sha256": "07dbe1b3b4358a230f2f3934f7ba8a469ad9affd9bdc8c186aaaa4402eb569b8",
+      "content": "valid JSON envelope, invalid campaign types (flags is an array)"
+    },
+    "slot_2": {
+      "bytes": 631,
+      "sha256": "68499c47912adf8d8dbfbeb8cc8ea6d41a38c5936bfa10ce7a8f9fe6c3dbbe3c",
+      "content": "real valid campaign written by production code"
+    }
+  },
+  "steps": [
+    {
+      "step": "Title Load lists all three occupied slots, including both invalid files",
+      "input": "Down, Enter",
+      "observed": "Load Game shows 'Slot 0 — (Classic)', 'Slot 1 — (Classic)', 'Slot 2 — mock_battle (Classic)', Back; Slot 0 selected.",
+      "capture": "images/01-title-load-menu-invalid-slots.png",
+      "sha256": "075f6a4ffd427a4b972ca5aee702d7440995ab0ed8a0af45bbae2597f7c412a8"
+    },
+    {
+      "step": "Title rejects the malformed occupied slot 0",
+      "input": "Enter",
+      "observed": "Top-wide band: 'Slot 0 couldn't be loaded — choose another slot.' Load menu stays open and selected; no scene change.",
+      "capture": "images/02-title-reject-malformed-slot0.png",
+      "sha256": "a7bccfbb48fccc6d32510a56b1a69300dd028de36a6bce43b1d391c1a3ac1f8b"
+    },
+    {
+      "step": "Retry on the same rejected slot",
+      "input": "Enter",
+      "observed": "Identical frame (same SHA-256 as the first rejection): the band persists and the menu stays usable; slot_0.json bytes unchanged.",
+      "capture": "images/12-title-retry-same-slot.png",
+      "sha256": "a7bccfbb48fccc6d32510a56b1a69300dd028de36a6bce43b1d391c1a3ac1f8b"
+    },
+    {
+      "step": "Title rejects a valid-JSON slot with invalid campaign types",
+      "input": "Down, Enter",
+      "observed": "Band: 'Slot 1 couldn't be loaded — choose another slot.' Menu still open; no scene change.",
+      "capture": "images/03-title-reject-invalid-types-slot1.png",
+      "sha256": "f78e024d62f0923a4d3cb9ecffc7bbbd291b329be85faba6532743b507089b5d"
+    },
+    {
+      "step": "Cancel returns to the main menu with the feedback cleared",
+      "input": "Escape",
+      "observed": "Main menu (New Game / Load Game / Dev Jump / Quit) with no stale band.",
+      "capture": "images/04-title-cancel-clears-feedback.png",
+      "sha256": "d3971c4b18f4fe5b3e779fbca699e12021c4b30998bc5a42072acbde8fd16fa2"
+    },
+    {
+      "step": "Choosing an existing valid slot still continues normally",
+      "input": "Down, Enter, Down, Down, Enter",
+      "observed": "Slot 2 loads and the campaign continues into the campus ('Week 3 — Study week', Kai at the fountain).",
+      "capture": "images/05-title-valid-slot-continues.png",
+      "sha256": "531d8fe8fe8c11f04e8fefa288ed775bc3cf91bc07e9e1c70c3e00467606eb80"
+    },
+    {
+      "step": "Journal System rejects the occupied invalid slot 1",
+      "input": "J, Right x4 (System), Down x3, Enter",
+      "observed": "Existing toast: 'Slot 1 couldn't be loaded — choose another slot.' System tab, book and Load row stay open; no scene change.",
+      "capture": "images/06-journal-reject-invalid-slot1.png",
+      "sha256": "70bdc2b43822b5a7a28dfefb58cd0cf3cec75ee3d10b7e072ffadbf9f39dfa64"
+    },
+    {
+      "step": "Journal rejects the next invalid slot with its own one-based numbering",
+      "input": "Down, Enter",
+      "observed": "Toast: 'Slot 2 couldn't be loaded — choose another slot.' Book still open.",
+      "capture": "images/07-journal-reject-invalid-slot2.png",
+      "sha256": "e28d60b0a44176d8f0e1e533232786db6779858c3c7d68a4139d76fa15af749c"
+    },
+    {
+      "step": "Changing tab clears a stale load rejection",
+      "input": "Right",
+      "observed": "Fish Log tab, no toast.",
+      "capture": "images/08-journal-tab-change-clears.png",
+      "sha256": "b85a2f6f000ccb4c8bea31d2768316e07803211d0a5ad15a541446e1560c4b40"
+    },
+    {
+      "step": "Repaired slot retried from Journal takes the existing success route",
+      "input": "copy valid campaign over slot_0.json, Left, Up, Enter",
+      "observed": "Load — Slot 1 loads the campaign and continues into the campus; no toast.",
+      "capture": "images/09-journal-repaired-slot-continues.png",
+      "sha256": "2b3e5cd7bf803ca9a9e66fdfdcdeb0cbdaeff48f7a41feb073494a02b96c6355"
+    },
+    {
+      "step": "Compact 640x360: Title rejects an invalid occupied slot",
+      "input": "Down, Enter, Down, Enter",
+      "observed": "Band reads 'Slot 1 couldn't be loaded — choose another slot.' fully inside the 640x360 client; menu usable.",
+      "capture": "images/10-compact-title-reject.png",
+      "sha256": "82bdc69b80f1e350854af37479e3d0c299d1344de867ffb753e3a97bd12512cd"
+    },
+    {
+      "step": "Compact 640x360: Journal rejects an invalid occupied slot",
+      "input": "J, Right x4, Down x4, Enter",
+      "observed": "Toast reads 'Slot 2 couldn't be loaded — choose another slot.' Book stays open; the message is fully legible (it sits over the last System rows, which is the pre-existing toast placement at this size).",
+      "capture": "images/11-compact-journal-reject.png",
+      "sha256": "e80c3d2d49f3e06bd8a0c70fec435bbc96a5206ee7631ba181f4d479c992da75"
+    }
+  ],
+  "byte_preservation": {
+    "default_run": {
+      "before": {
+        "slot_0.json": "be302461cda285db3ed2d45fb767b23e08ca8808b35a638009937df22b332d73",
+        "slot_1.json": "07dbe1b3b4358a230f2f3934f7ba8a469ad9affd9bdc8c186aaaa4402eb569b8",
+        "slot_2.json": "68499c47912adf8d8dbfbeb8cc8ea6d41a38c5936bfa10ce7a8f9fe6c3dbbe3c"
+      },
+      "after": {
+        "slot_0.json": "68499c47912adf8d8dbfbeb8cc8ea6d41a38c5936bfa10ce7a8f9fe6c3dbbe3c",
+        "slot_1.json": "07dbe1b3b4358a230f2f3934f7ba8a469ad9affd9bdc8c186aaaa4402eb569b8",
+        "slot_2.json": "68499c47912adf8d8dbfbeb8cc8ea6d41a38c5936bfa10ce7a8f9fe6c3dbbe3c"
+      },
+      "verdict": "slot_0 changed only because the operator deliberately overwrote it with the valid campaign for the retry step; the rejected slot_1 and the loaded slot_2 are byte-identical."
+    },
+    "retry_run": {
+      "before": {
+        "slot_0.json": "be302461cda285db3ed2d45fb767b23e08ca8808b35a638009937df22b332d73",
+        "slot_1.json": "07dbe1b3b4358a230f2f3934f7ba8a469ad9affd9bdc8c186aaaa4402eb569b8",
+        "slot_2.json": "68499c47912adf8d8dbfbeb8cc8ea6d41a38c5936bfa10ce7a8f9fe6c3dbbe3c"
+      },
+      "after": {
+        "slot_0.json": "be302461cda285db3ed2d45fb767b23e08ca8808b35a638009937df22b332d73",
+        "slot_1.json": "07dbe1b3b4358a230f2f3934f7ba8a469ad9affd9bdc8c186aaaa4402eb569b8",
+        "slot_2.json": "68499c47912adf8d8dbfbeb8cc8ea6d41a38c5936bfa10ce7a8f9fe6c3dbbe3c"
+      },
+      "verdict": "all three files byte-identical after a rejected load and an immediate retry."
+    }
+  },
+  "limits": [
+    "No full-school replay and no Neal taste/visual approval is claimed; this is bounded rejection/retry evidence.",
+    "At 640x360 the Journal toast uses the existing toast rectangle and therefore sits over the last System rows; the load rows and the message stay legible. That placement is unchanged by this issue.",
+    "The ornate nine-patch corner artifacts visible on the Journal frame at compact sizes are pre-existing and not introduced here.",
+    "The Title status band was changed from the nine-patch to the Journal toast's plain navy fill + gold rule after the first real-window capture showed the ornament cutting through the message at 34 px height."
+  ]
+}

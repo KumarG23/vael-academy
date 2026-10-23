@@ -8,6 +8,8 @@ const DEFAULT_SAVE_DIR := "user://saves"
 const SLOT_PREFIX := "slot_"
 const SLOT_EXT := ".json"
 
+const AUTOSAVE_FILE := "autosave.json"
+
 var save_dir := DEFAULT_SAVE_DIR
 
 
@@ -25,19 +27,56 @@ func save_slot(slot: int, payload: Dictionary) -> bool:
 	var data := payload.duplicate(true)
 	data["version"] = _int_or(data.get("version"), VERSION)
 	data["slot"] = slot
+	return _write_payload(slot_path(slot), data)
+
+
+func autosave_path() -> String:
+	return save_dir.trim_suffix("/").path_join(AUTOSAVE_FILE)
+
+
+func has_autosave() -> bool:
+	return FileAccess.file_exists(autosave_path())
+
+
+func save_autosave(payload: Dictionary) -> bool:
+	var data := payload.duplicate(true)
+	data["version"] = VERSION
+	return _write_payload(autosave_path(), data)
+
+
+func load_autosave() -> Dictionary:
+	return _read_payload(autosave_path())
+
+
+## Occupied even when invalid, so Title offers recovery/retry honestly.
+func autosave_entry() -> Dictionary:
+	var data := load_autosave()
+	var campaign: Dictionary = data.get("campaign", {}) if data.get("campaign") is Dictionary else {}
+	return {
+		"autosave": true,
+		"chapter_id": _first_string(campaign, ["chapter_id"]),
+		"week": _int_or(campaign.get("week"), 0),
+		"casual_mode": _first_bool(campaign, ["casual"]),
+	}
+
+
+func _write_payload(path: String, data: Dictionary) -> bool:
 	_ensure_save_dir()
 	# Write to a sibling temp file and swap it in, so a failed or interrupted
 	# write never truncates the player's existing save in this slot.
-	var path := slot_path(slot)
 	var tmp_path := path + ".tmp"
 	var file := FileAccess.open(tmp_path, FileAccess.WRITE)
 	if file == null:
 		return false
-	file.store_string(JSON.stringify(data, "\t"))
-	var write_ok := file.get_error() == OK
+	var serialized := JSON.stringify(data, "\t").to_utf8_buffer()
+	var write_ok := file.store_buffer(serialized)
+	file.flush()
+	write_ok = write_ok and file.get_error() == OK
 	file.close()
 	var tmp_abs := ProjectSettings.globalize_path(tmp_path)
-	if not write_ok:
+	# Buffered short writes may surface only on close, and get_error() alone
+	# does not report every write failure. Verify the closed temp before replace.
+	if not write_ok or FileAccess.get_file_as_bytes(tmp_path) != serialized:
 		DirAccess.remove_absolute(tmp_abs)
 		return false
 	if DirAccess.rename_absolute(tmp_abs, ProjectSettings.globalize_path(path)) != OK:
@@ -47,9 +86,11 @@ func save_slot(slot: int, payload: Dictionary) -> bool:
 
 
 func load_slot(slot: int) -> Dictionary:
-	if not has_slot(slot):
-		return {}
-	var file := FileAccess.open(slot_path(slot), FileAccess.READ)
+	return _read_payload(slot_path(slot))
+
+
+func _read_payload(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {}
 	var text := file.get_as_text()

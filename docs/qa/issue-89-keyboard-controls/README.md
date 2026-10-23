@@ -56,3 +56,7 @@ All four process logs contain no script/runtime errors or warnings. Renderer/raw
 - The editor title sits under the top-left corner ornament at both sizes, the same placement as the existing Journal title. The Journal footer's left end also runs under the bottom-left ornament on main. Both are left unchanged to avoid shared Journal edits; this is a presentation note, not a functional defect.
 - Not exercised graphically: travel to another room by custom Confirm (the fixture had no second visited room; covered in the automated tests), a real write failure (automated) and mouse capture rejection (automated).
 - Bounded Dev Jump fixture. No whole-year replay and no Neal taste/visual approval are claimed.
+
+## Accepted-sibling integration — 2026-10-23
+
+Accepted main `6d11efdd` (#83 / PR #88 and #85 / PR #86) was merged normally after the QA above. Source merged without conflicts; HANDOFF and §10 records from all three issues are kept. The siblings add no hard-coded key shortcut, and the Keyboard Controls row stays last in System. #83's Journal load-failure toast draws under the opaque editor page while the editor is open. Integrated checks: clean import exit 0 with no script errors, and the proportional affected group (see HANDOFF #89) passes apart from the 2 known ordering failures filed as #98, with `test_audio_preferences` alone 15/15. The graphical QA above was not repeated for this conflict-free integration; it stays attributed to its recorded sources.
