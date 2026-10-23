@@ -36,6 +36,9 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
             patch.object(team, 'STATE', self.state),
             patch.object(team, 'REPO', self.repo),
             patch.dict(os.environ, {'VAEL_USAGE_DB': str(self.db)}),
+            # These fixtures exercise quota/analytics, not launch-hour gating.
+            # Schedule boundaries and closed-window behavior have their own suite.
+            patch.object(team.work_schedule, 'status', return_value={'open': True}),
         ]
         for p in self.patches:
             p.start()
