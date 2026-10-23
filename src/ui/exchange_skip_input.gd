@@ -10,6 +10,10 @@ extends CanvasLayer
 const HINT := "Esc  Skip"
 const FONT_SIZE := 18
 const MARGIN := 16.0
+## Top-right, below every presenter's top chrome: map objective (y 10–34),
+## popup name plates (22–62), illustrated letterbox (0–48). The bottom-right
+## corner holds the illustrated/popup HP plates.
+const TOP := 72.0
 const PAD := Vector2(28, 0)
 ## The noble frame needs room for both 22 px corners plus a middle row.
 const MIN_HEIGHT := 2.0 * UITheme.DST_MARGIN + 18.0
@@ -71,7 +75,7 @@ func _place_hint() -> void:
 	var text_size := font.get_string_size(HINT, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE)
 	_hint.size = Vector2(text_size.x + PAD.x * 2.0, maxf(MIN_HEIGHT, text_size.y)).ceil()
 	var viewport := get_viewport().get_visible_rect().size
-	_hint.position = (viewport - _hint.size - Vector2(MARGIN, MARGIN)).floor()
+	_hint.position = Vector2(viewport.x - _hint.size.x - MARGIN, TOP).floor()
 	_hint.queue_redraw()
 
 

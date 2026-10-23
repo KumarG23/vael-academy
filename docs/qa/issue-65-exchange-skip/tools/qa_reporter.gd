@@ -62,7 +62,8 @@ func _summary(view: Node) -> Dictionary:
 		var uses := []
 		for item in u.inventory.items:
 			uses.append(item.uses)
-		units.append([u.unit_id(), u.team, u.current_hp, [u.cell.x, u.cell.y], u.has_acted, u.xp, u.level, uses, u.visible])
+		var px: Vector2 = view._cursor.get_global_transform_with_canvas() * view._grid.cell_center(u.cell)
+		units.append([u.unit_id(), u.team, u.current_hp, [u.cell.x, u.cell.y], u.has_acted, u.xp, u.level, uses, u.visible, [roundi(px.x), roundi(px.y)]])
 	var skip = view._combat_exec.get("_skip_input")
 	var cursor = view._cursor
 	return {

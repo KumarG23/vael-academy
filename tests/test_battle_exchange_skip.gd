@@ -664,4 +664,7 @@ func test_hint_is_readable_inside_the_viewport_only_while_playing():
 		assert_true(view.get_viewport().get_visible_rect().encloses(rect), "hint fully on screen")
 		assert_gt(rect.size.x, 60.0)
 		assert_gt(seen[1], view._illustrated_combat.layer, "drawn above the illustrated stage")
+		# Never over the illustrated HP plates (bottom band) or the top letterbox.
+		assert_gt(rect.position.y, 48.0, "below the illustrated letterbox")
+		assert_lt(rect.end.y, 568.0, "clear of the HP/name plate band")
 	assert_false(view._combat_exec._skip_input.hint_visible(), "hint gone once the exchange returns")
