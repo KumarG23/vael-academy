@@ -34,6 +34,7 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
         self.repo.mkdir(parents=True, exist_ok=True)
         self.patches = [
             patch.object(team, 'STATE', self.state),
+            patch.object(team, 'GLOBAL_STATE', self.state),
             patch.object(team, 'REPO', self.repo),
             patch.dict(os.environ, {'VAEL_USAGE_DB': str(self.db)}),
             # These fixtures exercise quota/analytics, not launch-hour gating.

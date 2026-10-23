@@ -17,7 +17,7 @@ class TeamTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.state = Path(self.tmp.name)
-        self.patches = [patch.object(team, 'STATE', self.state), patch.object(team, 'REPO', self.state),
+        self.patches = [patch.object(team, 'STATE', self.state), patch.object(team, 'GLOBAL_STATE', self.state), patch.object(team, 'REPO', self.state),
                         patch.object(team.work_schedule, 'status', return_value={'open': True})]
         for p in self.patches:
             p.start()
@@ -99,9 +99,10 @@ class TeamTests(unittest.TestCase):
     def test_active_counts_both_sockets_without_inheriting_or_creating_a_server(self):
         from types import SimpleNamespace
         results = [SimpleNamespace(stdout='vael-issue-7\npersonal\nvael-issue-8\n'),
-                   SimpleNamespace(stdout='vael-issue-8\nvael-issue-9\n')]
+                   SimpleNamespace(stdout='vael-issue-8\nvael-issue-9\n'),
+                   SimpleNamespace(stdout='studio-command-issue-2\n')]
         with patch.object(team.subprocess, 'run', side_effect=results) as query:
-            self.assertEqual(team.active(), ['vael-issue-7', 'vael-issue-8', 'vael-issue-9'])
+            self.assertEqual(team.active(), ['studio-command-issue-2', 'vael-issue-7', 'vael-issue-8', 'vael-issue-9'])
         self.assertEqual(query.call_args_list[0].args[0][:4], ['tmux', '-L', 'default', '-N'])
         self.assertEqual(query.call_args_list[1].args[0][:4],
                          ['tmux', '-S', str(self.state / 'tmux.sock'), '-N'])
