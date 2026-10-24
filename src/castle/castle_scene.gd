@@ -518,16 +518,24 @@ func _layout_prompt(preferred: Vector2) -> void:
 ## the castle menu; all other input is modal while open (including the editor).
 func _input(event: InputEvent) -> void:
 	if _room_map != null:
+		# Issue #89: an additional Up/Down/Confirm/Cancel key stands in for the
+		# shipped map key with the same meaning (Up/Down repeat like arrows).
+		var key: Key = event.keycode if event is InputEventKey else KEY_NONE
+		match KeyboardPreferences.extra_action(event):
+			"cursor_up": key = KEY_UP
+			"cursor_down": key = KEY_DOWN
+			"cursor_confirm": key = KEY_ENTER
+			"cursor_cancel": key = KEY_ESCAPE
 		if event is InputEventKey and event.pressed and not event.echo \
-				and event.keycode in [KEY_M, KEY_ESCAPE]:
+				and key in [KEY_M, KEY_ESCAPE]:
 			get_viewport().set_input_as_handled()
 			_close_room_map()
-		elif event is InputEventKey and event.pressed and event.keycode in [KEY_UP, KEY_DOWN]:
+		elif event is InputEventKey and event.pressed and key in [KEY_UP, KEY_DOWN]:
 			get_viewport().set_input_as_handled()
-			_room_map.navigate(1 if event.keycode == KEY_DOWN else -1)
-		elif event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_TAB, KEY_ENTER, KEY_KP_ENTER, KEY_SPACE]:
+			_room_map.navigate(1 if key == KEY_DOWN else -1)
+		elif event is InputEventKey and event.pressed and not event.echo and key in [KEY_TAB, KEY_ENTER, KEY_KP_ENTER, KEY_SPACE]:
 			get_viewport().set_input_as_handled()
-			if event.keycode == KEY_TAB:
+			if key == KEY_TAB:
 				_room_map.toggle_destinations()
 			else:
 				_room_map.confirm_destination()
