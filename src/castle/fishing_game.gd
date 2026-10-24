@@ -32,6 +32,7 @@ var _elapsed := 0.0    # total time since the cast — drives the float's sway
 var _bite_at := 0.0
 var _water_y := 0.0
 var _bob_x := 0.0
+var _layout_viewport_size := Vector2.ZERO
 var _label: Label
 var _hint: Label
 
@@ -44,9 +45,6 @@ func _init(seed_value: int = -1) -> void:
 
 
 func _ready() -> void:
-	var vp := get_viewport_rect().size
-	_water_y = vp.y * 0.52
-	_bob_x = vp.x * 0.62
 	_bite_at = _rng.randf_range(0.9, 3.2)
 	_label = Label.new()
 	_label.add_theme_font_size_override("font_size", 30)
@@ -54,7 +52,6 @@ func _ready() -> void:
 	_label.add_theme_color_override("font_outline_color", Color(0.1, 0.08, 0.05))
 	_label.add_theme_constant_override("outline_size", 7)
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE  # the cast is not a click target
-	_label.position = _bobber_position() + MARKER_OFFSET
 	_label.visible = false
 	add_child(_label)
 	_hint = Label.new()
@@ -64,8 +61,9 @@ func _ready() -> void:
 	_hint.add_theme_color_override("font_outline_color", Color(0.1, 0.08, 0.05))
 	_hint.add_theme_constant_override("outline_size", 5)
 	_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hint.position = Vector2(24, vp.y - 30)
 	add_child(_hint)
+	get_viewport().size_changed.connect(_refresh_presentation)
+	_refresh_presentation()
 
 
 func _process(delta: float) -> void:
@@ -77,6 +75,7 @@ func _process(delta: float) -> void:
 func tick(delta: float) -> void:
 	if phase == Phase.DONE:
 		return
+	_refresh_presentation()
 	_elapsed += delta
 	_timer += delta
 	if phase == Phase.WAITING and _timer >= _bite_at:
@@ -103,6 +102,24 @@ func _bobber_position() -> Vector2:
 func _update_label_position() -> void:
 	if _label != null and _label.visible:
 		_label.position = _bobber_position() + MARKER_OFFSET
+
+
+## Reflow only the cast's presentation. This never touches the cast clock,
+## phase, bite schedule, or RNG, so a live resize cannot alter the result.
+func _refresh_presentation() -> void:
+	var vp := get_viewport_rect().size
+	if vp == _layout_viewport_size and _hint != null:
+		return
+	_layout_viewport_size = vp
+	_water_y = vp.y * 0.52
+	_bob_x = vp.x * 0.62
+	if _hint != null:
+		_hint.reset_size()
+		var outline := float(_hint.get_theme_constant("outline_size"))
+		var margin := outline + 8.0
+		_hint.position = Vector2(maxf(24.0, margin),
+			maxf(vp.y * 0.5 + 1.0, vp.y - _hint.size.y - margin))
+	_update_label_position()
 
 
 ## The player strikes (confirm). Catch iff we're inside the bite window.
