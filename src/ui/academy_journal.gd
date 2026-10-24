@@ -1204,33 +1204,148 @@ func _fish_log_entries() -> Array:
 
 
 func _draw_fish_log(body: Rect2, font: Font) -> void:
-	var x := body.position.x
-	var y := body.position.y + 10.0
-	draw_string(font, Vector2(x, y), "Fishing Catch Log",
-		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 20, Color(0.86, 0.78, 0.45))
-	y += 38.0
-	var entries := _fish_log_entries()
+	var layout := _fish_log_layout(body, font)
+	var title: Dictionary = layout["title"]
+	draw_string(font, title["baseline"], title["text"], HORIZONTAL_ALIGNMENT_LEFT, -1, 20,
+		Color(0.86, 0.78, 0.45))
+	if layout["empty"]:
+		for line: Dictionary in layout["empty_lines"]:
+			draw_string(font, line["baseline"], line["text"], HORIZONTAL_ALIGNMENT_LEFT, -1, 16,
+				Color(0.72, 0.75, 0.82))
+	else:
+		for row: Dictionary in layout["rows"]:
+			var selected: bool = row["index"] == _fish_i
+			if selected:
+				draw_rect(row["rect"], Color(0.30, 0.45, 0.85, 0.35), true)
+			for line: Dictionary in row["name_lines"]:
+				draw_string(font, line["baseline"], line["text"], HORIZONTAL_ALIGNMENT_LEFT, -1, 16,
+					Color(0.95, 0.94, 0.88) if selected else Color(0.78, 0.8, 0.86))
+			for count_line: Dictionary in row["count_lines"]:
+				draw_string(font, count_line["baseline"], count_line["text"], HORIZONTAL_ALIGNMENT_LEFT, -1, 16,
+					Color(0.86, 0.78, 0.45))
+	for hint_line: Dictionary in layout["hint_lines"]:
+		draw_string(font, hint_line["baseline"], hint_line["text"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13,
+			Color(0.55, 0.58, 0.68))
+
+
+## Fish Log-specific measured layout. Each selected catch stays completely
+## visible; neighboring rows are admitted only when their measured glyphs fit
+## between the heading and the in-body browse hint.
+func _fish_log_layout(body: Rect2, font: Font, entries: Array = _fish_log_entries()) -> Dictionary:
+	var title_text := "Fishing Catch Log"
+	var title_size := 20
+	var title_ascent := font.get_ascent(title_size)
+	var title_descent := font.get_descent(title_size)
+	var title_baseline := Vector2(body.position.x, body.position.y + 4.0 + title_ascent)
+	var title_rect := Rect2(Vector2(title_baseline.x, title_baseline.y - title_ascent),
+		Vector2(font.get_string_size(title_text, HORIZONTAL_ALIGNMENT_LEFT, -1, title_size).x,
+			title_ascent + title_descent))
+	var hint_text := "↑/↓ browse catches"
+	var hint_size := 13
+	var hint_ascent := font.get_ascent(hint_size)
+	var hint_descent := font.get_descent(hint_size)
+	var hint_width := font.get_string_size(hint_text, HORIZONTAL_ALIGNMENT_LEFT, -1, hint_size).x
+	var hint_baseline := Vector2(body.position.x, body.end.y - 2.0 - hint_descent)
+	var hint_rect := Rect2(Vector2(hint_baseline.x, hint_baseline.y - hint_ascent),
+		Vector2(hint_width, hint_ascent + hint_descent))
+	var result := {
+		"title": {"text": title_text, "baseline": title_baseline, "rect": title_rect},
+		"hint_lines": [{"text": hint_text, "baseline": hint_baseline, "rect": hint_rect}],
+		"rows": [], "first_index": 0, "last_index": 0, "empty": entries.is_empty(),
+		"empty_lines": [], "body": body,
+	}
+	var content_top := title_rect.end.y + 4.0
+	var content_bottom := hint_rect.position.y - 4.0
 	if entries.is_empty():
-		draw_string(font, Vector2(x, y), "No catches yet. Visit the waterside to try fishing.",
-			HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 16, Color(0.72, 0.75, 0.82))
-		return
-	var row_pitch := 30.0
-	var visible_rows := maxi(1, floori((body.size.y - 50.0) / row_pitch))
+		var empty_text := "No catches yet. Visit the waterside to try fishing."
+		var empty_lines := _fish_wrap(empty_text, font, body.size.x, 16)
+		var line_height := font.get_height(16)
+		var first_baseline := content_top + font.get_ascent(16)
+		for index in range(empty_lines.size()):
+			var text: String = empty_lines[index]
+			var baseline := Vector2(body.position.x, first_baseline + index * line_height)
+			var glyph_rect := _fish_glyph_rect(text, font, 16, baseline)
+			result["empty_lines"].append({"text": text, "baseline": baseline, "rect": glyph_rect})
+		return result
+
 	_fish_i = clampi(_fish_i, 0, entries.size() - 1)
-	var first := clampi(_fish_i - visible_rows + 1, 0, maxi(0, entries.size() - visible_rows))
-	var last := mini(entries.size(), first + visible_rows)
-	for i in range(first, last):
-		var row_y := y + (i - first) * row_pitch
-		if i == _fish_i:
-			draw_rect(Rect2(x - 6, row_y - 18, body.size.x - 8, 25), Color(0.30, 0.45, 0.85, 0.35), true)
-		var entry: Dictionary = entries[i]
-		draw_string(font, Vector2(x + 8, row_y), str(entry["name"]),
-			HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 100.0, 16,
-			Color(0.95, 0.94, 0.88) if i == _fish_i else Color(0.78, 0.8, 0.86))
-		draw_string(font, Vector2(x + body.size.x - 78.0, row_y), "×%d" % int(entry["count"]),
-			HORIZONTAL_ALIGNMENT_RIGHT, 64.0, 16, Color(0.86, 0.78, 0.45))
-	draw_string(font, Vector2(x, body.position.y + body.size.y - 4.0), "↑/↓ browse catches",
-		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 13, Color(0.55, 0.58, 0.68))
+	var quantity_width := minf(body.size.x * 0.38,
+		maxf(74.0, font.get_string_size("×123456789", HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x))
+	var left_padding := 8.0
+	var right_padding := 8.0
+	var column_gap := 12.0
+	var name_width := maxf(1.0, body.size.x - left_padding - right_padding - column_gap - quantity_width)
+	var count_width := maxf(1.0, quantity_width)
+	var line_height := font.get_height(16)
+	var pad_y := 5.0
+	var measured_rows: Array[Dictionary] = []
+	for index in range(entries.size()):
+		var entry: Dictionary = entries[index]
+		var name_text := str(entry["name"])
+		var count_text := "×%d" % int(entry["count"])
+		var name_lines := _fish_wrap(name_text, font, name_width, 16)
+		var count_lines := _fish_wrap(count_text, font, count_width, 16)
+		var row_lines := maxi(name_lines.size(), count_lines.size())
+		var row_height := maxf(30.0, row_lines * line_height + pad_y * 2.0)
+		measured_rows.append({"index": index, "name": name_text, "count": count_text,
+			"name_lines_text": name_lines, "count_lines_text": count_lines, "height": row_height})
+
+	var capacity := maxf(0.0, content_bottom - content_top)
+	var first := _fish_i
+	var last := _fish_i + 1
+	var used_height := float(measured_rows[_fish_i]["height"])
+	while first > 0 and used_height + float(measured_rows[first - 1]["height"]) <= capacity:
+		first -= 1
+		used_height += float(measured_rows[first]["height"])
+	while last < measured_rows.size() and used_height + float(measured_rows[last]["height"]) <= capacity:
+		used_height += float(measured_rows[last]["height"])
+		last += 1
+	result["first_index"] = first
+	result["last_index"] = last
+	var row_y := content_top
+	for index in range(first, last):
+		var measured: Dictionary = measured_rows[index]
+		var rect := Rect2(Vector2(body.position.x, row_y), Vector2(body.size.x, measured["height"]))
+		var name_baseline := row_y + pad_y + font.get_ascent(16)
+		var name_lines: Array[Dictionary] = []
+		for line_index in range(measured["name_lines_text"].size()):
+			var text: String = measured["name_lines_text"][line_index]
+			var baseline := Vector2(body.position.x + left_padding,
+				name_baseline + line_index * line_height)
+			name_lines.append({"text": text, "baseline": baseline,
+				"rect": _fish_glyph_rect(text, font, 16, baseline)})
+		var count_lines: Array[Dictionary] = []
+		for line_index in range(measured["count_lines_text"].size()):
+			var text: String = measured["count_lines_text"][line_index]
+			var count_text_width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
+			var baseline := Vector2(body.end.x - right_padding,
+				name_baseline + line_index * line_height)
+			baseline.x -= count_text_width
+			count_lines.append({"text": text, "baseline": baseline,
+				"rect": _fish_glyph_rect(text, font, 16, baseline)})
+		result["rows"].append({"index": index, "name": measured["name"], "count": measured["count"],
+			"rect": rect, "name_lines": name_lines, "count_lines": count_lines})
+		row_y += rect.size.y
+	return result
+
+
+func _fish_wrap(value: String, font: Font, width: float, font_size: int) -> Array[String]:
+	var paragraph := TextParagraph.new()
+	paragraph.width = maxf(1.0, width)
+	paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+	paragraph.add_string(value, font, font_size)
+	var lines: Array[String] = []
+	for index in range(paragraph.get_line_count()):
+		var span := paragraph.get_line_range(index)
+		lines.append(value.substr(span.x, span.y - span.x).strip_edges())
+	return lines
+
+
+func _fish_glyph_rect(value: String, font: Font, font_size: int, baseline: Vector2) -> Rect2:
+	var size := font.get_string_size(value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	var ascent := font.get_ascent(font_size)
+	var descent := font.get_descent(font_size)
+	return Rect2(Vector2(baseline.x, baseline.y - ascent), Vector2(size.x, ascent + descent))
 
 
 ## Read the authored Kai chains through a throwaway SupportState. Applying the
