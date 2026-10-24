@@ -1,0 +1,45 @@
+{
+  "active": true,
+  "campaign": {
+    "academy_visits": [],
+    "casual": true,
+    "chapter_id": "mock_battle",
+    "fish_log": {},
+    "flags": {
+      "opening_started": true
+    },
+    "grade_samples": {
+      "arena_best_wave": 0,
+      "battle_scores": [],
+      "conduct_points": 0,
+      "quiz_scores": []
+    },
+    "house_id": "emberwing",
+    "house_locked": false,
+    "last_result": "",
+    "report_card_deliveries": [],
+    "report_cards": [],
+    "rng_state": "-8652048142274861590",
+    "semester": 1,
+    "support_save": {},
+    "training_used": false,
+    "unit_states": {},
+    "week": 1
+  },
+  "next_room": "",
+  "next_spawn": [
+    -1,
+    -1
+  ],
+  "roster": "emberwing",
+  "scene": "Opening",
+  "scene_file": "res://scenes/flow/opening.tscn",
+  "skip_reset": false,
+  "staged_prep": false,
+  "staged_resume": {},
+  "training_seed": "12989624",
+  "viewport": [
+    800.0,
+    450.0
+  ]
+}

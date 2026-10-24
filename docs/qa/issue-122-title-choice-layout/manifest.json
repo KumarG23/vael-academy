@@ -95,10 +95,41 @@
     }
   },
   "native": {
-    "status": "pending explicit release and lead naming after issues 114,117,118",
-    "jobs_started": 0,
-    "captures": [],
-    "checkpoint_loads_observed": 0,
+    "status": "complete on 1bb92da9; all graphical jobs ended and desktop explicitly released",
+    "results": "native-results.json",
+    "jobs_started": 5,
+    "captures": [
+      "images/01-title-default.png",
+      "images/02-new-1280.png",
+      "images/02-new-640.png",
+      "images/02-new-800.png",
+      "images/03-empty-load-640.png",
+      "images/04-classic-opening.png",
+      "images/05-casual-opening.png",
+      "images/06-earned-load-default.png",
+      "images/07-earned-battle-loaded.png",
+      "images/08-earned-native-wait-continuation-640.png",
+      "images/09-all-slots-1280.png",
+      "images/09-all-slots-640.png",
+      "images/09-all-slots-800.png",
+      "images/10-wheel-page-2-640.png",
+      "images/10-wheel-page-4-640.png",
+      "images/11-invalid-manual-640.png",
+      "images/12-invalid-manual-default.png",
+      "images/13-invalid-autosave-default.png",
+      "images/14-invalid-autosave-640.png",
+      "images/15-missing-autosave-retry-640.png",
+      "images/16-missing-manual-640.png",
+      "images/17-sparse-physical-2-640.png",
+      "images/18-sparse-battle-dispatch-640.png",
+      "images/19-sparse-native-continuation-640.png",
+      "images/20-earned-autosave-loaded.png",
+      "images/21-autosave-native-movement.png",
+      "images/22-new-back-640.png",
+      "images/23-custom-selected-autosave-640.png",
+      "images/24-custom-autosave-restored-640.png"
+    ],
+    "checkpoint_loads_observed": 3,
     "neals_visual_approval": false
   },
   "invariants": {
@@ -107,9 +138,9 @@
     "installation": "all Godot and inherited child processes use disposable XDG_DATA_HOME"
   },
   "limits": [
-    "No native original-Forward+ keys/pointer/capture/checkpoint/continuation evidence yet.",
-    "Fixture-driven automated coverage is not earned gameplay or Neal taste approval.",
-    "Title physical slot labels remain accepted zero-based 0\u20132; discrepancy reported in issue."
+    "No full-school/opening-story replay, outcome injection or Neal taste/canon approval.",
+    "Headless/native coverage and supplementary fixture alterations are separated in native-results.json.",
+    "Final documentation/integration-head Verify and engineering-lead review remain required."
   ],
   "full_baseline_source_sha256": {
     "src/ui/choice_menu.gd": "2279044e25797e17164d0623f455387881351b1214968142b3022a0c692df72c",
@@ -118,5 +149,11 @@
     "tests/test_title_choice_layout.gd": "bdcb56cebe280b0a675d3bf790654c5bb18c73d339e249ee83a1c314f490e601",
     "tests/test_battle_polish.gd": "cb8e225b0143e651be8a9cc6eee9976523fd5111591a95afeb76352360acb67d"
   },
-  "final_fixture_refinement": "After the full baseline, supplementary long metadata IDs were replaced with exact shipped ChapterRegistry IDs; incoming training RNG identity/seed restoration and assertions were strengthened. Production source is unchanged; focused checks and final-head CI cover this test-only delta."
+  "final_fixture_refinement": "After the full baseline, supplementary long metadata IDs were replaced with exact shipped ChapterRegistry IDs; incoming training RNG identity/seed restoration and assertions were strengthened. Production source is unchanged; focused checks and final-head CI cover this test-only delta.",
+  "ci": {
+    "source_commit": "1bb92da9baa6a78ea84ccafc751beeb68eb27476",
+    "run": 40110741306,
+    "result": "SUCCESS",
+    "url": "https://github.com/KumarG23/vael-academy/actions/runs/40110741306"
+  }
 }

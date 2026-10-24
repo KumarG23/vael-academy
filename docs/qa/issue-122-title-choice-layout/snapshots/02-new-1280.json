@@ -1,0 +1,80 @@
+{
+  "active": false,
+  "campaign": {
+    "academy_visits": [],
+    "casual": false,
+    "chapter_id": "mock_battle",
+    "fish_log": {},
+    "flags": {},
+    "grade_samples": {
+      "arena_best_wave": 0,
+      "battle_scores": [],
+      "conduct_points": 0,
+      "quiz_scores": []
+    },
+    "house_id": "emberwing",
+    "house_locked": false,
+    "last_result": "",
+    "report_card_deliveries": [],
+    "report_cards": [],
+    "rng_state": "-1966449618399012673",
+    "semester": 1,
+    "support_save": {},
+    "training_used": false,
+    "unit_states": {},
+    "week": 1
+  },
+  "context": "new",
+  "first_visible": 0,
+  "index": 0,
+  "labels": [
+    "Classic (permadeath)",
+    "Casual",
+    "Back"
+  ],
+  "menu_rect": [
+    498.5,
+    417.600006103516,
+    283.0,
+    195.999969482422
+  ],
+  "menu_title": "New Game",
+  "next_room": "",
+  "next_spawn": [
+    -1,
+    -1
+  ],
+  "roster": "emberwing",
+  "rows": [
+    [
+      20.0,
+      64.0,
+      243.0,
+      34.0
+    ],
+    [
+      20.0,
+      98.0,
+      243.0,
+      34.0
+    ],
+    [
+      20.0,
+      132.0,
+      243.0,
+      34.0
+    ]
+  ],
+  "scene": "Title",
+  "scene_file": "res://scenes/title/title.tscn",
+  "skip_reset": false,
+  "staged_prep": false,
+  "staged_resume": {},
+  "status": "",
+  "training_seed": "1",
+  "viewport": [
+    1280.0,
+    720.0
+  ],
+  "visible_rows": 3
+}
