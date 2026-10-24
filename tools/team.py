@@ -152,8 +152,8 @@ def lead_all():
 PROFILES = {
     'sol': ('codex', 'gpt-6.1-sol', 'high'),
     'sol-dev': ('codex', 'gpt-6.1-sol', 'medium'),
-    'astra': ('codex', 'gpt-6-astra', 'high'),
-    'opus': ('claude', 'opus', 'medium'),
+    'opus': ('claude', 'claude-opus-5-5', 'high'),
+    'sonnet': ('claude', 'claude-sonnet-5-5', 'medium'),
     'fable': ('claude', 'fable', 'high'),
     'argon': ('agy', 'gemini-4-argon-medium', 'medium'),
     'agy-opus': ('agy', 'claude-opus-5-5-medium', 'medium'),
@@ -166,8 +166,10 @@ PROFILES = {
     'nemotron': ('opencode', 'opencode/nemotron-3-ultra-free', ''),
     'cohere': ('opencode', 'openrouter/cohere/north-mini-code:free', ''),
 }
-SENIOR_WORKERS = ('sol-dev', 'opus', 'argon', 'agy-opus', 'agy-sonnet')
-EMERGENCY_WORKERS = ('astra',)
+# Retained solely for pre-existing assignment/session continuation, never admission.
+LEGACY_PROFILES = {'astra': ('codex', 'gpt-6-astra', 'high')}
+SENIOR_WORKERS = ('sol-dev', 'sonnet', 'argon', 'agy-opus', 'agy-sonnet')
+EMERGENCY_WORKERS = ('opus',)
 JUNIOR_WORKERS = ('luna', 'deepseek', 'minimax', 'nemotron', 'cohere', 'agy-gpt-oss', 'agy-flash')
 
 # Candidate Antigravity subscription routes: present with exact verified `agy models`
@@ -248,8 +250,9 @@ def environment():
     return env
 
 
-def command(profile, session=None):
-    tool, model, effort = PROFILES[profile]
+def command(profile, session=None, *, legacy_effort=None):
+    tool, model, effort = (PROFILES | LEGACY_PROFILES)[profile]
+    effort = legacy_effort or effort
     if tool == 'codex':
         args = ['codex', 'exec'] + (['resume', session] if session else [])
         return args + ['--ignore-user-config', '--dangerously-bypass-approvals-and-sandbox',
@@ -267,7 +270,7 @@ def command(profile, session=None):
 
 
 def native_session(profile, log):
-    tool = PROFILES[profile][0]
+    tool = (PROFILES | LEGACY_PROFILES)[profile][0]
     for line in log.read_text(errors='replace').splitlines():
         try:
             record = json.loads(line)
@@ -322,7 +325,7 @@ def agy_subscription(cwd, env):
 
 
 def preflight(profile, cwd, env):
-    tool = PROFILES[profile][0]
+    tool = (PROFILES | LEGACY_PROFILES)[profile][0]
     if tool == 'claude':
         claude_subscription(cwd, env)
     elif tool == 'codex':
@@ -367,7 +370,7 @@ def _log_records(log):
 
 def classify_log_failure(profile, log, rc, now_ts=None):
     """Classify terminal failure from a native log without misclassifying repaired intermediate errors."""
-    tool = PROFILES[profile][0]
+    tool = (PROFILES | LEGACY_PROFILES)[profile][0]
     lines = Path(log).read_text(errors='replace').splitlines() if Path(log).exists() else []
     if usage_analytics is not None:
         info = usage_analytics.classify_native_failure(
@@ -1021,6 +1024,7 @@ def start(number, profile):
                 break
     record = dict(old)
     record.update({
+        'route_effort': old.get('route_effort') or ('medium' if profile == 'opus' and old else PROFILES[profile][2]),
         'profile': profile,
         'session_id': native_id,
         'issue': issue,
@@ -1074,7 +1078,7 @@ def handoff(number, to_profile, now_ts=None):
     if old.get('repo', SLUG) != SLUG:
         raise RuntimeError('Handoff assignment repository mismatch')
     old_profile = old.get('profile')
-    if not old_profile or old_profile not in PROFILES:
+    if not old_profile or old_profile not in (PROFILES | LEGACY_PROFILES):
         raise RuntimeError('Existing assignment has no valid owner profile')
     blocked = old.get('blocked') or {}
     source_run_id = blocked.get('run_id') or old.get('last_run_id')
@@ -1101,7 +1105,7 @@ def handoff(number, to_profile, now_ts=None):
     branch = issue_branch(number)
     worktree = Path(old.get('worktree') or (STATE / 'worktrees' / str(number)))
     validate_worktree(worktree, branch)
-    old_provider = PROFILES[old_profile][0]
+    old_provider = (PROFILES | LEGACY_PROFILES)[old_profile][0]
     new_provider = PROFILES[to_profile][0]
     old_session_id = old.get('session_id')
     if not old_session_id:
@@ -1142,6 +1146,7 @@ def handoff(number, to_profile, now_ts=None):
     updated = dict(old)
     updated.update({
         'profile': to_profile,
+        'route_effort': (old.get('route_effort') or 'medium') if old_profile == to_profile and to_profile == 'opus' else PROFILES[to_profile][2],
         'session_id': new_session_id,
         'handoff_history': history,
         'handoff_state': handoff_entry,
@@ -1201,8 +1206,13 @@ def worker(number):
     profile = assignment['profile']
     handoff_info = assignment.get('handoff_state')
     prompt = worker_prompt(assignment['issue'], handoff_info=handoff_info)
-    cmd = command(profile, assignment.get('session_id'))
-    tool, model, effort = PROFILES[profile]
+    # Existing Opus/medium sessions keep their original effort; only new admissions use high.
+    legacy_effort = ((assignment.get('route_effort') or 'medium')
+                     if profile == 'opus' and assignment.get('route_effort') != 'high' else None)
+    cmd = command(profile, assignment.get('session_id'), legacy_effort=legacy_effort)
+    tool, model, effort = (PROFILES | LEGACY_PROFILES)[profile]
+    if legacy_effort:
+        effort = legacy_effort
     if tool == 'agy':
         cmd += ['--print', prompt]
     elif tool == 'opencode':
@@ -1518,10 +1528,10 @@ profiles follow host-wide provider policy (including disabled `fable`); projects
 Hierarchy and routing for assignments:
 - Team lead and PR reviewer: `sol` (`codex`, `gpt-6.1-sol`, `high`).
 - Regular senior developers (all `medium` effort): `sol-dev` (`codex`, `gpt-6.1-sol`, `medium`),
-  `opus` (`claude`, `opus`, `medium`) and `argon` (`agy`, `gemini-4-argon-medium`, `medium`).
+  `sonnet` (`claude`, `claude-sonnet-5-5`, `medium`) and `argon` (`agy`, `gemini-4-argon-medium`, `medium`).
   `sol-dev` is a developer identity distinct from lead `sol`; both share the ChatGPT quota.
   Qualified Antigravity Opus/Sonnet routes remain additional capacity in their own subscription pool.
-- Sole emergency developer: `astra` (`codex`, `gpt-6-astra`, `high`).
+- Sole emergency developer: `opus` (`claude`, `claude-opus-5-5`, `high`).
   Use only for a concrete emergency or a hard problem needing escalation, and state the reason in the
   issue/handoff. Routine quota exhaustion alone is not an emergency escalation. Fable 5.1 is excluded from
   the active roster because it requires extra credits on Pro; preserve historical records, no paid fallback.
@@ -1530,6 +1540,7 @@ Hierarchy and routing for assignments:
   auxiliary work (docs, tests, triage, summaries); give qualified `deepseek` bounded, well-specified work.
 - An issue already owned by a developer stays
 with that owner through revisions; never interrupt or reassign running or owned work for routing.
+  Existing sessions retain their original effort and ownership; retired identities cannot receive new assignments.
 Lead-owned quota recovery (worker usage limits only; never paid/API fallback or lead self-replacement):
 - Distinguish terminal provider quota/rate/session limits (`quota_exhausted`) from ordinary code, test,
   auth, permission, or network failures. Do not hand off ordinary errors as quota failures.

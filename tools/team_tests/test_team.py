@@ -202,10 +202,23 @@ class TeamTests(unittest.TestCase):
             self.assertIn(expected, prompt)
         self.assertEqual(team.LEAD, 'sol')
         self.assertEqual(team.PROFILES['sol'], ('codex', 'gpt-6.1-sol', 'high'))
-        self.assertEqual(team.PROFILES['astra'], ('codex', 'gpt-6-astra', 'high'))
-        self.assertEqual(team.PROFILES['opus'], ('claude', 'opus', 'medium'))
+        self.assertNotIn('astra', team.PROFILES)
+        self.assertEqual(team.PROFILES['opus'], ('claude', 'claude-opus-5-5', 'high'))
+        self.assertEqual(team.PROFILES['sonnet'], ('claude', 'claude-sonnet-5-5', 'medium'))
         self.assertEqual(team.PROFILES['argon'], ('agy', 'gemini-4-argon-medium', 'medium'))
         self.assertEqual(team.PROFILES['luna'], ('codex', 'gpt-6-luna', 'high'))
+        self.assertEqual(team.EMERGENCY_WORKERS, ('opus',))
+        self.assertIn('sonnet', team.SENIOR_WORKERS)
+        self.assertNotIn('opus', team.SENIOR_WORKERS)
+        self.assertNotIn('astra', team.lead_prompt([], [], [], ['routing']))
+        for profile, model, effort in [('opus', 'claude-opus-5-5', 'high'), ('sonnet', 'claude-sonnet-5-5', 'medium')]:
+            cmd = team.command(profile)
+            self.assertEqual(cmd[cmd.index('--model') + 1], model)
+            self.assertEqual(cmd[cmd.index('--effort') + 1], effort)
+        self.assertEqual(team.command('opus', 'old-session', legacy_effort='medium')[team.command('opus').index('--effort') + 1], 'medium')
+        self.assertIn('gpt-6-astra', team.command('astra', 'old-session'))
+        with self.assertRaisesRegex(RuntimeError, 'Unknown profile'):
+            team.start(99, 'astra')
 
     def test_empty_queue_wakes_lead_to_derive_plan_work(self):
         rc, inference = self.lead_once()
