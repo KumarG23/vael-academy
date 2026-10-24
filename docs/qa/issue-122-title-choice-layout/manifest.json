@@ -1,0 +1,122 @@
+{
+  "issue": 122,
+  "base": "8b442f13b34d86924cdb0fe374b49d7a7872649a",
+  "engine": "Godot 4.7.2",
+  "mode": "headless production SubViewport geometry and input; no GUI authority",
+  "source_sha256": {
+    "src/ui/choice_menu.gd": "2279044e25797e17164d0623f455387881351b1214968142b3022a0c692df72c",
+    "src/ui/title_screen.gd": "db34bae3de0bf92944e2ebc2dd8a0deb11d0bfdc2d1c57d5916152d0d3363045",
+    "tests/test_choice_menu_layout.gd": "ae96a2dfd136ef71bdc71133b368701a15e5704c3807009d661ef072e3b2168c",
+    "tests/test_title_choice_layout.gd": "1913e1596a87d2e303f972cbb673d09ca70adecbd776bfad546e3e4f69eea9e0",
+    "tests/test_battle_polish.gd": "cb8e225b0143e651be8a9cc6eee9976523fd5111591a95afeb76352360acb67d"
+  },
+  "base_production_sha256": {
+    "src/ui/choice_menu.gd": "42658ccdf0d9ba5bbccf71ef84058d26990706a0be1cc2a8586d65528f86fa98",
+    "src/ui/title_screen.gd": "fc3b7889036537b5e8bb2ddfca612602b7e58abfe838e47ca07bddf3a59049e2"
+  },
+  "regression_first": {
+    "tests": 1,
+    "passing_tests": 0,
+    "passing_assertions": 5,
+    "assertions": 12,
+    "manual_label_width_px": 555,
+    "autosave_supplementary_label_width_px": 493,
+    "available_single_line_width_px": 400,
+    "heading_64px_size": [
+      621,
+      88
+    ],
+    "viewport_sizes": [
+      [
+        1280,
+        720
+      ],
+      [
+        800,
+        450
+      ],
+      [
+        640,
+        360
+      ]
+    ],
+    "failure": "six complete-label width failures and one compact drawn/hit rectangle containment failure"
+  },
+  "checks": {
+    "clean_import": {
+      "exit_code": 0,
+      "script_load_errors": false
+    },
+    "helpers": {
+      "discovered": 113,
+      "passed": 111,
+      "skipped": 2
+    },
+    "affected_before_fixture_mouse_enter_correction": {
+      "scripts": 16,
+      "tests": 157,
+      "passed": 156,
+      "assertions": 7256,
+      "passing_assertions": 7255,
+      "remaining_failure": "new wrapped-row hover fixture omitted SubViewport.notify_mouse_entered; production and every existing test passed"
+    },
+    "final_focused": {
+      "scripts": 3,
+      "tests": 24,
+      "passed": 24,
+      "assertions": 1949,
+      "seconds": 2.778
+    },
+    "full_gut": {
+      "scripts": 127,
+      "tests": 1038,
+      "passed": 1038,
+      "assertions": 24479,
+      "gut_seconds": 486.484,
+      "process_seconds": 494.319,
+      "exit_code": 0,
+      "script_load_errors": false,
+      "inherited_deprecations": 99,
+      "exit_diagnostics": "two ObjectDB instances / one resource still in use (existing boundary diagnostic)"
+    },
+    "implementation_import": {
+      "exit_code": 0,
+      "seconds": 8.914,
+      "script_errors": false
+    },
+    "final_fixture_refinement": {
+      "tests": 24,
+      "passed": 24,
+      "assertions": 1970,
+      "scripts": 3,
+      "seconds": 2.716,
+      "exit_code": 0,
+      "script_load_errors": false
+    }
+  },
+  "native": {
+    "status": "pending explicit release and lead naming after issues 114,117,118",
+    "jobs_started": 0,
+    "captures": [],
+    "checkpoint_loads_observed": 0,
+    "neals_visual_approval": false
+  },
+  "invariants": {
+    "automated": "complete Campaign.to_dict/RNG/support/progression, active/skip/roster, staged resume/prep/room/spawn, save override; default disposable-profile manual/autosave/settings presence and bytes",
+    "fixture_writes": "unique injected disposable save directory; intentional writes and missing-after-browse removals occur outside read-only intervals",
+    "installation": "all Godot and inherited child processes use disposable XDG_DATA_HOME"
+  },
+  "limits": [
+    "No native original-Forward+ keys/pointer/capture/checkpoint/continuation evidence yet.",
+    "Fixture-driven automated coverage is not earned gameplay or Neal taste approval.",
+    "Title physical slot labels remain accepted zero-based 0\u20132; discrepancy reported in issue."
+  ],
+  "full_baseline_source_sha256": {
+    "src/ui/choice_menu.gd": "2279044e25797e17164d0623f455387881351b1214968142b3022a0c692df72c",
+    "src/ui/title_screen.gd": "db34bae3de0bf92944e2ebc2dd8a0deb11d0bfdc2d1c57d5916152d0d3363045",
+    "tests/test_choice_menu_layout.gd": "ae96a2dfd136ef71bdc71133b368701a15e5704c3807009d661ef072e3b2168c",
+    "tests/test_title_choice_layout.gd": "bdcb56cebe280b0a675d3bf790654c5bb18c73d339e249ee83a1c314f490e601",
+    "tests/test_battle_polish.gd": "cb8e225b0143e651be8a9cc6eee9976523fd5111591a95afeb76352360acb67d"
+  },
+  "final_fixture_refinement": "After the full baseline, supplementary long metadata IDs were replaced with exact shipped ChapterRegistry IDs; incoming training RNG identity/seed restoration and assertions were strengthened. Production source is unchanged; focused checks and final-head CI cover this test-only delta."
+}
