@@ -123,6 +123,28 @@ All game/input/capture jobs ended; final process exited 0 through System → Ret
 to Title → Quit. [Explicit GUI release](https://github.com/KumarG23/vael-academy/issues/106#issuecomment-6384514756).
 Native acceptance is bounded: other houses/closing battle, unavailable metadata,
 null/HOLIDAY and extended labels are automated/isolated-fixture coverage, not
-native earned progression. The separately owned compact Roster defect #96 remains
-outside this branch until its accepted merge. No full-school replay, future
+native earned progression. This original acceptance preceded the accepted Roster merge; see the
+integration receipt below. No full-school replay, future
 calendar authorship, new mission content or Neal approval is claimed.
+
+
+## Accepted Roster integration — 2026-10-24
+
+Normally merged accepted main **0b54e16b38ede97f346b06ca7c95afda20c7dc85**
+(PR #99, accepted source bcd1690e). Actual conflicts were MASTER_PLAN and the
+Journal footer. Preserved both status rows and every sibling source/test/QA
+record. Ten Roster layout/paging functions and test_journal_roster_compact.gd
+are byte-identical to accepted main. The Roster draw branch retains its accepted
+legacy frame/title and dedicated measured footer/body; the other tabs retain
+GH-106's captured frame/title/footer and Objectives behavior. No metadata,
+objective wording, calendar data, state/save or custom-key code changed.
+
+Proportional integration checks **100/100 tests, 2,114 assertions / 10 scripts**, exit 0 (31.732 s), under the common Godot lock/disposable data; no script-load errors. The run retains 56 inherited wait-frame deprecations and existing exit-time two ObjectDB/one resource diagnostics. The new production coexistence test navigates Roster ↔
+Objectives with actual viewport input, verifies actionless confirm, accepted
+PageUp/Down paging/clamping and unchanged tab-row counts at 1280×720, 800×450,
+640×360 and restored default, and compares complete Campaign/RNG state.
+All accepted Roster assertions remain unchanged. No new local full GUT or native
+baseline was repeated for this integration. No GUI was used: #108 is now the
+lead-named sole controller. Existing native evidence stays attributed to the
+source in the manifest and to #96's accepted QA, rather than being relabeled as
+an integration-head capture. Final exact-head Verify and lead review remain gates.

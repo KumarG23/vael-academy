@@ -262,3 +262,33 @@ func _assert_book_bounds(body: Rect2) -> void:
 	var footer := _journal._footer_rect("←/→ tab      ↑/↓ scroll      J / Esc close")
 	assert_true(safe.encloses(footer), "full Objectives footer clears frame")
 	assert_lte(body.end.y, footer.position.y, "body clears actual footer glyphs")
+
+func test_accepted_roster_paging_and_objectives_coexist_across_resize_and_wrap():
+	var before := Campaign.to_dict().duplicate(true)
+	for size in [Vector2i(1280, 720), Vector2i(800, 450), Vector2i(640, 360), Vector2i(1280, 720)]:
+		_viewport.size = size
+		await wait_process_frames(1)
+		_tap(KEY_LEFT)
+		assert_eq(_journal._tab, 7, "Left wraps Roster to Objectives")
+		var objective_body := _journal._body_rect()
+		_assert_book_bounds(objective_body)
+		var layout := _journal._objectives_layout(objective_body, UITheme.font())
+		assert_gt(layout.rows.size(), 0)
+		_tap(KEY_ENTER)
+		_tap(KEY_RIGHT)
+		assert_eq(_journal._tab, 0, "Right wraps Objectives to accepted Roster")
+		var margin := Vector2(minf(80, size.x * 0.08), minf(56, size.y * 0.08))
+		var book_width: float = size.x - margin.x * 2
+		assert_eq(_journal._tab_row_count(UITheme.font(), book_width - 68, 16), 1 if size.x == 1280 else 2,
+			"appended tab preserves accepted Roster tab-row count at each target size")
+		var roster_body := _journal._roster_body_rect()
+		assert_eq(roster_body, _journal._journal_body_rect(), "accepted Roster body is retained")
+		_journal._roster_detail_page = 0
+		_tap(KEY_PAGEDOWN)
+		var list_width := clampf(roster_body.size.x * 0.29, 112.0, 210.0)
+		var detail_lines := _journal._roster_detail_lines(_journal._snaps[0], UITheme.font(), roster_body.size.x - list_width - 14.0)
+		var pages := ceili(float(detail_lines.size()) / _journal._roster_detail_page_size(roster_body.size.y))
+		assert_eq(_journal._roster_detail_page, mini(1, pages - 1), "accepted detail paging/clamping works after tab wrap")
+		_tap(KEY_PAGEUP)
+		assert_eq(_journal._roster_detail_page, 0)
+	assert_eq(Campaign.to_dict(), before, "combined reference browsing remains read-only")
