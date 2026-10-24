@@ -62,6 +62,20 @@ native GUI run; those earlier results remain attributed to their source heads.
 No GUI job was launched because #122 owns the desktop. Exact integrated-head
 Verify is the remaining gate; PR #130 stays draft.
 
+
+### Subsequent accepted-main integration
+
+Accepted main `028132c504060ca6af48bd67f07eb9042712647a` (PR #132) was then
+merged normally. The only conflicts were HANDOFF and MASTER_PLAN status rows;
+there was no Journal source conflict. Both task records and accepted #118/#131
+source, tests, QA captures/manifests and status records remain intact. The
+previous 116/116, 18,030-assertion combined boundary is attributed to the
+preceding #117 integration head; it was not repeated for this documentation
+conflict-only integration. #118/#131 evidence remains attributed to their
+own source runs and accepted-main checks. No GUI run was made because #122
+owns the desktop. Exact Verify for the current integration head remains
+pending.
+
 ## Original-renderer evidence
 
 The #112 owner released the desktop, and the lead named #114/Luna the next
