@@ -2,9 +2,10 @@
 
 ## Issue #114 — compact Journal Items readability
 
-Implementation is in progress on `team/issue-114`, based on accepted main
-`2d7ae523` (normally integrated #110 Grades, #112 Battle reference UI, and #117
-System compact correction), under MASTER_PLAN §§1–2, §6 WO-9.4/9.7 and partial §10 M9;
+Implementation and the named slot-B native delta are complete on
+`team/issue-114`, currently integrated through accepted main `55bc1ceb`
+(#134/#133 compact inspection), #124 Supports, #118/#131, and #117 System,
+under MASTER_PLAN §§1–2, §6 WO-9.4/9.7 and partial §10 M9;
 ACADEMY_BIBLE §3 Quartermaster; existing inventory behavior from AW-52/53/55.
 The Items-only two-pane renderer now measures the active font, wraps complete
 pack names/equipped markers and contextual stage instructions, windows the
@@ -67,9 +68,39 @@ Current exact-head Verify and lead delta review remain required; PR #130 stays
 draft. Earlier Verify receipts above predate the current source and do not
 satisfy that gate.
 
+**Accepted-main #134 integration (2026-10-24):** normally merged current
+accepted main `55bc1ceb` (PR #134 / #133 compact inspection QA). The only
+conflicts were HANDOFF and MASTER_PLAN status records; both GH-114 and GH-133
+records are retained. Incoming BattleView source/tests and inspected QA
+captures/manifests are retained; `academy_journal.gd` and its tests were not
+changed by #134. The proportional production-SubViewport Items + BattleView
+inspection boundary passes **20/20 tests, 10,785 assertions / 2 scripts** under
+the common heavy lock and disposable XDG data. This combined run reported the
+known two ObjectDB / one resource-in-use exit diagnostics; no assertion
+failed. No clean import, full GUT, helper or native run was repeated for this
+accepted-main integration. No native slot or earned-save interaction was
+repeated; the just-completed named slot-B QA remains attributed to the GH-114
+source captured in its QA record.
+
 **Accepted-main integration:** normally merged main `2d7ae523` (#117 / PR #120). The real Journal conflict was limited to the toast drawing branch; tab 2 retains Items-local wrapped feedback, tab 4 retains System's measured reserved feedback row/range hint, and shared load-error/other-tab messages retain `_toast_rect()`. HANDOFF and MASTER_PLAN retain both issue records; all #117 source, tests, captures, manifests and status were preserved. The proportional combined Journal/Items/inventory/System/close/custom-key/Campaign-load/SaveSystem boundary passed **116/116 tests, 18,030 assertions / 12 scripts**, under the common `vael-godot-heavy.lock` and disposable XDG data. It reported 79 inherited wait-frame deprecations and existing exit-time two ObjectDB / one resource diagnostics. No full suite/import/helpers/native replay was repeated; #122 then owned GUI. Exact Verify 40119376013 passed for integrated #117 head `dc7f03c6`; later accepted-main integrations are recorded separately below.
 
 **Accepted-main #118/#131 integration:** normally merged accepted main `028132c504060ca6af48bd67f07eb9042712647a` (PR #132). The only conflicts were the adjacent HANDOFF and §10 status records; both GH-114 and upstream GH-118/GH-131 records are retained. There was no Journal source conflict. All accepted #118/#131 source, regression tests, QA captures/manifests and status material were preserved. The prior 116/116, 18,030-assertion boundary remains attributed to the #117 integration head; no unchanged source boundary was repeated because the Journal source is unchanged by this merge. #118/#131 validation remains source-attributed in their QA records and accepted-main CI. No GUI job was launched (#122 owned the desktop). The next accepted-main head `c77e03a5` later passed Verify 40123261285; PR readiness is recorded against the latest GH-114 head below.
+
+## Issue #133 — compact inspection bounds / hover overlap (2026-10-24; `team/issue-133`, from accepted main `028132c5`)
+
+Basis: MASTER_PLAN §§1–2 (inspectable tactics, presentation/logic split), §6 WO-4.4/9.5, partial §10 M9; ACADEMY_BIBLE §4. No canon change, no contradiction found.
+
+**Reproduction/limits.** On accepted main the 12 of the 14 ordered scripts that exist there passed **103/103, 6,519 assertions**; at the exact #122 head `eb78505e` (throwaway worktree, all 14 in the linked JSON order, one GUT process, heavy lock, disposable XDG) the run passed **113/113, 8,439 assertions**. The recorded failure is therefore timing-dependent and was not reproduced; no retry-to-green was attempted.
+
+**Cause (proven deterministically).** `UnitStatsPanel.show_unit` resets to `PANEL_SIZE` and fits width 400; `BattleView` only reflows from `_process`/`size_changed`. `_open_stats_for` did not lay out, so until the next process pass the sheet is 400 wide at a stale position and the hover is still in the lane left by the previous unit. Reading right after `show_unit` + `wait_physics_frames(1)` (physics frames are not process frames) gives exactly the recorded rects, e.g. inspection `(10,64,400,250)` vs hover `(380,206,250,144)`. The ordinary player path draws only after `_process`, so this is a latent one-frame window plus an invalid test readiness boundary, not a settled-state defect.
+
+**Repair.** `BattleView._open_stats_for` calls `_layout_reference_ui()` right after `show_unit` (presentation only). Existing assertions untouched. New `test_ordinary_inspection_open_is_laid_out_before_the_next_frame` checks every shipped unit plus a five-weapon pack with no wait at 800×450/640×360/800×450/1280×720 with hover visible, then header/objective clearance after one process frame, live resize both directions, any-key and pointer dismissal, and byte-identical battle snapshot/Campaign. Old code: **9/10, 59 failed assertions**; fixed: **10/10, 9,941 assertions**. Boundary (ordered 12 recorded scripts + camera, unit-cycle) **119/119, 14,630 assertions / 14 scripts**. Heavy lock + disposable XDG throughout. Clean import ended with a Godot exit-time heap error (exit 134) after finishing; tests ran normally afterwards.
+
+**Review correction (2026-10-24):** the original `test_all_shipped_inspection_fields_and_role_hints_fit_compact` now opens through `_open_stats_for` (immediate sheet/hover bounds+clearance, then one `process_frame` — the actual `_process` layout completion — before the header/clearance and field assertions; every prior assertion retained, no arbitrary wait). On the unfixed production line that original test fails (1865/1905 assertions); fixed, the ordered 12-script recorded boundary + camera/unit-cycle passes **119/119, 14,694 assertions / 14 scripts**. Native original-Forward+ slot-b acceptance with real keys/pointer: [docs/qa/issue-133-inspection-open](docs/qa/issue-133-inspection-open/README.md) (full-pack sheet open, 1152×648→800×450→640×360→800×450→default, content change, key and pointer dismissal, continuation; Campaign/battle hashes unchanged, no save written). No full GUT/import/helper replay; no Neal visual approval claimed.
+
+**Accepted-main integration (2026-10-24):** normally merged main `d5f51259` (Supports/System, #124 etc.); the only conflict was the adjacent top-of-file HANDOFF records, both retained (MASTER_PLAN auto-merged). Incoming changes touch Journal source/tests only, no battle source. Proportional check (heavy lock, disposable XDG, after a cached import): the 14-script battle boundary plus `test_journal_support_layout.gd` and `test_academy_journal.gd` passed **149/149, 14,896 assertions / 16 scripts**; GUT printed two internal `get_base_script` script diagnostics that also appear with the battle-only boundary and fail nothing. No native/full/import/helper baseline repeated.
+
+
 
 ## Issue #124 — Journal Supports complete records through compact/live resize
 
