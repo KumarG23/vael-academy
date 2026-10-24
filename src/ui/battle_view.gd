@@ -1708,6 +1708,7 @@ func _setup_ui() -> void:
 	_forecast_panel.visible = false
 	var vp := get_viewport_rect().size
 	_forecast_panel.position = Vector2(vp.x - CombatForecastPanel.PANEL_SIZE.x - 20, vp.y - CombatForecastPanel.PANEL_SIZE.y - 20)
+	_forecast_panel.resized.connect(_place_forecast_panel)
 	_ui_layer.add_child(_forecast_panel)
 	_turn_banner = TurnBanner.new()
 	_turn_banner.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -1757,7 +1758,7 @@ func _layout_reference_ui() -> void:
 	_input_hint.size = Vector2(358, 78)
 	_hover_info.position = Vector2(vp.x - 260 if _stats_panel.visible else 10.0, vp.y - _hover_info.size.y - 10)
 	_forecast_panel.fit_width(360)
-	_forecast_panel.position = vp - _forecast_panel.size - Vector2(10, 10)
+	_place_forecast_panel()
 	var header_bottom := maxf(60, _objective_label.position.y + _objective_label.get_minimum_size().y)
 	_stats_panel.fit_width(360 if compact else 400, vp.y - header_bottom - 14 if compact else INF, vp.x - 20 if compact else 0)
 	_stats_panel.position = Vector2(10, maxf(10, (vp.y - _stats_panel.size.y) * 0.5))
@@ -1769,6 +1770,12 @@ func _layout_reference_ui() -> void:
 			_debug_label.size = Vector2(vp.x - 280, 0)
 			_objective_label.position = Vector2(12, 14 + _debug_label.get_minimum_size().y)
 			_objective_label.size = Vector2(vp.x - 280, 0)
+
+
+## Bottom-right anchor from the panel's current size. A wrapped long name grows the
+## panel after layout last placed it (GH-131), so this also runs on its `resized`.
+func _place_forecast_panel() -> void:
+	_forecast_panel.position = get_viewport_rect().size - _forecast_panel.size - Vector2(10, 10)
 
 
 ## Flash the objective (field menu → Objective).
