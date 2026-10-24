@@ -103,6 +103,11 @@ func test_production_item_geometry_fits_complete_labels_and_stage_instructions()
 			assert_lte(measured.x, row["label_width"], "active-font item line width fits at %s" % size)
 			assert_lte(measured.y, row["rect"].size.y, "complete active-font item lines fit their row at %s" % size)
 			assert_true(body.encloses(row["rect"]), "pack item row remains inside body at %s" % size)
+			var uses_rect := Rect2(Vector2(row["uses_baseline"].x,
+				row["uses_baseline"].y - font.get_ascent(13)),
+				Vector2(row["uses_width"], font.get_height(13)))
+			assert_true(layout["pack_rect"].encloses(uses_rect),
+				"complete uses/count glyph lane remains inside pack pane at %s" % size)
 		for mode in range(3):
 			_journal._inv_mode = mode
 			layout = _journal._items_layout(body, font)

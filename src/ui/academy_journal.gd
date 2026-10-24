@@ -959,7 +959,8 @@ func _items_layout(body: Rect2, font: Font) -> Dictionary:
 				"label_baseline": row_rect.position + Vector2(18, font.get_ascent(16) + 1),
 				"uses_width": uses_width,
 				"uses": "∞" if inv.items[i].uses >= 999 else "×%d" % inv.items[i].uses,
-				"uses_baseline": row_rect.position + Vector2(pack_width - 4.0, font.get_ascent(13) + 3)})
+				"uses_baseline": row_rect.position + Vector2(pack_width - uses_width - 4.0,
+					font.get_ascent(13) + 3)})
 			item_y += item_heights[i]
 		pack_scrolls = start > 0 or visible_items.size() < inv.items.size()
 	return {"student_rect": student_rect, "pack_rect": pack_rect,
