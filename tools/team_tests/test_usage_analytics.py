@@ -34,6 +34,7 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
         self.repo.mkdir(parents=True, exist_ok=True)
         self.patches = [
             patch.object(team, 'STATE', self.state),
+            patch.object(team, 'GLOBAL_STATE', self.state),
             patch.object(team, 'REPO', self.repo),
             patch.dict(os.environ, {'VAEL_USAGE_DB': str(self.db)}),
             # These fixtures exercise quota/analytics, not launch-hour gating.
@@ -49,24 +50,30 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
         self.assertEqual(team.PROFILES['sol'], ('codex', 'gpt-6.1-sol', 'high'))
         self.assertEqual(team.PROFILES['sol-dev'], ('codex', 'gpt-6.1-sol', 'medium'))
         self.assertIn('sol-dev', team.SENIOR_WORKERS)
-        self.assertEqual(team.EMERGENCY_WORKERS, ('astra',))
-        self.assertEqual(team.PROFILES['astra'][2], 'high')
+        self.assertEqual(team.EMERGENCY_WORKERS, ('opus', 'astra'))
+        self.assertEqual(team.PROFILES['astra'], ('codex', 'gpt-6-astra', 'high'))
+        self.assertNotIn('astra', team.SENIOR_WORKERS)
         self.assertEqual(team.PROFILES['fable'][2], 'high')
         (self.state / 'disabled-fable').write_text('paid credits required; no spend authorized')
         for tier in ('junior', 'senior'):
             peers = team.eligible_peers(task_tier=tier, now_ts=1000.0)
             self.assertIn('sol-dev', peers)
             self.assertNotIn('sol', peers)
+            self.assertNotIn('opus', peers)
             self.assertNotIn('astra', peers)
             self.assertNotIn('fable', peers)
-        self.assertIn('astra', team.eligible_peers(task_tier='emergency', now_ts=1000.0))
+        self.assertEqual(team.eligible_peers(task_tier='emergency', now_ts=1000.0)[:2],
+                         ['opus', 'astra'])
         self.assertNotIn('fable', team.eligible_peers(task_tier='emergency', now_ts=1000.0))
         self.assertIn('model_reasoning_effort="medium"', team.command('sol-dev'))
         self.assertIn('model_reasoning_effort="high"', team.command('sol'))
         self.assertEqual(team._quota_scope_and_provider('sol')[1],
                          team._quota_scope_and_provider('sol-dev')[1])
+        self.assertEqual(team._quota_scope_and_provider('astra')[1],
+                         team._quota_scope_and_provider('sol')[1])
         prompt = team.lead_prompt([], [], [], ['test'])
-        self.assertIn('Sole emergency developer', prompt)
+        self.assertIn('Primary emergency developer', prompt)
+        self.assertIn('backup emergency', prompt)
         self.assertIn('sol-dev', prompt)
         self.assertNotIn('not emergency-only', prompt)
 
@@ -458,7 +465,7 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
             observed_at=1050.0,
         )
         team.record_provider_quota(
-            'astra', 'usage_limit',
+            'sol-dev', 'usage_limit',
             {'reset_at': 6000.0, 'reset_timezone': 'UTC', 'reset_provenance': 'provider_error_text'},
             observed_at=1050.0,
         )
@@ -724,14 +731,17 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
         self.assertEqual(team.PROFILES['agy-sonnet'], ('agy', 'claude-sonnet-5-5-medium', 'medium'))
         self.assertEqual(team.PROFILES['agy-gpt-oss'], ('agy', 'gpt-oss-120b-medium', 'medium'))
         self.assertEqual(team.PROFILES['agy-flash'], ('agy', 'gemini-3.8-flash-medium', 'medium'))
-        self.assertEqual(team.PROFILES['opus'], ('claude', 'opus', 'medium'))
+        self.assertEqual(team.PROFILES['opus'], ('claude', 'claude-opus-5-5', 'high'))
+        self.assertEqual(team.PROFILES['sonnet'], ('claude', 'claude-sonnet-5-5', 'medium'))
 
         self.assertEqual(ua.quota_scope_for('agy', 'argon', 'gemini-4-argon-medium'), 'agy_argon_weekly')
         self.assertEqual(ua.quota_scope_for('agy', 'agy-opus', 'claude-opus-5-5-medium'), 'agy_claude_gpt_oss_shared')
         self.assertEqual(ua.quota_scope_for('agy', 'agy-sonnet', 'claude-sonnet-5-5-medium'), 'agy_claude_gpt_oss_shared')
         self.assertEqual(ua.quota_scope_for('agy', 'agy-gpt-oss', 'gpt-oss-120b-medium'), 'agy_claude_gpt_oss_shared')
         self.assertEqual(ua.quota_scope_for('agy', 'agy-flash', 'gemini-3.8-flash-medium'), 'agy_gemini_shared')
-        self.assertEqual(ua.quota_scope_for('claude', 'opus', 'opus'), 'claude_subscription')
+        self.assertEqual(ua.quota_scope_for('claude', 'opus', 'claude-opus-5-5'), 'claude_subscription')
+        self.assertEqual(ua.quota_scope_for('claude', 'sonnet', 'claude-sonnet-5-5'), 'claude_subscription')
+        self.assertEqual(team._quota_scope_and_provider('opus')[1], team._quota_scope_and_provider('sonnet')[1])
 
         # 2. Fable remains retired/disabled and not reinterpreted
         (self.state / 'disabled-fable').write_text('retired profile')
@@ -745,7 +755,7 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
             self.assertIsNotNone(team.profile_disabled_reason(cand))
             with self.assertRaisesRegex(RuntimeError, 'unqualified/disabled'):
                 team.start(99, cand)
-        self.assertEqual(team.eligible_peers(for_profile='opus', task_tier='senior', now_ts=1000.0), ['sol-dev', 'argon'])
+        self.assertEqual(team.eligible_peers(for_profile='opus', task_tier='senior', now_ts=1000.0), ['sol-dev', 'sonnet', 'argon'])
 
         # 4. When candidate routes are qualified in isolated state, verify model-family quota pool isolation:
         for cand in ('agy-opus', 'agy-sonnet', 'agy-gpt-oss', 'agy-flash'):
@@ -758,7 +768,7 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
             observed_at=1000.0,
         )
         self.assertFalse(team.provider_quota_status('argon', now_ts=1100.0)['eligible'])
-        for sibling in ('agy-opus', 'agy-sonnet', 'agy-gpt-oss', 'agy-flash', 'opus', 'astra'):
+        for sibling in ('agy-opus', 'agy-sonnet', 'agy-gpt-oss', 'agy-flash', 'opus', 'sonnet'):
             self.assertTrue(team.provider_quota_status(sibling, now_ts=1100.0)['eligible'], sibling)
 
         # 4b. Blocking `agy-opus` (`agy_claude_gpt_oss_shared`) blocks `agy-opus`, `agy-sonnet`, and `agy-gpt-oss`,
@@ -783,6 +793,7 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
             observed_at=1000.0,
         )
         self.assertFalse(team.provider_quota_status('opus', now_ts=1100.0)['eligible'])
+        self.assertFalse(team.provider_quota_status('sonnet', now_ts=1100.0)['eligible'])
         self.assertTrue(team.provider_quota_status('agy-opus', now_ts=1100.0)['eligible'])
         self.assertTrue(team.provider_quota_status('agy-sonnet', now_ts=1100.0)['eligible'])
 

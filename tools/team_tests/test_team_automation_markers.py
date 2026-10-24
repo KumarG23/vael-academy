@@ -32,7 +32,7 @@ class AutomationMarkerTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.state = Path(self.tmp.name)
-        for target in ('STATE', 'REPO'):
+        for target in ('STATE', 'GLOBAL_STATE', 'REPO'):
             patcher = patch.object(team, target, self.state)
             patcher.start()
             self.addCleanup(patcher.stop)

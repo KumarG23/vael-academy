@@ -17,7 +17,7 @@ class TeamTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.state = Path(self.tmp.name)
-        self.patches = [patch.object(team, 'STATE', self.state), patch.object(team, 'REPO', self.state),
+        self.patches = [patch.object(team, 'STATE', self.state), patch.object(team, 'GLOBAL_STATE', self.state), patch.object(team, 'REPO', self.state),
                         patch.object(team.work_schedule, 'status', return_value={'open': True})]
         for p in self.patches:
             p.start()
@@ -99,9 +99,10 @@ class TeamTests(unittest.TestCase):
     def test_active_counts_both_sockets_without_inheriting_or_creating_a_server(self):
         from types import SimpleNamespace
         results = [SimpleNamespace(stdout='vael-issue-7\npersonal\nvael-issue-8\n'),
-                   SimpleNamespace(stdout='vael-issue-8\nvael-issue-9\n')]
+                   SimpleNamespace(stdout='vael-issue-8\nvael-issue-9\n'),
+                   SimpleNamespace(stdout='studio-command-issue-2\n')]
         with patch.object(team.subprocess, 'run', side_effect=results) as query:
-            self.assertEqual(team.active(), ['vael-issue-7', 'vael-issue-8', 'vael-issue-9'])
+            self.assertEqual(team.active(), ['studio-command-issue-2', 'vael-issue-7', 'vael-issue-8', 'vael-issue-9'])
         self.assertEqual(query.call_args_list[0].args[0][:4], ['tmux', '-L', 'default', '-N'])
         self.assertEqual(query.call_args_list[1].args[0][:4],
                          ['tmux', '-S', str(self.state / 'tmux.sock'), '-N'])
@@ -194,7 +195,7 @@ class TeamTests(unittest.TestCase):
         prompt = team.lead_prompt([], [], [], ['first pass'])
         for expected in ['`sol-dev` (`codex`, `gpt-6.1-sol`, `medium`)', 'qualified `deepseek` bounded',
                          'Evaluate `luna` for meaningful bounded implementation',
-                         'Sole emergency developer',
+                         'Primary emergency developer',
                          'stays\nwith that owner through revisions', 'three workers',
                          'Only one worker controls the shared GUI', 'exact-head\nacceptance receipt',
                          'only the delta since the last reviewed SHA', '--match-head-commit']:
@@ -202,9 +203,21 @@ class TeamTests(unittest.TestCase):
         self.assertEqual(team.LEAD, 'sol')
         self.assertEqual(team.PROFILES['sol'], ('codex', 'gpt-6.1-sol', 'high'))
         self.assertEqual(team.PROFILES['astra'], ('codex', 'gpt-6-astra', 'high'))
-        self.assertEqual(team.PROFILES['opus'], ('claude', 'opus', 'medium'))
+        self.assertEqual(team.PROFILES['opus'], ('claude', 'claude-opus-5-5', 'high'))
+        self.assertEqual(team.PROFILES['sonnet'], ('claude', 'claude-sonnet-5-5', 'medium'))
         self.assertEqual(team.PROFILES['argon'], ('agy', 'gemini-4-argon-medium', 'medium'))
         self.assertEqual(team.PROFILES['luna'], ('codex', 'gpt-6-luna', 'high'))
+        self.assertEqual(team.EMERGENCY_WORKERS, ('opus', 'astra'))
+        self.assertIn('sonnet', team.SENIOR_WORKERS)
+        self.assertNotIn('opus', team.SENIOR_WORKERS)
+        self.assertIn('backup emergency', team.lead_prompt([], [], [], ['routing']))
+        for profile, model, effort in [('opus', 'claude-opus-5-5', 'high'), ('sonnet', 'claude-sonnet-5-5', 'medium')]:
+            cmd = team.command(profile)
+            self.assertEqual(cmd[cmd.index('--model') + 1], model)
+            self.assertEqual(cmd[cmd.index('--effort') + 1], effort)
+        self.assertEqual(team.command('opus', 'old-session', legacy_effort='medium')[team.command('opus').index('--effort') + 1], 'medium')
+        self.assertIn('gpt-6-astra', team.command('astra', 'old-session'))
+        self.assertNotIn('astra', team.eligible_peers(task_tier='senior', now_ts=1000.0))
 
     def test_empty_queue_wakes_lead_to_derive_plan_work(self):
         rc, inference = self.lead_once()
