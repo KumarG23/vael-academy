@@ -153,6 +153,7 @@ PROFILES = {
     'sol': ('codex', 'gpt-6.1-sol', 'high'),
     'sol-dev': ('codex', 'gpt-6.1-sol', 'medium'),
     'opus': ('claude', 'claude-opus-5-5', 'high'),
+    'astra': ('codex', 'gpt-6-astra', 'high'),
     'sonnet': ('claude', 'claude-sonnet-5-5', 'medium'),
     'fable': ('claude', 'fable', 'high'),
     'argon': ('agy', 'gemini-4-argon-medium', 'medium'),
@@ -166,10 +167,10 @@ PROFILES = {
     'nemotron': ('opencode', 'opencode/nemotron-3-ultra-free', ''),
     'cohere': ('opencode', 'openrouter/cohere/north-mini-code:free', ''),
 }
-# Retained solely for pre-existing assignment/session continuation, never admission.
-LEGACY_PROFILES = {'astra': ('codex', 'gpt-6-astra', 'high')}
+# Retained solely for retired profiles with pre-existing assignment/session continuation.
+LEGACY_PROFILES = {}
 SENIOR_WORKERS = ('sol-dev', 'sonnet', 'argon', 'agy-opus', 'agy-sonnet')
-EMERGENCY_WORKERS = ('opus',)
+EMERGENCY_WORKERS = ('opus', 'astra')
 JUNIOR_WORKERS = ('luna', 'deepseek', 'minimax', 'nemotron', 'cohere', 'agy-gpt-oss', 'agy-flash')
 
 # Candidate Antigravity subscription routes: present with exact verified `agy models`
@@ -1531,10 +1532,12 @@ Hierarchy and routing for assignments:
   `sonnet` (`claude`, `claude-sonnet-5-5`, `medium`) and `argon` (`agy`, `gemini-4-argon-medium`, `medium`).
   `sol-dev` is a developer identity distinct from lead `sol`; both share the ChatGPT quota.
   Qualified Antigravity Opus/Sonnet routes remain additional capacity in their own subscription pool.
-- Sole emergency developer: `opus` (`claude`, `claude-opus-5-5`, `high`).
-  Use only for a concrete emergency or a hard problem needing escalation, and state the reason in the
-  issue/handoff. Routine quota exhaustion alone is not an emergency escalation. Fable 5.1 is excluded from
-  the active roster because it requires extra credits on Pro; preserve historical records, no paid fallback.
+- Primary emergency developer: `opus` (`claude`, `claude-opus-5-5`, `high`); backup emergency
+  developer: `astra` (`codex`, `gpt-6-astra`, `high`). In that order, use only on explicit lead
+  escalation for a concrete emergency or hard problem, and state the reason in the issue/handoff.
+  Routine quota exhaustion alone is not an emergency escalation. Astra shares the ChatGPT quota
+  pool with Sol and Sol-dev; it is not a regular senior or automatic ordinary quota fallback.
+  Fable 5.1 is excluded from the active roster because it requires extra credits on Pro; preserve historical records, no paid fallback.
 - Junior developers: `luna` (`codex`, `gpt-6-luna`, `high`) plus qualified `deepseek` and free OpenCode
   lanes (`minimax`, `nemotron`, `cohere`). Evaluate `luna` for meaningful bounded implementation and
   auxiliary work (docs, tests, triage, summaries); give qualified `deepseek` bounded, well-specified work.
