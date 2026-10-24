@@ -132,9 +132,7 @@ released. No full-school replay, replayed support scene, injected outcome,
 canon change or Neal visual/taste approval is claimed. The graphical pass is
 attributed to source head `c6bb0f37`; accepted #117 main `2d7ae523` was
 integrated afterward without a production conflict, so its sibling System
-behavior is not attributed to these captures. Proportional integration checks
-and the exact merged-head Verify are recorded in HANDOFF/§10/PR #129. The PR
-remains draft until those checks and lead review permit readiness.
+behavior is not attributed to these captures. Accepted #117 main `2d7ae523` was then integrated normally; its System code/tests/QA remain intact. Under the common heavy lock and disposable XDG data, the combined Journal/System/Supports/playback/keyboard/close/save/resume/dialogue→audio/battle-resize boundary passed **131/131 tests, 15,854 assertions / 14 scripts**. No unchanged full baseline or GUI pass was repeated. Native captures above are attributed to pre-integration #124 source `c6bb0f37`. All graphical jobs ended and the shared desktop is released. Exact integrated-head Verify and lead review remain pending; the PR stays draft.
 
 ## Captures
 
