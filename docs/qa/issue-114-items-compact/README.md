@@ -34,10 +34,33 @@ scripts** (479.318 s); helpers passed **113 discovered, 111 passed, two
 existing opt-in skips**. This is the required full baseline and is attributed
 to that commit. Accepted #108/#112 source/tests/QA/status were integrated
 normally through `8b442f13`; the combined source then passed a clean import
-and affected boundary. Exact PR-head Verify passed for
-`62794e1995655eff3bdcbc783cd6c2701fd03fcc`
-([run 40114841755](https://github.com/KumarG23/vael-academy/actions/runs/40114841755));
-PR #130 is ready for lead review. No review feedback has been posted yet.
+and affected boundary. Verify passed for pre-integration head
+`fda7f32fd8357a4c53c68c294c3c61cf1ea05414`
+([run 40117611917](https://github.com/KumarG23/vael-academy/actions/runs/40117611917));
+accepted main #117 has since advanced the PR head, so this does not verify the
+integrated source.
+
+
+## Accepted-main integration
+
+Main `2d7ae52338fa25556ca8ee1ffce6112b4a0c4a4a` (#117 / PR #120) was merged
+normally. The source conflict was isolated to the Journal toast drawing branch:
+Items on tab 2 keeps its wrapped inventory feedback, System on tab 4 keeps its
+reserved message row and range hint, and the shared toast path remains for
+load-error and other-tab feedback. The complete #117 source/tests/QA captures,
+manifests and status were retained; MASTER_PLAN and HANDOFF retain both issue
+records.
+
+On the merged working tree, the proportional combined boundary passed
+**116/116 tests, 18,030 assertions / 12 scripts**: Items layout/input and
+transfer, inventory, System rows/feedback/load rejection, Journal/close and
+sibling tabs, custom keyboard controls, Campaign load validation and SaveSystem.
+It ran under the shared `vael-godot-heavy.lock` with disposable XDG data. The
+run reported 79 inherited `wait_frames` deprecations and existing exit-time
+two ObjectDB / one resource diagnostics. No repeated full GUT/import/helper or
+native GUI run; those earlier results remain attributed to their source heads.
+No GUI job was launched because #122 owns the desktop. Exact integrated-head
+Verify is the remaining gate; PR #130 stays draft.
 
 ## Original-renderer evidence
 
