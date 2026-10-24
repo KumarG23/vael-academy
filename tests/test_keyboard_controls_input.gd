@@ -305,6 +305,7 @@ func test_extra_keys_in_room_map_and_travel_keep_modal_consumption() -> void:
 		_tap(DOWN)
 	_key(CONFIRM)
 	assert_null(_castle._room_map, "custom Confirm travels")
+	await wait_until(func(): return not _castle.busy(), 2.0)
 	assert_eq(_castle.room.id, "campus")
 	_key(CONFIRM, false)
 	assert_eq(_castle._menu_context, "", "release did not interact")

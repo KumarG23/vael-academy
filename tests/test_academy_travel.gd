@@ -60,6 +60,7 @@ func _walk_through(target: String) -> void:
 			Input.action_press(actions[i])
 			_castle._process(float(_castle._grid.cell_size) / CastleScene.WALK_SPEED)
 			Input.action_release(actions[i])
+			await wait_until(func(): return not _castle.busy(), 2.0)
 			assert_eq(_castle.room.id, target, "ordinary movement crossed physical doorway")
 			return
 	fail_test("No usable physical door to " + target)
@@ -80,9 +81,9 @@ func test_actual_entry_discovery_deduplication_and_excluded_rooms():
 	assert_eq(_castle._room_map.destinations.size(), 1, "no undiscovered interiors")
 	assert_eq(_castle._room_map.destinations[0].id, "campus")
 	_key(KEY_ESCAPE)
-	_walk_through("entrance")
+	await _walk_through("entrance")
 	assert_eq(Campaign.academy_visits, ["campus", "entrance"])
-	_walk_through("campus")
+	await _walk_through("campus")
 	assert_eq(Campaign.academy_visits, ["campus", "entrance"], "entry deduplicates")
 	for id: String in ["grove", "vael_square"]:
 		_castle.enter_room(id)
@@ -90,7 +91,7 @@ func test_actual_entry_discovery_deduplication_and_excluded_rooms():
 
 
 func test_cancel_current_room_keyboard_travel_state_invariance_and_continuation():
-	_walk_through("entrance")
+	await _walk_through("entrance")
 	Campaign.flags = {"gold": 43, "quest_fixture": true}
 	Campaign.training_used = true
 	var before := Campaign.to_dict().duplicate(true)
@@ -116,6 +117,7 @@ func test_cancel_current_room_keyboard_travel_state_invariance_and_continuation(
 	assert_null(_castle._nearest_point, "previous room interaction invalidated synchronously")
 	_key(KEY_ENTER)
 	assert_null(_castle._room_map)
+	await wait_until(func(): return not _castle.busy(), 2.0)
 	assert_eq(_castle.room.id, "campus")
 	var cell := _castle._grid.world_to_cell(_castle._avatar.position)
 	assert_true(AcademyTravel.safe_cell(_castle.room, cell, _castle._terrain_db))
@@ -124,7 +126,7 @@ func test_cancel_current_room_keyboard_travel_state_invariance_and_continuation(
 	assert_eq(_castle._support_state.save_state(), supports)
 	_castle._check_door()
 	assert_eq(_castle.room.id, "campus", "safe arrival cannot bounce")
-	_walk_through("entrance")
+	await _walk_through("entrance")
 	assert_eq(Campaign.to_dict(), before, "ordinary continuation still deduplicates")
 	_castle.enter_room("training")
 	for point: CastlePoint in _castle.room.points:
@@ -136,7 +138,7 @@ func test_cancel_current_room_keyboard_travel_state_invariance_and_continuation(
 
 
 func test_pointer_switch_selection_confirm_and_compact_destination_bounds():
-	_walk_through("entrance")
+	await _walk_through("entrance")
 	var position := _castle._avatar.position
 	_key(KEY_M)
 	_click(Vector2(10, 10), MOUSE_BUTTON_RIGHT)
@@ -159,12 +161,13 @@ func test_pointer_switch_selection_confirm_and_compact_destination_bounds():
 		if map.destinations[i].id == "campus":
 			_click(map._destination_labels[i].get_global_rect().get_center())
 			break
+	await wait_until(func(): return not _castle.busy(), 2.0)
 	assert_eq(_castle.room.id, "campus")
 	assert_null(_castle._room_map)
 
 
 func test_unknown_disconnected_and_broken_arrival_fail_without_partial_transition():
-	_walk_through("entrance")
+	await _walk_through("entrance")
 	_key(KEY_M)
 	var map := _castle._room_map
 	var before := Campaign.to_dict().duplicate(true)
@@ -245,7 +248,7 @@ func test_compact_long_earned_destination_list_scrolls_and_wraps_without_world_c
 
 
 func test_blocked_existing_door_is_an_access_gate_even_for_an_earned_room():
-	_walk_through("entrance")
+	await _walk_through("entrance")
 	_key(KEY_M)
 	var map := _castle._room_map
 	var before := Campaign.to_dict().duplicate(true)
