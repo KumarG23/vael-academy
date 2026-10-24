@@ -268,6 +268,7 @@ func test_close_then_normal_walking_door_edge_guard_reopen_and_interaction():
 	_castle._check_door()
 	_castle._avatar.position = _castle._grid.cell_center(door.cell)
 	_castle._check_door()
+	await wait_until(func(): return not _castle.busy(), 2.0)
 	assert_eq(_castle.room.id, door.to_room, "normal armed doorway transitions")
 	_key(KEY_M)
 	await wait_process_frames(2)

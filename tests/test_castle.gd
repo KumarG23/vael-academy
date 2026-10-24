@@ -94,6 +94,7 @@ func test_walking_into_a_door_changes_rooms():
 	_castle._door_armed = true  # as after any real step off a doorway
 	_castle._avatar.position = _castle._grid.cell_center(door.cell)
 	_castle._check_door()
+	await wait_until(func(): return not _castle.busy(), 2.0)
 	assert_eq(_castle.room.id, door.to_room, "walk-in transition, no button")
 	assert_eq(events.size(), 1)
 
