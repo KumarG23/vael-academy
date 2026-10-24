@@ -1,0 +1,102 @@
+{
+  "base": "d15bdb95",
+  "renderer": "Godot 4.7.2 Vulkan Forward+ / llvmpipe, X11",
+  "source_sha256": {
+    "src/ui/academy_journal.gd": "0dfd0b615ede3eb65be173bfe010280e2be45551696df274b4aaf270156b17c2",
+    "src/ui/battle_view.gd": "06ccbd298fe9e530ff7be02e614699f57317dbbd31537f79f849c38c6c2f517a",
+    "src/ui/mission_reference.gd": "27682fda155be9012db71937357219bae90684640a78a795f98d7f8bf6614d61",
+    "src/ui/ui_theme.gd": "5b5afec5db1aa7f32474de3f8cccbed220bac1c817e43d70b8ac2dafae9a0488",
+    "docs/qa/issue-106-objectives/tools/runner.gd": "6c4c294d943018f14a9acf2bda56414ca01d8b40c1377b00ada6306627d25a39",
+    "docs/qa/issue-106-objectives/tools/reporter.gd": "529555c864fb6945ca84ccc895ddd94de7962c8ba0b98fd56478dd846414fc97"
+  },
+  "captures": [
+    {
+      "file": "images/01-title.png",
+      "size": [
+        1280,
+        720
+      ],
+      "sha256": "d3971c4b18f4fe5b3e779fbca699e12021c4b30998bc5a42072acbde8fd16fa2"
+    },
+    {
+      "file": "images/02-load.png",
+      "size": [
+        1280,
+        720
+      ],
+      "sha256": "ceed47495a4399d8e2f99e4ee3189dc758b0d4e89e9166c4d3d231502d86dbf7"
+    },
+    {
+      "file": "images/03-nonbattle-default.png",
+      "size": [
+        1280,
+        720
+      ],
+      "sha256": "40081c46de064285fe6ff5cb4957ddf4fbc5f4af14d9898f783dce90ccb8e95a"
+    },
+    {
+      "file": "images/04-battle-default.png",
+      "size": [
+        1280,
+        720
+      ],
+      "sha256": "a345ec8d357fc8b4ec09ca4c200812df74d0f195943fedc2afbac54c63a2fe8c"
+    },
+    {
+      "file": "images/05-battle-800.png",
+      "size": [
+        800,
+        450
+      ],
+      "sha256": "15d8231ab9aa65ed4507d1f4b72c825ebe17742a596dbf2cc2464ebffae1c642"
+    },
+    {
+      "file": "images/06-battle-640-top.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "23c95ea7eab3eafe2f0954af9be92347aec1ce57a5b10c5b0ea40b5c32e290d7"
+    },
+    {
+      "file": "images/07-battle-640-bottom.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "23c95ea7eab3eafe2f0954af9be92347aec1ce57a5b10c5b0ea40b5c32e290d7"
+    },
+    {
+      "file": "images/08-exploration.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "3a2e4616636a459a55664ae0457d736d74fc50f022317b150dd399b31d9acb4f"
+    },
+    {
+      "file": "images/10-custom-objectives-640.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "8d8f002c799403ac8f7a5bfca7eebc7a7ab135463825f0682da5219375cbca65"
+    },
+    {
+      "file": "images/11-nonbattle-800.png",
+      "size": [
+        800,
+        450
+      ],
+      "sha256": "6c4a42f5f0344f2cab7e36739437ddc3d551d1bb9982fe4ff10cdfde38d52501"
+    },
+    {
+      "file": "images/12-nonbattle-640.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "4fdb0239871bfe532547bab73759ddb01a8f32bea07b28421b95476e3a0a10ac"
+    }
+  ]
+}
