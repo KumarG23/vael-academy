@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+[ext_resource type="Script" path="res://src/ui/battle_view.gd" id="1"]
+[ext_resource type="Resource" path="res://data/chapters/prologue.tres" id="2"]
+[node name="NotABattle" type="Node2D"]
+[node name="BattleChild" type="Node2D" parent="."]
+script = ExtResource("1")
+chapter = ExtResource("2")
