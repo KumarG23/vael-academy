@@ -12,6 +12,7 @@ const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System", "Fish
 const STAT_KEYS := ["hp", "str", "mag", "skl", "spd", "lck", "def", "res"]
 const STAT_LABELS := ["HP", "STR", "MAG", "SKL", "SPD", "LCK", "DEF", "RES"]
 const SLOTS := 3
+const ROSTER_FOOTER_SAFE_INSET := UITheme.DST_MARGIN * 2.5 + 1.0
 # System rows: (label, kind). kind drives Enter / ←→.
 const SYS_ROWS := [
 	["Save — Slot 1", "save0"], ["Save — Slot 2", "save1"], ["Save — Slot 3", "save2"],
@@ -25,6 +26,7 @@ const SYS_ROWS := [
 
 var _tab := 0
 var _roster_i := 0
+var _roster_detail_page := 0
 var _sys_i := 0
 var _fish_i := 0
 var _support_i := 0
@@ -148,6 +150,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		if not _adjust_volume(1):
 			_switch_tab(1)
 		_handled()
+	elif _tab == 0 and _is_roster_page_key(event):
+		# The roster's list stays on Up/Down; PageUp/PageDown browse the selected
+		# student's complete detail when the compact book cannot show it at once.
+		# Consume echoes too so a held key cannot leak into castle exploration.
+		if event is InputEventKey and event.pressed and not event.echo:
+			_move_roster_detail_page(-1 if event.keycode == KEY_PAGEUP else 1)
+		_handled()
 	elif event.is_action_pressed("cursor_up"):
 		_move_row(-1); _handled()
 	elif event.is_action_pressed("cursor_down"):
@@ -160,6 +169,23 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _is_journal_key(event: InputEvent) -> bool:
 	return event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_J
+
+
+func _is_roster_page_key(event: InputEvent) -> bool:
+	return event is InputEventKey and event.pressed and event.keycode in [KEY_PAGEUP, KEY_PAGEDOWN]
+
+
+func _move_roster_detail_page(dir: int) -> void:
+	if _snaps.is_empty() or _roster_i >= _snaps.size():
+		return
+	var body := _roster_body_rect()
+	var list_width := clampf(body.size.x * 0.29, 112.0, 210.0)
+	var detail_width := body.size.x - list_width - 14.0
+	var lines := _roster_detail_lines(_snaps[_roster_i], UITheme.font(), detail_width)
+	var pages := maxi(1, int(ceil(float(lines.size()) / _roster_detail_page_size(body.size.y))))
+	_roster_detail_page = clampi(_roster_detail_page + dir, 0, pages - 1)
+	AudioManager.play_sfx("cursor")
+	queue_redraw()
 
 
 func _handled() -> void:
@@ -182,6 +208,7 @@ func _move_row(dir: int) -> void:
 		0:
 			if not _snaps.is_empty():
 				_roster_i = (_roster_i + dir + _snaps.size()) % _snaps.size()
+			_roster_detail_page = 0
 		2:
 			_inv_move(dir)
 		4:
@@ -442,7 +469,7 @@ func _draw() -> void:
 	var tabs_height := 92.0 + (tab_rows - 1) * 22.0
 	draw_line(book.position + Vector2(30, tabs_height), Vector2(book.position.x + book.size.x - 30, book.position.y + tabs_height),
 		Color(0.3, 0.33, 0.44), 1.0)
-	var body := _body_rect()
+	var body := _roster_body_rect() if _tab == 0 else _body_rect()
 	match _tab:
 		0: _draw_roster(body, font)
 		1: _draw_calendar(body, font)
@@ -452,15 +479,55 @@ func _draw() -> void:
 		5: _draw_fish_log(body, font)
 		6: _draw_supports(body, font)
 	# footer
-	var hint := "←/→ tab      ↑/↓ move      Enter select      J / Esc close"
-	draw_string(font, Vector2(book.position.x + 34, book.position.y + book.size.y - 26), hint,
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
+	if _tab == 0:
+		var roster_hint := _roster_footer_hint()
+		var footer_bounds := _roster_footer_bounds(book, font, roster_hint)
+		draw_string(font, Vector2(footer_bounds.position.x, footer_bounds.position.y + font.get_ascent(14)), roster_hint,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
+	else:
+		var hint := "←/→ tab      ↑/↓ move      Enter select      J / Esc close"
+		draw_string(font, Vector2(book.position.x + 34, book.position.y + book.size.y - 26), hint,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
 	if _toast_t > 0.0:
 		var tr := _toast_rect()
 		draw_rect(tr, Color(0.1, 0.11, 0.16, 0.95), true)
 		draw_rect(tr, Color(0.86, 0.78, 0.45, 0.8), false, 1.5)
 		draw_string(font, Vector2(tr.position.x + 16, tr.position.y + 20), _toast,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.95, 0.9, 0.7))
+
+
+func _roster_body_rect() -> Rect2:
+	return _journal_body_rect()
+
+
+func _journal_body_rect() -> Rect2:
+	var vp := get_viewport_rect().size
+	var m := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
+	var book := Rect2(m, vp - m * 2.0)
+	var rows := _tab_row_count(UITheme.font(), book.size.x - 68.0, 16)
+	var body_top := 92.0 + (rows - 1) * 22.0 + 16.0
+	return Rect2(book.position + Vector2(34, body_top),
+		Vector2(book.size.x - 68.0, book.size.y - body_top - 42.0))
+
+
+func _roster_footer_hint() -> String:
+	return "↑/↓ student   PgUp/PgDn details   ←/→ tab   J / Esc close"
+
+
+## Bounds the actual Roster footer glyphs inside the clear area of the ornate
+## panel. Width and height come from the active font; the safe inset avoids the
+## lower corner filigree at every supported window size.
+func _roster_footer_bounds(book: Rect2, font: Font, hint: String) -> Rect2:
+	var font_size := 14
+	var measured := font.get_string_size(hint, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	var ascent := font.get_ascent(font_size)
+	var descent := font.get_descent(font_size)
+	var safe_left := book.position.x + ROSTER_FOOTER_SAFE_INSET
+	var safe_right := book.end.x - ROSTER_FOOTER_SAFE_INSET
+	var x := clampf(book.get_center().x - measured.x * 0.5, safe_left, safe_right - measured.x)
+	var bottom := book.end.y - ROSTER_FOOTER_SAFE_INSET
+	var baseline := bottom - descent
+	return Rect2(Vector2(x, baseline - ascent), Vector2(measured.x, ascent + descent))
 
 
 ## The toast box, measured once so the layout test can verify both default and
@@ -475,52 +542,102 @@ func _toast_rect() -> Rect2:
 
 
 func _draw_roster(body: Rect2, font: Font) -> void:
-	# left: unit list; right: selected unit detail
-	var lw := 210.0
-	var y := body.position.y + 6
-	for i in range(_snaps.size()):
+	# Keep both panes inside the measured body. At compact heights only the
+	# selected roster rows are shown; Up/Down still wraps through every member.
+	var lw := clampf(body.size.x * 0.29, 112.0, 210.0)
+	var list_x := body.position.x
+	var row_step := 26.0
+	var visible_rows := maxi(1, int(floor((body.size.y - 4.0) / row_step)))
+	var first := clampi(_roster_i - visible_rows + 1, 0, maxi(0, _snaps.size() - visible_rows))
+	var y := body.position.y + 18
+	for i in range(first, mini(_snaps.size(), first + visible_rows)):
 		var s: Dictionary = _snaps[i]
 		if i == _roster_i:
-			draw_rect(Rect2(body.position.x - 6, y - 18, lw, 26), Color(0.30, 0.45, 0.85, 0.45), true)
+			draw_rect(Rect2(list_x, y - 17, lw, 22), Color(0.30, 0.45, 0.85, 0.45), true)
 		var col: Color = _house_color(s["house"])
-		draw_rect(Rect2(body.position.x - 2, y - 15, 4, 20), col, true)
-		draw_string(font, Vector2(body.position.x + 10, y), s["name"],
-			HORIZONTAL_ALIGNMENT_LEFT, lw - 20, 18, Color(0.95, 0.94, 0.88) if i == _roster_i else Color(0.78, 0.8, 0.86))
-		y += 30
+		draw_rect(Rect2(list_x + 2, y - 14, 3, 16), col, true)
+		draw_string(font, Vector2(list_x + 10, y), s["name"],
+			HORIZONTAL_ALIGNMENT_LEFT, lw - 14, 16, Color(0.95, 0.94, 0.88) if i == _roster_i else Color(0.78, 0.8, 0.86))
+		y += row_step
 	if _roster_i < _snaps.size():
-		_draw_unit_detail(_snaps[_roster_i], Rect2(body.position + Vector2(lw + 20, 0), body.size - Vector2(lw + 20, 0)), font)
+		var pane := Rect2(body.position + Vector2(lw + 14.0, 0), Vector2(body.size.x - lw - 14.0, body.size.y))
+		_draw_unit_detail(_snaps[_roster_i], pane, font)
 
 
 func _draw_unit_detail(s: Dictionary, r: Rect2, font: Font) -> void:
-	var x := r.position.x
-	var y := r.position.y
-	# portrait
+	var lines := _roster_detail_lines(s, font, r.size.x)
+	var page_size := _roster_detail_page_size(r.size.y)
+	var page_count := maxi(1, int(ceil(float(lines.size()) / page_size)))
+	_roster_detail_page = clampi(_roster_detail_page, 0, page_count - 1)
+	var start := _roster_detail_page * page_size
+	var end := mini(lines.size(), start + page_size)
 	var portrait := _portrait(s["id"])
-	if portrait != null:
-		var ph := 150.0
-		var pw := portrait.get_width() * (ph / portrait.get_height())
-		draw_texture_rect(portrait, Rect2(x, y, pw, ph), false)
-		x += pw + 22
-	draw_string(font, Vector2(x, y + 26), s["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 24,
-		_house_color(s["house"]).lightened(0.25))
-	draw_string(font, Vector2(x, y + 52), "%s   ·   Lv %d   ·   Mov %d" % [s["class"], s["level"], s["mov"]],
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.8, 0.82, 0.9))
-	draw_string(font, Vector2(x, y + 76), (str(s["house"]).capitalize() + " House") if s["house"] != "" else "Protagonist",
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.62, 0.65, 0.74))
-	# stat grid (2 columns of 4)
-	var sy := r.position.y + 172
-	for i in range(STAT_KEYS.size()):
-		var gx := r.position.x + (i % 2) * 190.0
-		var gy := sy + (i / 2) * 26.0
-		draw_string(font, Vector2(gx, gy), STAT_LABELS[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.66, 0.7, 0.82))
-		draw_string(font, Vector2(gx + 52, gy), str(s["stats"][STAT_KEYS[i]]),
-			HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.96, 0.93, 0.82))
-	var by := sy + 4 * 26 + 14
-	draw_string(font, Vector2(r.position.x, by), "Carries:  " + (", ".join(s["items"]) if not s["items"].is_empty() else "—"),
-		HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 4, 14, Color(0.82, 0.84, 0.9))
-	if not s["skills"].is_empty():
-		draw_string(font, Vector2(r.position.x, by + 24), "Skills:  " + ", ".join(s["skills"]),
-			HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 4, 14, Color(0.7, 0.9, 0.75))
+	var heading_y := r.position.y + 18
+	var portrait_h := minf(42.0, maxf(0.0, r.size.y * 0.42)) if _roster_detail_page == 0 else 0.0
+	if portrait != null and portrait_h >= 18.0:
+		var portrait_w := portrait.get_width() * (portrait_h / portrait.get_height())
+		draw_texture_rect(portrait, Rect2(r.position.x, r.position.y + 2.0, portrait_w, portrait_h), false)
+		var hx := r.position.x + portrait_w + 8.0
+		draw_string(font, Vector2(hx, heading_y), s["name"], HORIZONTAL_ALIGNMENT_LEFT, r.size.x - (hx - r.position.x), 17,
+			_house_color(s["house"]).lightened(0.25))
+		draw_string(font, Vector2(hx, heading_y + 17), "%s · Lv %d · Mov %d" % [s["class"], s["level"], s["mov"]],
+			HORIZONTAL_ALIGNMENT_LEFT, r.size.x - (hx - r.position.x), 13, Color(0.8, 0.82, 0.9))
+	else:
+		draw_string(font, Vector2(r.position.x, heading_y), s["name"], HORIZONTAL_ALIGNMENT_LEFT, r.size.x, 17,
+			_house_color(s["house"]).lightened(0.25))
+		draw_string(font, Vector2(r.position.x, heading_y + 17), "%s · Lv %d · Mov %d" % [s["class"], s["level"], s["mov"]],
+			HORIZONTAL_ALIGNMENT_LEFT, r.size.x, 13, Color(0.8, 0.82, 0.9))
+	var line_y := r.position.y + 60.0
+	for i in range(start, end):
+		draw_string(font, Vector2(r.position.x, line_y), lines[i], HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 2.0, 14, Color(0.82, 0.84, 0.9))
+		line_y += 18.0
+
+
+func _roster_detail_page_size(body_height: float) -> int:
+	# The title/portrait header and footer stay outside this measured text region,
+	# so every visible line remains inside the book body even at 640×360.
+	return maxi(1, int(floor((body_height - 68.0) / 18.0)))
+
+
+func _roster_detail_lines(s: Dictionary, font: Font, width: float) -> Array[String]:
+	var rows: Array[String] = []
+	var house := (str(s["house"]).capitalize() + " House") if s["house"] != "" else "Protagonist"
+	rows.append("House: " + house)
+	rows.append("Stats")
+	for i in range(0, STAT_KEYS.size(), 2):
+		var next := i + 1
+		rows.append("%s %s     %s %s" % [STAT_LABELS[i], s["stats"][STAT_KEYS[i]], STAT_LABELS[next], s["stats"][STAT_KEYS[next]]])
+	rows.append("Carries")
+	if s["items"].is_empty():
+		rows.append("—")
+	else:
+		for item in s["items"]:
+			rows.append(str(item))
+	rows.append("Skills")
+	if s["skills"].is_empty():
+		rows.append("—")
+	else:
+		for skill in s["skills"]:
+			rows.append(str(skill))
+	var wrapped: Array[String] = []
+	for row in rows:
+		wrapped.append_array(_wrap_roster_line(row, font, width - 2.0, 14))
+	return wrapped
+
+
+func _wrap_roster_line(value: String, font: Font, width: float, font_size: int) -> Array[String]:
+	var result: Array[String] = []
+	var line := ""
+	for word in value.split(" ", false):
+		var candidate := word if line.is_empty() else line + " " + word
+		if not line.is_empty() and font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > width:
+			result.append(line)
+			line = word
+		else:
+			line = candidate
+	if not line.is_empty():
+		result.append(line)
+	return result
 
 
 func _draw_calendar(body: Rect2, font: Font) -> void:
