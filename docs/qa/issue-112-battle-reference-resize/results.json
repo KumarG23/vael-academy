@@ -1,0 +1,65 @@
+{
+  "base": "300f146a4192e6078735827d496355c005e7650c",
+  "engine": "Godot 4.7.2 / Vulkan 1.4.318 Forward+ / llvmpipe LLVM 20.1.2",
+  "native_source_first_pass": {
+    "src/ui/battle_view.gd": "efc95d51487770f1aca00eaca710e040d1fe7e4f84a4da463121ed4e8dc4ed47",
+    "src/ui/combat_forecast_panel.gd": "6ce8a0f2fababb5bc5489f09a49f1945f3d24fc358844fd84b4128ee951b7207",
+    "src/ui/unit_stats_panel.gd": "c05d7f72986cd7cfc39bfc69a3a717a18da80eb8a161ae0c977c07ce9f36f00d"
+  },
+  "native_source_full_pack_and_earned_delta": {
+    "src/ui/battle_view.gd": "8c16cbe97563e3ce6f2a6ea125c3256752be29901502726c02057fb8d9f3750c",
+    "src/ui/combat_forecast_panel.gd": "6ce8a0f2fababb5bc5489f09a49f1945f3d24fc358844fd84b4128ee951b7207",
+    "src/ui/unit_stats_panel.gd": "21f6e839a758d2646bdbfc6260f6919d5c9f6bfda303c52bbad671e5532a8d3e"
+  },
+  "earned_source": "docs/qa/issue-39-three-house-contests/saves/emberwing-opening.json",
+  "earned_sha256": "c156c62b43e6d6f48002d50f787751e708ec03cdef3378ceadddcd806e99a4d3",
+  "native_sizes": [
+    [
+      1280,
+      720
+    ],
+    [
+      800,
+      450
+    ],
+    [
+      640,
+      360
+    ],
+    [
+      800,
+      450
+    ],
+    [
+      1280,
+      720
+    ]
+  ],
+  "unchanged_reference_interval_fields": [
+    "payload (whole campaign, battle RNG, battle state, supports, roster)",
+    "cursor",
+    "phase",
+    "busy",
+    "selected",
+    "move origin"
+  ],
+  "extra_keys_configured_in_shipped_editor": {
+    "up": "I",
+    "down": "U",
+    "left": "L",
+    "right": "O",
+    "confirm": "P",
+    "cancel": "N"
+  },
+  "fixture_notes": [
+    "Campus Dev Jump used solely to configure optional keys; it is not earned progression.",
+    "Additional comparison files copied unchanged from #39: Tidemark opening, Thornrook opening, Emberwing opening (Autosave); they were not loaded or written.",
+    "Full-pack graphical fixture is a fresh production battle with Brenna promoted via existing promotion_class and inventory filled with sig_bertram, sig_brenna, sig_fenn, sig_rurik, sig_osric. It is supplementary, not earned. No outcomes injected."
+  ],
+  "comparison": {
+    "hover": true,
+    "forecast": true,
+    "stats": true,
+    "all_five_files_byte_identical": true
+  }
+}
