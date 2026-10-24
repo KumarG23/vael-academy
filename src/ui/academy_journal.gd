@@ -30,6 +30,7 @@ var _fish_i := 0
 var _support_i := 0
 var _calendar_i := -1
 var _calendar_scroll := 0
+var _grades_scroll := 0     # Issue #108: first visible Grades item
 var _snaps: Array = []       # per-unit data snapshots
 var _slot_info: Array = []   # save-slot summaries
 var _toast := ""
@@ -148,9 +149,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if not _adjust_volume(1):
 			_switch_tab(1)
 		_handled()
-	elif event.is_action_pressed("cursor_up"):
+	elif event.is_action_pressed("cursor_up", _tab == 3):
 		_move_row(-1); _handled()
-	elif event.is_action_pressed("cursor_down"):
+	elif event.is_action_pressed("cursor_down", _tab == 3):
 		_move_row(1); _handled()
 	elif event.is_action_pressed("cursor_confirm"):
 		# AW-49: handled BEFORE acting — _activate can change the scene (Return to
@@ -168,6 +169,7 @@ func _handled() -> void:
 
 func _switch_tab(dir: int) -> void:
 	_tab = (_tab + dir + TAB_NAMES.size()) % TAB_NAMES.size()
+	_grades_scroll = 0
 	# Issue #83: don't leave a stale load rejection on an unrelated tab.
 	if _toast_is_load_error:
 		_toast = ""
@@ -194,6 +196,12 @@ func _move_row(dir: int) -> void:
 			var supports := _support_entries()
 			if not supports.is_empty():
 				_support_i = (_support_i + dir + supports.size()) % supports.size()
+		3:
+			var before := _grades_scroll
+			var layout := _grades_layout(_body_rect(), UITheme.font())
+			_grades_scroll = clampi(_grades_scroll + dir, 0, layout["max_start"])
+			if _grades_scroll == before:
+				return
 		1:
 			var events := Campaign.calendar()
 			if not events.is_empty():
@@ -711,52 +719,146 @@ func _draw_items(body: Rect2, font: Font) -> void:
 
 ## AW-54: the Grades tab (GRADING_SYSTEM.md §3) — the running grade, the four
 ## weighted marks as bars, and the "↑ how to raise it" hint per mark.
+## Issue #108: the content is a list of measured items (every op carries its own
+## active-font rect) so compact windows page through it instead of overflowing.
 func _draw_grades(body: Rect2, font: Font) -> void:
 	var g := Campaign.running_grade()
-	var x := body.position.x
-	var y := body.position.y + 8
-	draw_string(font, Vector2(x, y), "ACADEMY STANDING",
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.86, 0.78, 0.45))
-	draw_string(font, Vector2(x + body.size.x - 260, y), "Semester %d  ·  Week %d" % [Campaign.semester, Campaign.week],
-		HORIZONTAL_ALIGNMENT_RIGHT, 250, 15, Color(0.62, 0.66, 0.76))
-	y += 52
-	# the running grade, big
+	var layout := _grades_layout(body, font, g)
+	for op: Dictionary in layout["ops"]:
+		var rect: Rect2 = op["rect"]
+		if op["kind"] == "rect":
+			draw_rect(rect, op["color"], true)
+		else:
+			draw_multiline_string(font, Vector2(rect.position.x, rect.position.y + font.get_ascent(op["size"])),
+				op["text"], HORIZONTAL_ALIGNMENT_LEFT, op["wrap"], op["size"], -1, op["color"],
+				TextServer.BREAK_WORD_BOUND)
+	if layout["scrolls"]:
+		var fb: Rect2 = layout["feedback_rect"]
+		draw_string(font, Vector2(fb.position.x, fb.position.y + font.get_ascent(13)), layout["feedback"],
+			HORIZONTAL_ALIGNMENT_RIGHT, fb.size.x, 13, Color(0.72, 0.76, 0.88))
+
+
+func _grades_text(font: Font, text: String, size: int, color: Color, pos: Vector2, width := -1.0) -> Dictionary:
+	var measured := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, size, -1,
+		TextServer.BREAK_WORD_BOUND)
+	return {"kind": "text", "text": text, "size": size, "color": color, "wrap": width,
+		"rect": Rect2(pos, Vector2(ceilf(measured.x), measured.y))}
+
+
+## One grade item per block (header, standing, each mark, next card, each locked
+## card). Ops are item-relative; _grades_layout offsets the visible ones.
+func _grades_items(body: Rect2, font: Font, g: Dictionary) -> Array[Dictionary]:
+	var items: Array[Dictionary] = []
+	var w := body.size.x
+	var dim := Color(0.55, 0.58, 0.68)
 	var rank_col := _rank_color(str(g["rank"]))
-	draw_string(font, Vector2(x, y + 10), str(g["rank"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 54, rank_col)
-	draw_string(font, Vector2(x + 56, y + 4), "%d  ·  %s" % [int(g["score"]), str(g["rank_name"])],
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.95, 0.94, 0.88))
-	draw_string(font, Vector2(x + 56, y + 26), "the grade if the semester ended today",
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.55, 0.58, 0.68))
-	y += 66
+	# header: title + semester/week, stacked when they would collide
+	var head := _grades_text(font, "ACADEMY STANDING", 18, Color(0.86, 0.78, 0.45), Vector2.ZERO)
+	var sem := _grades_text(font, "Semester %d  ·  Week %d" % [Campaign.semester, Campaign.week],
+		15, Color(0.62, 0.66, 0.76), Vector2.ZERO)
+	var sem_rect: Rect2 = sem["rect"]
+	var head_rect: Rect2 = head["rect"]
+	if head_rect.size.x + 16.0 + sem_rect.size.x <= w:
+		sem["rect"] = Rect2(Vector2(w - sem_rect.size.x, 2), sem_rect.size)
+	else:
+		sem["rect"] = Rect2(Vector2(0, head_rect.size.y + 2), sem_rect.size)
+	items.append({"ops": [head, sem], "h": (sem["rect"] as Rect2).end.y + 12.0})
+	# the running grade, big
+	var big := _grades_text(font, str(g["rank"]), 54, rank_col, Vector2.ZERO)
+	var tx := maxf(56.0, (big["rect"] as Rect2).size.x + 8.0)
+	var score := _grades_text(font, "%d  ·  %s" % [int(g["score"]), str(g["rank_name"])], 20,
+		Color(0.95, 0.94, 0.88), Vector2(tx, 6), w - tx)
+	var meaning := _grades_text(font, "the grade if the semester ended today", 13, dim,
+		Vector2(tx, (score["rect"] as Rect2).end.y + 4), w - tx)
+	items.append({"ops": [big, score, meaning],
+		"h": maxf((big["rect"] as Rect2).end.y, (meaning["rect"] as Rect2).end.y) + 8.0})
 	# the four marks
 	var order := ["coursework", "battlefield", "arena", "conduct"]
 	var labels := {"coursework": "Coursework", "battlefield": "Battlefield", "arena": "The Arena", "conduct": "Conduct"}
 	var marks: Dictionary = g["marks"]
 	var hints: Dictionary = g["hints"]
+	var wide := true
+	var value_w := 0.0
+	for k in order:
+		var v: float = marks[k]
+		var vt := ("%d" % roundi(v if v >= 0.0 else Grading.NEUTRAL)) + ("" if v >= 0.0 else " (no marks yet)")
+		value_w = maxf(value_w, font.get_string_size(vt, HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x)
+		if 510.0 + font.get_string_size("↑ " + str(hints[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x > w \
+				or 380.0 + value_w > 510.0:
+			wide = false
+	var bar_x := 180.0 if wide else 176.0
+	var bar_w := 190.0 if wide else clampf(w - bar_x - value_w - 14.0, 48.0, 190.0)
+	var value_x := bar_x + bar_w + 10.0
 	for k in order:
 		var v: float = marks[k]
 		var has_data := v >= 0.0
 		var shown := v if has_data else Grading.NEUTRAL
-		draw_string(font, Vector2(x, y), labels[k], HORIZONTAL_ALIGNMENT_LEFT, 130, 16, Color(0.9, 0.9, 0.95))
-		draw_string(font, Vector2(x + 130, y), "%d%%" % roundi(Grading.WEIGHTS[k] * 100),
-			HORIZONTAL_ALIGNMENT_LEFT, 50, 13, Color(0.55, 0.58, 0.68))
-		var bar := Rect2(x + 180, y - 13, 190, 14)
-		draw_rect(bar, Color(0.2, 0.22, 0.3), true)
-		draw_rect(Rect2(bar.position, Vector2(bar.size.x * shown / 100.0, bar.size.y)),
-			rank_col.darkened(0.1) if has_data else Color(0.45, 0.48, 0.58), true)
-		draw_string(font, Vector2(x + 380, y), ("%d" % roundi(shown)) + ("" if has_data else " (no marks yet)"),
-			HORIZONTAL_ALIGNMENT_LEFT, 150, 15, Color(0.96, 0.93, 0.82))
-		draw_string(font, Vector2(x + 380 + 130, y), "↑ " + str(hints[k]),
-			HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 520, 14, Color(0.7, 0.9, 0.75))
-		y += 40
-	y += 8
-	draw_string(font, Vector2(x, y), "→ Next report card: end of Semester %d (Week %d)" % [Campaign.semester, Campaign.semester_end_week()],
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.62, 0.66, 0.76))
-	# locked history
+		var ops: Array = []
+		var label := _grades_text(font, labels[k], 16, Color(0.9, 0.9, 0.95), Vector2.ZERO)
+		var line_h: float = (label["rect"] as Rect2).size.y
+		ops.append(label)
+		ops.append(_grades_text(font, "%d%%" % roundi(Grading.WEIGHTS[k] * 100), 13, dim, Vector2(bar_x - 50.0, 2)))
+		var bar := Rect2(bar_x, (line_h - 14.0) * 0.5, bar_w, 14.0)
+		ops.append({"kind": "rect", "color": Color(0.2, 0.22, 0.3), "rect": bar})
+		ops.append({"kind": "rect", "color": rank_col.darkened(0.1) if has_data else Color(0.45, 0.48, 0.58),
+			"rect": Rect2(bar.position, Vector2(bar.size.x * shown / 100.0, bar.size.y))})
+		ops.append(_grades_text(font, ("%d" % roundi(shown)) + ("" if has_data else " (no marks yet)"), 15,
+			Color(0.96, 0.93, 0.82), Vector2(value_x, 0)))
+		var hint_text := "↑ " + str(hints[k])
+		var hint_op: Dictionary
+		if wide:
+			hint_op = _grades_text(font, hint_text, 14, Color(0.7, 0.9, 0.75), Vector2(510, 1), w - 510.0)
+		else:
+			hint_op = _grades_text(font, hint_text, 14, Color(0.7, 0.9, 0.75), Vector2(0, line_h + 2), w)
+		ops.append(hint_op)
+		items.append({"ops": ops, "h": maxf(40.0, (hint_op["rect"] as Rect2).end.y + 12.0)})
+	var next_op := _grades_text(font, "→ Next report card: end of Semester %d (Week %d)" % [Campaign.semester, Campaign.semester_end_week()],
+		14, Color(0.62, 0.66, 0.76), Vector2(0, 8), w)
+	items.append({"ops": [next_op], "h": (next_op["rect"] as Rect2).end.y + 14.0})
+	# locked history, oldest first as stored
 	for rc in Campaign.report_cards:
-		y += 28
-		draw_string(font, Vector2(x, y), "Semester %d — %s (%s, %d)" % [int(rc["semester"]), str(rc["rank"]), str(rc["rank_name"]), int(rc["score"])],
-			HORIZONTAL_ALIGNMENT_LEFT, -1, 15, _rank_color(str(rc["rank"])))
+		var card := _grades_text(font, "Semester %d — %s (%s, %d)" % [int(rc["semester"]), str(rc["rank"]), str(rc["rank_name"]), int(rc["score"])],
+			15, _rank_color(str(rc["rank"])), Vector2(0, 6), w)
+		items.append({"ops": [card], "h": maxf(28.0, (card["rect"] as Rect2).end.y + 8.0)})
+	return items
+
+
+## Measured, scroll-clamped Grades layout. `ops` are the absolute draw ops of the
+## visible items; `_grades_scroll` is the first visible item and is clamped here
+## so resizes and content changes never strand the view.
+func _grades_layout(body: Rect2, font: Font, g: Dictionary = Campaign.running_grade()) -> Dictionary:
+	var items := _grades_items(body, font, g)
+	var total := 0.0
+	for it in items:
+		total += it["h"]
+	var scrolls := total > body.size.y
+	var avail := body.size.y - (20.0 if scrolls else 0.0)
+	var max_start := 0
+	if scrolls:
+		var used := 0.0
+		max_start = items.size()
+		while max_start > 0 and used + items[max_start - 1]["h"] <= avail:
+			max_start -= 1
+			used += items[max_start]["h"]
+		max_start = mini(max_start, items.size() - 1)
+	_grades_scroll = clampi(_grades_scroll, 0, max_start)
+	var ops: Array = []
+	var visible: Array[int] = []
+	var y := body.position.y
+	for i in range(_grades_scroll, items.size()):
+		var h: float = items[i]["h"]
+		if not visible.is_empty() and y + h > body.position.y + avail:
+			break
+		for op: Dictionary in items[i]["ops"]:
+			var placed: Dictionary = op.duplicate()
+			placed["rect"] = Rect2((op["rect"] as Rect2).position + Vector2(body.position.x, y), (op["rect"] as Rect2).size)
+			ops.append(placed)
+		visible.append(i)
+		y += h
+	return {"items": items, "visible_indices": visible, "ops": ops, "scrolls": scrolls,
+		"max_start": max_start, "content_bottom": y,
+		"feedback": "↑/↓ browse   %d–%d of %d" % [visible[0] + 1, visible[-1] + 1, items.size()],
+		"feedback_rect": Rect2(body.position.x, body.end.y - 16.0, body.size.x, 16.0)}
 
 
 func _rank_color(rank: String) -> Color:
