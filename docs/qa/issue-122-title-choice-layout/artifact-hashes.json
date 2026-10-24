@@ -1,0 +1,278 @@
+{
+  "accepted-inspection-integration-results.json": {
+    "sha256": "5818fd2c88c72f14d315bfe77935bffe02647993ae60321924c398e02f88a296",
+    "bytes": 1661
+  },
+  "configured-files-after.json": {
+    "sha256": "ec3ce7ad46e68fb056e5776e504b3a0a7cb7402e3f5aa30f7ba2f9caf89c5173",
+    "bytes": 430
+  },
+  "configured-files-before.json": {
+    "sha256": "ec3ce7ad46e68fb056e5776e504b3a0a7cb7402e3f5aa30f7ba2f9caf89c5173",
+    "bytes": 430
+  },
+  "earned-files-after.json": {
+    "sha256": "1d47912938a344701ea3317bd2b79ce9069c54f74a58ef9523491ae9393eed48",
+    "bytes": 368
+  },
+  "earned-files-before.json": {
+    "sha256": "1d47912938a344701ea3317bd2b79ce9069c54f74a58ef9523491ae9393eed48",
+    "bytes": 368
+  },
+  "hover-integration-results.json": {
+    "sha256": "1b29461e284c152b2a7d914da293ef85bd3919d794c6a6d713acfc0f3b9c93a4",
+    "bytes": 2605
+  },
+  "images/01-title-default.png": {
+    "sha256": "2e9bf882f36bc85509548fd870efe83f58293279e872adebfec502aafa744e6c",
+    "bytes": 32306
+  },
+  "images/02-new-1280.png": {
+    "sha256": "37506b053032315d0d61b8cd7ae14b274241b4558d3040cd8fb8ba58359b56fc",
+    "bytes": 33509
+  },
+  "images/02-new-640.png": {
+    "sha256": "84fd9f8e38e936e8d774395e6f4e46a084192b0e47892932b7f3efd69ff7a05a",
+    "bytes": 27066
+  },
+  "images/02-new-800.png": {
+    "sha256": "2728f921fe048324947e11a454068c13599dff6e4498c72cd937a3d1afbabddb",
+    "bytes": 29892
+  },
+  "images/03-empty-load-640.png": {
+    "sha256": "71191abb2ca7293b5bedb0dc206486760fb01d5d69cd628b6dcfb16fc91af17a",
+    "bytes": 25876
+  },
+  "images/04-classic-opening.png": {
+    "sha256": "2e1917466c8b39704b67729f2b7bb6ed7d296af49faacce2c0cd744633739585",
+    "bytes": 1187743
+  },
+  "images/05-casual-opening.png": {
+    "sha256": "23af1f5b797a22b5966b4f16ab69da581a98e4950c5de3a6253a587aa5fa1045",
+    "bytes": 516422
+  },
+  "images/06-earned-load-default.png": {
+    "sha256": "0fdd4b2b12d712c23b4ec7581076e5a0ed96b041308e21d431c0bf1372c96be9",
+    "bytes": 53454
+  },
+  "images/07-earned-battle-loaded.png": {
+    "sha256": "f470e54496b1966dfaa743838d7a852f193b61e8793bb4ff705f27a75136dbf4",
+    "bytes": 244005
+  },
+  "images/08-earned-native-wait-continuation-640.png": {
+    "sha256": "6759b39efdbf45adb3b49077137c49e11791ba788f9c446cb5a76ca6dc011982",
+    "bytes": 101531
+  },
+  "images/09-all-slots-1280.png": {
+    "sha256": "337fd4f445323be55b4399a9d11a013298b77906732a33a2366f5e7508facc00",
+    "bytes": 56637
+  },
+  "images/09-all-slots-640.png": {
+    "sha256": "aac4f83af3fe4a9af270771d79c9b94671fbfa2bf9dbbb358ac44636d084d965",
+    "bytes": 35132
+  },
+  "images/09-all-slots-800.png": {
+    "sha256": "f78649b012725ec4bac123930d9dacbe0d1b94f56328699f3c275c111d2452bf",
+    "bytes": 51204
+  },
+  "images/10-wheel-page-2-640.png": {
+    "sha256": "aabfedfd74bfb5c1dfa75c27402c578e4bf3aa1d4ed0c7adaae5c33816ccb981",
+    "bytes": 30634
+  },
+  "images/10-wheel-page-4-640.png": {
+    "sha256": "243b1e238b8b4e1feb4e6febd8adcf87bc8f57decd93f180aedd68ed3d944f6d",
+    "bytes": 29813
+  },
+  "images/11-invalid-manual-640.png": {
+    "sha256": "78f0f0b1e3b99ba4b81e62aad89b303b5cc750211637f3bc2110f763225f1bb7",
+    "bytes": 31919
+  },
+  "images/12-invalid-manual-default.png": {
+    "sha256": "1ace526f6bd07595d3741cdec5e3b64f3fc3314438c60ac3a3e38ed953ac3a12",
+    "bytes": 61221
+  },
+  "images/13-invalid-autosave-default.png": {
+    "sha256": "e85f416eea0c56f27a756f1102b7b8ed43e49cc48b0122784b0cbaf85564f543",
+    "bytes": 59531
+  },
+  "images/14-invalid-autosave-640.png": {
+    "sha256": "12823984e8629ff58c31ba5cb9180565d8c64bbb768dc220e1806c7eff90ed85",
+    "bytes": 32583
+  },
+  "images/15-missing-autosave-retry-640.png": {
+    "sha256": "12823984e8629ff58c31ba5cb9180565d8c64bbb768dc220e1806c7eff90ed85",
+    "bytes": 32583
+  },
+  "images/16-missing-manual-640.png": {
+    "sha256": "4a182add3ff451a85b9a59fbdd5d1fe65d4f0cec448938fdba7978429dfb401d",
+    "bytes": 29502
+  },
+  "images/17-sparse-physical-2-640.png": {
+    "sha256": "0ed20ac6daa030a2b69ee2f74230728bebadb2565363c4540f4bdb42f7fdfb98",
+    "bytes": 30574
+  },
+  "images/18-sparse-battle-dispatch-640.png": {
+    "sha256": "82a7cac82da5deaab66e15febb6c25a0f388216a0f879ac961fffa79a9977325",
+    "bytes": 100934
+  },
+  "images/19-sparse-native-continuation-640.png": {
+    "sha256": "60cd91a15a2d4bb7a6207d0002351e505ab3ffbcf463c2af8b8bd9b2705e24c8",
+    "bytes": 108264
+  },
+  "images/20-earned-autosave-loaded.png": {
+    "sha256": "ea6bb72380efd744e63991f591b8e7aa0ef32cc9fcb79630856ce79460ed9fdf",
+    "bytes": 117393
+  },
+  "images/21-autosave-native-movement.png": {
+    "sha256": "de992e8c4247677359f0e844de699fa0828da5f0f3a93daf9999096e0bd6c2f3",
+    "bytes": 111368
+  },
+  "images/22-new-back-640.png": {
+    "sha256": "184f7ac8c6738a71e5ec455d44ec1a94163fc3ae7fa4ff4e696192fd34d4a6d5",
+    "bytes": 24395
+  },
+  "images/23-custom-selected-autosave-640.png": {
+    "sha256": "55c4bf91700108757b920ecef4635847d7e752895545cf5cc64b450296553330",
+    "bytes": 29057
+  },
+  "images/24-custom-autosave-restored-640.png": {
+    "sha256": "55c4bf91700108757b920ecef4635847d7e752895545cf5cc64b450296553330",
+    "bytes": 29057
+  },
+  "manifest.json": {
+    "sha256": "2b363c5ad04c97794c0ae1f551e1f59a0f7e6c2a93fa52772ad7d51fd5fc788b",
+    "bytes": 8069
+  },
+  "native-results.json": {
+    "sha256": "3a596dede006aa8d2ea25de5a6f0af55bf9cb6a4e272d87e615490245c64af15",
+    "bytes": 5860
+  },
+  "recovery-files-after-deliberate-removals.json": {
+    "sha256": "d14da49e9250e336ca70bed6d84879ddd9e56bfea5adf0496793e1a660b8c30a",
+    "bytes": 182
+  },
+  "recovery-files-after-readonly.json": {
+    "sha256": "e7db78154a17b8f46439e742486eb25aaccf0ab98b3eeb102eac95ef75e4a745",
+    "bytes": 368
+  },
+  "recovery-files-before.json": {
+    "sha256": "e7db78154a17b8f46439e742486eb25aaccf0ab98b3eeb102eac95ef75e4a745",
+    "bytes": 368
+  },
+  "snapshots/01-title-default.json": {
+    "sha256": "efc84a363147c903dcfd93c3e313b1266dfdde53ef275e8bd329abdbea4659b0",
+    "bytes": 1418
+  },
+  "snapshots/02-new-1280.json": {
+    "sha256": "73657688b922eca661d443aa6e65f9ab94d5b1d1e8ab1ef334f275189e00129d",
+    "bytes": 1350
+  },
+  "snapshots/02-new-640.json": {
+    "sha256": "e7d6aa5ad9622495a2d4d092654efdc7a9a4289f6aae5020045ea355d0a085f9",
+    "bytes": 1321
+  },
+  "snapshots/02-new-800.json": {
+    "sha256": "54bde7f08e207fc34843c08b5982dfcfa3cdacf5c8485a712688bb927332984f",
+    "bytes": 1327
+  },
+  "snapshots/03-empty-load-640.json": {
+    "sha256": "b53992ec951f047fbb1edc97a7f011d720e5f60f4ab22dd2959e4b59a6519fe2",
+    "bytes": 1249
+  },
+  "snapshots/04-classic-opening.json": {
+    "sha256": "7db491f1db70052368dcd61a71bb8103ef78ced24ccca46e997663965c5a21cd",
+    "bytes": 914
+  },
+  "snapshots/05-casual-opening.json": {
+    "sha256": "9533258a87d42adebb843568c99be9119cb0d05e80db39f0365c1bf3bfdd5146",
+    "bytes": 912
+  },
+  "snapshots/06-earned-load-default.json": {
+    "sha256": "ee3a7ee6c57ed2a58d527bb2607c5d14ae6c5e9399807b4b719dfd47e1451188",
+    "bytes": 1659
+  },
+  "snapshots/07-earned-battle-loaded.json": {
+    "sha256": "f583a6d932a26ae3f8fded0a674faef3575ab05d03f94ee503fb84ad6abb9c93",
+    "bytes": 19434
+  },
+  "snapshots/08-earned-native-wait-continuation-640.json": {
+    "sha256": "15023bd7b2252016e7ed74a82125dd0027d7450d6c70a23f8db40b82c1e10339",
+    "bytes": 19476
+  },
+  "snapshots/09-all-slots-1280.json": {
+    "sha256": "d8d7ca3dbc5e62758709855c09f9fb6c9185042efb7d584b1c2439aec69ee314",
+    "bytes": 1697
+  },
+  "snapshots/09-all-slots-640.json": {
+    "sha256": "b3bdba641567101c823e34e316a886b5440f443499c1dfb7d90f00e9fd8db5de",
+    "bytes": 1654
+  },
+  "snapshots/09-all-slots-800.json": {
+    "sha256": "eb9144f8170de1565c629f4f4f63588c178b169e78bd3fe8c1a3b9a42b432f2f",
+    "bytes": 1667
+  },
+  "snapshots/10-wheel-page-2-640.json": {
+    "sha256": "fae6a9683f2c3e333288a85983607e80d624286e1d142849beb9ccc34357acf4",
+    "bytes": 1649
+  },
+  "snapshots/10-wheel-page-4-640.json": {
+    "sha256": "e00db58cefd2890a88bc44ca4ccf27d83f51962791934c8032c799a9bdbae0ff",
+    "bytes": 1654
+  },
+  "snapshots/11-invalid-manual-640.json": {
+    "sha256": "6b6ee8cf5a1fb1e548b4badda36c60cf245df2739ab384600d6cfcfe231caa25",
+    "bytes": 1724
+  },
+  "snapshots/12-invalid-manual-default.json": {
+    "sha256": "b69a676922c9701093d10494be2a9b22f39e64f42dc8f11ac1351e5f5cf396b1",
+    "bytes": 1750
+  },
+  "snapshots/13-invalid-autosave-default.json": {
+    "sha256": "b97ed63004a20118c6b43cc87a0e5e63de91c030042addb9ef9c4d118918b39c",
+    "bytes": 1724
+  },
+  "snapshots/14-invalid-autosave-640.json": {
+    "sha256": "7c1bf0b7592f4009e742325f29607d08fc5d82641dba85ec027e6093051fa2a4",
+    "bytes": 1681
+  },
+  "snapshots/15-missing-autosave-retry-640.json": {
+    "sha256": "ded38c26d6252fb82e1996d16a1d4cdd3de71dbc0fd548d125af4fde8216f913",
+    "bytes": 1703
+  },
+  "snapshots/16-missing-manual-640.json": {
+    "sha256": "a5d2aae46fdb696f7b136ad88badede7555682bc9546d0df366b916ddfdb3fa7",
+    "bytes": 1687
+  },
+  "snapshots/17-sparse-physical-2-640.json": {
+    "sha256": "1f602a92c43f56a05a22e3c242645b9f1ff9ba56d30c9b77d33e5f0bab265fad",
+    "bytes": 1315
+  },
+  "snapshots/18-sparse-battle-dispatch-640.json": {
+    "sha256": "e63931225f785f51ed4669b1d38fb64b0408fceec026558ac837c85912e2e5c6",
+    "bytes": 28461
+  },
+  "snapshots/19-sparse-native-continuation-640.json": {
+    "sha256": "8512148eacfe819bdfff432c588f3e529225e8b9dac28d1c41c23184d42892b7",
+    "bytes": 28462
+  },
+  "snapshots/20-earned-autosave-loaded.json": {
+    "sha256": "5ffbd2904ec5abc12cc8c3df6af60bc73d47a8a4c9cf91f6eca85483fa70ddf6",
+    "bytes": 4749
+  },
+  "snapshots/21-autosave-native-movement.json": {
+    "sha256": "17ec36789bb009b33d0f92fc6ae05f20ec491bd7ef7fa50d38f913da14e059bc",
+    "bytes": 4757
+  },
+  "snapshots/22-new-back-640.json": {
+    "sha256": "5c702d8ebaae8c7594b7d870047fa537d40148ae4f05ee8106d094bb16da5bf4",
+    "bytes": 4864
+  },
+  "snapshots/23-custom-selected-autosave-640.json": {
+    "sha256": "4a3b67e60691bfdc9062646fa1c69adea2ea264ad81574f495fac57c754add39",
+    "bytes": 5181
+  },
+  "snapshots/24-custom-autosave-restored-640.json": {
+    "sha256": "1fb38efb84e7783518a15121652ed33e790bdb94f2649456793e6f8d78a2b9f9",
+    "bytes": 5159
+  }
+}
