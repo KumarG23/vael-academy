@@ -1,4 +1,8 @@
 {
+  "accepted-inspection-integration-results.json": {
+    "sha256": "5818fd2c88c72f14d315bfe77935bffe02647993ae60321924c398e02f88a296",
+    "bytes": 1661
+  },
   "configured-files-after.json": {
     "sha256": "ec3ce7ad46e68fb056e5776e504b3a0a7cb7402e3f5aa30f7ba2f9caf89c5173",
     "bytes": 430
@@ -136,8 +140,8 @@
     "bytes": 29057
   },
   "manifest.json": {
-    "sha256": "6c908d44efe473ad7c9aaf748f7ba7f44524f3f16e528a33f1c2a7abdc38ac2a",
-    "bytes": 7510
+    "sha256": "2b363c5ad04c97794c0ae1f551e1f59a0f7e6c2a93fa52772ad7d51fd5fc788b",
+    "bytes": 8069
   },
   "native-results.json": {
     "sha256": "3a596dede006aa8d2ea25de5a6f0af55bf9cb6a4e272d87e615490245c64af15",

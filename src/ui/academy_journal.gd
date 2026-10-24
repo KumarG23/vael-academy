@@ -33,6 +33,7 @@ var _sys_i := 0
 var _sys_scroll := 0      # Issue #117: first visible System row
 var _fish_i := 0
 var _support_i := 0
+var _support_detail_page := 0
 var _calendar_i := -1
 var _calendar_scroll := 0
 var _grades_scroll := 0     # Issue #108: first visible Grades item
@@ -162,6 +163,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event is InputEventKey and event.pressed and not event.echo:
 			_move_roster_detail_page(-1 if event.keycode == KEY_PAGEUP else 1)
 		_handled()
+	elif _tab == 6 and _is_support_page_key(event):
+		if event is InputEventKey and event.pressed and not event.echo:
+			_move_support_detail_page(-1 if event.keycode == KEY_PAGEUP else 1)
+		_handled()
 	elif event.is_action_pressed("cursor_up", _tab == 3):
 		_move_row(-1); _handled()
 	elif event.is_action_pressed("cursor_down", _tab == 3):
@@ -178,6 +183,19 @@ func _is_journal_key(event: InputEvent) -> bool:
 
 func _is_roster_page_key(event: InputEvent) -> bool:
 	return event is InputEventKey and event.pressed and event.keycode in [KEY_PAGEUP, KEY_PAGEDOWN]
+
+
+func _is_support_page_key(event: InputEvent) -> bool:
+	return event is InputEventKey and event.pressed and event.keycode in [KEY_PAGEUP, KEY_PAGEDOWN]
+
+
+func _move_support_detail_page(dir: int) -> void:
+	var layout := _support_layout(_body_rect(), UITheme.font())
+	if int(layout["page_count"]) <= 1:
+		return
+	_support_detail_page = clampi(_support_detail_page + dir, 0, int(layout["page_count"]) - 1)
+	AudioManager.play_sfx("cursor")
+	queue_redraw()
 
 
 func _move_roster_detail_page(dir: int) -> void:
@@ -230,6 +248,7 @@ func _move_row(dir: int) -> void:
 			var supports := _support_entries()
 			if not supports.is_empty():
 				_support_i = (_support_i + dir + supports.size()) % supports.size()
+				_support_detail_page = 0
 		3:
 			var before := _grades_scroll
 			var layout := _grades_layout(_body_rect(), UITheme.font())
@@ -1250,44 +1269,115 @@ func _support_entries() -> Array:
 
 func _draw_supports(body: Rect2, font: Font) -> void:
 	var x := body.position.x
-	var y := body.position.y + 8.0
-	draw_string(font, Vector2(x, y), "Kai's Support Record",
+	var title := _support_title_layout(body, font)
+	draw_string(font, title["baseline"], title["text"],
 		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 20, Color(0.86, 0.78, 0.45))
-	y += 38.0
 	var entries := _support_entries()
 	if entries.is_empty():
-		draw_string(font, Vector2(x, y), "No authored Kai support chains are available on the current roster.",
-			HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 15, Color(0.72, 0.75, 0.82))
+		var message := "No authored Kai support chains are available on the current roster."
+		var empty_layout: Dictionary = _support_empty_message_layout(body, font, message, 15)
+		draw_multiline_string(font, empty_layout["baseline"], message,
+			HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 15, -1, Color(0.72, 0.75, 0.82), TextServer.BREAK_WORD_BOUND)
 		return
 	_support_i = clampi(_support_i, 0, entries.size() - 1)
-	var visible_indices := _support_visible_indices(entries, body.size.y - 66.0)
-	for i in visible_indices:
-		var entry: Dictionary = entries[i]
-		var conversations: Array = entry["conversations"]
-		var row_height := 28.0 + maxf(1, conversations.size()) * 19.0
-		if i == _support_i:
-			draw_rect(Rect2(x - 6.0, y - 17.0, body.size.x - 8.0, row_height - 2.0),
-				Color(0.30, 0.45, 0.85, 0.30), true)
-		var rank: String = str(entry["rank"])
-		var rank_text := rank if rank != "" else "No rank earned"
-		draw_string(font, Vector2(x + 4.0, y), "%s  ·  Current rank: %s" % [entry["name"], rank_text],
-			HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 20.0, 16, Color(0.95, 0.94, 0.88))
-		y += 22.0
-		if conversations.is_empty():
-			draw_string(font, Vector2(x + 14.0, y), "No earned conversations.",
-				HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 28.0, 14, Color(0.62, 0.66, 0.76))
-			y += 19.0
-		else:
-			for conversation: Dictionary in conversations:
-				var status := "Viewed" if bool(conversation["viewed"]) else "Unviewed"
-				draw_string(font, Vector2(x + 14.0, y), "%s conversation  ·  %s" % [conversation["rank"], status],
-					HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 28.0, 14,
-					Color(0.75, 0.84, 0.92) if status == "Viewed" else Color(0.95, 0.80, 0.55))
-				y += 19.0
-		y += 6.0
-	if entries.size() > 1:
-		draw_string(font, Vector2(x, body.position.y + body.size.y - 4.0), "↑/↓ browse companions",
+	var layout := _support_layout(body, font, entries)
+	var record: Dictionary = layout["record"]
+	var conversations: Array = record["conversations"]
+	var header: Dictionary = layout["header"]
+	draw_rect(Rect2(x - 6.0, header["rect"].position.y - 3.0, body.size.x - 8.0,
+		maxf(24.0, layout["content_rect"].end.y - header["rect"].position.y + 3.0)),
+		Color(0.30, 0.45, 0.85, 0.30), true)
+	draw_string(font, header["baseline"], header["text"], HORIZONTAL_ALIGNMENT_LEFT,
+		body.size.x - 20.0, 16, Color(0.95, 0.94, 0.88))
+	if conversations.is_empty():
+		var empty: Dictionary = layout["empty"]
+		draw_string(font, empty["baseline"], empty["text"], HORIZONTAL_ALIGNMENT_LEFT,
+			body.size.x - 28.0, 14, Color(0.62, 0.66, 0.76))
+	else:
+		for status: Dictionary in layout["statuses"]:
+			draw_string(font, status["baseline"], status["text"], HORIZONTAL_ALIGNMENT_LEFT,
+				body.size.x - 28.0, 14,
+				Color(0.75, 0.84, 0.92) if bool(status["viewed"]) else Color(0.95, 0.80, 0.55))
+	if entries.size() > 1 or int(layout["page_count"]) > 1:
+		draw_string(font, layout["feedback"]["baseline"], layout["feedback"]["text"],
 			HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 13, Color(0.55, 0.58, 0.68))
+
+
+func _support_layout(body: Rect2, font: Font, entries: Array = _support_entries()) -> Dictionary:
+	if entries.is_empty():
+		return {"record": {}, "statuses": [], "page_count": 0,
+			"title": _support_title_layout(body, font),
+			"empty_message": _support_empty_message_layout(body, font,
+			"No authored Kai support chains are available on the current roster.", 15)}
+	_support_i = clampi(_support_i, 0, entries.size() - 1)
+	var record: Dictionary = entries[_support_i]
+	var conversations: Array = record["conversations"]
+	var has_footer := entries.size() > 1
+	var baseline := Vector2(body.position.x + 4.0, body.position.y + 46.0)
+	var content_bottom := body.end.y - (22.0 if has_footer else 8.0)
+	var available := maxf(0.0, content_bottom - baseline.y)
+	var max_statuses := maxi(1, floori((available - 22.0 - font.get_height(14)) / 19.0) + 1)
+	var page_count := maxi(1, int(ceil(float(conversations.size()) / max_statuses)))
+	_support_detail_page = clampi(_support_detail_page, 0, page_count - 1)
+	var first_status := _support_detail_page * max_statuses
+	var last_status := mini(conversations.size(), first_status + max_statuses)
+	var rank: String = str(record["rank"])
+	var header_text := "%s  ·  Current rank: %s" % [record["name"], rank if rank != "" else "No rank earned"]
+	var header_size := font.get_string_size(header_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16)
+	var header_rect := Rect2(baseline.x, baseline.y - font.get_ascent(16), header_size.x, font.get_height(16))
+	var result := {"record": record, "content_rect": Rect2(body.position.x, baseline.y - font.get_ascent(16),
+		body.size.x, maxf(0.0, content_bottom - (baseline.y - font.get_ascent(16)))),
+		"title": _support_title_layout(body, font),
+		"header": {"text": header_text, "baseline": baseline, "rect": header_rect},
+		"statuses": [], "page_count": page_count, "visible_status_indices": range(first_status, last_status)}
+	if conversations.is_empty():
+		var empty_text := "No earned conversations."
+		var empty_baseline := Vector2(baseline.x + 10.0, baseline.y + 22.0)
+		var empty_size := font.get_string_size(empty_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
+		result["empty"] = {"text": empty_text, "baseline": empty_baseline,
+			"rect": Rect2(empty_baseline.x, empty_baseline.y - font.get_ascent(14), empty_size.x, font.get_height(14))}
+	else:
+		for i in range(first_status, last_status):
+			var conversation: Dictionary = conversations[i]
+			var viewed := bool(conversation["viewed"])
+			var status_text := "%s conversation  ·  %s" % [conversation["rank"], "Viewed" if viewed else "Unviewed"]
+			var status_baseline := Vector2(baseline.x + 10.0, baseline.y + 22.0 + (i - first_status) * 19.0)
+			var status_size := font.get_string_size(status_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
+			result["statuses"].append({"index": i, "text": status_text, "viewed": viewed,
+				"baseline": status_baseline, "rect": Rect2(status_baseline.x,
+				status_baseline.y - font.get_ascent(14), status_size.x, font.get_height(14))})
+	if page_count > 1:
+		var first_label := first_status + 1
+		var last_label := last_status
+		result["feedback"] = _support_feedback_layout(body, font, "↑/↓ companions · PgUp/PgDn statuses %d–%d of %d" %
+			[first_label, last_label, conversations.size()])
+	else:
+		result["feedback"] = _support_feedback_layout(body, font, "↑/↓ browse companions")
+	return result
+
+
+func _support_title_layout(body: Rect2, font: Font) -> Dictionary:
+	var title := "Kai's Support Record"
+	var baseline := Vector2(body.position.x, body.position.y + font.get_ascent(20))
+	var size := font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 20)
+	return {"text": title, "baseline": baseline,
+		"rect": Rect2(baseline.x, baseline.y - font.get_ascent(20), size.x, font.get_height(20))}
+
+
+func _support_feedback_layout(body: Rect2, font: Font, message: String) -> Dictionary:
+	var baseline := Vector2(body.position.x, body.end.y - 4.0)
+	var size := font.get_string_size(message, HORIZONTAL_ALIGNMENT_LEFT, -1, 13)
+	return {"text": message, "baseline": baseline,
+		"rect": Rect2(baseline.x, baseline.y - font.get_ascent(13), size.x, font.get_height(13))}
+
+
+func _support_empty_message_layout(body: Rect2, font: Font, message: String, font_size: int) -> Dictionary:
+	var baseline := Vector2(body.position.x, body.position.y + 40.0 + font.get_ascent(font_size))
+	var measured := font.get_multiline_string_size(message, HORIZONTAL_ALIGNMENT_LEFT,
+		body.size.x, font_size, -1, TextServer.BREAK_WORD_BOUND)
+	var rect := Rect2(baseline.x, baseline.y - font.get_ascent(font_size),
+		minf(body.size.x, measured.x), measured.y)
+	return {"text": message, "baseline": baseline, "rect": rect}
 
 
 func _support_visible_indices(entries: Array, available_height: float) -> Array[int]:
@@ -1296,7 +1386,7 @@ func _support_visible_indices(entries: Array, available_height: float) -> Array[
 	for i in range(_support_i, entries.size()):
 		var conversations: Array = entries[i]["conversations"]
 		var row_height := 28.0 + maxf(1, conversations.size()) * 19.0
-		if not visible.is_empty() and used + row_height > available_height:
+		if used + row_height > available_height:
 			break
 		visible.append(i)
 		used += row_height

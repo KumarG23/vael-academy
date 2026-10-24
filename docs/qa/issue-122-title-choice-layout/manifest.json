@@ -188,5 +188,17 @@
     "own_five_source_test_hashes_unchanged": true,
     "prior_native_evidence_unchanged": true,
     "status": "integration source preserved; one inspection-layout boundary failure requires lead/#131 triage, final-head Verify pending"
+  },
+  "ci_pre_inspection_integration": {
+    "head": "eb78505e99e6a0a94ce0813e45135b14a2afc509",
+    "run": 40121582365,
+    "result": "SUCCESS",
+    "url": "https://github.com/KumarG23/vael-academy/actions/runs/40121582365"
+  },
+  "latest_integration": {
+    "accepted_main": "55bc1ceb878949cf00763343ae9c27bac36cfbce",
+    "results": "accepted-inspection-integration-results.json",
+    "status": "all requested local boundaries pass; #133 dependency resolved; exact new-head Verify and lead review remain",
+    "native_title_choice_source_unchanged": true
   }
 }
