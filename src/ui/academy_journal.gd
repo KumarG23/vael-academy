@@ -870,6 +870,7 @@ func _grades_items(body: Rect2, font: Font, g: Dictionary) -> Array[Dictionary]:
 	var dim := Color(0.55, 0.58, 0.68)
 	var rank_col := _rank_color(str(g["rank"]))
 	# header: title + semester/week, stacked when they would collide
+	var compact := body.size.y < 200.0
 	var head := _grades_text(font, "ACADEMY STANDING", 18, Color(0.86, 0.78, 0.45), Vector2.ZERO)
 	var sem := _grades_text(font, "Semester %d  ·  Week %d" % [Campaign.semester, Campaign.week],
 		15, Color(0.62, 0.66, 0.76), Vector2.ZERO)
@@ -879,16 +880,17 @@ func _grades_items(body: Rect2, font: Font, g: Dictionary) -> Array[Dictionary]:
 		sem["rect"] = Rect2(Vector2(w - sem_rect.size.x, 2), sem_rect.size)
 	else:
 		sem["rect"] = Rect2(Vector2(0, head_rect.size.y + 2), sem_rect.size)
-	items.append({"ops": [head, sem], "h": (sem["rect"] as Rect2).end.y + 12.0})
+	items.append({"ops": [head, sem], "h": (sem["rect"] as Rect2).end.y + (6.0 if compact else 12.0)})
 	# the running grade, big
-	var big := _grades_text(font, str(g["rank"]), 54, rank_col, Vector2.ZERO)
-	var tx := maxf(56.0, (big["rect"] as Rect2).size.x + 8.0)
+	# Compact bodies shrink the rank glyph so the header and standing share a page.
+	var big := _grades_text(font, str(g["rank"]), 40 if compact else 54, rank_col, Vector2.ZERO)
+	var tx := maxf(44.0 if compact else 56.0, (big["rect"] as Rect2).size.x + 8.0)
 	var score := _grades_text(font, "%d  ·  %s" % [int(g["score"]), str(g["rank_name"])], 20,
 		Color(0.95, 0.94, 0.88), Vector2(tx, 6), w - tx)
 	var meaning := _grades_text(font, "the grade if the semester ended today", 13, dim,
 		Vector2(tx, (score["rect"] as Rect2).end.y + 4), w - tx)
 	items.append({"ops": [big, score, meaning],
-		"h": maxf((big["rect"] as Rect2).end.y, (meaning["rect"] as Rect2).end.y) + 8.0})
+		"h": maxf((big["rect"] as Rect2).end.y, (meaning["rect"] as Rect2).end.y) + (4.0 if compact else 8.0)})
 	# the four marks
 	var order := ["coursework", "battlefield", "arena", "conduct"]
 	var labels := {"coursework": "Coursework", "battlefield": "Battlefield", "arena": "The Arena", "conduct": "Conduct"}

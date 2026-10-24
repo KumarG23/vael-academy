@@ -86,6 +86,8 @@ func _sweep() -> Dictionary:
 			var fw := UITheme.font().get_string_size(layout["feedback"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
 			assert_true(fw <= body.size.x, "browse feedback fits")
 	_journal.set("_grades_scroll", 0)
+	var top := _layout()
+	assert_true(top["visible_indices"].has(1), "the first page shows Academy Standing with its heading")
 	return {"texts": texts, "reached": reached, "count": first["items"].size(), "scrolls": first["scrolls"]}
 
 
