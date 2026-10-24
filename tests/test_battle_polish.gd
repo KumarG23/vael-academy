@@ -216,8 +216,12 @@ func test_viewed_flags_survive_save_state_round_trip():
 # --- menu width ---------------------------------------------------------------------
 
 func test_choice_menu_widens_for_long_labels():
+	# Width is now constrained to the actual viewport; the headless root is 64px.
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(1280, 720)
+	add_child_autofree(viewport)
 	var menu := ChoiceMenu.new()
-	add_child_autofree(menu)
+	viewport.add_child(menu)
 	menu.open("Load Game", ["Slot 0 — mock_battle (Classic, extra long label)"], Vector2.ZERO)
 	assert_gt(menu._width, ChoiceMenu.WIDTH, "menu grows to fit its labels")
 	menu.open("A", ["ok"], Vector2.ZERO)

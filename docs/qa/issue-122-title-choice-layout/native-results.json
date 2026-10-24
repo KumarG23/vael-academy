@@ -1,0 +1,82 @@
+{
+  "source_commit": "1bb92da9baa6a78ea84ccafc751beeb68eb27476",
+  "production_source_sha256": {
+    "src/ui/choice_menu.gd": "2279044e25797e17164d0623f455387881351b1214968142b3022a0c692df72c",
+    "src/ui/title_screen.gd": "db34bae3de0bf92944e2ebc2dd8a0deb11d0bfdc2d1c57d5916152d0d3363045"
+  },
+  "renderer": "Godot 4.7.2 / Vulkan 1.4.318 Forward+ / llvmpipe LLVM 20.1.2 (256 bits)",
+  "native_input": "Real X11 xdotool keys/pointer and window-manager resize, default 1280x720 / 800x450 / 640x360 / live restore",
+  "capture": "PIL X11 exact client rectangle from xwininfo absolute client origin; all 29 curated full-client captures inspected",
+  "authority": "https://github.com/KumarG23/vael-academy/issues/122#issuecomment-6387634754",
+  "release": "https://github.com/KumarG23/vael-academy/issues/122#issuecomment-6387727595",
+  "fixtures": {
+    "docs/qa/issue-39-three-house-contests/saves/emberwing-opening.json": {
+      "sha256": "c156c62b43e6d6f48002d50f787751e708ec03cdef3378ceadddcd806e99a4d3",
+      "bytes": 13772
+    },
+    "docs/qa/issue-39-three-house-contests/saves/tidemark-opening.json": {
+      "sha256": "4d031e383a9111d7765c6451b1d05d23af43d02dc2fc3ca63de1ed99bcba5121",
+      "bytes": 16047
+    },
+    "docs/qa/issue-39-three-house-contests/saves/thornrook-classic-opening.json": {
+      "sha256": "c47f8e03b947d9b4b06f209500b93a4538e7b499f54632bc7d66a5a84ac9b52b",
+      "bytes": 20107
+    },
+    "docs/qa/issue-5-school-loop/emberwing-return-save.json": {
+      "sha256": "681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4",
+      "bytes": 3008
+    },
+    "docs/qa/issue-85-rest-autosave/week-4-autosave.json": {
+      "sha256": "c05d21e41b5dfe527bed89df82a5aca18f16b46da88336c667fdba493eb6fac8",
+      "bytes": 3363
+    }
+  },
+  "comparisons": {
+    "empty_new_resize": "serialized Campaign/RNG seed/state, roster, active/skip flags, staged resume/prep/room/spawn and files unchanged",
+    "recovery_browse_reject_retry_resize": true,
+    "earned_battle_exact_after_existing_legacy_defaults": true,
+    "earned_battle_existing_defaults": {
+      "campaign.academy_visits": [],
+      "campaign.report_card_deliveries": []
+    },
+    "earned_autosave_entire_campaign_exact": true,
+    "all_manual_autosave_settings_bytes_unchanged_earned": true,
+    "all_manual_autosave_settings_bytes_unchanged_recovery_before_deliberate_removals": true,
+    "custom_preference_post_configuration_bytes_unchanged": true,
+    "configured_title_full_state_equals_loaded_autosave_state": true
+  },
+  "deliberate_writes_and_actions": [
+    "Provisioned isolated fixture files before launches; installation saves/settings were never used.",
+    "Classic and Casual deliberately reset live Campaign and enter original opening; no save/settings file writes.",
+    "Earned round-3 battle: native Kael select, one-cell move and Wait; deliberate live action only, no save or injected combat result.",
+    "Supplementary recovery: replaced manual Slot 1 and Autosave campaign flags with invalid array; changed only declared Autosave chapter/week metadata, retained complete shipped text.",
+    "Removed supplementary Autosave then manual Slot 1 after listing to test missing-file retry; later removed Slot 0 to expose sparse physical Slot 2. Never removed the original checkpoint sources.",
+    "Valid sparse Slot 2 loads unchanged Thornrook Classic checkpoint; native Next/select/Escape continues.",
+    "Earned Week-4 Autosave recovery followed by native campus movement; existing hub active=false/skip-reset consumption retained.",
+    "Through shipped Journal keyboard editor, assigned Down U / Confirm P / Cancel N; only settings.cfg deliberately written. Manual/Autosave bytes preserved."
+  ],
+  "native_observed": [
+    "Title/New Game/default/compact/live resize; Classic/Casual dispatch to original opening; empty Load and Back.",
+    "All-three/manual+Autosave summaries retain shipped IDs, physical 0\u20132, Classic/Casual, week and mid-battle tags.",
+    "Wheel reaches final Back; sparse physical Slot 2 wraps complete mid-battle label at 640x360.",
+    "Occupied manual and Autosave rejection, retry, missing-after-browse and Back, with status/retry instructions clear.",
+    "Ordinary unchanged earned battle and earned Autosave restore, exact saved fields/defaults, normal continuation.",
+    "Default and editor-configured U/P/N keys, pointer hover/click/right-cancel/wheel; selected Autosave survives shrink/restore."
+  ],
+  "automated_only": [
+    "Every variable-height row edge and hidden partial-edge hit case, empty-menu Cancel, full custom alias matrix and callback consumption assertions.",
+    "Atomic validator/IO failure matrix, all battle resolver/save fields and broad castle/keyboard/load/resume boundaries remain covered by recorded tests."
+  ],
+  "helper_limits": [
+    "Initial screenshot attempt lacked Python XAUTHORITY and produced no image; corrected before the first curated capture.",
+    "Reopening an existing profile initially encountered a window startup race; startup wait corrected, no duplicate graphical process launched.",
+    "An observer helper initially read Unit.unit_id as a property; unit screen auxiliary fields are omitted from curated snapshots, corrected to method call before continuation. Save payload/Campaign comparisons were unaffected.",
+    "Castle intentionally sets active=false on hub entry; the assertion was corrected to existing behavior. No production change was made."
+  ],
+  "limits": [
+    "No full-school or opening-story replay, new battle victory/outcome injection, other-route qualification or Neal taste/canon approval.",
+    "New Game capture verifies dispatch/opening entry, not completion of its narrative.",
+    "No original font, renderer, project setting, combat, schema, routing or persistence source changed during native QA."
+  ],
+  "jobs_ended": true
+}
