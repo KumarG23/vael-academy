@@ -1,5 +1,5 @@
 {
-  "README.md": "dc9b7ceb045a2611c644763989adfca351051d0547a5146245992b2cc88649f9",
+  "README.md": "7487ccd558c45a8bebb83f05615765e92232a97b4402ded1c35e7eb3a073e095",
   "delta-files-after.json": "077767ccfaa3206b3cb88729b3ffa62383f09a9927da31367a60979c8f601620",
   "files-after.json": "077767ccfaa3206b3cb88729b3ffa62383f09a9927da31367a60979c8f601620",
   "files-before.json": "077767ccfaa3206b3cb88729b3ffa62383f09a9927da31367a60979c8f601620",
@@ -25,7 +25,7 @@
   "images/supplementary-pack-1-800-450.png": "02d99eb5d31072a493038916f074ab1cf62bddeef2c04b4dd8e485d234f781d7",
   "images/supplementary-pack-2-640-360.png": "9d3960ed148cfe76ee68fa3ac2f3f6ae7401c34a375db78dbff01a948c623308",
   "images/supplementary-pack-4-1280-720.png": "6f492222ec81332560d317cb7daa860429653683fab09edb7ad3e2c55bfd8c10",
-  "results.json": "d567e94e22fbcdee06b5f50b68727e6765a767e95897d846b55c0a9a9ed1e474",
+  "results.json": "fc36793b03ff4eef361f3ccf47f3ddd56ae15467f35fca83b8c97c50b55cac01",
   "snapshots/custom-confirm-forecast-640.json": "03e44dd6bf169127016cec8281b595f8254f4310668cf278852288c1cb5491cf",
   "snapshots/custom-selection-cancel-640.json": "347afd7aa7f099737edb0f674b077aa82ac0a3ddec46fbd81c56b9bb73daf656",
   "snapshots/earned-final-0-1280-720.json": "06be5c7323fc762922c44a2ac0829d18fbb1d0e159f7e95c6ccc0c0ba06d67ac",

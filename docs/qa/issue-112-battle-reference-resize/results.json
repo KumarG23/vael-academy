@@ -61,5 +61,15 @@
     "forecast": true,
     "stats": true,
     "all_five_files_byte_identical": true
+  },
+  "accepted_main_integration": {
+    "main": "611bf01b",
+    "checks": {
+      "tests": 65,
+      "assertions": 5294,
+      "scripts": 9,
+      "seconds": 28.139
+    },
+    "battle_source_unchanged": true
   }
 }
