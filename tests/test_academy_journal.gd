@@ -279,6 +279,8 @@ func test_support_rows_scroll_when_conversation_statuses_fill_compact_page():
 		"default Journal height fits both companion records")
 	assert_eq(_journal._support_visible_indices(entries, 162.0), [0],
 		"compact Journal height scrolls the longer support records")
+	assert_true(_journal._support_visible_indices(entries, 80.0).is_empty(),
+		"layout never reports an oversized first companion as fully visible")
 	_journal._support_i = 1
 	assert_eq(_journal._support_visible_indices(entries, 162.0), [1],
 		"down navigation scrolls the selected companion into the compact viewport")

@@ -1,0 +1,49 @@
+{
+  "source_head": "c6bb0f37f2e534d4b3b97adcd15f119676f735b3",
+  "files": {
+    "journal": {
+      "path": "src/ui/academy_journal.gd",
+      "sha256": "5614e8c047b81ac7d7d73a64416bfdb32f30ce36efdca4a97e9c684930455788"
+    },
+    "title_screen": {
+      "path": "src/ui/title_screen.gd",
+      "sha256": "fc3b7889036537b5e8bb2ddfca612602b7e58abfe838e47ca07bddf3a59049e2"
+    },
+    "title_scene": {
+      "path": "scenes/title/title.tscn",
+      "sha256": "210339553f763102b7d257900bcf01109df28ec759fdef56c9d34fae036572e7"
+    },
+    "castle_scene": {
+      "path": "src/castle/castle_scene.gd",
+      "sha256": "cc1fbc5ba1af9d76b8d6ecbf224bc8e8342cb1376865d822a56f713ea25e010e"
+    },
+    "support_state": {
+      "path": "src/progression/support_state.gd",
+      "sha256": "009f1490981a121bb22b66a53d23876effc739ebe4e2d322fc9854ed91858ffb"
+    },
+    "support_registry": {
+      "path": "src/progression/support_registry.gd",
+      "sha256": "f76447f801c3e4af6bb869678aa1d2990e5f2d8108c84b5460689780c6d158c6"
+    },
+    "support_chain_def": {
+      "path": "src/progression/support_chain_def.gd",
+      "sha256": "d1854225f2d85ed76e3674f497102f7d1e04e13de4a1da7f8b538f35aec589a8"
+    },
+    "liora_chain": {
+      "path": "data/supports/kai_liora.tres",
+      "sha256": "57c6e7920428d3d5d836fcd58dbeb6c989c585e48de22bf046b04668da969736"
+    },
+    "project": {
+      "path": "project.godot",
+      "sha256": "aec9625675f97e3b566b7d059cdd94a9fd18282c07990ab28b2e755121b08cf4"
+    },
+    "checkpoint": {
+      "path": "docs/qa/issue-5-school-loop/emberwing-return-save.json",
+      "sha256": "681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4"
+    },
+    "supplementary_fixture": {
+      "path": "docs/qa/issue-124-support-layout/fixtures/maximum-support-supplemental-slot0.json",
+      "sha256": "903851c838f8095253c867be2de18289e6e8bcd3e95c1f877988ccff3b612d36"
+    }
+  }
+}
