@@ -1,5 +1,44 @@
 # HANDOFF.md — agent handoff & project state
 
+## Issue #114 — compact Journal Items readability
+
+Implementation is in progress on `team/issue-114`, based on accepted main
+`300f146a`, under MASTER_PLAN §§1–2, §6 WO-9.4/9.7 and partial §10 M9;
+ACADEMY_BIBLE §3 Quartermaster; existing inventory behavior from AW-52/53/55.
+The Items-only two-pane renderer now measures the active font, wraps complete
+pack names/equipped markers and contextual stage instructions, windows the
+student and pack lists while keeping the selection visible through live
+resizes, pins the giver identity during recipient selection, and wraps
+inventory-origin toast feedback. It does not change transfer/input rules,
+indices, save schema, or the other tabs. Issue #83 load-error toast drawing
+remains on its existing branch. No plan/bible contradiction found.
+
+Regression-first on the unmodified accepted source: the new production-
+SubViewport file failed 4/6 tests: compact item label/instruction width, final
+student glyph bounds, and refusal-toast bounds. The source geometry measured
+`Ember Heir's Lance (equipped)` at 244 px against a 204 px label pane at
+800×450, and the stage-2 instruction at 468 px against 334 px. On the current
+implementation, `tests/test_journal_items_compact.gd` passes **8/8 tests, 356
+assertions**. It covers three viewport sizes and live shrink/restore, all
+stages, first/final students and recipients, shipped five-item fixture labels,
+equipped markers and uses, empty pack/roster, real default/custom dispatched
+input, full/bound/tome refusal invariance and feedback bounds, and successful
+Campaign save/load transfer persistence. Fixtures are scratch units; they do
+not claim earned progression.
+
+Godot 4.7.2 import exited 0 under the common Git-directory
+`vael-godot-heavy.lock` with disposable XDG data; no script parse/load errors
+were reported. The clean import regenerated untracked `.uid`/`.import` sidecars
+for existing assets/scripts that lacked them; those generated sidecars were
+removed from this worktree. Helpers pass: **113 discovered, 111 passed, two
+existing opt-in skips**. One full GUT attempt was stopped when a concurrent
+headless import appeared outside the lock; it is discarded and the required
+full run remains pending after serialized headless work clears. No game/GUI/input/capture job has run:
+#112/Sol-dev owns the shared desktop; native acceptance waits for its explicit
+release and the lead naming the next controller. [QA manifest and evidence
+limits](docs/qa/issue-114-items-compact/README.md). Keep the PR draft until the
+native gate, final Verify and lead review are complete.
+
 ## Issue #106 — current Objectives reference
 
 Implemented on `team/issue-106`, based on accepted main `d15bdb95`, under MASTER_PLAN §§1–2 / §6 WO-9.7 / partial §10 M9 and ACADEMY_BIBLE §3 Mission Board / War Room / §4 weekly rhythm. Journal appends Objectives at index 7; current event/house routing selects actual root ChapterDef metadata without instantiating or readying a battle. Inherited properties honor explicit overrides/null; absent or invalid metadata fails closed. Shared pure objective/boss wording is identical to BattleView; current week/event, actual mission name/objective and War Room reference only. FREE/HOLIDAY/null states remain neutral and do not claim a canonical completed year. No authored missions, future content, calendar/arithmetic/routes/objective resolver/deployment/progression/RNG/schema changes. Existing indices, input/custom controls, keyboard editor, Calendar heading/selection and portrait caching remain.
