@@ -1,0 +1,172 @@
+{
+  "captures": [
+    {
+      "path": "images/03-load-slot-menu.png",
+      "sha256": "dd60caf32298489a740991b47278cc42f13a4f99b04f41726f7dfed3c1ae84df",
+      "width": 1152,
+      "height": 648
+    },
+    {
+      "path": "images/05-default-support-kael.png",
+      "sha256": "adc24762367140d9b75ff5c30198c6d40e41d89166efe2d48ac59a2986f39ff7",
+      "width": 1152,
+      "height": 648
+    },
+    {
+      "path": "images/08-640-support-page1.png",
+      "sha256": "8436dd12e687d0530bfda999871e61c5c97aade4fae1d1cec28c86172f8c6d48",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "path": "images/09-640-support-page2.png",
+      "sha256": "7837a328c48e06c8501e8806e0fcdaf7e1187191384e28a778c5c0d6474595c4",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "path": "images/10-640-support-page3.png",
+      "sha256": "a051b1cbccd2268d4bc078dd0c0971001868ab40ddf23239b91f92a7a426b8df",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "path": "images/11-640-support-page4.png",
+      "sha256": "07c457d72c20471abd1e736ee74a1146e0d7d3d8b9267be0c474e79d63440a83",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "path": "images/13-first-companion-kael.png",
+      "sha256": "afa178e591cce5fa145f0e5dda9243243c2c2d08c9b530f873ebb83979e69437",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/14-wrap-companion-liora.png",
+      "sha256": "adf602fc32370eee2b94bc185d66a31d0351f7fa061e1be25192f866d7ce3795",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/15-wrap-companion-kael-down.png",
+      "sha256": "51beb67fc59a10d31c2c6617472508b439a9309514b374bc849580eac2d130af",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/16-shipped-alternate-down-key-s.png",
+      "sha256": "9917bca76ba39fb03f40d1d2aa89781f97add94ae947bc67387cb40309b5545f",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/17-system-save-selected.png",
+      "sha256": "96490b9c45cac1c106adb205da30dc01e284fbeae7bbd444304105981fae6c43",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/18-save-slot1-toast.png",
+      "sha256": "d43dc2891b0ecbfac298f37c34d2013b529a5938c0f0ec9f4c72c5a5cb5431d7",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/31-walk-to-great-hall.png",
+      "sha256": "a4b6c4b5572528a5e55938b06f72540913a097082ebb52d3fa7d2d833a1ed54d",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/33-common-hall-entered.png",
+      "sha256": "8a99d8668a0209610d92bb8d63474826a8c0b1f94dd9e361a1e92f4425f548e0",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/35-common-hall-support-archive.png",
+      "sha256": "2bb8a5edf6bdd4ac9a321b3b9604c3e9302a0fc5b14a1653513447a59f2a126b",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/36-common-hall-exploration-continued.png",
+      "sha256": "b41b039a0b7b4a4a3f7586c9d671a78f7208fb372a5a233975f775b3a262e807",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/37-fresh-title-load-menu.png",
+      "sha256": "dd60caf32298489a740991b47278cc42f13a4f99b04f41726f7dfed3c1ae84df",
+      "width": 1152,
+      "height": 648
+    },
+    {
+      "path": "images/38-fresh-slot0-campus.png",
+      "sha256": "2c7dedcb9c5edbd560442f04e347d0990e939ffc7880f916a51e4f6f503a5a39",
+      "width": 1152,
+      "height": 648
+    },
+    {
+      "path": "images/39-fresh-load-support-tab.png",
+      "sha256": "51beb67fc59a10d31c2c6617472508b439a9309514b374bc849580eac2d130af",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/40-fresh-load-support-max-chain.png",
+      "sha256": "9917bca76ba39fb03f40d1d2aa89781f97add94ae947bc67387cb40309b5545f",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/41-fresh-load-journal-escape-closed.png",
+      "sha256": "3850c09f3423c2536ac69a8204191f024516b3cd7eb19b596167bcfb07be3ef8",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/42-fresh-load-movement-continued.png",
+      "sha256": "298d7234d93c411c3c194b769d41a26caab1dec36cfabb8430685d9f672b2de7",
+      "width": 1280,
+      "height": 664
+    },
+    {
+      "path": "images/44-fullscreen-support-liora-1280.png",
+      "sha256": "ffe5908a6e52b3f7aab6d95c3ae0c6c006db19c675b2c6131eab369d31ab08dc",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "images/45-live-window-800x450.png",
+      "sha256": "903295fcad0157406f97df9cefcf46ecc831957a335a4c3b9d1e558632d7c9fd",
+      "width": 800,
+      "height": 450
+    },
+    {
+      "path": "images/46-live-window-640-page1.png",
+      "sha256": "8436dd12e687d0530bfda999871e61c5c97aade4fae1d1cec28c86172f8c6d48",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "path": "images/47-live-window-640-page4.png",
+      "sha256": "07c457d72c20471abd1e736ee74a1146e0d7d3d8b9267be0c474e79d63440a83",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "path": "images/48-live-window-800-restore.png",
+      "sha256": "903295fcad0157406f97df9cefcf46ecc831957a335a4c3b9d1e558632d7c9fd",
+      "width": 800,
+      "height": 450
+    },
+    {
+      "path": "images/49-live-window-fullscreen-restore-1280.png",
+      "sha256": "741bb0b7fda32acaaa83425ebcd741f88892baa896391f3528307cefaeff08e0",
+      "width": 1280,
+      "height": 720
+    }
+  ]
+}
