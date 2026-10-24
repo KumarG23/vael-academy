@@ -12,6 +12,9 @@ Basis: MASTER_PLAN §§1–2 (inspectable tactics, presentation/logic split), §
 
 **Review correction (2026-10-24):** the original `test_all_shipped_inspection_fields_and_role_hints_fit_compact` now opens through `_open_stats_for` (immediate sheet/hover bounds+clearance, then one `process_frame` — the actual `_process` layout completion — before the header/clearance and field assertions; every prior assertion retained, no arbitrary wait). On the unfixed production line that original test fails (1865/1905 assertions); fixed, the ordered 12-script recorded boundary + camera/unit-cycle passes **119/119, 14,694 assertions / 14 scripts**. Native original-Forward+ slot-b acceptance with real keys/pointer: [docs/qa/issue-133-inspection-open](docs/qa/issue-133-inspection-open/README.md) (full-pack sheet open, 1152×648→800×450→640×360→800×450→default, content change, key and pointer dismissal, continuation; Campaign/battle hashes unchanged, no save written). No full GUT/import/helper replay; no Neal visual approval claimed.
 
+**Accepted-main integration (2026-10-24):** normally merged main `d5f51259` (Supports/System, #124 etc.); the only conflict was the adjacent top-of-file HANDOFF records, both retained (MASTER_PLAN auto-merged). Incoming changes touch Journal source/tests only, no battle source. Proportional check (heavy lock, disposable XDG, after a cached import): the 14-script battle boundary plus `test_journal_support_layout.gd` and `test_academy_journal.gd` passed **149/149, 14,896 assertions / 16 scripts**; GUT printed two internal `get_base_script` script diagnostics that also appear with the battle-only boundary and fail nothing. No native/full/import/helper baseline repeated.
+
+
 
 ## Issue #124 — Journal Supports complete records through compact/live resize
 
