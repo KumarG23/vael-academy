@@ -21,9 +21,16 @@ student glyph bounds, and refusal-toast bounds. The source geometry measured
 800×450, and the stage-2 instruction at 468 px against 334 px. Original-
 renderer QA later caught a second compact overlap between the item-scroll
 counter and stage hint at 640×360; the added active-font bounds assertion
-reproduced it regression-first. On the current implementation,
-`tests/test_journal_items_compact.gd` passes **9/9 tests, 364 assertions**; the
-final 18-script affected boundary passes **160/160, 9,385 assertions**. It
+reproduced it regression-first. Marker-width source passed the focused Items
+suite **10/10 tests, 771 assertions** and combined accepted-main boundary
+**134/134 tests, 18,744 assertions / 14 scripts**. Its named slot-B
+original-Forward+ delta then exposed full-pack refusal feedback overlapping
+the contextual hint at 640×360. A regression-first Items-only reserved toast
+line now sits above the complete hint, and visible item/student rows end above
+the feedback line. The System feedback and shared load-error branches remain
+unchanged. Final focused Items passes **10/10 tests, 780 assertions** and the
+proportional combined boundary passes **134/134 tests, 18,753 assertions / 14
+scripts**. It
 covers three viewport sizes and live shrink/restore, all
 stages, first/final students and recipients, shipped five-item fixture labels,
 equipped markers and uses, empty pack/roster, real default/custom dispatched
@@ -46,13 +53,19 @@ The #112 owner explicitly
 released every graphical job, and the lead named #114/Luna next sole GUI
 controller ([release](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385623578),
 [lead naming](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385711360)).
-Bounded original-Forward+ Items acceptance is complete on the isolated earned
-copy and separately labeled fixture. Slot 0 stayed byte-identical to the
-earned source; the pre/post browse save hash stayed equal, and the deliberate
-transfer persisted after reload. Native 1280×720/800×450/640×360 resize,
-selection, refusal, cancel/close and custom-control evidence is hashed in the
-[QA manifest](docs/qa/issue-114-items-compact/README.md). The final 18-script
-boundary passes 160/160, 9,385 assertions on the pre-#117 source. Its exact-head Verify passed on `fda7f32f` ([run 40117611917](https://github.com/KumarG23/vael-academy/actions/runs/40117611917)); that result predates accepted main #117.
+The bounded original-Forward+ source-delta check is complete on the isolated
+earned copy and a separately labeled five-item/full-pack fixture. The source
+save hash remained unchanged through earned browse/close; the fixture copy
+remained unchanged through the full-recipient refusal. Prior earned
+successful-transfer and save/reload evidence remains attributed to its
+recorded source and was not repeated for this presentation-only delta. Native
+1280×720/800×450/640×360 selection, shrink/restore, equipped labels, full-pack
+first/final rows, toast clearance, dismissal and ordinary continuation
+captures are hashed in the [QA manifest](docs/qa/issue-114-items-compact/README.md).
+All slot-B game/input/capture jobs ended normally and the slot was released.
+Current exact-head Verify and lead delta review remain required; PR #130 stays
+draft. Earlier Verify receipts above predate the current source and do not
+satisfy that gate.
 
 **Accepted-main integration:** normally merged main `2d7ae523` (#117 / PR #120). The real Journal conflict was limited to the toast drawing branch; tab 2 retains Items-local wrapped feedback, tab 4 retains System's measured reserved feedback row/range hint, and shared load-error/other-tab messages retain `_toast_rect()`. HANDOFF and MASTER_PLAN retain both issue records; all #117 source, tests, captures, manifests and status were preserved. The proportional combined Journal/Items/inventory/System/close/custom-key/Campaign-load/SaveSystem boundary passed **116/116 tests, 18,030 assertions / 12 scripts**, under the common `vael-godot-heavy.lock` and disposable XDG data. It reported 79 inherited wait-frame deprecations and existing exit-time two ObjectDB / one resource diagnostics. No full suite/import/helpers/native replay was repeated; #122 then owned GUI. Exact Verify 40119376013 passed for integrated #117 head `dc7f03c6`; later accepted-main integrations are recorded separately below.
 
@@ -79,7 +92,7 @@ Native QA completed after #117's explicit release and lead naming #118 sole GUI 
 
 **Accepted-main Supports integration (2026-10-24):** normally merged accepted main `d5f512599a7c1de81405d893c5fb24a578c5aa52` (PR #129). The Supports source/tests/QA/status are retained alongside GH-114 and #117/#118/#131 records. PR #129 exact-head Verify 40121701156 passed and the lead accepted its reviewed head; no Supports behavior is changed by GH-114. This integration's proportional combined Journal boundary and final-head Verify are recorded below when run.
 
-**Accepted Supports main + rendered-marker follow-through:** normally integrated `d5f512599a7c1de81405d893c5fb24a578c5aa52` (PR #129). Actual conflicts were HANDOFF and MASTER_PLAN status records only; both task records and all Items/Supports/System source, tests, QA and status are retained. `academy_journal.gd` auto-merged, with both feature branches intact. A new production-SubViewport measurement evaluated the exact `draw_multiline_string` text (selected `› ` and unselected two-space prefix) at 1280×720, 800×450, 640×360, shrink and restore, for every current roster item plus the separately declared five-item shipped-weapon fixture. The regression first failed 9/10 tests (714 assertions): at 640×360, the prefixed `Bulwark Lance (equipped)` and `Verdant Blade (equipped)` each gained an unreserved line for both marker forms. `_items_layout()` now reserves the active-font width of the wider marker before wrapping; row heights/windowing therefore include the actual rendered lines. Final Items suite: **10/10, 771 assertions**. Combined Journal Items/Supports/System/input/close/save/inventory/Campaign boundary: **134/134 tests, 18,744 assertions / 14 scripts**, under the common Git-directory `vael-godot-heavy.lock` and disposable XDG data. The run reported 96 inherited wait-frame deprecations and expected keyboard-settings fixture parse/write diagnostics; no test failed. No repeated full/import/helper baseline or GUI run. This is a source-level layout correction, so prior native evidence remains attributed to its recorded source. #133 currently owns slot b; #114 needs a new lead-named GUI slot for a bounded original-Forward+ delta check. Exact-head Verify remains pending; PR #130 stays draft.
+**Accepted Supports main + rendered-marker follow-through:** normally integrated `d5f512599a7c1de81405d893c5fb24a578c5aa52` (PR #129). Actual conflicts were HANDOFF and MASTER_PLAN status records only; both task records and all Items/Supports/System source, tests, QA and status are retained. `academy_journal.gd` auto-merged, with both feature branches intact. A new production-SubViewport measurement evaluated the exact `draw_multiline_string` text (selected `› ` and unselected two-space prefix) at 1280×720, 800×450, 640×360, shrink and restore, for every current roster item plus the separately declared five-item shipped-weapon fixture. The regression first failed 9/10 tests (714 assertions): at 640×360, the prefixed `Bulwark Lance (equipped)` and `Verdant Blade (equipped)` each gained an unreserved line for both marker forms. `_items_layout()` now reserves the active-font width of the wider marker before wrapping; row heights/windowing therefore include the actual rendered lines. Marker-width source passed Items **10/10, 771 assertions** and the combined boundary **134/134, 18,744 assertions / 14 scripts**. The named slot-B native check found a separate full-pack toast/stage-hint overlap at 640×360. An Items-only reserved 14 px toast row clears the complete hint and visible pack rows; System feedback and load-error toast behavior are unchanged. Final focused Items passes **10/10, 780 assertions**; combined Journal Items/Supports/System/input/close/save/inventory/Campaign boundary passes **134/134, 18,753 assertions / 14 scripts** under the common heavy lock/disposable XDG data. The final run reported 96 inherited wait-frame deprecations and expected keyboard-settings fixture parse/write diagnostics; no test failed. The native delta is complete on slot B, with earned and separately labeled fixture hashes/captures in the QA record; prior successful transfer/save/reload evidence remains attributed to its source and was not repeated. No full/import/helper baseline or broader GUI replay was repeated. Exact-head Verify and lead delta review remain pending; PR #130 stays draft.
 ## Issue #117 — Journal System rows/summaries readable in compact windows (2026-10-24; `team/issue-117`, based on accepted main `611bf01b`)
 
 Source/headless work complete and native GUI QA complete on pre-correction `3c10c780` (original Forward+ llvmpipe, earned Week-2 checkpoint, see `docs/qa/issue-117-system-compact/README.md`): all rows/summaries/settings/editor/save/load/fresh-launch persistence at default, 800×450, 640×360 and live resize. Native finding on `3c10c780`: the floating toast covered the windowing hint/footer at 640×360 (lead review P2 on `fc3a5677`: changes required). **Correction (headless only so far):** System feedback is now a System-local reserved line at the bottom of the System body (`_system_layout()` returns `toast_rect`/`hint_rect`; rows window above them; message at the same 14 px; other tabs and the shared `_toast_rect()` untouched; #83 rejection/retry semantics and message text unchanged). Cost: compact windows show one fewer row. Regression: `test_active_feedback_never_collides_with_hint_rows_or_footer` (volume/text-speed/save/load-reject/retry at all sizes, Down navigation while active, live resize while active, expiry does not reflow) and `test_every_system_message_fits_the_compact_feedback_line`; Journal group 65/65 (14,038 assertions). The native capture set below is from the pre-correction source `3c10c780`; the narrow native recheck of active feedback at `77471d4d` is **complete** (`docs/qa/issue-117-system-compact/README.md` correction section, `images-correction/`): message, selected row, range hint and footer are separate and readable at 640×360/800×450/default with default and (fixture-seeded) configured keys, repeated rejection/retry and live resize; invalid slot hashes unchanged. The corrected source and native recheck were accepted on main `2d7ae523` (PR #120, exact Verify 40117681795; lead receipt 6387654288). Title Load menu clips `⚔ mid-battle` (pre-existing, untouched). No Neal visual approval claimed. MASTER_PLAN §§1–2, §6 WO-9.4/9.6, partial §10 M9; ACADEMY_BIBLE §3. No canon contradiction; presentation repair only.

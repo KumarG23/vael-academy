@@ -262,17 +262,30 @@ func test_inventory_origin_refusal_feedback_fits_the_compact_viewport() -> void:
 	for size in [Vector2i(1280, 720), Vector2i(800, 450), Vector2i(640, 360)]:
 		_viewport.size = size
 		await wait_process_frames(1)
-		var toast_layout: Dictionary = _journal._inventory_toast_layout(font)
+		var body: Rect2 = _journal._body_rect()
+		var items_layout: Dictionary = _journal._items_layout(body, font)
+		var toast_layout: Dictionary = _journal._inventory_toast_layout(font, body, items_layout["hint_rect"])
 		var toast: Rect2 = toast_layout["rect"]
 		var text_bounds := Rect2(Vector2(toast_layout["baseline"].x,
-			toast_layout["baseline"].y - font.get_ascent(16)),
-			Vector2(toast_layout["text_width"], toast.size.y - 18.0))
+			toast_layout["baseline"].y - font.get_ascent(14)),
+			Vector2(toast_layout["text_width"], toast.size.y - 8.0))
 		assert_true(Rect2(Vector2.ZERO, Vector2(size)).encloses(toast),
 			"refusal feedback background fits at %s" % size)
 		assert_true(Rect2(Vector2.ZERO, Vector2(size)).encloses(text_bounds),
 			"complete refusal feedback glyphs fit at %s" % size)
+		assert_false(toast.intersects(items_layout["hint_rect"]),
+			"feedback stays clear of the complete stage instruction at %s" % size)
+		for row: Dictionary in items_layout["pack_rows"]:
+			assert_false(toast.intersects(row["rect"]),
+				"feedback stays clear of visible item names at %s" % size)
+		if items_layout["pack_scrolls"]:
+			var progress_rect := Rect2(Vector2(items_layout["pack_rect"].position.x,
+				items_layout["pack_progress_baseline"].y - font.get_ascent(11)),
+				Vector2(items_layout["pack_rect"].size.x, font.get_height(11)))
+			assert_false(toast.intersects(progress_rect),
+				"feedback stays clear of the pack progress counter at %s" % size)
 		for line: String in toast_layout["lines"]:
-			assert_lte(font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x,
+			assert_lte(font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x,
 				toast_layout["text_width"], "inventory refusal line fits its measured text pane at %s" % size)
 
 
@@ -488,11 +501,18 @@ func _inventory_toast_is_readable() -> bool:
 	var font := UITheme.font()
 	for size in [Vector2i(1280, 720), Vector2i(800, 450), Vector2i(640, 360)]:
 		_viewport.size = size
-		var layout: Dictionary = _journal._inventory_toast_layout(font)
+		var body: Rect2 = _journal._body_rect()
+		var items_layout: Dictionary = _journal._items_layout(body, font)
+		var layout: Dictionary = _journal._inventory_toast_layout(font, body, items_layout["hint_rect"])
 		var viewport_rect := Rect2(Vector2.ZERO, Vector2(size))
 		if not viewport_rect.encloses(layout["rect"]):
 			return false
+		if layout["rect"].intersects(items_layout["hint_rect"]):
+			return false
+		for row: Dictionary in items_layout["pack_rows"]:
+			if layout["rect"].intersects(row["rect"]):
+				return false
 		for line: String in layout["lines"]:
-			if font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x > layout["text_width"]:
+			if font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x > layout["text_width"]:
 				return false
 	return true

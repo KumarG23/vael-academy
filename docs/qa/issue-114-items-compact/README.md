@@ -170,3 +170,74 @@ so those captures remain attributed to their recorded pre-correction source.
 No GUI job was launched: #133 owns slot b and #114 has no current GUI naming.
 A bounded original-Forward+ delta check is still needed after the lead names
 #114 a GUI task slot. Exact-head Verify is pending for the integration commit.
+
+
+### Named slot-B source-delta QA and feedback clearance
+
+The continuation issue body named #114 for isolated slot B after #133 released
+all graphical jobs. The actual source base for this delta was
+`59faa49ea1904d828dc9187033c26d0bc777cacf`, already containing the accepted
+Supports integration and measured rendered-marker correction. A second native
+finding arose during the requested full-pack refusal inspection: at 640×360,
+the floating inventory refusal toast covered the stage instruction. The
+SubViewport feedback-clearance regression failed at 1280×720, 800×450 and
+640×360 before a narrow Items-only correction reserved a measured 14 px
+feedback line above the contextual hint and ended visible item rows above the
+feedback line. The System reserved message branch and shared load-error toast
+branch are unchanged.
+
+After that correction, the focused production-SubViewport suite passes
+**10/10 tests, 780 assertions**. The combined accepted-main
+Items/Supports/System/Journal/input/close/custom-key/load-feedback/inventory/
+Campaign/SaveSystem boundary passes **134/134 tests, 18,753 assertions / 14
+scripts** under the common heavy lock and disposable XDG profile. These are
+headless regression/runtime checks; no unchanged full GUT/import/helper run
+was repeated.
+
+The lead named #114 for slot B only after #133 explicitly released it
+([release comment](https://github.com/KumarG23/vael-academy/pull/134#issuecomment-6388536358)).
+Godot 4.7.2 original Forward+ was launched from ordinary Title → Load on a
+separate copy of the earned Week 2 checkpoint. The source checkpoint SHA-256
+was `681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4`;
+the isolated slot-0 copy matched it before interaction and still matched it
+after close. The fixture override hash was
+`16ce6cd1c306f6ab9b0d4baa6115a9ce516e8ba7b9da6564f1fd6ff6cd7f4d42`; its
+separate slot copy was `ae2c5ecb0aa9d551a778639281d6abb9f5b166c4cdc838ec199ba82c54fe8fe7`
+before and after the refusal/browse flow. That override is explicitly
+supplementary fixture data, not earned progress. The checked-in earned save
+was not modified.
+
+In the earned copy, the actual client window was measured at 1280×720,
+800×450 and 640×360, and shrunk/restored in both item and recipient stages.
+Bulwark Lance and Verdant Blade selected and unselected row states were
+inspected at the default and 800×450 sizes; the selected wrapped/equipped
+labels were inspected at 640×360. At compact size the one-row window means a
+neighboring item may scroll out while selected; the regression checks both
+marker forms for every shipped item at all sizes. The active giver and
+selected recipient remained visible in recipient mode, and resize/restore
+returned to the same default recipient capture hash
+(`4ad639c3523f0fad8a15a6ff89575c33bb468e9941ad0263857ff515b3a5b4d7`).
+
+The separately labelled five-item fixture showed first and final rows, full
+recipient capacity and the full-pack refusal at all three sizes. At 640×360,
+the refusal reads `Perrin's pack is full.` in its own bordered line above the
+complete recipient instruction, with the selected Ember Heir's Lance, Kai
+as giver, Perrin as selected full recipient and pack counts visible. The
+toast's expiry/back path and ordinary close to campus were also captured.
+No fixture transfer was saved. The earned-copy browse/cancel/close hash stayed
+equal to the original source hash. Prior earned successful-transfer and
+save/reload evidence remains exactly as recorded above; this narrow source
+delta did not repeat that transfer path because transfer/save behavior is
+unchanged.
+
+New inspected captures are in [`images-delta/`](images-delta/), with exact
+per-image hashes and the current source/test hashes in
+[`capture-hashes.sha256`](capture-hashes.sha256). The captures are original
+desktop screenshots with the game client at the stated size, not crops. All
+slot-B game, input and capture processes ended through the driver `quit`; the
+slot was released. Evidence establishes the requested bounded presentation
+delta, not a full graphical playthrough or Neal's visual approval. No canon
+contradiction was found.
+
+Exact-head Verify and lead delta review are still required; PR #130 remains a
+draft until those gates pass.

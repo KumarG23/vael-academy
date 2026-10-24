@@ -533,12 +533,13 @@ func _draw() -> void:
 		draw_string(font, _footer_rect(hint).position + Vector2(0, font.get_ascent(14)), hint,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
 	if _toast_t > 0.0 and _tab == 2 and not _toast_is_load_error:
-		var toast_layout := _inventory_toast_layout(font)
+		var items_layout: Dictionary = _items_layout(body, font)
+		var toast_layout: Dictionary = _inventory_toast_layout(font, body, items_layout["hint_rect"])
 		var tr: Rect2 = toast_layout["rect"]
 		draw_rect(tr, Color(0.1, 0.11, 0.16, 0.97), true)
 		draw_rect(tr, Color(0.86, 0.78, 0.45, 0.9), false, 1.5)
 		draw_multiline_string(font, toast_layout["baseline"], "\n".join(toast_layout["lines"]),
-			HORIZONTAL_ALIGNMENT_LEFT, toast_layout["text_width"], 16, MULTILINE_MAX_LINES, Color(0.95, 0.9, 0.7))
+			HORIZONTAL_ALIGNMENT_LEFT, toast_layout["text_width"], 14, MULTILINE_MAX_LINES, Color(0.95, 0.9, 0.7))
 	elif _toast_t > 0.0 and _tab == 4:
 		# System feedback uses its reserved row/range-hint layout.
 		var sr: Rect2 = _system_layout(body, font)["toast_rect"]
@@ -904,8 +905,14 @@ func _items_layout(body: Rect2, font: Font) -> Dictionary:
 	var hint_lines := _wrap_roster_line(_items_hint(), font, body.size.x, 14)
 	var hint_height := maxf(font.get_height(14), float(hint_lines.size()) * font.get_height(14))
 	var hint_rect := Rect2(Vector2(body.position.x, body.end.y - hint_height), Vector2(body.size.x, hint_height))
+	var toast_layout: Dictionary = {}
+	var feedback_active := _tab == 2 and _toast_t > 0.0 and not _toast_is_load_error
+	if feedback_active:
+		toast_layout = _inventory_toast_layout(font, body, hint_rect)
 	var content_top := body.position.y + 24.0
 	var content_bottom := hint_rect.position.y - 4.0
+	if feedback_active:
+		content_bottom = minf(content_bottom, toast_layout["rect"].position.y - 4.0)
 	var row_height := font.get_height(17) + 4.0
 	var student_rows: Array[Dictionary] = []
 	var visible_students: Array[int] = []
@@ -1003,20 +1010,22 @@ func _items_layout(body: Rect2, font: Font) -> Dictionary:
 		"pack_progress_baseline": Vector2(pack_rect.position.x, pack_header.y),
 		"giver_name": str(_inv_units[_inv_i]["name"]) if not _inv_units.is_empty() else "",
 		"hint_lines": hint_lines, "hint_rect": hint_rect,
+		"feedback_active": feedback_active, "toast_rect": toast_layout.get("rect", Rect2()),
 		"hint_baseline": Vector2(body.position.x, hint_rect.position.y + font.get_ascent(14))}
 
 
-func _inventory_toast_layout(font: Font) -> Dictionary:
-	var vp := get_viewport_rect().size
-	var margin := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
-	var book := Rect2(margin, vp - margin * 2.0)
-	var text_width := maxf(120.0, book.size.x - 64.0)
-	var lines := _wrap_roster_line(_toast, font, text_width, 16)
-	var text_height := maxf(font.get_height(16), lines.size() * font.get_height(16))
-	var rect := Rect2(book.position.x + (book.size.x - text_width - 24.0) * 0.5,
-		book.end.y - text_height - 42.0, text_width + 24.0, text_height + 18.0)
+func _inventory_toast_layout(font: Font, body: Rect2, hint_rect: Rect2) -> Dictionary:
+	# Items-local feedback gets its own measured line above the stage instruction.
+	# The student/item window ends above it, so refusal/success text cannot obscure
+	# the selected row, pack progress, contextual hint or common footer.
+	var text_width := maxf(120.0, body.size.x - 12.0)
+	var lines := _wrap_roster_line(_toast, font, text_width, 14)
+	var text_height := maxf(font.get_height(14), float(lines.size()) * font.get_height(14))
+	var rect := Rect2(Vector2(body.position.x, hint_rect.position.y - text_height - 6.0),
+		Vector2(body.size.x, text_height + 4.0))
 	return {"rect": rect, "lines": lines, "text_width": text_width,
-		"baseline": Vector2(rect.position.x + 12.0, rect.position.y + 9.0 + font.get_ascent(16))}
+		"baseline": Vector2(rect.position.x + 6.0,
+			rect.position.y + (rect.size.y - text_height) * 0.5 + font.get_ascent(14))}
 
 
 ## AW-54: the Grades tab (GRADING_SYSTEM.md §3) — the running grade, the four
