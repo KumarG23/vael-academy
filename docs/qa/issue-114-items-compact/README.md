@@ -28,17 +28,24 @@ regenerated untracked `.uid`/`.import` sidecars for existing files that lacked
 them; those generated sidecars were removed from this worktree. Team helpers
 pass **113 discovered, 111 passed, two existing opt-in skips**.
 
-The full GUT attempt was stopped after a concurrent headless import appeared
-outside the shared lock. That partial run is discarded, not a failure or
-acceptance receipt. The required full suite and affected-sibling integration
-checks remain pending a serialized run; exact-head Verify remains pending.
+On `4f11054d` (before accepted #112 integration), clean Godot 4.7.2 import
+exited 0, full GUT passed **1,027/1,027 tests, 20,249 assertions / 125
+scripts** (479.318s), and helpers passed **113 discovered, 111 passed, two
+existing opt-in skips**. A prior GUT attempt stopped after a concurrent
+headless import appeared outside the shared lock; that partial run was
+discarded. These receipts are tied to `4f11054d`, not the current combined
+head. #112 Battle reference UI was then normally integrated from accepted main
+`8b442f13`, retaining its source/tests/QA/status. A clean import/full GUT/helper
+pass on the combined head and exact-head Verify remain pending.
 
 ## Original-renderer GUI evidence
 
-**Pending. No game, GUI input or capture job has been run.** Issue #112/Sol-dev
-currently owns the shared desktop. GH-114 must wait for #112 to explicitly end
-and release every GUI job, followed by the engineering lead naming the next GUI
-controller. Do not infer visual acceptance from the SubViewport measurements.
+**In progress.** #112/Sol-dev explicitly ended and released every graphical
+job ([release](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385623578));
+the engineering lead then named #114/Luna next sole GUI controller
+([handoff](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385711360)).
+Native evidence is still pending; do not infer visual acceptance from the
+SubViewport measurements.
 
 After that gate, use the bounded ordinary Title/load flow and isolated earned
 checkpoint required in [issue #114](https://github.com/KumarG23/vael-academy/issues/114).

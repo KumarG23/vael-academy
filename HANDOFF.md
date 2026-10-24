@@ -3,7 +3,8 @@
 ## Issue #114 — compact Journal Items readability
 
 Implementation is in progress on `team/issue-114`, based on accepted main
-`300f146a`, under MASTER_PLAN §§1–2, §6 WO-9.4/9.7 and partial §10 M9;
+`300f146a` and normally integrated through `8b442f13` (#110 Grades, then #115
+Battle reference UI), under MASTER_PLAN §§1–2, §6 WO-9.4/9.7 and partial §10 M9;
 ACADEMY_BIBLE §3 Quartermaster; existing inventory behavior from AW-52/53/55.
 The Items-only two-pane renderer now measures the active font, wraps complete
 pack names/equipped markers and contextual stage instructions, windows the
@@ -26,18 +27,21 @@ input, full/bound/tome refusal invariance and feedback bounds, and successful
 Campaign save/load transfer persistence. Fixtures are scratch units; they do
 not claim earned progression.
 
-Godot 4.7.2 import exited 0 under the common Git-directory
-`vael-godot-heavy.lock` with disposable XDG data; no script parse/load errors
-were reported. The clean import regenerated untracked `.uid`/`.import` sidecars
-for existing assets/scripts that lacked them; those generated sidecars were
-removed from this worktree. Helpers pass: **113 discovered, 111 passed, two
-existing opt-in skips**. One full GUT attempt was stopped when a concurrent
-headless import appeared outside the lock; it is discarded and the required
-full run remains pending after serialized headless work clears. No game/GUI/input/capture job has run:
-#112/Sol-dev owns the shared desktop; native acceptance waits for its explicit
-release and the lead naming the next controller. [QA manifest and evidence
-limits](docs/qa/issue-114-items-compact/README.md). Keep the PR draft until the
-native gate, final Verify and lead review are complete.
+Before accepted #112 integration, clean Godot 4.7.2 import exited 0 and full
+GUT passed **1,027/1,027 tests, 20,249 assertions / 125 scripts** (479.318 s,
+99 inherited deprecations) on `4f11054d`; helpers passed **113 discovered, 111
+passed, two existing opt-in skips**. These results are source-attributed to
+that head. Import sidecars were removed. Final combined-head clean import,
+full GUT and helpers remain pending a serialized run after #117's active full
+suite. Accepted #112 is integrated normally; both incoming Grades and Battle
+reference source/tests/QA/status are retained. The #112 owner explicitly
+released every graphical job, and the lead named #114/Luna next sole GUI
+controller ([release](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385623578),
+[lead naming](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385711360)).
+Bounded original-Forward+ Items acceptance is now authorized and underway;
+no result is claimed until captured and hashed. [QA manifest and evidence
+limits](docs/qa/issue-114-items-compact/README.md). Keep the PR draft until
+native evidence, exact-head Verify and lead review are complete.
 ## Issue #112 — Battle reference UI live resize
 
 Implemented on `team/issue-112`, from accepted main `300f146a`, under MASTER_PLAN §§1–3 / §6 WO-9.4–9.5 / partial §10 M9 and ACADEMY_BIBLE §4. No contradiction or canon/mechanic decision. BattleView recomputes objective/header/hint/hover/forecast/inspection presentation on resize/content changes. Active-font paragraphs preserve complete forecast sides, stats/weapon/inventory/role hints and font sizes; oversized five-slot sheets use measured two-column reflow. Complete existing frame-corner slices stop ornament crossing text. Input, camera coordinates, formulas/RNG, resolver/progression/support, saves/settings, renderer/project settings remain in their existing paths. Accepted #9/#72 behavior/tests preserved.
