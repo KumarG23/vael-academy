@@ -1,0 +1,4 @@
+{
+  "vael": {"slug": "KumarG23/vael-academy", "repo": "~/projects/vael-academy", "state": "~/.local/state/vael-team", "base": "main"},
+  "command": {"slug": "KumarG23/jarvis-command", "repo": "~/projects/jarvis-command", "state": "~/.local/state/studio-team/command", "base": "release/gpt6-sol-luna"}
+}

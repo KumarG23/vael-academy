@@ -409,6 +409,7 @@ func _cancel_room_fade() -> void:
 
 func _exit_tree() -> void:
 	_cancel_room_fade()
+	_rest_checkpoint_pending = false
 
 
 func _setup_camera() -> void:
@@ -487,7 +488,7 @@ func _point_available(p: CastlePoint) -> bool:
 
 
 func busy() -> bool:
-	return _room_fade != RoomFade.IDLE or _room_map != null or _leaving or _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
+	return _room_fade != RoomFade.IDLE or _rest_checkpoint_pending or _room_map != null or _leaving or _dialogue != null or _menu_context != "" or _fishing != null or _journal != null \
 		or _quiz != null or (_editor != null and _editor.active)
 
 
@@ -643,16 +644,24 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if _room_map != null:
+		# Issue #89: an additional Up/Down/Confirm/Cancel key stands in for the
+		# shipped map key with the same meaning (Up/Down repeat like arrows).
+		var key: Key = event.keycode if event is InputEventKey else KEY_NONE
+		match KeyboardPreferences.extra_action(event):
+			"cursor_up": key = KEY_UP
+			"cursor_down": key = KEY_DOWN
+			"cursor_confirm": key = KEY_ENTER
+			"cursor_cancel": key = KEY_ESCAPE
 		if event is InputEventKey and event.pressed and not event.echo \
-				and event.keycode in [KEY_M, KEY_ESCAPE]:
+				and key in [KEY_M, KEY_ESCAPE]:
 			get_viewport().set_input_as_handled()
 			_close_room_map()
-		elif event is InputEventKey and event.pressed and event.keycode in [KEY_UP, KEY_DOWN]:
+		elif event is InputEventKey and event.pressed and key in [KEY_UP, KEY_DOWN]:
 			get_viewport().set_input_as_handled()
-			_room_map.navigate(1 if event.keycode == KEY_DOWN else -1)
-		elif event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_TAB, KEY_ENTER, KEY_KP_ENTER, KEY_SPACE]:
+			_room_map.navigate(1 if key == KEY_DOWN else -1)
+		elif event is InputEventKey and event.pressed and not event.echo and key in [KEY_TAB, KEY_ENTER, KEY_KP_ENTER, KEY_SPACE]:
 			get_viewport().set_input_as_handled()
-			if event.keycode == KEY_TAB:
+			if key == KEY_TAB:
 				_room_map.toggle_destinations()
 			else:
 				_room_map.confirm_destination()
@@ -707,7 +716,7 @@ func _travel_destinations() -> Array[CastleRoomDef]:
 
 
 func _travel_to(id: String) -> void:
-	if _room_fade != RoomFade.IDLE or _leaving or _dialogue != null or _menu_context != "" \
+	if _room_fade != RoomFade.IDLE or _rest_checkpoint_pending or _leaving or _dialogue != null or _menu_context != "" \
 			or _journal != null or _fishing != null or _quiz != null or (_editor != null and _editor.active) \
 			or _room_map == null or not _map_available() or not Campaign.academy_visits.has(id):
 		return
@@ -1082,6 +1091,23 @@ const CEREMONY_LINES := {
 }
 
 
+# A rest owns one checkpoint request until its presentation queue settles.
+# Deferred once at completion so the finishing input cannot reach live play.
+var _rest_checkpoint_pending := false
+
+
+func _finish_rest_checkpoint() -> void:
+	if not _rest_checkpoint_pending:
+		return
+	_rest_checkpoint_pending = false
+	if not is_inside_tree() or is_queued_for_deletion() or busy() or not _dialogue_queue.is_empty():
+		return
+	# Failed/unplayable ceremonies must not persist a half-delivered rest.
+	if not Campaign.pending_report_cards().is_empty() or not _scheduled_set_pieces.is_empty():
+		return
+	_toast("Autosaved." if Campaign.save_autosave() else "Autosave failed. Progress kept in play; next rest retries.")
+
+
 func _rest_week() -> void:
 	# AW-76 (Codex finding #2): a battle week doesn't pass by sleeping through
 	# it — winning the mission is what advances the calendar (Campaign.capture).
@@ -1091,9 +1117,12 @@ func _rest_week() -> void:
 		return
 	if busy():
 		return
+	_rest_checkpoint_pending = true
 	var sem_before := Campaign.semester
 	Campaign.advance_week()
 	_refresh_date()
+	if _dialogue == null and _dialogue_queue.is_empty():
+		_finish_rest_checkpoint.call_deferred()
 	if Campaign.semester != sem_before:
 		return  # the ceremony supplies the feedback for a term-closing rest
 	var e := Campaign.current_event()
@@ -1518,6 +1547,7 @@ var _dialogue_queue: Array[Dictionary] = []
 ## script — not a queued neighbour — finishes.
 func _play_script(script: DialogueScript, on_complete := Callable()) -> bool:
 	if not script.is_playable():
+		_rest_checkpoint_pending = false
 		var why := script.error if script.error != "" else "empty script"
 		push_warning("castle dialogue skipped: %s" % why)
 		return false
@@ -1540,7 +1570,9 @@ func _play_script(script: DialogueScript, on_complete := Callable()) -> bool:
 			on_complete.call()
 		if not _dialogue_queue.is_empty():
 			var next: Dictionary = _dialogue_queue.pop_front()
-			_play_script(next["script"], next["on_complete"]))
+			_play_script(next["script"], next["on_complete"])
+		elif _rest_checkpoint_pending:
+			_finish_rest_checkpoint.call_deferred())
 	scene.play(script)
 	return true
 

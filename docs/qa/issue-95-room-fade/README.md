@@ -144,17 +144,62 @@ Limits: bounded three-room/native checkpoint acceptance, not a full-school repla
 or Neal taste/visual approval. Dynamic invalid destination/access/spawn and
 teardown cases are production viewport/lifecycle tests; native invalid checks
 cover unavailable destinations/current-room/blank-pointer/cancel without
-corrupting authored resources. Actual autosave-file/custom-key integration stays
-pending accepted #85/#89. Native Journal open/close passed, but its inherited
+corrupting authored resources. Actual autosave-file/custom-key integration is covered by the production
+viewport/IO checks below; the original native captures remain attributed to their
+actual source and shipped keys/checkpoint. Native Journal open/close passed, but its inherited
 compact **Roster** stats/gear overflow was observed separately and filed as
 [#96](https://github.com/KumarG23/vael-academy/issues/96), with default/compact
 captures; #95 does not claim that unrelated layout is fixed.
 
-## Remaining acceptance gates
+## Accepted-main integration — 2026-10-24
 
-- Integrate #85 and #89 only after each is accepted/merged, by ordinary main merge;
-  preserve #92 if accepted main contains it. Run proportional boundary checks,
-  including the actual autosave checkpoint and custom keyboard controls.
-- Actual exact-final-head CI success and engineering-lead acceptance before
-  ready/merge. No draft sibling copying, unchanged full/native replays merely to
-  wait, direct-main push or self-merge.
+Normally merged accepted main **`efeceb29477fc031b56a0483339aff4c0d85d43d`**,
+which includes accepted #85 / PR #86 (`6d11efdd`), #89 / PR #90 (`efeceb29`)
+and #92 / PR #93 (`66d635c2`). No #96/#98 draft code was copied.
+
+The `busy()` conflict combines pending rest and fade gates. Both independently
+added `_exit_tree()` functions are combined, retaining local fade cancellation
+and pending-rest cancellation. The existing travel boundary also honors pending
+rest. The accepted `KeyboardPreferences.extra_action()` map adapter stays after
+fade input consumption. Calendar, controls/editor, save/Title/Campaign source
+otherwise match accepted main exactly. Every accepted-main HANDOFF/plan line is
+retained in order; adjacent insertions kept both sides. All existing assertions
+are retained; #89's immediate custom-travel arrival assertion now awaits the
+bounded presentation.
+
+New production integration cases use real accepted `KeyboardPreferences.assign()`
+and `ui_*` aliases for I/N/G/L/O/P. Custom confirm starts the shared fade; all six
+custom keys and shipped confirm/cancel/Journal/map/editor keys are consumed for
+press/echo/release in both halves. Held custom movement is blocked while fading
+and resumes afterward; custom System and Journal close still work, and settings
+bytes remain unchanged. A normal custom-confirm rest creates exactly one actual
+settled checkpoint through the accepted deferred completion path. Pending-rest
+busy/map/door guards remain intact. A subsequent physical Emberwing Hall →
+Emberwing Dorm trip earns only its supported visit, and custom travel back leaves
+the entire Campaign/support/training/RNG state, actual checkpoint bytes, all
+three manual slot bytes and checkpoint-write count unchanged.
+
+**Proportional integration checks: 196/196 tests, 6,149 assertions / 18 scripts**,
+exit 0 (60.244 s). Includes fade (16/16), castle, earned travel/map, keyboard
+preferences/editor/input/battle, settled-rest autosave/Title fresh-process restore,
+SaveSystem, rejected-load feedback, report-card delivery, campaign-load/flow,
+resume, Journal/close/Calendar and Title flow. 59 inherited deprecation notices;
+no failed tests, script-load or exit-time resource diagnostics. The first focused
+pass exposed a fixture's stale `dorm_hall` ID; correcting it to the actual authored
+`emberwing_dorm` resource required no gameplay/data change.
+
+Cached Godot 4.7.2 import after accepted autoload integration: exit 0, no
+script-load errors; optional online version check reported a TLS handshake error.
+Helper discovery: **113 run, 111 pass / two existing opt-in skips** (10.780 s).
+Godot work serialized under the common heavy lock with fresh disposable data.
+No unchanged full baseline or graphical playthrough was repeated. Native evidence
+above remains explicitly source-specific; integration adds automated evidence
+for actual autosave/custom controls and the combined lifecycle/input boundaries.
+No GUI control was acquired; the prior explicit release remains in force.
+
+## Remaining acceptance gate
+
+Actual exact-final-head CI success and engineering-lead acceptance before
+ready/merge. CI/readiness receipts belong on PR #97 without manufacturing another
+status-only source head. No draft sibling copying, unchanged full/native replays
+merely to wait, direct-main push or self-merge.

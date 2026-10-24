@@ -1,11 +1,30 @@
 extends GutTest
 ## GH-95: real viewport dispatch with deterministic production fade frames.
 
+class CountingSaves extends SaveSystem:
+	var checkpoint_writes := 0
+	func save_autosave(payload: Dictionary) -> bool:
+		checkpoint_writes += 1
+		return super.save_autosave(payload)
+
+var _old_prefs_path := ""
+var _prefs_path := ""
+var _old_extras: Dictionary
+var _old_save_system: SaveSystem
+var _integration_saves: CountingSaves
 var _viewport: SubViewport
 var _castle: CastleScene
 
 
 func before_each() -> void:
+	_old_prefs_path = KeyboardPreferences.prefs_path
+	_old_extras = KeyboardPreferences._extras.duplicate()
+	KeyboardPreferences._unapply()
+	KeyboardPreferences._extras.clear()
+	_prefs_path = "user://fade_keyboard_%d.cfg" % Time.get_ticks_usec()
+	KeyboardPreferences.prefs_path = _prefs_path
+	_old_save_system = Campaign.save_system_override
+	_integration_saves = null
 	Campaign.reset_new_game(false, 9501)
 	Campaign.week = 2
 	CastleScene.next_room = ""
@@ -21,8 +40,22 @@ func before_each() -> void:
 
 
 func after_each() -> void:
-	for action: String in ["ui_up", "ui_down", "ui_left", "ui_right"]:
+	for action: String in ["ui_up", "ui_down", "ui_left", "ui_right", "cursor_right"]:
 		Input.action_release(action)
+	KeyboardPreferences._unapply()
+	KeyboardPreferences._extras = _old_extras
+	KeyboardPreferences._apply()
+	KeyboardPreferences.prefs_path = _old_prefs_path
+	for suffix: String in ["", ".tmp"]:
+		if FileAccess.file_exists(_prefs_path + suffix):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(_prefs_path + suffix))
+	Campaign.save_system_override = _old_save_system
+	if _integration_saves != null:
+		var dir := DirAccess.open(_integration_saves.save_dir)
+		if dir != null:
+			for file: String in dir.get_files():
+				dir.remove(file)
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(_integration_saves.save_dir))
 	Campaign.reset_new_game(false)
 
 
@@ -391,3 +424,127 @@ func test_changed_destination_spawn_rejects_physical_and_travel_at_switch():
 		_castle._process(0.5)
 		assert_eq(_castle.room.id, "campus", "repaired data never retries the old request")
 		_castle.room_changed.disconnect(receipt)
+
+
+## Accepted #89 bindings use the real validation/persistence/InputMap aliases.
+func _assign_custom_controls() -> void:
+	var picks := {"cursor_up": KEY_I, "cursor_down": KEY_N, "cursor_left": KEY_G,
+		"cursor_right": KEY_L, "cursor_confirm": KEY_O, "cursor_cancel": KEY_P}
+	for action: String in picks:
+		var event := InputEventKey.new()
+		event.keycode = picks[action]
+		event.physical_keycode = picks[action]
+		event.pressed = true
+		assert_eq(KeyboardPreferences.assign(action, event), "")
+		assert_true(InputMap.event_is_action(event, KeyboardPreferences.ALIASES[action], true))
+
+
+func test_accepted_custom_controls_confirm_cancel_and_are_consumed_in_both_halves():
+	_assign_custom_controls()
+	_castle.enter_room("entrance")
+	_castle.enter_room("campus")
+	_key(KEY_M)
+	_key(KEY_TAB)
+	while _castle._room_map.destinations[_castle._room_map.selected].id != "entrance":
+		_key(KEY_N)
+	_key(KEY_P)
+	assert_null(_castle._room_map, "accepted custom Cancel closes without travel")
+	assert_eq(_castle._menu_context, "")
+	_open_travel("entrance")
+	var before := Campaign.to_dict().duplicate(true)
+	var settings := FileAccess.get_file_as_bytes(_prefs_path)
+	_key(KEY_O)
+	assert_eq(_castle.room.id, "campus", "custom Confirm begins shared fade")
+	assert_null(_castle._room_map)
+	for half in range(2):
+		var position := _castle._avatar.position
+		for code: Key in [KEY_I, KEY_N, KEY_G, KEY_L, KEY_O, KEY_P,
+				KEY_ENTER, KEY_ESCAPE, KEY_J, KEY_M, KEY_QUOTELEFT]:
+			for kind: int in range(3):
+				_key(code, kind != 2, kind == 1)
+				assert_true(_viewport.is_input_handled(), "press/echo/release consumed before action")
+		var held := InputEventKey.new()
+		held.keycode = KEY_L
+		held.physical_keycode = KEY_L
+		held.pressed = true
+		Input.parse_input_event(held)
+		Input.flush_buffered_events()
+		assert_true(Input.is_action_pressed("ui_right"), "accepted custom alias is held")
+		_castle._process(0.02)
+		assert_eq(_castle._avatar.position, position)
+		assert_null(_castle._journal)
+		assert_null(_castle._room_map)
+		assert_false(_castle._editor.active)
+		assert_eq(_castle._menu_context, "")
+		assert_null(_castle._dialogue)
+		if half == 0:
+			_conceal_and_switch()
+	_reveal()
+	var position := _castle._avatar.position
+	_castle._process(0.02)
+	assert_gt(_castle._avatar.position.x, position.x, "held custom movement resumes normally")
+	var release := InputEventKey.new()
+	release.keycode = KEY_L
+	release.physical_keycode = KEY_L
+	Input.parse_input_event(release)
+	Input.flush_buffered_events()
+	_key(KEY_P)
+	assert_eq(_castle._menu_context, "system", "custom Cancel works after reveal")
+	_key(KEY_P)
+	assert_eq(_castle._menu_context, "")
+	_key(KEY_J)
+	assert_not_null(_castle._journal)
+	_key(KEY_P)
+	assert_null(_castle._journal)
+	assert_eq(_castle._menu_context, "", "accepted custom Journal close stays consumed")
+	assert_eq(Campaign.to_dict(), before)
+	assert_eq(FileAccess.get_file_as_bytes(_prefs_path), settings)
+
+
+func test_settled_real_rest_checkpoint_and_manual_bytes_survive_door_and_custom_travel():
+	_assign_custom_controls()
+	_integration_saves = CountingSaves.new("user://fade_settled_%d" % Time.get_ticks_usec())
+	Campaign.save_system_override = _integration_saves
+	_castle.enter_room("emberwing_hall")
+	for point: CastlePoint in _castle.room.points:
+		if point.id == "fn_rest":
+			_castle._avatar.position = _castle._grid.cell_center(point.cell)
+	_castle._update_prompt()
+	_key(KEY_O)
+	assert_eq(Campaign.week, 3, "ordinary custom interaction performs existing rest")
+	assert_true(_castle._rest_checkpoint_pending)
+	assert_true(_castle.busy(), "merged rest gate survives fade busy conflict")
+	_key(KEY_M)
+	assert_null(_castle._room_map)
+	_start_door("emberwing_dorm")
+	assert_eq(_castle._room_fade, CastleScene.RoomFade.IDLE, "pending rest prevents a physical trip")
+	await wait_process_frames(2)
+	assert_false(_castle._rest_checkpoint_pending)
+	assert_false(_castle.busy())
+	assert_eq(_integration_saves.checkpoint_writes, 1, "existing deferred settled rest writes once")
+	assert_eq(_integration_saves.load_autosave().get("campaign"), JSON.parse_string(JSON.stringify(Campaign.to_dict())))
+	var checkpoint := FileAccess.get_file_as_bytes(_integration_saves.autosave_path())
+	var manual: Array[PackedByteArray] = []
+	for slot in range(3):
+		assert_true(Campaign.save_to_slot(slot))
+		manual.append(FileAccess.get_file_as_bytes(_integration_saves.slot_path(slot)))
+	Campaign.training_used = true
+	Campaign.flags["fade_integration_fixture"] = true
+	var before := Campaign.to_dict().duplicate(true)
+	var supports := _castle._support_state.save_state().duplicate(true)
+	_start_door("emberwing_dorm")
+	_conceal_and_switch()
+	_reveal()
+	before["academy_visits"].append("emberwing_dorm")
+	assert_eq(Campaign.to_dict(), before, "door earns only its existing public visit")
+	_open_travel("emberwing_hall")
+	_key(KEY_O)
+	_conceal_and_switch()
+	_reveal()
+	await wait_process_frames(3)
+	assert_eq(Campaign.to_dict(), before, "fast travel never starts a hub visit/rest/save")
+	assert_eq(_castle._support_state.save_state(), supports)
+	assert_eq(_integration_saves.checkpoint_writes, 1)
+	assert_eq(FileAccess.get_file_as_bytes(_integration_saves.autosave_path()), checkpoint)
+	for slot in range(3):
+		assert_eq(FileAccess.get_file_as_bytes(_integration_saves.slot_path(slot)), manual[slot])

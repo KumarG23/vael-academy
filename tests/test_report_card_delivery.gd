@@ -3,13 +3,17 @@ extends GutTest
 
 var _castle: CastleScene
 var _sys: SaveSystem
+var _previous_sys: SaveSystem
 
 func before_each() -> void:
 	Campaign.reset_new_game(false)
 	Campaign.house_locked = true
 	_sys = SaveSystem.new("user://test_report_card_delivery")
+	_previous_sys = Campaign.save_system_override
+	Campaign.save_system_override = _sys
 
 func after_each() -> void:
+	Campaign.save_system_override = _previous_sys
 	if is_instance_valid(_castle):
 		_castle.free()
 	Campaign.reset_new_game(false)
