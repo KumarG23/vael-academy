@@ -122,8 +122,13 @@ func test_all_shipped_inspection_fields_and_role_hints_fit_compact() -> void:
 		unit.setup(def, view._grid, Vector2i.ZERO)
 		assert_lte(UITheme.font().get_string_size(def.display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x, 206.0, "shipped hover name fits active font")
 		assert_lte(UITheme.font().get_string_size("%s   Lv %d" % [def.char_class.display_name, unit.level], HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x, 206.0, "shipped hover class/level fits")
-		view._stats_panel.show_unit(unit)
-		await wait_physics_frames(1)
+		# GH-133: open through the production owner. BattleView lays reference UI out in
+		# _process, so the sheet/hover are valid immediately at open and the header labels
+		# (autowrap minimums) once one process frame has run; a physics-frame wait is neither.
+		view._open_stats_for(unit)
+		_inside(view._stats_panel)
+		assert_false(view._stats_panel.get_global_rect().intersects(view._hover_info.get_global_rect()), "%s inspection clears hover at open" % def.display_name)
+		await get_tree().process_frame
 		_references_clear(view._stats_panel)
 		_paragraphs_fit(view._stats_panel)
 		var fields: Array[String] = []
