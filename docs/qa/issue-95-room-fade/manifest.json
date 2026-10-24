@@ -1,0 +1,23 @@
+{
+  "clips/compact-transition.mp4": "736ec89273b367b06cad8ec7790ea8ab2c048cad5e7d3589472d22e59ba04cf7",
+  "clips/default-transition.mp4": "b51c521b8141b540027dc29c456dca6b905c02f2671f89d97c97c4c4b53b8454",
+  "images/01-initial.png": "a08fe7b87132db250c7d9818b72dbcdf2eee5cfc9e57634da88882c2c3b51d58",
+  "images/02-only-campus.png": "8fb67e6cb9b89b365e22e076102aa20fccb3314c948d49cb81f4122292f78708",
+  "images/03-door-entrance.png": "befb1831e316ab87f09b97039f519a5509da18bb0ed18d042693242d60210e9a",
+  "images/06-pointer-travel.png": "c5050aa887f61ef3be99cd9b083b80515f945e5056f67f16e6b8bb684a5a0c7a",
+  "images/08-held-revealed.png": "cb15d4f513b6729ef6b84a78255293a6406afece235c629d6bf4b4c3b30d9741",
+  "images/09-journal.png": "501dbfb6418d74c288a85273f911583d2e923b2ca789565e69f8cfa0896da928",
+  "images/12-compact-campus.png": "da55f3b4cceef9c2425e3d72c28eb20e30753f05b4169149b3433e86f7cbf930",
+  "images/13-compact-current-map.png": "f914355a08738131387b2edc6ce868903b0e4c5139df99dae91f1506fcefad85",
+  "images/14-compact-pointer.png": "a6c3654ee2788f5ab182a65c585b89d74ed735eb8b39deea3c1ed0fff459eea7",
+  "images/15-resized-reveal.png": "0a6221e8c22f0d3716c0e65342367385c2ec65644b046d052207a2911139ead5",
+  "images/16-dialogue.png": "f69143d6e5d93405b71b8b8cedb7ad175ecdb294f323c828d3510b45dc2dfa40",
+  "images/17-compact-journal.png": "a51a744d1580987e7fe4220b3ab01998ba71dc85f4e246f33c05a69c279c5160",
+  "images/19-invalid-pointer.png": "b3f0d6f9cba2b8a2830fd919fe43bb2193fae024e6c8b9a04569e2230a8b20bf",
+  "images/clip-0.52.png": "078c7f7625d49c1a97c383bb418753b79e3d8b3189aa1a1919ac6518a82e2a70",
+  "images/clip-0.66.png": "2a8e4d6a830ae2f3ba0baf388dc9fb4a1439ec05a2a4741ee32b1625aebe9c4f",
+  "images/clip-source.png": "ccb4ff97a3c558843e1e4a7353afae05e22ca9c8ebaa6254c498f5ef3fcbaee1",
+  "images/compact-concealed.png": "123d72e39fb2866b0f6136a0ccb8d123e5d9127d3d0240fbef70d49f9e693a41",
+  "images/compact-revealed.png": "bbda9329475b757fdc0fcc48b465d260a870c427c0264a92f69aff70b38df7f7",
+  "results.json": "99a43e52d61d091e893df6dc97a7b4f87bd906d6f3143a5b8db380965960b680"
+}
