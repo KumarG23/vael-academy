@@ -1740,20 +1740,11 @@ func _toast_objective() -> void:
 
 
 func _objective_text() -> String:
-	match chapter.objective:
-		ChapterDef.Objective.SEIZE:
-			return "Objective: Seize the marked tile"
-		ChapterDef.Objective.DEFEAT_BOSS:
-			return "Objective: Defeat %s — or rout them all" % _boss_display_name()
-		_:
-			return "Objective: Rout the enemy"
+	return preload("res://src/ui/mission_reference.gd").objective_text(chapter)
 
 
 func _boss_display_name() -> String:
-	for spawn in chapter.enemy_spawns:
-		if spawn != null and spawn.unit != null and spawn.unit.id == chapter.boss_unit_id:
-			return spawn.unit.display_name
-	return "the enemy commander"
+	return preload("res://src/ui/mission_reference.gd").boss_display_name(chapter)
 
 
 ## Pull every themed UI element's colors from the active HouseDefs. Swapping the

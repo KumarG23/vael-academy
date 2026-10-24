@@ -8,7 +8,9 @@ extends Control
 
 signal closed
 
-const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System", "Fish Log", "Supports"]
+const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System", "Fish Log", "Supports", "Objectives"]
+const MissionReference = preload("res://src/ui/mission_reference.gd")
+
 const STAT_KEYS := ["hp", "str", "mag", "skl", "spd", "lck", "def", "res"]
 const STAT_LABELS := ["HP", "STR", "MAG", "SKL", "SPD", "LCK", "DEF", "RES"]
 const SLOTS := 3
@@ -33,6 +35,7 @@ var _support_i := 0
 var _calendar_i := -1
 var _calendar_scroll := 0
 var _grades_scroll := 0     # Issue #108: first visible Grades item
+var _objectives_scroll := 0
 var _snaps: Array = []       # per-unit data snapshots
 var _slot_info: Array = []   # save-slot summaries
 var _toast := ""
@@ -219,6 +222,9 @@ func _move_row(dir: int) -> void:
 			var catches := _fish_names()
 			if not catches.is_empty():
 				_fish_i = (_fish_i + dir + catches.size()) % catches.size()
+		7:
+			_objectives_scroll += dir
+			_objectives_layout(_body_rect(), UITheme.font())
 		6:
 			var supports := _support_entries()
 			if not supports.is_empty():
@@ -448,10 +454,14 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, vp), Color(0.05, 0.06, 0.09, 0.72))  # dim the castle
 	var m := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
 	var book := Rect2(m, vp - m * 2.0)
-	UITheme.draw_panel(self, book, Color(0.11, 0.12, 0.17, 0.98))  # AW-56 shared frame
+	# Preserve GH-96's accepted Roster frame/title alongside its measured footer.
+	# Other tabs retain GH-106's captured complete-corner slice and heading.
+	var source_margin := UITheme.SRC_MARGIN if _tab == 0 else 112.0
+	UITheme.draw_panel(self, book, Color(0.11, 0.12, 0.17, 0.98), source_margin)
 	var font := UITheme.font()
 	# heading + tabs
-	draw_string(font, book.position + Vector2(34, 46), "Academy Journal",
+	var heading_position := book.position + Vector2(34, 46) if _tab == 0 else _heading_rect().position + Vector2(0, font.get_ascent(26))
+	draw_string(font, heading_position, "Academy Journal",
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(0.86, 0.78, 0.45))
 	# AW-70: the purse, always visible — gold finally has sinks, show the total
 	var purse := "Purse: %dg" % int(Campaign.flags.get("gold", 0))
@@ -486,6 +496,7 @@ func _draw() -> void:
 		4: _draw_system(body, font)
 		5: _draw_fish_log(body, font)
 		6: _draw_supports(body, font)
+		7: _draw_objectives(body, font)
 	# footer
 	if _tab == 0:
 		var roster_hint := _roster_footer_hint()
@@ -494,7 +505,9 @@ func _draw() -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
 	else:
 		var hint := "←/→ tab      ↑/↓ move      Enter select      J / Esc close"
-		draw_string(font, Vector2(book.position.x + 34, book.position.y + book.size.y - 26), hint,
+		if _tab == 7:
+			hint = "←/→ tab      ↑/↓ scroll      J / Esc close"
+		draw_string(font, _footer_rect(hint).position + Vector2(0, font.get_ascent(14)), hint,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
 	if _toast_t > 0.0:
 		var tr := _toast_rect()
@@ -708,7 +721,7 @@ func _body_rect() -> Rect2:
 	var tabs_height := 92.0 + (tab_rows - 1) * 22.0
 	var body_top := tabs_height + 16.0
 	return Rect2(book.position + Vector2(34, body_top),
-		Vector2(book.size.x - 68.0, book.size.y - body_top - 42.0))
+		Vector2(book.size.x - 68.0, book.size.y - body_top - UITheme.DST_MARGIN - 9.0 - font.get_height(14)))
 
 
 func _calendar_layout(body: Rect2, font: Font, events: Array = Campaign.calendar()) -> Dictionary:
@@ -1243,3 +1256,81 @@ func _kind_color(kind: int) -> Color:
 	return Color(0.6, 0.66, 0.78)
 
 
+
+## GH-106: only the current assignment. Routing is the War Room's existing
+## registry lookup; unavailable metadata never claims a usable deployment.
+func _objective_lines() -> Array[String]:
+	var event := Campaign.current_event()
+	var lines: Array[String] = []
+	if event == null:
+		return ["Week %d" % Campaign.week, "Current assignment unavailable.", "No mission this week."]
+	lines.append("Week %d · %s" % [Campaign.week, event.label])
+	if event.kind != CalendarEventDef.Kind.BATTLE:
+		lines.append("No mission this week.")
+		return lines
+	var chapter := MissionReference.chapter_from_path(ChapterRegistry.scene_for(event.chapter_id, Campaign.house_id))
+	if chapter == null or chapter.display_name.strip_edges().is_empty():
+		lines.append("Mission details unavailable.")
+		return lines
+	lines.append(chapter.display_name)
+	lines.append(MissionReference.objective_text(chapter))
+	lines.append("Deploy from the War Room.")
+	return lines
+
+
+func _objectives_layout(body: Rect2, font: Font) -> Dictionary:
+	var wrapped: Array[Dictionary] = []
+	var sections := _objective_lines()
+	for section in range(sections.size()):
+		var text: String = sections[section]
+		var paragraph := TextParagraph.new()
+		paragraph.width = maxf(1.0, body.size.x)
+		paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+		paragraph.add_string(text, font, 16)
+		for line in range(paragraph.get_line_count()):
+			var span := paragraph.get_line_range(line)
+			wrapped.append({"text": text.substr(span.x, span.y - span.x).strip_edges(), "section": section})
+	var pitch := ceilf(font.get_height(16)) + 6.0
+	var capacity := maxi(1, floori(body.size.y / pitch))
+	var scrolling := wrapped.size() > capacity
+	if scrolling:
+		capacity = maxi(1, floori((body.size.y - font.get_height(12) - 4.0) / pitch))
+	_objectives_scroll = clampi(_objectives_scroll, 0, maxi(0, wrapped.size() - capacity))
+	var rows: Array[Dictionary] = []
+	for i in range(_objectives_scroll, mini(wrapped.size(), _objectives_scroll + capacity)):
+		var row := wrapped[i].duplicate()
+		row["index"] = i
+		row["rect"] = Rect2(body.position + Vector2(0, (i - _objectives_scroll) * pitch),
+			Vector2(body.size.x, font.get_height(16)))
+		rows.append(row)
+	return {"rows": rows, "total": wrapped.size(), "scrolling": scrolling}
+
+
+func _draw_objectives(body: Rect2, font: Font) -> void:
+	var layout := _objectives_layout(body, font)
+	for row: Dictionary in layout.rows:
+		var rect: Rect2 = row.rect
+		draw_string(font, rect.position + Vector2(0, font.get_ascent(16)), row.text,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 16,
+			Color(0.86, 0.78, 0.45) if row.section == 0 else Color(0.90, 0.91, 0.95))
+	if layout.scrolling:
+		var progress := "↑/↓ scroll  ·  %d–%d / %d" % [_objectives_scroll + 1,
+			_objectives_scroll + layout.rows.size(), layout.total]
+		draw_string(font, Vector2(body.position.x, body.end.y - font.get_descent(12)), progress,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.62, 0.66, 0.76))
+
+
+
+## Include ascent/descent, not just the baseline, when clearing the ornament.
+func _heading_rect() -> Rect2:
+	var vp := get_viewport_rect().size
+	var margin := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
+	return Rect2(margin + Vector2(34, UITheme.DST_MARGIN + 2),
+		UITheme.font().get_string_size("Academy Journal", HORIZONTAL_ALIGNMENT_LEFT, -1, 26))
+
+
+func _footer_rect(hint: String) -> Rect2:
+	var vp := get_viewport_rect().size
+	var margin := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
+	var measured := UITheme.font().get_string_size(hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
+	return Rect2(Vector2(margin.x + 34, vp.y - margin.y - UITheme.DST_MARGIN - 3 - measured.y), measured)

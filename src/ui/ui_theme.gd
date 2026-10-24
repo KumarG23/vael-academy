@@ -21,20 +21,20 @@ static var _font_checked := false
 
 ## The navy fill + gold pixel frame. Falls back to a flat bordered rect when the
 ## kit art is missing (code never blocks on art).
-static func draw_panel(ci: CanvasItem, rect: Rect2, fill := FILL) -> void:
+static func draw_panel(ci: CanvasItem, rect: Rect2, fill := FILL, source_margin: float = SRC_MARGIN) -> void:
 	if fill.a > 0.0:
 		ci.draw_rect(rect.grow(-6.0), fill, true)
 	var tex := panel()
 	if tex == null:
 		ci.draw_rect(rect, GOLD, false, 2.0)
 		return
-	nine_patch(ci, tex, rect)
+	nine_patch(ci, tex, rect, source_margin)
 
 
-static func nine_patch(ci: CanvasItem, tex: Texture2D, dest: Rect2) -> void:
+static func nine_patch(ci: CanvasItem, tex: Texture2D, dest: Rect2, source_margin: float = SRC_MARGIN) -> void:
 	var tw := float(tex.get_width())
 	var th := float(tex.get_height())
-	var sm := SRC_MARGIN
+	var sm := source_margin
 	# never let the corners overrun a small panel
 	var dm := minf(DST_MARGIN, minf(dest.size.x, dest.size.y) * 0.5)
 	var sx := [0.0, sm, tw - sm, tw]
