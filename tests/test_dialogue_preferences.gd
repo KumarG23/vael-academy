@@ -5,6 +5,13 @@ var _original_path := ""
 var _original_mode := "normal"
 var _prefs_path := ""
 var _xdg := ""
+var _audio_original_path := ""
+var _audio_test_path := ""
+var _audio_original_levels := {}
+var _audio_original_muted := false
+var _install_settings_path := ""
+var _install_settings_existed := false
+var _install_settings_bytes := PackedByteArray()
 
 
 func before_each() -> void:
@@ -14,6 +21,18 @@ func before_each() -> void:
 	DialoguePreferences.prefs_path = _prefs_path
 	DialoguePreferences.text_speed = "normal"
 	DialoguePreferences.last_write_error = OK
+	_audio_original_path = AudioManager.prefs_path
+	_audio_original_levels = {
+		"master_volume": AudioManager.master_volume,
+		"music_volume": AudioManager.music_volume,
+		"sfx_volume": AudioManager.sfx_volume,
+	}
+	_audio_original_muted = AudioManager.muted
+	_install_settings_path = ProjectSettings.globalize_path(_audio_original_path)
+	_install_settings_existed = FileAccess.file_exists(_install_settings_path)
+	_install_settings_bytes = FileAccess.get_file_as_bytes(_install_settings_path) if _install_settings_existed else PackedByteArray()
+	_audio_test_path = "user://test_dialogue_audio_preferences_%d.cfg" % Time.get_ticks_usec()
+	AudioManager.prefs_path = _audio_test_path
 	_xdg = ProjectSettings.globalize_path("user://test_dialogue_prefs_xdg_%d" % Time.get_ticks_usec())
 	DirAccess.make_dir_recursive_absolute(_xdg)
 
@@ -22,10 +41,24 @@ func after_each() -> void:
 	DialoguePreferences.prefs_path = _original_path
 	DialoguePreferences.text_speed = _original_mode
 	DialoguePreferences.last_write_error = OK
+	AudioManager.prefs_path = _audio_original_path
+	for key: String in _audio_original_levels:
+		AudioManager.set(key, _audio_original_levels[key])
+	AudioManager.muted = _audio_original_muted
+	assert_eq(AudioManager.prefs_path, _audio_original_path, "AudioManager preference path is restored")
+	assert_eq(AudioManager.master_volume, _audio_original_levels["master_volume"], "incoming master level is restored")
+	assert_eq(AudioManager.music_volume, _audio_original_levels["music_volume"], "incoming music level is restored")
+	assert_eq(AudioManager.sfx_volume, _audio_original_levels["sfx_volume"], "incoming SFX level is restored")
+	assert_eq(AudioManager.muted, _audio_original_muted, "incoming mute state is restored")
 	for suffix in ["", ".tmp"]:
 		var path := ProjectSettings.globalize_path(_prefs_path + suffix)
 		if FileAccess.file_exists(path):
 			DirAccess.remove_absolute(path)
+		assert_false(FileAccess.file_exists(path), "dialogue preference test file and temp neighbor are removed")
+		path = ProjectSettings.globalize_path(_audio_test_path + suffix)
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(path)
+		assert_false(FileAccess.file_exists(path), "audio preference test file and temp neighbor are removed")
 	_remove_tree(_xdg)
 
 
@@ -66,6 +99,11 @@ func test_system_save_audio_and_title_rows_remain_available() -> void:
 	assert_eq(_row_index("title"), 10)
 	journal._sys_i = _row_index("music")
 	assert_true(journal._adjust_volume(-1), "audio controls still adjust")
+	assert_eq(AudioManager.prefs_path, _audio_test_path, "Journal audio writes target this test's disposable file")
+	assert_true(FileAccess.file_exists(ProjectSettings.globalize_path(_audio_test_path)), "Journal audio adjustment saves only the disposable file")
+	assert_eq(FileAccess.file_exists(_install_settings_path), _install_settings_existed, "installation settings file presence is unchanged")
+	if _install_settings_existed:
+		assert_eq(FileAccess.get_file_as_bytes(_install_settings_path), _install_settings_bytes, "installation settings bytes are unchanged")
 	journal._sys_i = _row_index("save0")
 	journal._activate()
 	assert_eq(journal._toast, "Saved to slot 1", "save row remains usable")

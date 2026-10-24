@@ -148,3 +148,22 @@ baseline was repeated for this integration. No GUI was used: #108 is now the
 lead-named sole controller. Existing native evidence stays attributed to the
 source in the manifest and to #96's accepted QA, rather than being relabeled as
 an integration-head capture. Final exact-head Verify and lead review remain gates.
+
+
+## Accepted test-isolation integration — 2026-10-24
+
+Lead accepted **4c535c1c0a7a9e4a06b5c910c2b5c8ad1e56b6bc** source/runtime/checks,
+with no production/test finding and exact Verify 40098210146 SUCCESS. Retain that
+acceptance and all earlier source-specific native/full-suite evidence. Normally
+merged accepted #98/main **afe9859264895b17e35f5ee3c89b820dc6b14529**; conflicts
+were HANDOFF and MASTER_PLAN only. Kept both records and updated acceptance status
+where resolving those rows. Production, Objectives/Roster/Calendar/input tests and
+the source/capture manifest are unchanged from accepted #106; the incoming
+isolation test/assertions are unchanged from accepted main.
+
+Post-#98 Journal/preferences boundary **86/86 tests, 1,877 assertions / 9 scripts**, exit 0 (29.434 s); same-process dialogue→audio repeated on that reused disposable profile **24/24, 381 assertions**, exit 0 (12.704 s). Installation settings remained absent after both runs; no script-load errors. Boundary reported 61 inherited deprecations and existing exit-time two ObjectDB/one resource diagnostics; repeat reported five deprecations. Both processes use the same disposable XDG profile under the
+common Godot lock. The first runs dialogue then audio before the Journal boundary;
+the second repeats dialogue→audio on reused data. Installation settings remain
+absent after both runs. No source repair, new test, GUI, local full/import/native
+replay, new canon or Neal approval claim. #108 retains sole GUI control. Final
+integration-head Verify and lead delta review remain required.
