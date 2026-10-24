@@ -114,6 +114,13 @@ func test_production_item_geometry_fits_complete_labels_and_stage_instructions()
 				"stage-%d instruction glyphs fit at %s" % [mode, size])
 
 
+
+
+func test_items_multiline_calls_keep_all_text_lines_enabled() -> void:
+	assert_eq(AcademyJournal.MULTILINE_MAX_LINES, -1,
+		"item labels, stage hints and inventory toasts must not request zero visible lines")
+
+
 func test_production_student_and_recipient_rows_have_a_visible_window() -> void:
 	var font := UITheme.font()
 	for size in [Vector2i(1280, 720), Vector2i(800, 450), Vector2i(640, 360)]:

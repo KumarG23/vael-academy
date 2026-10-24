@@ -9,6 +9,7 @@ extends Control
 signal closed
 
 const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System", "Fish Log", "Supports", "Objectives"]
+const MULTILINE_MAX_LINES := -1
 const MissionReference = preload("res://src/ui/mission_reference.gd")
 
 const STAT_KEYS := ["hp", "str", "mag", "skl", "spd", "lck", "def", "res"]
@@ -518,7 +519,7 @@ func _draw() -> void:
 			draw_rect(tr, Color(0.1, 0.11, 0.16, 0.97), true)
 			draw_rect(tr, Color(0.86, 0.78, 0.45, 0.9), false, 1.5)
 			draw_multiline_string(font, toast_layout["baseline"], "\n".join(toast_layout["lines"]),
-				HORIZONTAL_ALIGNMENT_LEFT, toast_layout["text_width"], 16, 0.0, Color(0.95, 0.9, 0.7))
+				HORIZONTAL_ALIGNMENT_LEFT, toast_layout["text_width"], 16, MULTILINE_MAX_LINES, Color(0.95, 0.9, 0.7))
 		else:
 			# Keep Issue #83's load-error feedback geometry and behavior unchanged.
 			var tr := _toast_rect()
@@ -842,7 +843,7 @@ func _draw_items(body: Rect2, font: Font) -> void:
 				draw_rect(row["rect"], Color(0.86, 0.68, 0.25, 0.5) if _inv_mode == 2 else Color(0.30, 0.45, 0.85, 0.45), true)
 			var marker := "› " if selected else "  "
 			draw_multiline_string(font, row["label_baseline"], marker + "\n".join(row["lines"]),
-				HORIZONTAL_ALIGNMENT_LEFT, row["label_width"], 16, 0.0,
+				HORIZONTAL_ALIGNMENT_LEFT, row["label_width"], 16, MULTILINE_MAX_LINES,
 				Color(0.95, 0.94, 0.88) if selected else Color(0.85, 0.86, 0.92))
 			draw_string(font, row["uses_baseline"], row["uses"], HORIZONTAL_ALIGNMENT_RIGHT,
 				row["uses_width"], 13, Color(0.62, 0.66, 0.76))
@@ -852,7 +853,7 @@ func _draw_items(body: Rect2, font: Font) -> void:
 			draw_string(font, layout["pack_progress_baseline"], progress, HORIZONTAL_ALIGNMENT_RIGHT,
 				layout["pack_rect"].size.x, 11, Color(0.62, 0.66, 0.76))
 	draw_multiline_string(font, layout["hint_baseline"], "\n".join(layout["hint_lines"]),
-		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 14, 0.0, Color(0.86, 0.78, 0.45, 0.95))
+		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 14, MULTILINE_MAX_LINES, Color(0.86, 0.78, 0.45, 0.95))
 
 
 func _items_hint() -> String:
