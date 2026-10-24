@@ -12,6 +12,7 @@ const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System", "Fish
 const STAT_KEYS := ["hp", "str", "mag", "skl", "spd", "lck", "def", "res"]
 const STAT_LABELS := ["HP", "STR", "MAG", "SKL", "SPD", "LCK", "DEF", "RES"]
 const SLOTS := 3
+const ROSTER_FOOTER_SAFE_INSET := UITheme.DST_MARGIN * 2.5 + 1.0
 # System rows: (label, kind). kind drives Enter / ←→.
 const SYS_ROWS := [
 	["Save — Slot 1", "save0"], ["Save — Slot 2", "save1"], ["Save — Slot 3", "save2"],
@@ -445,7 +446,7 @@ func _draw() -> void:
 	var tabs_height := 92.0 + (tab_rows - 1) * 22.0
 	draw_line(book.position + Vector2(30, tabs_height), Vector2(book.position.x + book.size.x - 30, book.position.y + tabs_height),
 		Color(0.3, 0.33, 0.44), 1.0)
-	var body := _roster_body_rect()
+	var body := _roster_body_rect() if _tab == 0 else _journal_body_rect()
 	match _tab:
 		0: _draw_roster(body, font)
 		1: _draw_calendar(body, font)
@@ -455,10 +456,15 @@ func _draw() -> void:
 		5: _draw_fish_log(body, font)
 		6: _draw_supports(body, font)
 	# footer
-	var hint := "↑/↓ student   PgUp/PgDn details   ←/→ tab   J / Esc close" if _tab == 0 else "←/→ tab      ↑/↓ move      Enter select      J / Esc close"
-	var footer_offset := 42.0 if _tab == 0 else 26.0
-	draw_string(font, Vector2(book.position.x + 34, book.position.y + book.size.y - footer_offset), hint,
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
+	if _tab == 0:
+		var roster_hint := _roster_footer_hint()
+		var footer_bounds := _roster_footer_bounds(book, font, roster_hint)
+		draw_string(font, Vector2(footer_bounds.position.x, footer_bounds.position.y + font.get_ascent(14)), roster_hint,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
+	else:
+		var hint := "←/→ tab      ↑/↓ move      Enter select      J / Esc close"
+		draw_string(font, Vector2(book.position.x + 34, book.position.y + book.size.y - 26), hint,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
 	if _toast_t > 0.0:
 		var tr := _toast_rect()
 		draw_rect(tr, Color(0.1, 0.11, 0.16, 0.95), true)
@@ -468,6 +474,10 @@ func _draw() -> void:
 
 
 func _roster_body_rect() -> Rect2:
+	return _journal_body_rect()
+
+
+func _journal_body_rect() -> Rect2:
 	var vp := get_viewport_rect().size
 	var m := Vector2(minf(80, vp.x * 0.08), minf(56, vp.y * 0.08))
 	var book := Rect2(m, vp - m * 2.0)
@@ -475,6 +485,26 @@ func _roster_body_rect() -> Rect2:
 	var body_top := 92.0 + (rows - 1) * 22.0 + 16.0
 	return Rect2(book.position + Vector2(34, body_top),
 		Vector2(book.size.x - 68.0, book.size.y - body_top - 42.0))
+
+
+func _roster_footer_hint() -> String:
+	return "↑/↓ student   PgUp/PgDn details   ←/→ tab   J / Esc close"
+
+
+## Bounds the actual Roster footer glyphs inside the clear area of the ornate
+## panel. Width and height come from the active font; the safe inset avoids the
+## lower corner filigree at every supported window size.
+func _roster_footer_bounds(book: Rect2, font: Font, hint: String) -> Rect2:
+	var font_size := 14
+	var measured := font.get_string_size(hint, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	var ascent := font.get_ascent(font_size)
+	var descent := font.get_descent(font_size)
+	var safe_left := book.position.x + ROSTER_FOOTER_SAFE_INSET
+	var safe_right := book.end.x - ROSTER_FOOTER_SAFE_INSET
+	var x := clampf(book.get_center().x - measured.x * 0.5, safe_left, safe_right - measured.x)
+	var bottom := book.end.y - ROSTER_FOOTER_SAFE_INSET
+	var baseline := bottom - descent
+	return Rect2(Vector2(x, baseline - ascent), Vector2(measured.x, ascent + descent))
 
 
 ## The toast box, measured once so the layout test can verify both default and

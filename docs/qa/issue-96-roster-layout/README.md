@@ -40,9 +40,10 @@ approval claim.
 
 ## Inspected captures
 
-The captures show the existing first member, both compact sizes, all eight
-stats, carried equipment and skills, final-member browsing, close/continuation,
-and the live resize back to default.
+The initial captures show the existing first member, both compact sizes, all
+eight stats, carried equipment and skills, final-member browsing,
+close/continuation, and the live resize back to default. The three footer
+review captures record the revised hint at default and both compact sizes.
 Capture checksums are recorded in [SHA256SUMS](SHA256SUMS).
 
 | Capture | What it records |
@@ -58,10 +59,23 @@ Capture checksums are recorded in [SHA256SUMS](SHA256SUMS).
 | [640×360 closed Journal](images/19-640-closed.png) | J returns to exploration without reopening an overlay. |
 | [Restored 1280×720](images/21-restored-1280.png) | Live resize returns to default exploration. |
 | [Continued exploration](images/24-continuation-movement.png) | Fresh movement input works after close; camera follows. |
+| [Reviewed footer at 1280×720](images/25-footer-default.png) | Measured, centered Roster hint clears both lower frame ornaments. |
+| [Reviewed footer at 800×450](images/26-footer-800.png) | The complete hint stays inside the safe frame area at compact width. |
+| [Reviewed footer at 640×360](images/27-footer-640.png) | The complete hint clears the lower filigree at the smallest size. |
 
 The small final-member pages do not contain its portrait after page 1; the
 existing cached portrait is kept proportional on the first page. If a portrait
 resource is missing, the existing name/class fallback remains in use.
+
+The lead's P3 review noted that the original Roster footer crossed the lower-left
+filigree at default size. The footer now uses actual active-font dimensions and
+is horizontally centered inside a conservative inset derived from the ornate
+panel. Its measured glyph bounds clear the lower frame at all three tested
+sizes, and the last detail line is checked against those bounds in the
+production-layout regression. The new captures were taken from the existing
+Week-2 checkpoint with native input and the original Forward+ renderer. The
+source and disposable Slot 0 checkpoint hashes matched before and after; the
+game exited and the shared display was released afterward.
 
 ## Limits
 

@@ -73,6 +73,19 @@ func test_compact_roster_pages_all_existing_details_and_keeps_selected_row_visib
 		_journal.queue_redraw()
 		await wait_frames(1)
 		var body: Rect2 = _journal._roster_body_rect()
+		var frame_margin := Vector2(minf(80.0, size.x * 0.08), minf(56.0, size.y * 0.08))
+		var book := Rect2(frame_margin, Vector2(size) - frame_margin * 2.0)
+		var footer_hint := _journal._roster_footer_hint()
+		var footer_bounds: Rect2 = _journal._roster_footer_bounds(book, UITheme.font(), footer_hint)
+		var measured_footer_width: float = UITheme.font().get_string_size(footer_hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x
+		assert_lte(absf(footer_bounds.size.x - measured_footer_width), 0.01,
+			"footer bounds use the active font's measured text width at %s" % size)
+		assert_gte(footer_bounds.position.x, book.position.x + AcademyJournal.ROSTER_FOOTER_SAFE_INSET,
+			"footer clears the left corner filigree at %s" % size)
+		assert_lte(footer_bounds.end.x, book.end.x - AcademyJournal.ROSTER_FOOTER_SAFE_INSET,
+			"footer clears the right corner filigree at %s" % size)
+		assert_lte(footer_bounds.end.y, book.end.y - AcademyJournal.ROSTER_FOOTER_SAFE_INSET,
+			"footer glyph bounds clear the lower frame ornament at %s" % size)
 		var list_width: float = clampf(body.size.x * 0.29, 112.0, 210.0)
 		var detail_width := body.size.x - list_width - 14.0
 		assert_gt(body.size.x, list_width + 14.0, "detail pane has usable width at %s" % size)
@@ -96,6 +109,9 @@ func test_compact_roster_pages_all_existing_details_and_keeps_selected_row_visib
 			var last_bottom := last_baseline + UITheme.font().get_descent(14)
 			assert_lte(last_bottom, body.end.y - UITheme.font().get_ascent(14),
 				"detail text clears the footer using actual font metrics at %s" % size)
+			if page + 1 == page_count:
+				assert_gte(footer_bounds.position.y - last_bottom, 1.0,
+					"final detail line clears the measured Roster footer at %s" % size)
 			if page + 1 < page_count:
 				_press(KEY_PAGEDOWN)
 			else:
