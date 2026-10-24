@@ -155,5 +155,24 @@
     "run": 40110741306,
     "result": "SUCCESS",
     "url": "https://github.com/KumarG23/vael-academy/actions/runs/40110741306"
+  },
+  "integration": {
+    "accepted_main": "2d7ae52338fa25556ca8ee1ffce6112b4a0c4a4a",
+    "accepted_pr": 120,
+    "conflict": "adjacent HANDOFF entries only; retained both records",
+    "unchanged_native_production_and_test_hashes": true,
+    "incoming_system_source_tests_qa_match_main": true,
+    "checks": {
+      "scripts": 14,
+      "tests": 132,
+      "passed": 132,
+      "assertions": 18187,
+      "seconds": 35.764,
+      "exit_code": 0,
+      "inherited_deprecations": 24,
+      "script_load_errors": false,
+      "exit_resource_errors": false
+    },
+    "baseline_repeated": false
   }
 }
