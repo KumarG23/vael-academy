@@ -174,5 +174,19 @@
       "exit_resource_errors": false
     },
     "baseline_repeated": false
+  },
+  "ci_117_integration": {
+    "head": "1b03361778a0a4351c8e51bdd3e121e092906797",
+    "run": 40119741126,
+    "result": "SUCCESS",
+    "url": "https://github.com/KumarG23/vael-academy/actions/runs/40119741126"
+  },
+  "hover_integration": {
+    "accepted_main": "9183237ab4ef96bd75ab79d5e5f9d027df583d7b",
+    "results": "hover-integration-results.json",
+    "incoming_promoted_hover_source_test_qa_match_main": true,
+    "own_five_source_test_hashes_unchanged": true,
+    "prior_native_evidence_unchanged": true,
+    "status": "integration source preserved; one inspection-layout boundary failure requires lead/#131 triage, final-head Verify pending"
   }
 }

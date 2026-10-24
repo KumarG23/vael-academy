@@ -1,0 +1,50 @@
+{
+  "parents": {
+    "issue_122": "1b03361778a0a4351c8e51bdd3e121e092906797",
+    "accepted_main": "9183237ab4ef96bd75ab79d5e5f9d027df583d7b"
+  },
+  "engine": "Godot 4.7.2",
+  "mode": "headless, disposable XDG_DATA_HOME, Git-common vael-godot-heavy.lock",
+  "ordered_scripts": [
+    "test_choice_menu.gd",
+    "test_choice_menu_layout.gd",
+    "test_title_choice_layout.gd",
+    "test_title_flow.gd",
+    "test_battle_hover_promotion.gd",
+    "test_battle_hover_refresh.gd",
+    "test_battle_reference_resize.gd",
+    "test_battle_polish.gd",
+    "test_battle_mouse_input.gd",
+    "test_keyboard_controls_battle.gd",
+    "test_resume.gd",
+    "test_battle_save_load.gd",
+    "test_campaign_load_validation.gd",
+    "test_load_failure_feedback.gd"
+  ],
+  "tests": 113,
+  "passed": 112,
+  "assertions": 8436,
+  "passing_assertions": 8430,
+  "seconds": 26.041,
+  "exit_code": 1,
+  "inherited_deprecations": 12,
+  "script_load_errors": false,
+  "exit_diagnostics": "two ObjectDB instances / one resource still in use",
+  "failing_test": "test_battle_reference_resize.gd::test_all_shipped_inspection_fields_and_role_hints_fit_compact",
+  "assertion_site": "test_battle_reference_resize.gd:127 via _references_clear()",
+  "unique_failures": [
+    "Tidemark Guard clear of @Control@908: [P: (10.0, 88.0), S: (400.0, 250.0)] vs [P: (380.0, 206.0), S: (250.0, 144.0)]",
+    "Tidemark Scout clear of @Control@908: [P: (10.0, 88.0), S: (400.0, 250.0)] vs [P: (380.0, 206.0), S: (250.0, 144.0)]",
+    "Tidemark Soldier clear of @Control@908: [P: (10.0, 88.0), S: (400.0, 250.0)] vs [P: (380.0, 206.0), S: (250.0, 144.0)]",
+    "@Control@915 inside (640, 360): [P: (10.0, 100.0), S: (400.0, 262.0)]",
+    "Vesper clear of @Control@908: [P: (10.0, 100.0), S: (400.0, 262.0)] vs [P: (380.0, 206.0), S: (250.0, 144.0)]",
+    "Wren clear of @Control@908: [P: (10.0, 100.0), S: (400.0, 250.0)] vs [P: (380.0, 206.0), S: (250.0, 144.0)]"
+  ],
+  "observations": [
+    "All Title/ChoiceMenu, promoted-hover, hover-refresh, polish, mouse/custom battle input, load/resume and load-failure tests passed.",
+    "The failure is inspection/hover separation and Vesper containment at 640x360; it differs from #131 original long-forecast/800x450 observation.",
+    "Battle reference production/test files outside the accepted #118 hover change are unchanged; cause and native impact remain unproven.",
+    "No isolated/combined retry was run to seek a passing result; no assertion, source or GUI was changed."
+  ],
+  "triage": "Evidence shared with #131 owner/lead; do not claim the forecast-only draft fixes this inspection case."
+}

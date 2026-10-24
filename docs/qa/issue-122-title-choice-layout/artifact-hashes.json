@@ -15,6 +15,10 @@
     "sha256": "1d47912938a344701ea3317bd2b79ce9069c54f74a58ef9523491ae9393eed48",
     "bytes": 368
   },
+  "hover-integration-results.json": {
+    "sha256": "1b29461e284c152b2a7d914da293ef85bd3919d794c6a6d713acfc0f3b9c93a4",
+    "bytes": 2605
+  },
   "images/01-title-default.png": {
     "sha256": "2e9bf882f36bc85509548fd870efe83f58293279e872adebfec502aafa744e6c",
     "bytes": 32306
@@ -132,8 +136,8 @@
     "bytes": 29057
   },
   "manifest.json": {
-    "sha256": "8288a00d00bd7b3bdba4c071b740fe6b2a6846c6d37713d222509f3c38a148b2",
-    "bytes": 6854
+    "sha256": "6c908d44efe473ad7c9aaf748f7ba7f44524f3f16e528a33f1c2a7abdc38ac2a",
+    "bytes": 7510
   },
   "native-results.json": {
     "sha256": "3a596dede006aa8d2ea25de5a6f0af55bf9cb6a4e272d87e615490245c64af15",
