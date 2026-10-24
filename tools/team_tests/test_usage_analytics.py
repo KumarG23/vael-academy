@@ -50,9 +50,9 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
         self.assertEqual(team.PROFILES['sol'], ('codex', 'gpt-6.1-sol', 'high'))
         self.assertEqual(team.PROFILES['sol-dev'], ('codex', 'gpt-6.1-sol', 'medium'))
         self.assertIn('sol-dev', team.SENIOR_WORKERS)
-        self.assertEqual(team.EMERGENCY_WORKERS, ('opus',))
-        self.assertNotIn('astra', team.PROFILES)
-        self.assertEqual(team.LEGACY_PROFILES['astra'][2], 'high')
+        self.assertEqual(team.EMERGENCY_WORKERS, ('opus', 'astra'))
+        self.assertEqual(team.PROFILES['astra'], ('codex', 'gpt-6-astra', 'high'))
+        self.assertNotIn('astra', team.SENIOR_WORKERS)
         self.assertEqual(team.PROFILES['fable'][2], 'high')
         (self.state / 'disabled-fable').write_text('paid credits required; no spend authorized')
         for tier in ('junior', 'senior'):
@@ -62,14 +62,18 @@ class UsageAnalyticsAndQuotaRecoveryTests(unittest.TestCase):
             self.assertNotIn('opus', peers)
             self.assertNotIn('astra', peers)
             self.assertNotIn('fable', peers)
-        self.assertIn('opus', team.eligible_peers(task_tier='emergency', now_ts=1000.0))
+        self.assertEqual(team.eligible_peers(task_tier='emergency', now_ts=1000.0)[:2],
+                         ['opus', 'astra'])
         self.assertNotIn('fable', team.eligible_peers(task_tier='emergency', now_ts=1000.0))
         self.assertIn('model_reasoning_effort="medium"', team.command('sol-dev'))
         self.assertIn('model_reasoning_effort="high"', team.command('sol'))
         self.assertEqual(team._quota_scope_and_provider('sol')[1],
                          team._quota_scope_and_provider('sol-dev')[1])
+        self.assertEqual(team._quota_scope_and_provider('astra')[1],
+                         team._quota_scope_and_provider('sol')[1])
         prompt = team.lead_prompt([], [], [], ['test'])
-        self.assertIn('Sole emergency developer', prompt)
+        self.assertIn('Primary emergency developer', prompt)
+        self.assertIn('backup emergency', prompt)
         self.assertIn('sol-dev', prompt)
         self.assertNotIn('not emergency-only', prompt)
 
