@@ -434,10 +434,10 @@ func _draw_hover_info() -> void:
 	var team_col := Color(0.16, 0.25, 0.55, 0.92) if u.team == 0 else Color(0.5, 0.14, 0.14, 0.92)
 	UITheme.draw_panel(_hover_info, rect, Color(0.08, 0.09, 0.13, 0.92), 112.0)  # complete source corners, confined to the frame
 	_hover_info.draw_rect(Rect2(22, 18, rect.size.x - 44, 24), team_col, true)
-	var cls := u.unit_def.char_class.display_name if u.unit_def != null and u.unit_def.char_class != null else ""
+	var class_level_text := _hover_class_level_text(u)
 	_hover_info.draw_string(font, Vector2(22, 36), u.unit_def.display_name,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.98, 0.96, 0.9))
-	_hover_info.draw_string(font, Vector2(22, 60), "%s   Lv %d" % [cls, u.level],
+	_hover_info.draw_string(font, Vector2(22, 60), class_level_text,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.85, 0.85, 0.9))
 	_hover_info.draw_string(font, Vector2(22, 86), "HP  %d / %d" % [u.current_hp, u.max_hp()],
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.95, 0.7))
@@ -450,6 +450,12 @@ func _draw_hover_info() -> void:
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.95, 0.9, 0.55))
 	_hover_info.draw_rect(Rect2(120, 102, 108, 12), Color(0.15, 0.13, 0.05), true)
 	_hover_info.draw_rect(Rect2(120, 102, 108 * (float(u.xp % 100) / 100.0), 12), Color(0.95, 0.82, 0.35), true)
+
+
+## The hover renderer and its layout checks share the live class string.
+func _hover_class_level_text(u: Unit) -> String:
+	var current := u.current_class()
+	return "%s   Lv %d" % [current.display_name if current != null else "", u.level]
 
 
 ## Field-only shortcuts use the same gate for input and discoverability.
@@ -1702,6 +1708,7 @@ func _setup_ui() -> void:
 	_forecast_panel.visible = false
 	var vp := get_viewport_rect().size
 	_forecast_panel.position = Vector2(vp.x - CombatForecastPanel.PANEL_SIZE.x - 20, vp.y - CombatForecastPanel.PANEL_SIZE.y - 20)
+	_forecast_panel.resized.connect(_place_forecast_panel)
 	_ui_layer.add_child(_forecast_panel)
 	_turn_banner = TurnBanner.new()
 	_turn_banner.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -1751,7 +1758,7 @@ func _layout_reference_ui() -> void:
 	_input_hint.size = Vector2(358, 78)
 	_hover_info.position = Vector2(vp.x - 260 if _stats_panel.visible else 10.0, vp.y - _hover_info.size.y - 10)
 	_forecast_panel.fit_width(360)
-	_forecast_panel.position = vp - _forecast_panel.size - Vector2(10, 10)
+	_place_forecast_panel()
 	var header_bottom := maxf(60, _objective_label.position.y + _objective_label.get_minimum_size().y)
 	_stats_panel.fit_width(360 if compact else 400, vp.y - header_bottom - 14 if compact else INF, vp.x - 20 if compact else 0)
 	_stats_panel.position = Vector2(10, maxf(10, (vp.y - _stats_panel.size.y) * 0.5))
@@ -1763,6 +1770,12 @@ func _layout_reference_ui() -> void:
 			_debug_label.size = Vector2(vp.x - 280, 0)
 			_objective_label.position = Vector2(12, 14 + _debug_label.get_minimum_size().y)
 			_objective_label.size = Vector2(vp.x - 280, 0)
+
+
+## Bottom-right anchor from the panel's current size. A wrapped long name grows the
+## panel after layout last placed it (GH-131), so this also runs on its `resized`.
+func _place_forecast_panel() -> void:
+	_forecast_panel.position = get_viewport_rect().size - _forecast_panel.size - Vector2(10, 10)
 
 
 ## Flash the objective (field menu → Objective).

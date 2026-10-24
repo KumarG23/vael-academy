@@ -174,6 +174,26 @@ func test_initial_compact_and_both_forecast_columns_long_names_no_counter_doubli
 		view._stats_panel.close()
 
 
+func test_forecast_taller_than_default_is_repositioned_without_a_later_resize() -> void:
+	# GH-131: a wrapped long name grows the panel past PANEL_SIZE.y after layout last
+	# placed it from the old size; production must keep it inside with no further
+	# viewport event (deterministic cause of the intermittent bounds failure).
+	for dim in [Vector2i(800,450), Vector2i(640,360)]:
+		await _resize(dim)
+		var attacker := view.unit_by_id("kael")
+		var defender := view.unit_at(Vector2i(6,7))
+		var a := attacker.to_combatant(0,0)
+		var b := defender.to_combatant(0,0)
+		a.speed = 30
+		b.speed = 0
+		view._forecast_panel.show_forecast(defender, defender, CombatForecast.exchange(a, b, 1))
+		assert_gt(view._forecast_panel.size.y, CombatForecastPanel.PANEL_SIZE.y, "shipped long name wraps taller than default")
+		_inside(view._forecast_panel)
+		view._forecast_panel.show_forecast(attacker, defender, CombatForecast.exchange(a, b, 1))
+		_inside(view._forecast_panel)
+		view._forecast_panel.hide_panel()
+
+
 func test_compact_stats_pointer_dismiss_and_input_hint_clear_hover() -> void:
 	await _resize(Vector2i(640,360))
 	_inside(view._input_hint)
