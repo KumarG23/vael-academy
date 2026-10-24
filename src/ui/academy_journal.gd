@@ -510,7 +510,14 @@ func _draw() -> void:
 			hint = "←/→ tab      ↑/↓ scroll      J / Esc close"
 		draw_string(font, _footer_rect(hint).position + Vector2(0, font.get_ascent(14)), hint,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
-	if _toast_t > 0.0:
+	if _toast_t > 0.0 and _tab == 4:
+		# System feedback lives in the layout's reserved line (see _system_layout).
+		var sr: Rect2 = _system_layout(body, font)["toast_rect"]
+		draw_rect(sr, Color(0.1, 0.11, 0.16, 0.95), true)
+		draw_rect(sr, Color(0.86, 0.78, 0.45, 0.8), false, 1.5)
+		draw_string(font, Vector2(sr.position.x + 8.0, sr.position.y + 3.0 + font.get_ascent(SYS_FONT_SIZE)), _toast,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE, Color(0.95, 0.9, 0.7))
+	elif _toast_t > 0.0:
 		var tr := _toast_rect()
 		draw_rect(tr, Color(0.1, 0.11, 0.16, 0.95), true)
 		draw_rect(tr, Color(0.86, 0.78, 0.45, 0.8), false, 1.5)
@@ -1064,10 +1071,16 @@ func _system_layout(body: Rect2, font: Font) -> Dictionary:
 	var total := 0.0
 	for h in heights:
 		total += h
-	var avail := body.size.y
-	var windowed := total > avail
-	if windowed:
-		avail -= font.get_height(12) + 4.0
+	# Feedback gets its own reserved line at the bottom of the body (a System-local
+	# slot, never the shared floating toast box), so a save/speed/load message can
+	# never cover the row hint, footer or rows. The hint sits just above it.
+	var toast_h := ceilf(font.get_height(SYS_FONT_SIZE)) + 6.0
+	var hint_h := ceilf(font.get_height(12)) + 4.0
+	var windowed := total + toast_h > body.size.y
+	var avail := body.size.y - toast_h - (hint_h if windowed else 0.0)
+	var toast_w := minf(body.size.x, font.get_string_size(_toast, HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE).x + 16.0)
+	var toast_rect := Rect2(body.position.x, body.end.y - toast_h, toast_w, toast_h)
+	var hint_rect := Rect2(body.position.x, toast_rect.position.y - hint_h, body.size.x, hint_h)
 	_sys_i = clampi(_sys_i, 0, SYS_ROWS.size() - 1)
 	_sys_scroll = clampi(_sys_scroll, 0, _sys_i)
 	while _sys_scroll < _sys_i and _span_height(heights, _sys_scroll, _sys_i) > avail:
@@ -1099,7 +1112,7 @@ func _system_layout(body: Rect2, font: Font) -> Dictionary:
 			row["value"] = v
 		rows.append(row)
 		y += heights[i]
-	return {"rows": rows, "windowed": windowed, "total": SYS_ROWS.size(), "pitch": pitch, "line_h": line_h}
+	return {"rows": rows, "windowed": windowed, "toast_rect": toast_rect, "hint_rect": hint_rect, "total": SYS_ROWS.size(), "pitch": pitch, "line_h": line_h}
 
 
 func _span_height(heights: Array[float], from: int, to: int) -> float:
@@ -1136,7 +1149,8 @@ func _draw_system(body: Rect2, font: Font) -> void:
 	if layout["windowed"] and not rows.is_empty():
 		var first: int = rows[0]["index"]
 		var last: int = rows[rows.size() - 1]["index"]
-		draw_string(font, Vector2(body.position.x + 6.0, body.end.y - font.get_descent(12)),
+		var hr: Rect2 = layout["hint_rect"]
+		draw_string(font, Vector2(hr.position.x + 6.0, hr.end.y - font.get_descent(12) - 2.0),
 			"↑/↓ more  ·  rows %d–%d / %d" % [first + 1, last + 1, SYS_ROWS.size()],
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.62, 0.66, 0.76))
 

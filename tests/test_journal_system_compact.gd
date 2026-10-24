@@ -318,3 +318,73 @@ func test_degenerate_body_still_yields_selected_row_without_errors():
 	var layout: Dictionary = _journal.call("_system_layout", Rect2(Vector2(10, 10), Vector2(0, 0)), UITheme.font())
 	assert_eq(layout.rows.size(), 1)
 	assert_eq(layout.rows[0].index, 7)
+
+
+## Review finding (P2): active System feedback must not collide with the row
+## hint, rows or footer. The feedback uses a reserved System-local line.
+func _assert_feedback_clear(context: String) -> void:
+	var font := UITheme.font()
+	var body: Rect2 = _journal.call("_body_rect")
+	var layout := _layout()
+	var toast: Rect2 = layout.toast_rect
+	var hint: Rect2 = layout.hint_rect
+	var footer: Rect2 = _journal.call("_footer_rect", "←/→ tab      ↑/↓ move      Enter select      J / Esc close")
+	assert_true(body.encloses(toast), "toast inside body %s" % context)
+	assert_lte(toast.end.y, footer.position.y + 0.01, "toast clear of footer %s" % context)
+	assert_gte(toast.size.x, font.get_string_size(_journal._toast, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x + 16.0 - 0.01,
+		"complete message fits its box %s" % context)
+	assert_false(toast.intersects(hint), "toast clear of range hint %s" % context)
+	for row: Dictionary in layout.rows:
+		assert_false(toast.intersects(row.rect), "toast clear of row %d %s" % [row.index, context])
+		if layout.windowed:
+			assert_false(hint.intersects(row.rect), "hint clear of row %d %s" % [row.index, context])
+	if layout.windowed:
+		assert_true(body.encloses(hint))
+		assert_lte(hint.end.y, footer.position.y + 0.01)
+	assert_not_null(_row(layout, _journal._sys_i), "selected row still visible %s" % context)
+
+
+func test_active_feedback_never_collides_with_hint_rows_or_footer():
+	_write_slots()
+	_journal._save.save_slot(2, {"campaign": "broken"})  # occupied, rejected by the existing loader
+	_journal._refresh_slots()
+	for size in SIZES + [Vector2i(640, 360), Vector2i(1280, 720)]:
+		await _resize(size)
+		var steps := [
+			[6, KEY_RIGHT, "volume"], [9, KEY_RIGHT, "text speed fast"], [9, KEY_RIGHT, "text speed instant"],
+			[2, KEY_ENTER, "save slot 3"], [5, KEY_ENTER, "load rejected"], [5, KEY_ENTER, "load rejected retry"],
+		]
+		for step in steps:
+			_journal._sys_i = step[0]
+			_tap(step[1])
+			if _journal._toast_t <= 0.0:
+				continue  # a volume change with no text feedback
+			_assert_feedback_clear("%s %s" % [step[2], size])
+			# Navigation still works while the message is up.
+			var before: int = _journal._sys_i
+			_tap(KEY_DOWN)
+			assert_eq(_journal._sys_i, (before + 1) % AcademyJournal.SYS_ROWS.size())
+			_assert_feedback_clear("after Down %s %s" % [step[2], size])
+		# Live resize while a message is active, then expiry does not reflow the rows.
+		_journal._show_toast("Slot 3 couldn't be loaded — choose another slot.", true)
+		for other in [Vector2i(640, 360), Vector2i(800, 450), size]:
+			await _resize(other)
+			_assert_feedback_clear("resize active %s" % other)
+		var active_rows: Array = _layout().rows.map(func(r): return r.index)
+		_journal._toast_t = 0.0
+		await wait_process_frames(1)
+		assert_eq(_layout().rows.map(func(r): return r.index), active_rows, "expiry does not reflow rows")
+
+
+func test_every_system_message_fits_the_compact_feedback_line():
+	await _resize(Vector2i(640, 360))
+	var body: Rect2 = _journal.call("_body_rect")
+	var font := UITheme.font()
+	var messages := ["Saved to slot 3", "Couldn't save slot 3", "Slot 3 is empty",
+		"Slot 3 couldn't be loaded — choose another slot.", "Text speed: Fast (96 chars/sec) · save failed",
+		"Text speed: Normal (48 chars/sec) · save failed"]
+	for message in messages:
+		_journal._show_toast(message)
+		assert_lte(font.get_string_size(message, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x + 16.0, body.size.x,
+			"%s fits the 640x360 body" % message)
+		_assert_feedback_clear(message)
