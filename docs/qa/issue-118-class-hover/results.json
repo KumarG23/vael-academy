@@ -1,0 +1,49 @@
+{
+  "issue": 118,
+  "source_commit": "f9489c72edb30053ce78339f251c42f1e82f4087",
+  "engine": "Godot 4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Vulkan 1.4.318 Forward+; llvmpipe LLVM 20.1.2",
+  "display": "existing X11 desktop hosted by Xvfb; real Godot window; pointer/key events delivered with xdotool",
+  "source_sha256": {
+    "src/ui/battle_view.gd": "3354a5c3dd55f3ff7519b5f3184c6dc53b18a87bca0160f1d6ed054c52008712",
+    "tests/test_battle_hover_promotion.gd": "db7408b03c4e8c4922aa495897d0664aa64863c3652cebbc574a4979b29b3412",
+    "tests/test_battle_hover_promotion.gd.uid": "1e13a41e7c5d92875376cce73b7fc7d566a19f6046a96102f07eff2315cf9817",
+    "HANDOFF.md": "454900e1c2e4f4e9192a6a95a15c63f8f89be3fbb8aae9a23628f626f276ffae",
+    "MASTER_PLAN.md": "23e1cef91227079f2005103c3be24e1aa4f8a2a3e6272e619ebf81277ef9da56"
+  },
+  "capture_sha256": {
+    "docs/qa/issue-118-class-hover/base-hover-default.png": "917bb4d341d78340b826145eb1e60c07aa99b9f9710da3d7aab8130b82017392",
+    "docs/qa/issue-118-class-hover/base-stats-default.png": "0dc467089e78aee66c0b06d3970eefc7ce714ecd15ece566645d661d27168e40",
+    "docs/qa/issue-118-class-hover/images/promoted-continued-live.png": "af966f7b74103ac4b318d9984b2473e733c00d252002ef57c7466156525f9ebe",
+    "docs/qa/issue-118-class-hover/images/promoted-hover-640x360.png": "88b7d331e06c79a2b738f80f636f4daa9cbaa1d1ed0a44b51939e4531c0a7f31",
+    "docs/qa/issue-118-class-hover/images/promoted-hover-800x450.png": "0f1a8dd7b42ebf53de4d57eca532458a2ad113b264ff9d90da5b890d66bb3037",
+    "docs/qa/issue-118-class-hover/images/promoted-hover-default-full.png": "9778ee40493483f949e1bc9368632429c73f4d19d30f333132d77b8150097dbb",
+    "docs/qa/issue-118-class-hover/images/promoted-hover-restored-full.png": "3fdb74e80ae10666332d6c7f9af41889ad103458c82b12bc84853cffd9e924f7",
+    "docs/qa/issue-118-class-hover/images/promoted-stats-live.png": "012ea424c3d1a8e50613359c8579e47d453d53691ddd706a59eaed5f3bfdf23f",
+    "docs/qa/issue-118-class-hover/resumed-hover-default.png": "d9cd539fd8859485ef95666662490df2dc4099b69931c1107b26a30605d3e39e",
+    "docs/qa/issue-118-class-hover/resumed-stats-default.png": "6d8f7870700d3f67e0c5df3410f6af376a440e3242bb6c14a8d5a99a22d97aae"
+  },
+  "state_comparison": {
+    "fixture": "supplementary promoted Brenna restored through BattleView battle snapshot path; no earned-promotion claim",
+    "before_resize": {
+      "battle_payload_sha256": "c1c4c1bb92b2546f726c8b544ffd4f77bb9876b028503012be6e8b2be488b423",
+      "campaign_sha256": "1059fe298d7da5c3d06f90102a5cfcdfc4f556107f319e439d3b85ff2a686a35",
+      "active": false,
+      "class": "Bastion",
+      "hover": "Bastion   Lv 1"
+    },
+    "after_resize_restore": {
+      "battle_payload_sha256": "c1c4c1bb92b2546f726c8b544ffd4f77bb9876b028503012be6e8b2be488b423",
+      "campaign_sha256": "1059fe298d7da5c3d06f90102a5cfcdfc4f556107f319e439d3b85ff2a686a35",
+      "active": false,
+      "class": "Bastion",
+      "hover": "Bastion   Lv 1"
+    }
+  },
+  "files": "isolated XDG runtime profile contained no save slot, autosave or settings files before/after GUI pass; focused regression compares sentinel autosave/settings bytes exactly",
+  "limits": [
+    "Supplementary promotion fixture; not naturally earned progression.",
+    "No full-school replay or Neal visual approval claimed.",
+    "Native runtime was on llvmpipe/Xvfb."
+  ]
+}
