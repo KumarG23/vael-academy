@@ -103,7 +103,7 @@ func _references_clear(panel: Control) -> void:
 	_inside(view._debug_label)
 	for other: Control in [view._hover_info, view._objective_label, view._debug_label]:
 		assert_false(panel.get_global_rect().intersects(other.get_global_rect()), "%s clear of %s: %s vs %s" % [panel.get("_title"), other.name, panel.get_global_rect(), other.get_global_rect()])
-	assert_false(view._objective_label.get_global_rect().intersects(view._debug_label.get_global_rect()), "header and objective clear")
+	assert_false(view._objective_label.get_global_rect().intersects(view._debug_label.get_global_rect()), "header and objective clear %s %s" % [view._objective_label.get_global_rect(), view._debug_label.get_global_rect()])
 	for header: Control in [view._objective_label, view._debug_label]:
 		assert_false(header.get_global_rect().intersects(view._hover_info.get_global_rect()), "header clears hover")
 
@@ -317,3 +317,74 @@ func test_shipped_objective_wording_and_header_fit_at_all_reference_sizes() -> v
 			var font := label.get_theme_font("font")
 			var required := font.get_multiline_string_size(wording,HORIZONTAL_ALIGNMENT_LEFT,label.size.x,label.get_theme_font_size("font_size"))
 			assert_lte(required.y,label.size.y,"active-font objective text fits vertically")
+
+
+func _shipped_units() -> Array[Unit]:
+	var out: Array[Unit] = []
+	for filename in DirAccess.get_files_at("res://data/units"):
+		if not filename.ends_with(".tres"):
+			continue
+		var def: UnitDef = load("res://data/units/" + filename)
+		if def == null:
+			continue
+		var unit := Unit.new()
+		add_child_autofree(unit)
+		unit.setup(def, view._grid, Vector2i.ZERO)
+		out.append(unit)
+	return out
+
+
+func test_ordinary_inspection_open_is_laid_out_before_the_next_frame() -> void:
+	# GH-133: BattleView lays reference UI out from _process, so a physics-frame wait is
+	# not a layout boundary. Opening inspection must itself leave a valid sheet: checked
+	# here with NO wait, across repeated unit changes, a visible hover and live resize.
+	var foe := view.unit_at(Vector2i(6,7))
+	view._cursor.move_to(foe.cell)
+	view._update_hover_info(foe.cell)
+	var units := _shipped_units()
+	var full := units[0]
+	full.inventory = Inventory.new()
+	for weapon_id in ["sig_bertram", "sig_brenna", "sig_fenn", "sig_rurik", "sig_osric"]:
+		full.inventory.add(InventoryItem.from_weapon(load("res://data/weapons/%s.tres" % weapon_id)))
+	var payload := view.make_save_payload()
+	var campaign := Campaign.to_dict().duplicate(true)
+	for dim in [Vector2i(800,450), Vector2i(640,360), Vector2i(800,450), Vector2i(1280,720)]:
+		await _resize(dim)
+		for unit in units:
+			view._open_stats_for(unit)
+			assert_true(view._hover_info.visible, "hover coexists with inspection")
+			var panel: UnitStatsPanel = view._stats_panel
+			if dim.x >= 900:
+				assert_eq(panel.size.x, 400.0, "%s desktop sheet settled at open" % unit.unit_def.display_name)
+			else:
+				assert_lte(panel.size.x, float(dim.x) - 20.0, "%s compact sheet settled at open (%s)" % [unit.unit_def.display_name, dim])
+			_inside(panel)
+			assert_false(panel.get_global_rect().intersects(view._hover_info.get_global_rect()), "%s inspection clears hover at open: %s vs %s" % [unit.unit_def.display_name, panel.get_global_rect(), view._hover_info.get_global_rect()])
+			_paragraphs_fit(panel)
+			# Label autowrap minimum sizes (header rows) settle on the next process pass.
+			await get_tree().process_frame
+			_references_clear(panel)
+		if dim.x < 900:
+			assert_gt(view._stats_panel.position.y, 0.0, "tall sheet keeps its top edge on screen")
+	# Live resize while open, both directions, then dismissal by any key and by pointer.
+	view._open_stats_for(full)
+	await get_tree().process_frame
+	for dim in [Vector2i(640,360), Vector2i(1280,720), Vector2i(800,450)]:
+		await _resize(dim)
+		_references_clear(view._stats_panel)
+		_paragraphs_fit(view._stats_panel)
+	await _key(KEY_Q)
+	assert_false(view._stats_panel.is_shown(), "any key closes")
+	assert_true(view._cursor.active)
+	view._open_stats_for(full)
+	var ev := InputEventMouseButton.new()
+	ev.button_index = MOUSE_BUTTON_LEFT
+	ev.pressed = true
+	ev.position = view._stats_panel.get_global_rect().get_center()
+	ev.global_position = ev.position
+	vp.push_input(ev, true)
+	await wait_physics_frames(2)
+	assert_false(view._stats_panel.is_shown(), "pointer closes")
+	assert_true(view._cursor.active)
+	assert_eq(view.make_save_payload(), payload, "inspection is read only")
+	assert_eq(Campaign.to_dict(), campaign, "Campaign untouched")
