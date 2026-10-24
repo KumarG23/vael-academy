@@ -1,0 +1,44 @@
+{
+  "source_head": "c6bb0f37f2e534d4b3b97adcd15f119676f735b3",
+  "runtime_snapshot_fields": [
+    "complete Campaign.to_dict()",
+    "Campaign.active",
+    "Roster.active_house",
+    "BattleView.next_resume",
+    "room id",
+    "avatar position",
+    "door arming",
+    "room fade state"
+  ],
+  "reference_navigation": {
+    "before_sha256": "99eca0dd50b36352bf9e436e8b90a0e73ccab201ccbe7e1aac8624bea9132e44",
+    "after_sha256": "99eca0dd50b36352bf9e436e8b90a0e73ccab201ccbe7e1aac8624bea9132e44",
+    "equal": true
+  },
+  "ordinary_save_fresh_title_load": {
+    "saved_reference_sha256": "99eca0dd50b36352bf9e436e8b90a0e73ccab201ccbe7e1aac8624bea9132e44",
+    "fresh_load_sha256": "99eca0dd50b36352bf9e436e8b90a0e73ccab201ccbe7e1aac8624bea9132e44",
+    "equal": true,
+    "manual_file_sha256": "e1a25a815e31d551fd257263b54da55fced9e2545d9b373b4a5b70ff703cdcef"
+  },
+  "fresh_reference_navigation": {
+    "before_sha256": "99eca0dd50b36352bf9e436e8b90a0e73ccab201ccbe7e1aac8624bea9132e44",
+    "after_sha256": "99eca0dd50b36352bf9e436e8b90a0e73ccab201ccbe7e1aac8624bea9132e44",
+    "equal": true
+  },
+  "common_hall": {
+    "full_snapshot_sha256": "ebeb0d7be38e0dee7df758c4b81a4c2420da57a5d80ddc90f30acc28c514cd82",
+    "support_save_sha256": "07b83609f6cf8f3596e4b482697027c2bb93a4e0c487601ac8e4bffade8bf686",
+    "support_save_unchanged": true,
+    "changed_campaign_field": "academy_visits",
+    "live_room_position_door_and_fade_telemetry_changed": true
+  },
+  "files": {
+    "supplementary_input_manual_slot_sha256": "903851c838f8095253c867be2de18289e6e8bcd3e95c1f877988ccff3b612d36",
+    "manual_slot_after_deliberate_System_Save_Slot_1_sha256": "e1a25a815e31d551fd257263b54da55fced9e2545d9b373b4a5b70ff703cdcef",
+    "manual_slot_after_read_only_navigation_and_fresh_load_sha256": "e1a25a815e31d551fd257263b54da55fced9e2545d9b373b4a5b70ff703cdcef",
+    "autosave": "absent before/after both read-only intervals",
+    "settings_cfg": "absent before/after both read-only intervals",
+    "initial_manual_slot_change": "expected: explicit existing Journal System Save \u2014 Slot 1 overwrote internal data slot_0"
+  }
+}
