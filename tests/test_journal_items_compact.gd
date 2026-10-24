@@ -127,6 +127,60 @@ func test_production_item_geometry_fits_complete_labels_and_stage_instructions()
 				"stage-%d instruction glyphs fit at %s" % [mode, size])
 
 
+func test_rendered_item_marker_prefix_fits_reserved_rows_for_every_current_pack() -> void:
+	var font := UITheme.font()
+	var kai_index := -1
+	for i in range(_journal._inv_units.size()):
+		if _journal._inv_units[i]["id"] == "kai":
+			kai_index = i
+	assert_gte(kai_index, 0, "the current roster includes Kai for the declared five-item fixture")
+	if kai_index < 0:
+		return
+	var fixture_inventory: Inventory = _journal._inv_units[kai_index]["unit"].inventory
+	var original_items: Array = fixture_inventory.items.duplicate()
+	fixture_inventory.items.clear()
+	for id: String in ["sig_vesper", "sig_isolde", "sig_rina", "sig_osric", "sig_perrin"]:
+		var def: WeaponDef = load("res://data/weapons/%s.tres" % id)
+		assert_true(fixture_inventory.add(InventoryItem.from_weapon(def)),
+			"supplementary shipped-weapon label fixture fits: %s" % def.display_name)
+	var sizes := [Vector2i(1280, 720), Vector2i(800, 450), Vector2i(640, 360),
+		Vector2i(800, 450), Vector2i(1280, 720)]
+	for size: Vector2i in sizes:
+		_viewport.size = size
+		await wait_process_frames(1)
+		for student_index in range(_journal._inv_units.size()):
+			_journal._inv_i = student_index
+			_journal._inv_mode = 1
+			var inventory: Inventory = _journal._inv_units[student_index]["unit"].inventory
+			for item_index in range(inventory.items.size()):
+				_journal._inv_item_i = item_index
+				var body: Rect2 = _journal._body_rect()
+				var layout: Dictionary = _journal._items_layout(body, font)
+				var row: Dictionary = {}
+				for candidate: Dictionary in layout["pack_rows"]:
+					if candidate["index"] == item_index:
+						row = candidate
+				assert_false(row.is_empty(),
+					"selected item %d in %s's pack has a production row at %s" % [item_index,
+						_journal._inv_units[student_index]["name"], size])
+				if row.is_empty():
+					continue
+				var wrapped_label := "\n".join(row["lines"])
+				for marker: String in ["› ", "  "]:
+					var rendered_text := marker + wrapped_label
+					var measured := font.get_multiline_string_size(rendered_text,
+						HORIZONTAL_ALIGNMENT_LEFT, row["label_width"], 16)
+					var glyph_rect := Rect2(row["label_baseline"] - Vector2(0, font.get_ascent(16)),
+						Vector2(measured.x, measured.y))
+					assert_lte(measured.x, row["label_width"],
+						"actual %s item string fits the reserved width: %s at %s" % [marker, rendered_text, size])
+					assert_true(row["rect"].encloses(glyph_rect),
+						"actual %s item string fits its reserved row: %s at %s" % [marker, rendered_text, size])
+	assert_eq(fixture_inventory.items.size(), Inventory.MAX_SLOTS,
+		"supplementary fixture exercises every existing pack slot")
+	fixture_inventory.items.assign(original_items)
+
+
 
 
 func test_items_multiline_calls_keep_all_text_lines_enabled() -> void:

@@ -135,3 +135,38 @@ and per-image SHA-256s are in [`images/`](images/) and
 state versus fixture-only UI. Invalid crops, unrelated tabs, and exploratory
 captures were excluded. Automated SubViewport evidence does not claim a full
 graphical playthrough, and no Neal visual approval is implied.
+
+
+### Accepted Supports integration and rendered marker-width follow-through
+
+Accepted main `d5f512599a7c1de81405d893c5fb24a578c5aa52` (PR #129 / Supports)
+was merged normally. HANDOFF and MASTER_PLAN status were the only conflicts;
+both GH-114 and GH-124 records and the complete Items/Supports/System
+source, tests and QA were retained. The Journal source auto-merged.
+
+A new production-SubViewport regression measures the exact rendered item label,
+including both selected (`› `) and unselected (two-space) prefixes, against the
+row reserved by `_items_layout()`. It walks every item in every current roster
+pack at 1280×720, 800×450, 640×360 and both live resize directions, and repeats
+this for all five names in the separately declared shipped-weapon fixture.
+Before the source fix, the focused suite failed 9/10 tests (714 assertions):
+at 640×360 the actual marker-prefixed equipped `Bulwark Lance` and `Verdant
+Blade` text wrapped to an extra line and exceeded the computed row for both
+marker forms. `_items_layout()` now reserves the active font's measured width
+for the wider marker before wrapping; row height and scrolling use those
+complete lines. The final Items suite passes **10/10, 771 assertions**.
+
+The combined accepted-main Journal Items/Supports/System/input/close/save
+boundary passes **134/134 tests, 18,744 assertions / 14 scripts** under the
+common Git-directory `vael-godot-heavy.lock` and disposable XDG data. It includes
+all Journal tab layout/input groups, keyboard controls/preferences, inventory,
+SaveSystem and Campaign load validation. It reported 96 inherited wait-frame
+deprecations and expected keyboard-settings malformed/unwritable fixture
+diagnostics; no test failed. No unchanged full GUT/import/helper baseline was
+repeated.
+
+This wrapping correction is a source delta after the existing native captures,
+so those captures remain attributed to their recorded pre-correction source.
+No GUI job was launched: #133 owns slot b and #114 has no current GUI naming.
+A bounded original-Forward+ delta check is still needed after the lead names
+#114 a GUI task slot. Exact-head Verify is pending for the integration commit.
