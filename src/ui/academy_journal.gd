@@ -30,6 +30,7 @@ var _tab := 0
 var _roster_i := 0
 var _roster_detail_page := 0
 var _sys_i := 0
+var _sys_scroll := 0      # Issue #117: first visible System row
 var _fish_i := 0
 var _support_i := 0
 var _calendar_i := -1
@@ -1002,41 +1003,142 @@ func _rank_color(rank: String) -> Color:
 	return Color(0.9, 0.5, 0.4)
 
 
-func _draw_system(body: Rect2, font: Font) -> void:
-	# Fit every existing save/audio/title row plus Text Speed in compact supported
-	# windows. The old fixed 30 px spacing pushed the bottom controls off-screen.
-	var pitch := clampf((body.size.y - 8.0) / SYS_ROWS.size(), 10.0, 30.0)
-	var font_size := 10 if pitch < 13.0 else (12 if pitch < 17.0 else (13 if pitch < 23.0 else 16))
-	var y := body.position.y + minf(20.0, pitch * 0.72)
+const SYS_FONT_SIZE := 14
+const SYS_COL_GAP := 16.0
+const SYS_PCT_SAMPLE := "100%"
+
+
+## Issue #117: the text shown right of a System row's label (volume rows draw a
+## bar plus a percentage instead, handled by the layout). "" for action rows.
+func _system_data_text(kind: String) -> String:
+	if kind.begins_with("save") or kind.begins_with("load"):
+		return _slot_label(int(kind.substr(4)))
+	if kind == "text_speed":
+		return DialoguePreferences.label()
+	if kind == "keyboard":
+		return _keys_summary()
+	return ""
+
+
+func _system_volume(kind: String) -> float:
+	return AudioManager.music_volume if kind == "music" else (AudioManager.sfx_volume if kind == "sfx" else AudioManager.master_volume)
+
+
+func _system_wrap(text: String, font: Font, width: float) -> Array[String]:
+	var lines: Array[String] = []
+	var paragraph := TextParagraph.new()
+	paragraph.width = maxf(1.0, width)
+	paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+	paragraph.add_string(text, font, SYS_FONT_SIZE)
+	for line in range(paragraph.get_line_count()):
+		var span := paragraph.get_line_range(line)
+		lines.append(text.substr(span.x, span.y - span.x).strip_edges())
+	return lines
+
+
+## Measured System layout: label column sized from the active font, data wrapped
+## into the remaining width (rows grow taller instead of shrinking the font), and
+## a scrolling window that always contains the selected row. Index/order of
+## SYS_ROWS is untouched; every row is reachable with the existing Up/Down.
+func _system_layout(body: Rect2, font: Font) -> Dictionary:
+	var line_h := ceilf(font.get_height(SYS_FONT_SIZE))
+	var pitch := line_h + 4.0
+	var label_w := 0.0
+	for row in SYS_ROWS:
+		label_w = maxf(label_w, font.get_string_size(row[0], HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE).x)
+	var pad := 6.0
+	var rx := body.position.x + pad + label_w + SYS_COL_GAP
+	var data_w := maxf(1.0, body.end.x - rx - pad)
+	var pct_w := font.get_string_size(SYS_PCT_SAMPLE, HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE).x
+	var bar_w := clampf(data_w - pct_w - 12.0, 24.0, 160.0)
+	var heights: Array[float] = []
+	var lines_by_row: Array = []
 	for i in range(SYS_ROWS.size()):
 		var kind: String = SYS_ROWS[i][1]
-		var sel := i == _sys_i
+		var text := _system_data_text(kind)
+		var lines: Array[String] = []
+		if text != "":
+			lines = _system_wrap(text, font, data_w)
+		lines_by_row.append(lines)
+		heights.append(maxi(1, lines.size()) * pitch)
+	var total := 0.0
+	for h in heights:
+		total += h
+	var avail := body.size.y
+	var windowed := total > avail
+	if windowed:
+		avail -= font.get_height(12) + 4.0
+	_sys_i = clampi(_sys_i, 0, SYS_ROWS.size() - 1)
+	_sys_scroll = clampi(_sys_scroll, 0, _sys_i)
+	while _sys_scroll < _sys_i and _span_height(heights, _sys_scroll, _sys_i) > avail:
+		_sys_scroll += 1
+	while _sys_scroll > 0 and _span_height(heights, _sys_scroll - 1, SYS_ROWS.size() - 1) <= avail:
+		_sys_scroll -= 1
+	var rows: Array[Dictionary] = []
+	var y := body.position.y
+	for i in range(_sys_scroll, SYS_ROWS.size()):
+		if not rows.is_empty() and y + heights[i] > body.position.y + avail + 0.01:
+			break
+		var kind: String = SYS_ROWS[i][1]
+		var rect := Rect2(body.position.x, y, body.size.x, heights[i])
+		var row := {
+			"index": i, "kind": kind, "rect": rect,
+			"label": SYS_ROWS[i][0],
+			"label_rect": Rect2(body.position.x + pad, y + 2.0, font.get_string_size(SYS_ROWS[i][0], HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE).x, line_h),
+			"lines": lines_by_row[i], "line_rects": [],
+		}
+		for l in range(lines_by_row[i].size()):
+			row.line_rects.append(Rect2(rx, y + 2.0 + l * pitch,
+				font.get_string_size(lines_by_row[i][l], HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE).x, line_h))
+		if kind in ["music", "sfx", "master"]:
+			var v := _system_volume(kind)
+			row["bar_rect"] = Rect2(rx, y + 2.0 + (line_h - 12.0) * 0.5, bar_w, 12.0)
+			row["pct"] = "%d%%" % roundi(v * 100)
+			row["pct_rect"] = Rect2(rx + bar_w + 12.0, y + 2.0,
+				font.get_string_size(row["pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE).x, line_h)
+			row["value"] = v
+		rows.append(row)
+		y += heights[i]
+	return {"rows": rows, "windowed": windowed, "total": SYS_ROWS.size(), "pitch": pitch, "line_h": line_h}
+
+
+func _span_height(heights: Array[float], from: int, to: int) -> float:
+	var sum := 0.0
+	for i in range(from, to + 1):
+		sum += heights[i]
+	return sum
+
+
+func _draw_system(body: Rect2, font: Font) -> void:
+	var layout := _system_layout(body, font)
+	var rows: Array = layout["rows"]
+	for row: Dictionary in rows:
+		var sel: bool = row["index"] == _sys_i
+		var rect: Rect2 = row["rect"]
 		if sel:
-			draw_rect(Rect2(body.position.x - 6, y - pitch * 0.62, body.size.x - 20, pitch * 0.88), Color(0.30, 0.45, 0.85, 0.45), true)
-		draw_string(font, Vector2(body.position.x + 6, y), SYS_ROWS[i][0],
-			HORIZONTAL_ALIGNMENT_LEFT, minf(300.0, body.size.x * 0.48), font_size, Color(0.96, 0.94, 0.86) if sel else Color(0.78, 0.8, 0.86))
-		# right column: slot summary or a volume bar
-		var rx := body.position.x + 320
-		if kind.begins_with("save") or kind.begins_with("load"):
-			var slot := int(kind.substr(4))
-			draw_string(font, Vector2(rx, y), _slot_label(slot),
-				HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 340, 14, Color(0.62, 0.66, 0.76))
-		elif kind in ["music", "sfx", "master"]:
-			var v: float = AudioManager.music_volume if kind == "music" else (AudioManager.sfx_volume if kind == "sfx" else AudioManager.master_volume)
-			draw_rect(Rect2(rx, y - 12, 160, 12), Color(0.2, 0.22, 0.3), true)
-			draw_rect(Rect2(rx, y - 12, 160 * v, 12), Color(0.5, 0.7, 1.0), true)
-			draw_string(font, Vector2(rx + 172, y), "%d%%" % roundi(v * 100),
-				HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.82, 0.9))
-		elif kind == "text_speed":
-			draw_string(font, Vector2(rx, y), DialoguePreferences.label(),
-				HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 340, font_size, Color(0.8, 0.82, 0.9))
-		elif kind == "keyboard":
-			draw_string(font, Vector2(rx, y), _keys_summary(),
-				HORIZONTAL_ALIGNMENT_LEFT, body.size.x - 340, font_size, Color(0.8, 0.82, 0.9))
-		y += pitch
-	# The Journal-wide navigation hint already covers this tab. The older full
-	# castle controls reference exceeded the compact System panel and collided
-	# with that footer after adding the extra preference row.
+			draw_rect(rect, Color(0.30, 0.45, 0.85, 0.45), true)
+		var lr: Rect2 = row["label_rect"]
+		draw_string(font, lr.position + Vector2(0, font.get_ascent(SYS_FONT_SIZE)), row["label"],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE, Color(0.96, 0.94, 0.86) if sel else Color(0.78, 0.8, 0.86))
+		var is_slot: bool = row["kind"].begins_with("save") or row["kind"].begins_with("load")
+		for l in range(row["lines"].size()):
+			var r: Rect2 = row["line_rects"][l]
+			draw_string(font, r.position + Vector2(0, font.get_ascent(SYS_FONT_SIZE)), row["lines"][l],
+				HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE,
+				Color(0.62, 0.66, 0.76) if is_slot else Color(0.8, 0.82, 0.9))
+		if row.has("bar_rect"):
+			var bar: Rect2 = row["bar_rect"]
+			draw_rect(bar, Color(0.2, 0.22, 0.3), true)
+			draw_rect(Rect2(bar.position, Vector2(bar.size.x * float(row["value"]), bar.size.y)), Color(0.5, 0.7, 1.0), true)
+			var pr: Rect2 = row["pct_rect"]
+			draw_string(font, pr.position + Vector2(0, font.get_ascent(SYS_FONT_SIZE)), row["pct"],
+				HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE, Color(0.8, 0.82, 0.9))
+	if layout["windowed"] and not rows.is_empty():
+		var first: int = rows[0]["index"]
+		var last: int = rows[rows.size() - 1]["index"]
+		draw_string(font, Vector2(body.position.x + 6.0, body.end.y - font.get_descent(12)),
+			"↑/↓ more  ·  rows %d–%d / %d" % [first + 1, last + 1, SYS_ROWS.size()],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.62, 0.66, 0.76))
 
 
 func _keys_summary() -> String:
