@@ -11,8 +11,13 @@ Plan basis: MASTER_PLAN §§1–2, §6 WO-9.4/9.7, partial §10 M9; GRADING_SYST
 - **Supplementary fixture (declared, NOT earned):** a disposable-profile copy of the checkpoint with `semester=2, week=4` and one locked Semester-1 card (B / Accomplished / 70), delivered flag true, SHA-256 `6bba057cfbc667652ce4db203f5da26e793e274430d3776490d7fe917a8336f7`. It exercises history at default ([20](images/20-history-default.png)) and 640×360 final page ([21](images/21-history-640-final.png)). The Week-4 festival dialogue on load was dismissed with Enter before capturing.
 - All game/input/capture jobs ended (no godot process remains).
 
+## Native custom-key continuation (lead request, same source)
+
+- Fresh disposable profile with the earned Week-2 checkpoint (slot SHA-256 `681e0c32…1b1fe4`, identical after the run). Journal → System → Keyboard Controls (existing #89 editor): Up ← **I**, Down ← **N** ([capture prompt](images/c3-capture.png), [both assigned](images/c7-both-assigned.png)). An attempt to use K was correctly rejected (reserved Dev Jump key) and cancelled with Esc. These two assignments are the *intentional* settings write: `settings.cfg` = `[keyboard] up="I" down="N"`, SHA-256 `616550e1671adc6fd6303c7224fdc9f3f9ba4e902ee6d1eacefa4048e6864f83`; it was unchanged by everything after.
+- At 640×360 on Grades: N ×2 → items 3–3 of 7 ([c9](images/c9-n-twice.png)); N to the end → 6–7 of 7 ([c10](images/c10-n-final.png)); I back up one page → 5–5 ([c11](images/c11-i-up1.png)); I to the top. Enter did nothing ([c13](images/c13-confirm-actionless.png)); J closed the Journal and held Right walked normally with no system menu ([c15](images/c15-walked.png)). No save slot was added or changed. Game closed; no godot process remains.
+
 ## Limits
 
-- Custom-key browsing is verified headless only (`test_custom_keys_browse_and_tab_or_reopen_resets`), not natively.
+
 - Pre-existing, unchanged shared chrome: at these window sizes the gold frame ornament overlaps the "Academy Journal" title/Purse and the left of the footer hint on every tab. Not touched here (shared draw code); flagging for a separate issue.
 - No full-school replay. Exact-head Verify and lead review pending.
