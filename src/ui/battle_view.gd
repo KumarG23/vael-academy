@@ -434,10 +434,10 @@ func _draw_hover_info() -> void:
 	var team_col := Color(0.16, 0.25, 0.55, 0.92) if u.team == 0 else Color(0.5, 0.14, 0.14, 0.92)
 	UITheme.draw_panel(_hover_info, rect, Color(0.08, 0.09, 0.13, 0.92), 112.0)  # complete source corners, confined to the frame
 	_hover_info.draw_rect(Rect2(22, 18, rect.size.x - 44, 24), team_col, true)
-	var cls := u.unit_def.char_class.display_name if u.unit_def != null and u.unit_def.char_class != null else ""
+	var class_level_text := _hover_class_level_text(u)
 	_hover_info.draw_string(font, Vector2(22, 36), u.unit_def.display_name,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.98, 0.96, 0.9))
-	_hover_info.draw_string(font, Vector2(22, 60), "%s   Lv %d" % [cls, u.level],
+	_hover_info.draw_string(font, Vector2(22, 60), class_level_text,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.85, 0.85, 0.9))
 	_hover_info.draw_string(font, Vector2(22, 86), "HP  %d / %d" % [u.current_hp, u.max_hp()],
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.95, 0.7))
@@ -450,6 +450,12 @@ func _draw_hover_info() -> void:
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.95, 0.9, 0.55))
 	_hover_info.draw_rect(Rect2(120, 102, 108, 12), Color(0.15, 0.13, 0.05), true)
 	_hover_info.draw_rect(Rect2(120, 102, 108 * (float(u.xp % 100) / 100.0), 12), Color(0.95, 0.82, 0.35), true)
+
+
+## The hover renderer and its layout checks share the live class string.
+func _hover_class_level_text(u: Unit) -> String:
+	var current := u.current_class()
+	return "%s   Lv %d" % [current.display_name if current != null else "", u.level]
 
 
 ## Field-only shortcuts use the same gate for input and discoverability.
