@@ -52,8 +52,8 @@ earned source; the pre/post browse save hash stayed equal, and the deliberate
 transfer persisted after reload. Native 1280×720/800×450/640×360 resize,
 selection, refusal, cancel/close and custom-control evidence is hashed in the
 [QA manifest](docs/qa/issue-114-items-compact/README.md). The final 18-script
-boundary passes 160/160, 9,385 assertions. Exact-head PR Verify and lead
-review remain pending.
+boundary passes 160/160, 9,385 assertions. Exact-head PR Verify passed for
+`62794e1995655eff3bdcbc783cd6c2701fd03fcc` ([run 40114841755](https://github.com/KumarG23/vael-academy/actions/runs/40114841755)); PR #130 is ready for lead review. No review feedback has been posted yet.
 ## Issue #112 — Battle reference UI live resize
 
 Implemented on `team/issue-112`, from accepted main `300f146a`, under MASTER_PLAN §§1–3 / §6 WO-9.4–9.5 / partial §10 M9 and ACADEMY_BIBLE §4. No contradiction or canon/mechanic decision. BattleView recomputes objective/header/hint/hover/forecast/inspection presentation on resize/content changes. Active-font paragraphs preserve complete forecast sides, stats/weapon/inventory/role hints and font sizes; oversized five-slot sheets use measured two-column reflow. Complete existing frame-corner slices stop ornament crossing text. Input, camera coordinates, formulas/RNG, resolver/progression/support, saves/settings, renderer/project settings remain in their existing paths. Accepted #9/#72 behavior/tests preserved.

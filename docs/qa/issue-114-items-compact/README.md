@@ -34,7 +34,10 @@ scripts** (479.318 s); helpers passed **113 discovered, 111 passed, two
 existing opt-in skips**. This is the required full baseline and is attributed
 to that commit. Accepted #108/#112 source/tests/QA/status were integrated
 normally through `8b442f13`; the combined source then passed a clean import
-and affected boundary. The exact PR-head Verify remains pending.
+and affected boundary. Exact PR-head Verify passed for
+`62794e1995655eff3bdcbc783cd6c2701fd03fcc`
+([run 40114841755](https://github.com/KumarG23/vael-academy/actions/runs/40114841755));
+PR #130 is ready for lead review. No review feedback has been posted yet.
 
 ## Original-renderer evidence
 
