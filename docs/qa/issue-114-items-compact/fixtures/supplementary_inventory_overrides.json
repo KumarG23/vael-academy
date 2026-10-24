@@ -1,0 +1,26 @@
+{
+  "fixture_only": true,
+  "earned_checkpoint_source": "docs/qa/issue-5-school-loop/emberwing-return-save.json",
+  "earned_checkpoint_sha256": "681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4",
+  "description": "Supplementary UI fixture. Applied only to a separate disposable profile after copying the earned checkpoint unchanged. These pack contents are not earned progression and are never written back to the source save.",
+  "unit_states": {
+    "kai": {
+      "inventory": [
+        { "id": "sig_vesper", "path": "res://data/weapons/sig_vesper.tres", "type": "weapon", "uses": 9 },
+        { "id": "sig_isolde", "path": "res://data/weapons/sig_isolde.tres", "type": "weapon", "uses": 8 },
+        { "id": "sig_rina", "path": "res://data/weapons/sig_rina.tres", "type": "weapon", "uses": 7 },
+        { "id": "sig_osric", "path": "res://data/weapons/sig_osric.tres", "type": "weapon", "uses": 6 },
+        { "id": "sig_perrin", "path": "res://data/weapons/sig_perrin.tres", "type": "weapon", "uses": 5 }
+      ]
+    },
+    "perrin": {
+      "inventory": [
+        { "id": "sig_perrin", "path": "res://data/weapons/sig_perrin.tres", "type": "weapon", "uses": 34 },
+        { "id": "heal", "path": "res://data/weapons/heal.tres", "type": "weapon", "uses": 30 },
+        { "id": "iron_sword", "path": "res://data/weapons/iron_sword.tres", "type": "weapon", "uses": 30 },
+        { "id": "iron_lance", "path": "res://data/weapons/iron_lance.tres", "type": "weapon", "uses": 40 },
+        { "id": "vulnerary", "path": "res://data/items/vulnerary.tres", "type": "item", "uses": 3 }
+      ]
+    }
+  }
+}

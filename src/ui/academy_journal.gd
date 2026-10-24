@@ -9,6 +9,7 @@ extends Control
 signal closed
 
 const TAB_NAMES := ["Roster", "Calendar", "Inventory", "Grades", "System", "Fish Log", "Supports", "Objectives"]
+const MULTILINE_MAX_LINES := -1
 const MissionReference = preload("res://src/ui/mission_reference.gd")
 
 const STAT_KEYS := ["hp", "str", "mag", "skl", "spd", "lck", "def", "res"]
@@ -54,6 +55,8 @@ var _inv_mode := 0           # 0 = pick a student · 1 = pick an item · 2 = pic
 var _inv_i := 0
 var _inv_item_i := 0
 var _inv_give_i := 0
+var _items_student_scroll := 0
+var _items_pack_scroll := 0
 
 
 func _ready() -> void:
@@ -529,14 +532,23 @@ func _draw() -> void:
 			hint = "←/→ tab      ↑/↓ scroll      J / Esc close"
 		draw_string(font, _footer_rect(hint).position + Vector2(0, font.get_ascent(14)), hint,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.55, 0.58, 0.68))
-	if _toast_t > 0.0 and _tab == 4:
-		# System feedback lives in the layout's reserved line (see _system_layout).
+	if _toast_t > 0.0 and _tab == 2 and not _toast_is_load_error:
+		var items_layout: Dictionary = _items_layout(body, font)
+		var toast_layout: Dictionary = _inventory_toast_layout(font, body, items_layout["hint_rect"])
+		var tr: Rect2 = toast_layout["rect"]
+		draw_rect(tr, Color(0.1, 0.11, 0.16, 0.97), true)
+		draw_rect(tr, Color(0.86, 0.78, 0.45, 0.9), false, 1.5)
+		draw_multiline_string(font, toast_layout["baseline"], "\n".join(toast_layout["lines"]),
+			HORIZONTAL_ALIGNMENT_LEFT, toast_layout["text_width"], 14, MULTILINE_MAX_LINES, Color(0.95, 0.9, 0.7))
+	elif _toast_t > 0.0 and _tab == 4:
+		# System feedback uses its reserved row/range-hint layout.
 		var sr: Rect2 = _system_layout(body, font)["toast_rect"]
 		draw_rect(sr, Color(0.1, 0.11, 0.16, 0.95), true)
 		draw_rect(sr, Color(0.86, 0.78, 0.45, 0.8), false, 1.5)
 		draw_string(font, Vector2(sr.position.x + 8.0, sr.position.y + 3.0 + font.get_ascent(SYS_FONT_SIZE)), _toast,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, SYS_FONT_SIZE, Color(0.95, 0.9, 0.7))
 	elif _toast_t > 0.0:
+		# Keep shared load-error and other-tab feedback geometry unchanged.
 		var tr := _toast_rect()
 		draw_rect(tr, Color(0.1, 0.11, 0.16, 0.95), true)
 		draw_rect(tr, Color(0.86, 0.78, 0.45, 0.8), false, 1.5)
@@ -814,64 +826,206 @@ func _calendar_layout(body: Rect2, font: Font, events: Array = Campaign.calendar
 ## AW-52: the Inventory HUB — left: students; right: the selected pack. Enter
 ## drills in (student → item → recipient), Esc backs out, moves persist.
 func _draw_items(body: Rect2, font: Font) -> void:
-	var lw := 230.0
-	var y := body.position.y + 6
-	for i in range(_inv_units.size()):
-		var e: Dictionary = _inv_units[i]
-		var is_src := i == _inv_i
-		var is_tgt := _inv_mode == 2 and i == _inv_give_i
-		if is_tgt:
-			draw_rect(Rect2(body.position.x - 6, y - 18, lw, 26), Color(0.86, 0.68, 0.25, 0.5), true)
-		elif is_src and _inv_mode == 0:
-			draw_rect(Rect2(body.position.x - 6, y - 18, lw, 26), Color(0.30, 0.45, 0.85, 0.45), true)
-		draw_rect(Rect2(body.position.x - 2, y - 15, 4, 20), _house_color(e["house"]), true)
-		var nm: String = e["name"]
-		if is_src and _inv_mode > 0:
-			nm += "  ◂ giving" if _inv_mode == 2 else "  ◂"
-		var count: int = e["unit"].inventory.items.size()
-		draw_string(font, Vector2(body.position.x + 10, y), nm,
-			HORIZONTAL_ALIGNMENT_LEFT, lw - 60, 17,
-			Color(0.95, 0.94, 0.88) if (is_src or is_tgt) else Color(0.78, 0.8, 0.86))
-		draw_string(font, Vector2(body.position.x + lw - 44, y), "%d/5" % count,
-			HORIZONTAL_ALIGNMENT_RIGHT, 40, 13, Color(0.55, 0.58, 0.68))
-		y += 30
-	# right pane: the selected student's pack
+	var layout := _items_layout(body, font)
 	if _inv_units.is_empty():
-		return
-	var e0: Dictionary = _inv_units[_inv_i]
-	var rx := body.position.x + lw + 30
-	var ry := body.position.y + 6
-	draw_string(font, Vector2(rx, ry + 12), "%s's pack" % e0["name"],
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 19, _house_color(e0["house"]).lightened(0.25))
-	ry += 44
-	var inv: Inventory = e0["unit"].inventory
-	var eq: InventoryItem = inv.equipped_weapon_item()
-	if inv.items.is_empty():
-		draw_string(font, Vector2(rx, ry), "— carrying nothing —",
-			HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.6, 0.63, 0.72))
-	for i in range(inv.items.size()):
-		var item: InventoryItem = inv.items[i]
-		var sel := _inv_mode >= 1 and i == _inv_item_i
-		if sel:
-			draw_rect(Rect2(rx - 8, ry - 18, body.size.x - lw - 50, 26),
-				Color(0.86, 0.68, 0.25, 0.5) if _inv_mode == 2 else Color(0.30, 0.45, 0.85, 0.45), true)
-		var label: String = item.display_name()
-		if item == eq:
-			label += "   (equipped)"
-		draw_string(font, Vector2(rx, ry), label, HORIZONTAL_ALIGNMENT_LEFT,
-			body.size.x - lw - 170, 16, Color(0.95, 0.94, 0.88) if sel else Color(0.85, 0.86, 0.92))
-		var uses := "∞" if item.uses >= 999 else "×%d" % item.uses
-		draw_string(font, Vector2(body.position.x + body.size.x - 70, ry), uses,
-			HORIZONTAL_ALIGNMENT_RIGHT, 60, 14, Color(0.62, 0.66, 0.76))
-		ry += 30
-	# contextual hint under the pack
-	var hint := ""
+		draw_string(font, layout["student_header"], "Students · none", HORIZONTAL_ALIGNMENT_LEFT,
+			layout["student_rect"].size.x, 14, Color(0.86, 0.78, 0.45))
+		draw_string(font, layout["pack_header"], "Pack", HORIZONTAL_ALIGNMENT_LEFT,
+			layout["pack_rect"].size.x, 16, Color(0.86, 0.78, 0.45))
+	else:
+		var giver: Dictionary = _inv_units[_inv_i]
+		var pane_title := "Giver: %s" % giver["name"] if _inv_mode == 2 else "Students"
+		draw_string(font, layout["student_header"], pane_title, HORIZONTAL_ALIGNMENT_LEFT,
+			layout["student_rect"].size.x, 14, Color(0.86, 0.78, 0.45))
+		for row: Dictionary in layout["student_rows"]:
+			var i: int = row["index"]
+			var e: Dictionary = _inv_units[i]
+			var is_src := i == _inv_i
+			var is_tgt := _inv_mode == 2 and i == _inv_give_i
+			if is_tgt:
+				draw_rect(row["rect"], Color(0.86, 0.68, 0.25, 0.5), true)
+			elif is_src:
+				draw_rect(row["rect"], Color(0.30, 0.45, 0.85, 0.45), true)
+			draw_rect(Rect2(row["rect"].position.x + 2, row["rect"].position.y + 2, 3,
+				row["rect"].size.y - 4), _house_color(e["house"]), true)
+			var name_color := Color(0.98, 0.92, 0.72) if is_tgt else (Color(0.95, 0.94, 0.88) if is_src else Color(0.78, 0.8, 0.86))
+			draw_string(font, row["name_baseline"], str(e["name"]), HORIZONTAL_ALIGNMENT_LEFT,
+				row["name_width"], 17, name_color)
+			draw_string(font, row["count_baseline"], "%d/5" % e["unit"].inventory.items.size(),
+				HORIZONTAL_ALIGNMENT_RIGHT, row["count_width"], 12, Color(0.62, 0.66, 0.76))
+		var pack_label := "%s's pack" % giver["name"]
+		if _inv_mode == 2:
+			pack_label = "%s's pack · giver" % giver["name"]
+		draw_string(font, layout["pack_header"], pack_label, HORIZONTAL_ALIGNMENT_LEFT,
+			layout["pack_rect"].size.x, 16, _house_color(giver["house"]).lightened(0.25))
+		var inv: Inventory = giver["unit"].inventory
+		if inv.items.is_empty():
+			draw_string(font, layout["pack_content_rect"].position + Vector2(0, font.get_ascent(14)),
+				"— carrying nothing —", HORIZONTAL_ALIGNMENT_LEFT, layout["pack_content_rect"].size.x, 14,
+				Color(0.6, 0.63, 0.72))
+		for row: Dictionary in layout["pack_rows"]:
+			var item: InventoryItem = inv.items[row["index"]]
+			var selected: bool = _inv_mode >= 1 and row["index"] == _inv_item_i
+			if selected:
+				draw_rect(row["rect"], Color(0.86, 0.68, 0.25, 0.5) if _inv_mode == 2 else Color(0.30, 0.45, 0.85, 0.45), true)
+			var marker := "› " if selected else "  "
+			draw_multiline_string(font, row["label_baseline"], marker + "\n".join(row["lines"]),
+				HORIZONTAL_ALIGNMENT_LEFT, row["label_width"], 16, MULTILINE_MAX_LINES,
+				Color(0.95, 0.94, 0.88) if selected else Color(0.85, 0.86, 0.92))
+			draw_string(font, row["uses_baseline"], row["uses"], HORIZONTAL_ALIGNMENT_RIGHT,
+				row["uses_width"], 13, Color(0.62, 0.66, 0.76))
+		if layout["pack_scrolls"]:
+			var progress := "Items %d–%d/%d" % [layout["visible_items"][0] + 1,
+				layout["visible_items"][-1] + 1, inv.items.size()]
+			draw_string(font, layout["pack_progress_baseline"], progress, HORIZONTAL_ALIGNMENT_RIGHT,
+				layout["pack_rect"].size.x, 11, Color(0.62, 0.66, 0.76))
+	draw_multiline_string(font, layout["hint_baseline"], "\n".join(layout["hint_lines"]),
+		HORIZONTAL_ALIGNMENT_LEFT, body.size.x, 14, MULTILINE_MAX_LINES, Color(0.86, 0.78, 0.45, 0.95))
+
+
+func _items_hint() -> String:
 	match _inv_mode:
-		0: hint = "Enter — open this student's pack"
-		1: hint = "Enter — give this item to someone   ·   Esc — back"
-		2: hint = "↑/↓ — choose who receives it   ·   Enter — hand it over   ·   Esc — back"
-	draw_string(font, Vector2(rx, body.position.y + body.size.y - 8), hint,
-		HORIZONTAL_ALIGNMENT_LEFT, body.size.x - lw - 40, 14, Color(0.86, 0.78, 0.45, 0.9))
+		0: return "Enter — open this student's pack"
+		1: return "Enter — give this item to someone   ·   Esc — back"
+		2: return "↑/↓ — choose who receives it   ·   Enter — hand it over   ·   Esc — back"
+	return ""
+
+
+## Active-font measurements shared by the Items renderer and its production-
+## SubViewport regression. Lists window the existing selections when space is
+## short; the selected row is kept in view through both directions of resize.
+func _items_layout(body: Rect2, font: Font) -> Dictionary:
+	var gap := 16.0
+	var student_width := clampf(body.size.x * 0.38, 176.0, 250.0)
+	student_width = minf(student_width, body.size.x * 0.48)
+	var pack_width := maxf(96.0, body.size.x - student_width - gap)
+	var student_rect := Rect2(body.position, Vector2(student_width, body.size.y))
+	var pack_rect := Rect2(Vector2(body.position.x + student_width + gap, body.position.y),
+		Vector2(pack_width, body.size.y))
+	var hint_lines := _wrap_roster_line(_items_hint(), font, body.size.x, 14)
+	var hint_height := maxf(font.get_height(14), float(hint_lines.size()) * font.get_height(14))
+	var hint_rect := Rect2(Vector2(body.position.x, body.end.y - hint_height), Vector2(body.size.x, hint_height))
+	var toast_layout: Dictionary = {}
+	var feedback_active := _tab == 2 and _toast_t > 0.0 and not _toast_is_load_error
+	if feedback_active:
+		toast_layout = _inventory_toast_layout(font, body, hint_rect)
+	var content_top := body.position.y + 24.0
+	var content_bottom := hint_rect.position.y - 4.0
+	if feedback_active:
+		content_bottom = minf(content_bottom, toast_layout["rect"].position.y - 4.0)
+	var row_height := font.get_height(17) + 4.0
+	var student_rows: Array[Dictionary] = []
+	var visible_students: Array[int] = []
+	var selected_student := _inv_give_i if _inv_mode == 2 else _inv_i
+	if not _inv_units.is_empty():
+		selected_student = clampi(selected_student, 0, _inv_units.size() - 1)
+		_inv_i = clampi(_inv_i, 0, _inv_units.size() - 1)
+		_inv_give_i = clampi(_inv_give_i, 0, _inv_units.size() - 1)
+		var student_capacity := maxi(1, int(floor((content_bottom - content_top) / row_height)))
+		_items_student_scroll = clampi(_items_student_scroll, 0, maxi(0, _inv_units.size() - student_capacity))
+		if selected_student < _items_student_scroll:
+			_items_student_scroll = selected_student
+		elif selected_student >= _items_student_scroll + student_capacity:
+			_items_student_scroll = selected_student - student_capacity + 1
+		_items_student_scroll = clampi(_items_student_scroll, 0, maxi(0, _inv_units.size() - student_capacity))
+		for i in range(_items_student_scroll, mini(_inv_units.size(), _items_student_scroll + student_capacity)):
+			var row_rect := Rect2(Vector2(student_rect.position.x, content_top + (i - _items_student_scroll) * row_height),
+				Vector2(student_rect.size.x, row_height))
+			visible_students.append(i)
+			student_rows.append({"index": i, "rect": row_rect,
+				"name_baseline": row_rect.position + Vector2(10, font.get_ascent(17) + 2),
+				"name_width": student_width - 56.0,
+				"count_baseline": row_rect.position + Vector2(student_width - 46.0, font.get_ascent(12) + 4),
+				"count_width": 42.0})
+	var pack_header := Vector2(pack_rect.position.x, pack_rect.position.y + font.get_ascent(16))
+	var inv: Inventory = null
+	if not _inv_units.is_empty():
+		inv = _inv_units[_inv_i]["unit"].inventory
+	_inv_item_i = clampi(_inv_item_i, 0, maxi(0, inv.items.size() - 1)) if inv != null else 0
+	var uses_width := 44.0
+	var label_width := maxf(48.0, pack_width - uses_width - 12.0)
+	var item_heights: Array[float] = []
+	var item_lines: Array[Array] = []
+	if inv != null:
+		# The renderer prepends a visible selection marker (or two spacer
+		# spaces) after these lines are wrapped. Reserve its measured width so
+		# the active-font draw call cannot add an unaccounted extra line.
+		var marker_width := maxf(
+			font.get_string_size("› ", HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x,
+			font.get_string_size("  ", HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x)
+		for item: InventoryItem in inv.items:
+			var label := item.display_name()
+			if item == inv.equipped_weapon_item():
+				label += "   (equipped)"
+			var lines := _wrap_roster_line(label, font, label_width - 18.0 - marker_width, 16)
+			item_lines.append(lines)
+			item_heights.append(maxf(font.get_height(16) + 4.0, lines.size() * font.get_height(16) + 3.0))
+	var pack_content_top := content_top
+	var pack_content_bottom := content_bottom - (font.get_height(11) + 2.0)
+	var pack_content_rect := Rect2(pack_rect.position.x, pack_content_top, pack_width,
+		maxf(0.0, pack_content_bottom - pack_content_top))
+	var visible_items: Array[int] = []
+	var pack_rows: Array[Dictionary] = []
+	var pack_scrolls := false
+	var used_height := 0.0
+	if inv != null and not inv.items.is_empty():
+		var selected_item := _inv_item_i if _inv_mode >= 1 else 0
+		var start := clampi(_items_pack_scroll, 0, inv.items.size() - 1)
+		if selected_item < start:
+			start = selected_item
+		used_height = 0.0
+		for i in range(start, selected_item + 1):
+			used_height += item_heights[i]
+		while start < selected_item and used_height > pack_content_rect.size.y:
+			used_height -= item_heights[start]
+			start += 1
+		while start > 0 and used_height + item_heights[start - 1] <= pack_content_rect.size.y:
+			start -= 1
+			used_height += item_heights[start]
+		_items_pack_scroll = start
+		var item_y := pack_content_rect.position.y
+		for i in range(start, inv.items.size()):
+			if not visible_items.is_empty() and item_y + item_heights[i] > pack_content_rect.end.y:
+				break
+			if visible_items.is_empty() and item_heights[i] > pack_content_rect.size.y:
+				# A narrow label wraps to complete lines; permit the selected row to
+				# use the content window and keep its text inside the book body.
+				item_heights[i] = pack_content_rect.size.y
+			var row_rect := Rect2(pack_content_rect.position.x, item_y, pack_width, item_heights[i])
+			visible_items.append(i)
+			pack_rows.append({"index": i, "rect": row_rect, "lines": item_lines[i],
+				"label_width": label_width - 18.0,
+				"label_baseline": row_rect.position + Vector2(18, font.get_ascent(16) + 1),
+				"uses_width": uses_width,
+				"uses": "∞" if inv.items[i].uses >= 999 else "×%d" % inv.items[i].uses,
+				"uses_baseline": row_rect.position + Vector2(pack_width - uses_width - 4.0,
+					font.get_ascent(13) + 3)})
+			item_y += item_heights[i]
+		pack_scrolls = start > 0 or visible_items.size() < inv.items.size()
+	return {"student_rect": student_rect, "pack_rect": pack_rect,
+		"student_header": Vector2(student_rect.position.x, student_rect.position.y + font.get_ascent(14)),
+		"pack_header": pack_header, "student_rows": student_rows, "visible_students": visible_students,
+		"pack_rows": pack_rows, "visible_items": visible_items, "pack_content_rect": pack_content_rect,
+		"pack_scrolls": pack_scrolls,
+		"pack_progress_baseline": Vector2(pack_rect.position.x, pack_header.y),
+		"giver_name": str(_inv_units[_inv_i]["name"]) if not _inv_units.is_empty() else "",
+		"hint_lines": hint_lines, "hint_rect": hint_rect,
+		"feedback_active": feedback_active, "toast_rect": toast_layout.get("rect", Rect2()),
+		"hint_baseline": Vector2(body.position.x, hint_rect.position.y + font.get_ascent(14))}
+
+
+func _inventory_toast_layout(font: Font, body: Rect2, hint_rect: Rect2) -> Dictionary:
+	# Items-local feedback gets its own measured line above the stage instruction.
+	# The student/item window ends above it, so refusal/success text cannot obscure
+	# the selected row, pack progress, contextual hint or common footer.
+	var text_width := maxf(120.0, body.size.x - 12.0)
+	var lines := _wrap_roster_line(_toast, font, text_width, 14)
+	var text_height := maxf(font.get_height(14), float(lines.size()) * font.get_height(14))
+	var rect := Rect2(Vector2(body.position.x, hint_rect.position.y - text_height - 6.0),
+		Vector2(body.size.x, text_height + 4.0))
+	return {"rect": rect, "lines": lines, "text_width": text_width,
+		"baseline": Vector2(rect.position.x + 6.0,
+			rect.position.y + (rect.size.y - text_height) * 0.5 + font.get_ascent(14))}
 
 
 ## AW-54: the Grades tab (GRADING_SYSTEM.md §3) — the running grade, the four
