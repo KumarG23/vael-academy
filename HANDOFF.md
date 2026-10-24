@@ -22,7 +22,9 @@ The old `_draw_system()` fixed the data column at `body.x+320`, volume bars 160 
 
 **Repair:** `BattleView._place_forecast_panel()` anchors from the current size and is connected to the panel's `resized`, and used by `_layout_reference_ui`. No assertion weakened; no sleeps, sizes or fonts changed.
 
-**Evidence (headless, Godot 4.7.2, shared heavy lock, disposable XDG):** new `test_forecast_taller_than_default_is_repositioned_without_a_later_resize` fails on unchanged main deterministically with the identical geometry (8/9; 2 assertions) and passes after (9/9, 2687 assertions). Forecast-touching scripts (resize, supports, unit-cycle, keyboard battle): 26/26, 3,614 assertions. Not run: native GUI (no desktop authority; #122/#124/#127 hold it) — the change only moves one panel inside the viewport; native #112 evidence is otherwise unchanged. The combined-order flake itself was not statistically re-run; the cause is shown deterministically instead.
+**Native QA:** [docs/qa/issue-131-forecast-anchor](docs/qa/issue-131-forecast-anchor/README.md) (original Forward+, slot b, real input, 800×450/640×360 both resize directions, cancel/continue; combined-order 81/81).
+
+**Evidence (headless, Godot 4.7.2, shared heavy lock, disposable XDG):** new `test_forecast_taller_than_default_is_repositioned_without_a_later_resize` fails on unchanged main deterministically with the identical geometry (8/9; 2 assertions) and passes after (9/9, 2687 assertions). Forecast-touching scripts (resize, supports, unit-cycle, keyboard battle): 26/26, 3,614 assertions. Native GUI evidence recorded in the QA folder above. The combined-order flake itself was not statistically re-run; the cause is shown deterministically instead.
 
 ## Issue #112 — Battle reference UI live resize
 
