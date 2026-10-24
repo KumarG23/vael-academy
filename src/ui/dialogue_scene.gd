@@ -296,8 +296,16 @@ func _gui_input(event: InputEvent) -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	if _finished or not (event is InputEventKey) or not event.pressed or event.echo:
 		return
+	# Issue #89: a player's additional Up/Down/Confirm key reaches the same
+	# branch as the shipped keys below; nothing else changes meaning here.
+	var extra := KeyboardPreferences.extra_action(event)
 	if _choice != null:
-		match event.keycode:
+		var key: Key = event.keycode
+		match extra:
+			"cursor_up": key = KEY_UP
+			"cursor_down": key = KEY_DOWN
+			"cursor_confirm": key = KEY_ENTER
+		match key:
 			KEY_UP, KEY_W:
 				_choice_index = wrapi(_choice_index - 1, 0, _shown.size())
 				queue_redraw()
@@ -310,7 +318,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				return
 		get_viewport().set_input_as_handled()
 		return
-	if event.keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
+	if event.keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER] or extra == "cursor_confirm":
 		get_viewport().set_input_as_handled()
 		advance()
 

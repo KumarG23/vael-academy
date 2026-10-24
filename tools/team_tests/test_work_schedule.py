@@ -47,7 +47,7 @@ class WorkScheduleTests(unittest.TestCase):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         self.state = Path(tmp.name)
-        for attr in ('STATE', 'REPO'):
+        for attr in ('STATE', 'GLOBAL_STATE', 'REPO'):
             p = patch.object(team, attr, self.state)
             p.start()
             self.addCleanup(p.stop)
