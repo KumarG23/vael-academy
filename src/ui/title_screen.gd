@@ -29,12 +29,45 @@ func _ready() -> void:
 	_menu.chosen.connect(_on_chosen)
 	_menu.cancelled.connect(_on_cancelled)
 	add_child(_menu)
+	get_viewport().size_changed.connect(_layout_title)
 	_open_main()
+
+
+## Keep the established heading/font and short-menu appearance. At compact
+## heights the same title block moves up to leave a separate menu region.
+func heading_layout() -> Dictionary:
+	var vp := get_viewport_rect().size
+	var font := ThemeDB.fallback_font
+	var lines := ChoiceMenu.wrapped_lines("EMBERLINE TACTICS", font, 64, vp.x - 12.0)
+	var pitch := ceilf(font.get_height(64))
+	var height := font.get_ascent(64) + (lines.size() - 1) * pitch + 40.0 + font.get_descent(22)
+	var top := minf(vp.y * 0.34 - font.get_ascent(64), vp.y - 30.0 - 230.0 - 12.0 - height)
+	top = maxf(54.0 if _status != "" else 14.0, top)
+	var rect := Rect2(6, top, vp.x - 12.0, height)
+	return {"rect": rect, "lines": lines, "pitch": pitch,
+		"baseline": top + font.get_ascent(64),
+		"subtitle": top + font.get_ascent(64) + (lines.size() - 1) * pitch + 40.0}
 
 
 func _menu_pos() -> Vector2:
 	var vp := get_viewport_rect().size
-	return Vector2(vp.x * 0.5 - 120, vp.y * 0.58)
+	var heading: Rect2 = heading_layout()["rect"]
+	var margin := 6.0 if vp.x <= 640.0 else 16.0
+	_menu.layout_bounds = Rect2(margin, heading.end.y + 12.0, vp.x - margin * 2,
+		maxf(0.0, vp.y - 30.0 - heading.end.y - 12.0))
+	# Use extra horizontal room only when complete summaries need it.
+	_menu.width_limit = vp.x - margin * 2
+	var width := minf(_menu._fit_width(), _menu.layout_bounds.size.x)
+	return Vector2((vp.x - width) * 0.5, maxf(heading.end.y + 12.0, vp.y * 0.58))
+
+
+func _layout_title() -> void:
+	if is_instance_valid(_menu):
+		_menu._preferred_position = _menu_pos()
+		_menu._layout_panel()
+		# open() computes the new content width after _menu_pos() was called.
+		_menu.position.x = (get_viewport_rect().size.x - _menu.size.x) * 0.5
+	queue_redraw()
 
 
 ## AW-42: dev scene-jump targets (label, kind). Lets Neal hop into any part of
@@ -60,6 +93,7 @@ func _open_main() -> void:
 	_context = "main"
 	_status = ""
 	_menu.open("", ["New Game", "Load Game", "Dev Jump ▶", "Quit"], _menu_pos())
+	_layout_title()
 	queue_redraw()
 
 
@@ -73,6 +107,7 @@ func _open_dev() -> void:
 	var height := ChoiceMenu.PAD * 2 + ChoiceMenu.ROW_H * (labels.size() + 1)
 	pos.y = minf(pos.y, get_viewport_rect().size.y - height - 20.0)
 	_menu.open("Dev Jump", labels, pos)
+	_layout_title()
 
 
 func _dev_jump(kind: String) -> void:
@@ -133,6 +168,7 @@ func _open_new_game() -> void:
 	_context = "new"
 	_status = ""
 	_menu.open("New Game", ["Classic (permadeath)", "Casual", "Back"], _menu_pos())
+	_layout_title()
 
 
 func _open_load() -> void:
@@ -142,6 +178,7 @@ func _open_load() -> void:
 	if _save_system.has_autosave():
 		_slots.append(_save_system.autosave_entry())
 	_menu.open("Load Game", _slot_labels(), _menu_pos())
+	_layout_title()
 
 
 func _slot_labels() -> Array:
@@ -211,12 +248,12 @@ func _choose_slot(index: int) -> void:
 			# retry never changes the player's selection to a different save.
 			_menu.open("Autosave unavailable. Retry or Back.", _slot_labels(), _menu_pos())
 			_menu._index = index
-			_menu._keep_selection_visible()
+			_layout_title()
 		return
 	# An Autosave rejection temporarily names the menu; manual feedback uses
 	# the accepted #83 status band and the ordinary Load Game heading.
 	_menu._title = "Load Game"
-	_menu.queue_redraw()
+	_menu._layout_panel()
 	var slot := int(_slots[index]["slot"])
 	# AW-75: a slot holding a live battle resumes INTO the battle, mid-fight.
 	if bool(_slots[index].get("in_battle", false)):
@@ -238,7 +275,7 @@ func _report_load_failure(slot: int) -> void:
 	else:
 		_status = "Slot %d couldn't be loaded — choose another slot." % slot
 	AudioManager.play_sfx("cancel")
-	queue_redraw()
+	_layout_title()
 
 
 ## Top-wide feedback band, measured so it stays readable at compact sizes.
@@ -305,13 +342,15 @@ func _draw() -> void:
 		draw_rect(Rect2(i * stripe_w, 0, stripe_w, 10), Color(c.r, c.g, c.b, 0.9), true)
 	var font := ThemeDB.fallback_font
 	# Title block (placeholder until AW-5 title art).
-	var title := "EMBERLINE TACTICS"
-	var ts := font.get_string_size(title, HORIZONTAL_ALIGNMENT_CENTER, -1, 64)
-	draw_string(font, Vector2(vp.x * 0.5 - ts.x * 0.5, vp.y * 0.34), title,
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 64, Color(0.95, 0.90, 0.80))
+	var heading := heading_layout()
+	var lines: Array = heading["lines"]
+	for i in range(lines.size()):
+		var ts := font.get_string_size(lines[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 64)
+		draw_string(font, Vector2((vp.x - ts.x) * 0.5, heading["baseline"] + i * heading["pitch"]), lines[i],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 64, Color(0.95, 0.90, 0.80))
 	var sub := "A year at Vael Academy"
 	var ss := font.get_string_size(sub, HORIZONTAL_ALIGNMENT_CENTER, -1, 22)
-	draw_string(font, Vector2(vp.x * 0.5 - ss.x * 0.5, vp.y * 0.34 + 40), sub,
+	draw_string(font, Vector2(vp.x * 0.5 - ss.x * 0.5, heading["subtitle"]), sub,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(0.65, 0.62, 0.68))
 	if _status != "":
 		var sr := status_rect()

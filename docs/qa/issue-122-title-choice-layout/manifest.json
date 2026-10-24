@@ -1,0 +1,204 @@
+{
+  "issue": 122,
+  "base": "8b442f13b34d86924cdb0fe374b49d7a7872649a",
+  "engine": "Godot 4.7.2",
+  "mode": "headless production SubViewport geometry and input; no GUI authority",
+  "source_sha256": {
+    "src/ui/choice_menu.gd": "2279044e25797e17164d0623f455387881351b1214968142b3022a0c692df72c",
+    "src/ui/title_screen.gd": "db34bae3de0bf92944e2ebc2dd8a0deb11d0bfdc2d1c57d5916152d0d3363045",
+    "tests/test_choice_menu_layout.gd": "ae96a2dfd136ef71bdc71133b368701a15e5704c3807009d661ef072e3b2168c",
+    "tests/test_title_choice_layout.gd": "1913e1596a87d2e303f972cbb673d09ca70adecbd776bfad546e3e4f69eea9e0",
+    "tests/test_battle_polish.gd": "cb8e225b0143e651be8a9cc6eee9976523fd5111591a95afeb76352360acb67d"
+  },
+  "base_production_sha256": {
+    "src/ui/choice_menu.gd": "42658ccdf0d9ba5bbccf71ef84058d26990706a0be1cc2a8586d65528f86fa98",
+    "src/ui/title_screen.gd": "fc3b7889036537b5e8bb2ddfca612602b7e58abfe838e47ca07bddf3a59049e2"
+  },
+  "regression_first": {
+    "tests": 1,
+    "passing_tests": 0,
+    "passing_assertions": 5,
+    "assertions": 12,
+    "manual_label_width_px": 555,
+    "autosave_supplementary_label_width_px": 493,
+    "available_single_line_width_px": 400,
+    "heading_64px_size": [
+      621,
+      88
+    ],
+    "viewport_sizes": [
+      [
+        1280,
+        720
+      ],
+      [
+        800,
+        450
+      ],
+      [
+        640,
+        360
+      ]
+    ],
+    "failure": "six complete-label width failures and one compact drawn/hit rectangle containment failure"
+  },
+  "checks": {
+    "clean_import": {
+      "exit_code": 0,
+      "script_load_errors": false
+    },
+    "helpers": {
+      "discovered": 113,
+      "passed": 111,
+      "skipped": 2
+    },
+    "affected_before_fixture_mouse_enter_correction": {
+      "scripts": 16,
+      "tests": 157,
+      "passed": 156,
+      "assertions": 7256,
+      "passing_assertions": 7255,
+      "remaining_failure": "new wrapped-row hover fixture omitted SubViewport.notify_mouse_entered; production and every existing test passed"
+    },
+    "final_focused": {
+      "scripts": 3,
+      "tests": 24,
+      "passed": 24,
+      "assertions": 1949,
+      "seconds": 2.778
+    },
+    "full_gut": {
+      "scripts": 127,
+      "tests": 1038,
+      "passed": 1038,
+      "assertions": 24479,
+      "gut_seconds": 486.484,
+      "process_seconds": 494.319,
+      "exit_code": 0,
+      "script_load_errors": false,
+      "inherited_deprecations": 99,
+      "exit_diagnostics": "two ObjectDB instances / one resource still in use (existing boundary diagnostic)"
+    },
+    "implementation_import": {
+      "exit_code": 0,
+      "seconds": 8.914,
+      "script_errors": false
+    },
+    "final_fixture_refinement": {
+      "tests": 24,
+      "passed": 24,
+      "assertions": 1970,
+      "scripts": 3,
+      "seconds": 2.716,
+      "exit_code": 0,
+      "script_load_errors": false
+    }
+  },
+  "native": {
+    "status": "complete on 1bb92da9; all graphical jobs ended and desktop explicitly released",
+    "results": "native-results.json",
+    "jobs_started": 5,
+    "captures": [
+      "images/01-title-default.png",
+      "images/02-new-1280.png",
+      "images/02-new-640.png",
+      "images/02-new-800.png",
+      "images/03-empty-load-640.png",
+      "images/04-classic-opening.png",
+      "images/05-casual-opening.png",
+      "images/06-earned-load-default.png",
+      "images/07-earned-battle-loaded.png",
+      "images/08-earned-native-wait-continuation-640.png",
+      "images/09-all-slots-1280.png",
+      "images/09-all-slots-640.png",
+      "images/09-all-slots-800.png",
+      "images/10-wheel-page-2-640.png",
+      "images/10-wheel-page-4-640.png",
+      "images/11-invalid-manual-640.png",
+      "images/12-invalid-manual-default.png",
+      "images/13-invalid-autosave-default.png",
+      "images/14-invalid-autosave-640.png",
+      "images/15-missing-autosave-retry-640.png",
+      "images/16-missing-manual-640.png",
+      "images/17-sparse-physical-2-640.png",
+      "images/18-sparse-battle-dispatch-640.png",
+      "images/19-sparse-native-continuation-640.png",
+      "images/20-earned-autosave-loaded.png",
+      "images/21-autosave-native-movement.png",
+      "images/22-new-back-640.png",
+      "images/23-custom-selected-autosave-640.png",
+      "images/24-custom-autosave-restored-640.png"
+    ],
+    "checkpoint_loads_observed": 3,
+    "neals_visual_approval": false
+  },
+  "invariants": {
+    "automated": "complete Campaign.to_dict/RNG/support/progression, active/skip/roster, staged resume/prep/room/spawn, save override; default disposable-profile manual/autosave/settings presence and bytes",
+    "fixture_writes": "unique injected disposable save directory; intentional writes and missing-after-browse removals occur outside read-only intervals",
+    "installation": "all Godot and inherited child processes use disposable XDG_DATA_HOME"
+  },
+  "limits": [
+    "No full-school/opening-story replay, outcome injection or Neal taste/canon approval.",
+    "Headless/native coverage and supplementary fixture alterations are separated in native-results.json.",
+    "Final documentation/integration-head Verify and engineering-lead review remain required."
+  ],
+  "full_baseline_source_sha256": {
+    "src/ui/choice_menu.gd": "2279044e25797e17164d0623f455387881351b1214968142b3022a0c692df72c",
+    "src/ui/title_screen.gd": "db34bae3de0bf92944e2ebc2dd8a0deb11d0bfdc2d1c57d5916152d0d3363045",
+    "tests/test_choice_menu_layout.gd": "ae96a2dfd136ef71bdc71133b368701a15e5704c3807009d661ef072e3b2168c",
+    "tests/test_title_choice_layout.gd": "bdcb56cebe280b0a675d3bf790654c5bb18c73d339e249ee83a1c314f490e601",
+    "tests/test_battle_polish.gd": "cb8e225b0143e651be8a9cc6eee9976523fd5111591a95afeb76352360acb67d"
+  },
+  "final_fixture_refinement": "After the full baseline, supplementary long metadata IDs were replaced with exact shipped ChapterRegistry IDs; incoming training RNG identity/seed restoration and assertions were strengthened. Production source is unchanged; focused checks and final-head CI cover this test-only delta.",
+  "ci": {
+    "source_commit": "1bb92da9baa6a78ea84ccafc751beeb68eb27476",
+    "run": 40110741306,
+    "result": "SUCCESS",
+    "url": "https://github.com/KumarG23/vael-academy/actions/runs/40110741306"
+  },
+  "integration": {
+    "accepted_main": "2d7ae52338fa25556ca8ee1ffce6112b4a0c4a4a",
+    "accepted_pr": 120,
+    "conflict": "adjacent HANDOFF entries only; retained both records",
+    "unchanged_native_production_and_test_hashes": true,
+    "incoming_system_source_tests_qa_match_main": true,
+    "checks": {
+      "scripts": 14,
+      "tests": 132,
+      "passed": 132,
+      "assertions": 18187,
+      "seconds": 35.764,
+      "exit_code": 0,
+      "inherited_deprecations": 24,
+      "script_load_errors": false,
+      "exit_resource_errors": false
+    },
+    "baseline_repeated": false
+  },
+  "ci_117_integration": {
+    "head": "1b03361778a0a4351c8e51bdd3e121e092906797",
+    "run": 40119741126,
+    "result": "SUCCESS",
+    "url": "https://github.com/KumarG23/vael-academy/actions/runs/40119741126"
+  },
+  "hover_integration": {
+    "accepted_main": "9183237ab4ef96bd75ab79d5e5f9d027df583d7b",
+    "results": "hover-integration-results.json",
+    "incoming_promoted_hover_source_test_qa_match_main": true,
+    "own_five_source_test_hashes_unchanged": true,
+    "prior_native_evidence_unchanged": true,
+    "status": "integration source preserved; one inspection-layout boundary failure requires lead/#131 triage, final-head Verify pending"
+  },
+  "ci_pre_inspection_integration": {
+    "head": "eb78505e99e6a0a94ce0813e45135b14a2afc509",
+    "run": 40121582365,
+    "result": "SUCCESS",
+    "url": "https://github.com/KumarG23/vael-academy/actions/runs/40121582365"
+  },
+  "latest_integration": {
+    "accepted_main": "55bc1ceb878949cf00763343ae9c27bac36cfbce",
+    "results": "accepted-inspection-integration-results.json",
+    "status": "all requested local boundaries pass; #133 dependency resolved; exact new-head Verify and lead review remain",
+    "native_title_choice_source_unchanged": true
+  }
+}
