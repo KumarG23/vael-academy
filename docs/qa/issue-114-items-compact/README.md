@@ -35,8 +35,11 @@ existing opt-in skips**. A prior GUT attempt stopped after a concurrent
 headless import appeared outside the shared lock; that partial run was
 discarded. These receipts are tied to `4f11054d`, not the current combined
 head. #112 Battle reference UI was then normally integrated from accepted main
-`8b442f13`, retaining its source/tests/QA/status. A clean import/full GUT/helper
-pass on the combined head and exact-head Verify remain pending.
+`8b442f13`, retaining its source/tests/QA/status. The baseline above satisfies
+the required clean import/full GUT/helper run. After the accepted-main merge,
+an integration-focused clean import and affected-sibling checks remain pending
+once the shared lock clears; this does not call for an unchanged duplicate full
+suite. Exact-head Verify remains pending.
 
 ## Original-renderer GUI evidence
 

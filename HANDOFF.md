@@ -31,10 +31,12 @@ Before accepted #112 integration, clean Godot 4.7.2 import exited 0 and full
 GUT passed **1,027/1,027 tests, 20,249 assertions / 125 scripts** (479.318 s,
 99 inherited deprecations) on `4f11054d`; helpers passed **113 discovered, 111
 passed, two existing opt-in skips**. These results are source-attributed to
-that head. Import sidecars were removed. Final combined-head clean import,
-full GUT and helpers remain pending a serialized run after #117's active full
-suite. Accepted #112 is integrated normally; both incoming Grades and Battle
-reference source/tests/QA/status are retained. The #112 owner explicitly
+that head. Import sidecars were removed. Accepted #112 is integrated normally;
+both incoming Grades and Battle reference source/tests/QA/status are retained.
+Its final clean import and affected-sibling focused checks are pending after
+#117/#118 clear the shared lock; the required full baseline is already recorded
+above, so no duplicate full run is needed for this accepted-main integration.
+The #112 owner explicitly
 released every graphical job, and the lead named #114/Luna next sole GUI
 controller ([release](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385623578),
 [lead naming](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385711360)).
