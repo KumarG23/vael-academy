@@ -1,64 +1,97 @@
 # GH-114 — existing Journal Items compact layout
 
-## Scope and source references
+## Scope and references
 
-This is a presentation/input reachability repair for the existing Quartermaster
-Items tab. It follows `MASTER_PLAN.md` §§1–2 and §6 WO-9.4/9.7, with M9 still
-partial, and `ACADEMY_BIBLE.md` §3 (Quartermaster: roster, inventory, trading,
-promotion items). The existing inventory rules and persistence channel are
-documented in `HANDOFF.md` AW-52/AW-53/AW-55. No canon contradiction was found.
+This changes presentation and reachability for the existing Quartermaster
+Items tab under `MASTER_PLAN.md` §§1–2, §6 WO-9.4/9.7 and partial §10 M9.
+The owning design is `ACADEMY_BIBLE.md` §3, Quartermaster/inventory/trading;
+existing transfer, bound-item, tome and persistence rules are in `HANDOFF.md`
+AW-52/AW-53/AW-55. No canon contradiction was found. No new mechanic,
+inventory rule, content, schema, renderer or project-setting change was made.
 
-## Automated production-viewport evidence
+## Automated evidence
 
 `tests/test_journal_items_compact.gd` instantiates the production Academy
-Journal in a real `SubViewport`, dispatches configured/default keyboard events,
-and measures the same layout returned to the renderer with `UITheme.font()`.
-The measurements cover 1280×720, 800×450 and 640×360, both resize directions,
-all three existing trade stages, first/final students and recipients, complete
-shipped pack labels/equipped markers/uses, full five-item packs, empty pack and
-roster states, and inventory-origin feedback.
+Journal in a real `SubViewport`, dispatches configured/default keyboard
+events, and measures renderer layout with `UITheme.font()`. It covers
+1280×720, 800×450 and 640×360; both resize directions; all three existing
+trade stages; first/final students and recipients; complete shipped labels,
+equipped markers and uses; full five-item packs; empty pack/roster; refusal
+feedback; default/custom controls; browse/cancel/close invariance; and the
+existing transfer/save-load path.
 
-The regression-first run on accepted main `300f146a` passed 2/6 tests; the four
-failing cases were compact label/instruction widths, the final student's body
-bounds, and compact refusal-toast bounds. On the implementation source the
-focused file passes **8/8 tests, 356 assertions**. The unchanged shipped input
-flow and ordinary successful transfer/save round-trip pass. Godot 4.7.2
-implementation-head import exited 0 with no script parse/load errors. It
-regenerated untracked `.uid`/`.import` sidecars for existing files that lacked
-them; those generated sidecars were removed from this worktree. Team helpers
-pass **113 discovered, 111 passed, two existing opt-in skips**.
+Regression-first on accepted main `300f146a`, the new viewport checks failed
+four cases: compact item label/instruction widths, the final student's body
+bounds, and compact refusal-toast bounds. Original-renderer QA then exposed a
+second 640×360 overlap between the scroll counter and stage instruction. Its
+new measured-bounds assertion failed before the fix. The final focused file
+passes **9/9 tests, 364 assertions**. The final 18-script affected boundary
+passes **160/160 tests, 9,385 assertions**.
 
-On `4f11054d` (before accepted #112 integration), clean Godot 4.7.2 import
-exited 0, full GUT passed **1,027/1,027 tests, 20,249 assertions / 125
-scripts** (479.318s), and helpers passed **113 discovered, 111 passed, two
-existing opt-in skips**. A prior GUT attempt stopped after a concurrent
-headless import appeared outside the shared lock; that partial run was
-discarded. These receipts are tied to `4f11054d`, not the current combined
-head. #112 Battle reference UI was then normally integrated from accepted main
-`8b442f13`, retaining its source/tests/QA/status. The baseline above satisfies
-the required clean import/full GUT/helper run. After the accepted-main merge,
-an integration-focused clean import and affected-sibling checks remain pending
-once the shared lock clears; this does not call for an unchanged duplicate full
-suite. Exact-head Verify remains pending.
+On source `4f11054d`, before accepted #112 integration, clean Godot 4.7.2
+import exited 0; full GUT passed **1,027/1,027 tests, 20,249 assertions / 125
+scripts** (479.318 s); helpers passed **113 discovered, 111 passed, two
+existing opt-in skips**. This is the required full baseline and is attributed
+to that commit. Accepted #108/#112 source/tests/QA/status were integrated
+normally through `8b442f13`; the combined source then passed a clean import
+and affected boundary. The exact PR-head Verify remains pending.
 
-## Original-renderer GUI evidence
+## Original-renderer evidence
 
-**In progress.** #112/Sol-dev explicitly ended and released every graphical
-job ([release](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385623578));
-the engineering lead then named #114/Luna next sole GUI controller
-([handoff](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385711360)).
-Native evidence is still pending; do not infer visual acceptance from the
-SubViewport measurements.
+The #112 owner released the desktop, and the lead named #114/Luna the next
+sole GUI controller ([release](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385623578),
+[handoff](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385711360)).
+Bounded Godot 4.7.2 Forward+ runs use ordinary Title → Load from isolated
+copies of the earned Week 2 checkpoint
+([source save](../issue-5-school-loop/emberwing-return-save.json), SHA-256
+`681e0c32af7483a6b48abdfe2c0c612ee65cf5450352d62ca5a8a431275b1fe4`). The
+checked-in checkpoint was not modified.
 
-After that gate, use the bounded ordinary Title/load flow and isolated earned
-checkpoint required in [issue #114](https://github.com/KumarG23/vael-academy/issues/114).
-Record checkpoint provenance, source/capture hashes, whole-state and file
-hashes, intentional transfer/settings writes separately, and exact native vs
-fixture evidence. Never alter the earned original. Five-item/full/bound/tome
-fixtures are supplementary test fixtures, not earned campaign state.
+On the earned copy, native Items were inspected at 1280×720, 800×450 and
+640×360, including stage-1 item selection and stage-2 recipient selection
+through shrink/restore resize. The active student/item/recipient remained
+visible; names, equipped marker, use counts, giver identity, selected
+recipient, instructions and refusal feedback remained readable. An ordinary
+successful transfer was saved to UI Slot 2 and reloaded. Perrin lost
+`sig_perrin` (34 uses), Kai gained it, and the other inventory items/uses
+were preserved.
 
-## Capture manifest
+For browse invariance, a fresh earned-checkpoint copy was saved to UI Slot 2
+before Items browsing. After stage browsing, live resize, cancel and close,
+saving to the same slot produced the same SHA-256: `8104826b83a95589c4ec0e159bfda96d8e61ed8d0603701a219174ed211042bf`.
+Slot 0 stayed byte-identical to the source checkpoint (`681e0c32…`). After
+the explicit transfer, Slot 2 became
+`83aab4f0285bd240e8541936f1727a7f55a67af06067558d356fe1e51d1ec2c2`; reload
+restored the transfer. The saved Campaign fields outside the Kai and Perrin
+`unit_states` entries were unchanged. Those two entries were refreshed by the
+existing `Unit.save_state()` transfer path, including the transferred
+inventory; the save schema and campaign RNG/progression/flags/support/calendar
+did not change. Native Crownspark refusal did not change either saved file.
 
-No captures exist yet. Keep screenshots, input logs and state/hash receipts in
-this directory once the authorized original-Forward+ run is complete. Record
-the source SHA beside each capture and identify any fixture state explicitly.
+The first earned-profile run configured Up/Down to I/N using the shipped
+Keyboard Controls editor (an intentional settings write). Its settings
+SHA-256 `616550e1671adc6fd6303c7224fdc9f3f9ba4e902ee6d1eacefa4048e6864f83`
+remained stable through Items browsing/resize, refusal, cancel/close and custom
+Up continuation in exploration. The state-boundary profile used default
+controls and made no settings write. The only intentional save writes were
+the explicitly selected Slot 2 snapshots used to measure browse invariance
+and transfer persistence.
+
+The supplementary overrides in
+[`fixtures/supplementary_inventory_overrides.json`](fixtures/supplementary_inventory_overrides.json)
+were applied only to a separate disposable copy of the earned save. They are
+fixture data, not earned progress. Original-renderer captures show the
+complete five-item list at 1280×720 and the scroll window reaching the final
+item at 800×450 and 640×360, with complete names, equipped status and uses.
+The final student remains selected and visible in the compact student window.
+The Codex of Reason tome refusal and full-pack refusal were readable at
+640×360. The fixture save remained unchanged at SHA-256
+`caec6941ad53497c7eedc642a3acd498ed932714b578def711d3679b7caab470`; no
+fixture transfer was saved.
+
+All game/input/capture processes ended after each run. The screenshot list
+and per-image SHA-256s are in [`images/`](images/) and
+[`capture-hashes.sha256`](capture-hashes.sha256). Captures identify earned
+state versus fixture-only UI. Invalid crops, unrelated tabs, and exploratory
+captures were excluded. Automated SubViewport evidence does not claim a full
+graphical playthrough, and no Neal visual approval is implied.

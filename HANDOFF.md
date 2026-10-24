@@ -18,9 +18,13 @@ Regression-first on the unmodified accepted source: the new production-
 SubViewport file failed 4/6 tests: compact item label/instruction width, final
 student glyph bounds, and refusal-toast bounds. The source geometry measured
 `Ember Heir's Lance (equipped)` at 244 px against a 204 px label pane at
-800×450, and the stage-2 instruction at 468 px against 334 px. On the current
-implementation, `tests/test_journal_items_compact.gd` passes **8/8 tests, 356
-assertions**. It covers three viewport sizes and live shrink/restore, all
+800×450, and the stage-2 instruction at 468 px against 334 px. Original-
+renderer QA later caught a second compact overlap between the item-scroll
+counter and stage hint at 640×360; the added active-font bounds assertion
+reproduced it regression-first. On the current implementation,
+`tests/test_journal_items_compact.gd` passes **9/9 tests, 364 assertions**; the
+final 18-script affected boundary passes **160/160, 9,385 assertions**. It
+covers three viewport sizes and live shrink/restore, all
 stages, first/final students and recipients, shipped five-item fixture labels,
 equipped markers and uses, empty pack/roster, real default/custom dispatched
 input, full/bound/tome refusal invariance and feedback bounds, and successful
@@ -33,17 +37,23 @@ GUT passed **1,027/1,027 tests, 20,249 assertions / 125 scripts** (479.318 s,
 passed, two existing opt-in skips**. These results are source-attributed to
 that head. Import sidecars were removed. Accepted #112 is integrated normally;
 both incoming Grades and Battle reference source/tests/QA/status are retained.
-Its final clean import and affected-sibling focused checks are pending after
-#117/#118 clear the shared lock; the required full baseline is already recorded
-above, so no duplicate full run is needed for this accepted-main integration.
+The combined-head Godot 4.7.2 clean import exited 0 on `123b17be`, before the
+last scroll-counter placement. After that final rendering fix, the affected
+boundary passed 160/160, 9,385 assertions. The required full baseline is
+already recorded above; no duplicate full suite is needed for this
+accepted-main integration.
 The #112 owner explicitly
 released every graphical job, and the lead named #114/Luna next sole GUI
 controller ([release](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385623578),
 [lead naming](https://github.com/KumarG23/vael-academy/issues/112#issuecomment-6385711360)).
-Bounded original-Forward+ Items acceptance is now authorized and underway;
-no result is claimed until captured and hashed. [QA manifest and evidence
-limits](docs/qa/issue-114-items-compact/README.md). Keep the PR draft until
-native evidence, exact-head Verify and lead review are complete.
+Bounded original-Forward+ Items acceptance is complete on the isolated earned
+copy and separately labeled fixture. Slot 0 stayed byte-identical to the
+earned source; the pre/post browse save hash stayed equal, and the deliberate
+transfer persisted after reload. Native 1280×720/800×450/640×360 resize,
+selection, refusal, cancel/close and custom-control evidence is hashed in the
+[QA manifest](docs/qa/issue-114-items-compact/README.md). The final 18-script
+boundary passes 160/160, 9,385 assertions. Exact-head PR Verify and lead
+review remain pending.
 ## Issue #112 — Battle reference UI live resize
 
 Implemented on `team/issue-112`, from accepted main `300f146a`, under MASTER_PLAN §§1–3 / §6 WO-9.4–9.5 / partial §10 M9 and ACADEMY_BIBLE §4. No contradiction or canon/mechanic decision. BattleView recomputes objective/header/hint/hover/forecast/inspection presentation on resize/content changes. Active-font paragraphs preserve complete forecast sides, stats/weapon/inventory/role hints and font sizes; oversized five-slot sheets use measured two-column reflow. Complete existing frame-corner slices stop ornament crossing text. Input, camera coordinates, formulas/RNG, resolver/progression/support, saves/settings, renderer/project settings remain in their existing paths. Accepted #9/#72 behavior/tests preserved.

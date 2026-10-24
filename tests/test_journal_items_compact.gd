@@ -108,6 +108,14 @@ func test_production_item_geometry_fits_complete_labels_and_stage_instructions()
 				Vector2(row["uses_width"], font.get_height(13)))
 			assert_true(layout["pack_rect"].encloses(uses_rect),
 				"complete uses/count glyph lane remains inside pack pane at %s" % size)
+		if layout["pack_scrolls"]:
+			var progress_rect := Rect2(Vector2(layout["pack_rect"].position.x,
+				layout["pack_progress_baseline"].y - font.get_ascent(11)),
+				Vector2(layout["pack_rect"].size.x, font.get_height(11)))
+			assert_true(layout["pack_rect"].encloses(progress_rect),
+				"pack scroll progress stays inside its pane at %s" % size)
+			assert_false(progress_rect.intersects(layout["hint_rect"]),
+				"pack scroll progress stays clear of stage instructions at %s" % size)
 		for mode in range(3):
 			_journal._inv_mode = mode
 			layout = _journal._items_layout(body, font)

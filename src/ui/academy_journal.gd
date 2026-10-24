@@ -968,7 +968,7 @@ func _items_layout(body: Rect2, font: Font) -> Dictionary:
 		"pack_header": pack_header, "student_rows": student_rows, "visible_students": visible_students,
 		"pack_rows": pack_rows, "visible_items": visible_items, "pack_content_rect": pack_content_rect,
 		"pack_scrolls": pack_scrolls,
-		"pack_progress_baseline": Vector2(pack_rect.position.x, content_bottom + font.get_ascent(11)),
+		"pack_progress_baseline": Vector2(pack_rect.position.x, pack_header.y),
 		"giver_name": str(_inv_units[_inv_i]["name"]) if not _inv_units.is_empty() else "",
 		"hint_lines": hint_lines, "hint_rect": hint_rect,
 		"hint_baseline": Vector2(body.position.x, hint_rect.position.y + font.get_ascent(14))}
