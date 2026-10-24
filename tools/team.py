@@ -331,12 +331,22 @@ def preflight(profile, cwd, env):
         agy_subscription(cwd, env)
 
 
+def unqualified_profiles():
+    """Qualification belongs to the host/provider, not a project's task state."""
+    return sorted(p for p in UNQUALIFIED_PROFILES
+                  if not (GLOBAL_STATE / f'qualified-{p}').exists())
+
+
 def profile_disabled_reason(profile):
-    """Return explicit disable/unqualified reason for a profile, or None if enabled and qualified."""
-    disabled_file = STATE / f'disabled-{profile}'
-    if disabled_file.exists():
-        return disabled_file.read_text().strip() or f'`{profile}` is disabled'
-    if profile in UNQUALIFIED_PROFILES and not (STATE / f'qualified-{profile}').exists():
+    """Host policy always applies; projects may add restrictions, never lift them."""
+    for state in (GLOBAL_STATE, STATE) if STATE != GLOBAL_STATE else (GLOBAL_STATE,):
+        disabled_file = state / f'disabled-{profile}'
+        if disabled_file.exists():
+            return disabled_file.read_text().strip() or f'`{profile}` is disabled'
+    # Defense in depth: removing a historical reason file cannot enable paid Fable.
+    if profile == 'fable':
+        return 'Fable 5.1 requires usage credits; no extra spend authorized or fallback.'
+    if profile in unqualified_profiles():
         return UNQUALIFIED_PROFILES[profile]
     return None
 
@@ -1504,7 +1514,7 @@ passing CI for that exact head and the worker's recorded runtime/QA evidence; do
 suite or re-audit every QA asset/capture each pass unless you have a concrete suspected defect, the
 evidence is missing/stale for the head, or the change touches behavior the evidence did not cover.
 Assign ready issues using the same launcher command. Profiles are {json.dumps(PROFILES)}; disabled
-profiles have a reason file in your team state directory (`fable` remains disabled).
+profiles follow host-wide provider policy (including disabled `fable`); projects may add restrictions.
 Hierarchy and routing for assignments:
 - Team lead and PR reviewer: `sol` (`codex`, `gpt-6.1-sol`, `high`).
 - Regular senior developers (all `medium` effort): `sol-dev` (`codex`, `gpt-6.1-sol`, `medium`),
@@ -1890,7 +1900,7 @@ def main():
             'lead': LEAD,
             'running': active(),
             'disabled': disabled_map,
-            'unqualified': sorted(p for p in UNQUALIFIED_PROFILES if not (STATE / f'qualified-{p}').exists()),
+            'unqualified': unqualified_profiles(),
             'quota': quota_status_all(),
         }, indent=2))
     return 0
