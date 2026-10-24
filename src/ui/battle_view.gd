@@ -706,6 +706,7 @@ func _view_support_entry(index: int) -> void:
 func _open_stats_for(unit: Unit) -> void:
 	_recompute_auras()  # AW-27: show aura-buffed stats in the panel
 	_stats_panel.show_unit(unit)
+	_layout_reference_ui()  # GH-133: settle width/position/hover lane now, not on the next _process
 	if _cursor != null:
 		_cursor.active = false
 
