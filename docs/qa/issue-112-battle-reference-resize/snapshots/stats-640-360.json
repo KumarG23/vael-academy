@@ -1,0 +1,855 @@
+{
+  "busy": false,
+  "cursor": [
+    3,
+    13
+  ],
+  "forecast": false,
+  "menu": [
+    "trade",
+    "stats",
+    "wait"
+  ],
+  "menu_context": "action",
+  "origin": [
+    3,
+    13
+  ],
+  "payload": {
+    "battle": {
+      "active_team": 0,
+      "arena_pending_wave": 0,
+      "arena_wave": 0,
+      "battle_over": false,
+      "battle_victory": false,
+      "boss_quote_played": true,
+      "chapter_id": "mock_battle",
+      "defeated_unit_ids": [
+        "elowen",
+        "fenn",
+        "serra",
+        "corvin",
+        "bertram",
+        "osric",
+        "isolde"
+      ],
+      "fielded": 7,
+      "lord_alive": true,
+      "objective": 0,
+      "permadead_unit_ids": [],
+      "rng_seed": "16603512",
+      "rng_state": "-5062308349469950056",
+      "round_number": 3,
+      "seize_cell": {
+        "x": -1,
+        "y": -1
+      },
+      "visited_spot_ids": []
+    },
+    "campaign": {
+      "academy_visits": [],
+      "casual": true,
+      "casual_mode": true,
+      "chapter_id": "mock_battle",
+      "current_chapter_id": "mock_battle",
+      "fish_log": {
+        "Warded Coin": 1.0
+      },
+      "flags": {
+        "kai_awakened": true,
+        "opening_complete": true,
+        "opening_started": true,
+        "prologue_done": true,
+        "road_aftermath_seen": true,
+        "road_intro_seen": true
+      },
+      "grade_samples": {
+        "arena_best_wave": 0.0,
+        "battle_scores": [
+          88.0,
+          40.0
+        ],
+        "conduct_points": 2.0,
+        "quiz_scores": []
+      },
+      "house_id": "emberwing",
+      "house_locked": true,
+      "last_result": "victory",
+      "report_card_deliveries": [],
+      "report_cards": [],
+      "rng_state": "1612510189733646864",
+      "semester": 1,
+      "support_save": {
+        "consents": {},
+        "points": {
+          "kai_kael": 10.0,
+          "kai_liora": 0.0
+        },
+        "ranks": {
+          "kai_kael": "",
+          "kai_liora": ""
+        },
+        "romances": {},
+        "viewed": {}
+      },
+      "training_used": false,
+      "unit_states": {
+        "kai": {
+          "class_override": "",
+          "id": "kai",
+          "inventory": [
+            {
+              "id": "sig_kai",
+              "path": "res://data/weapons/sig_kai.tres",
+              "type": "weapon",
+              "uses": 37.0
+            },
+            {
+              "id": "crownspark",
+              "path": "res://data/weapons/crownspark.tres",
+              "type": "weapon",
+              "uses": 999.0
+            },
+            {
+              "id": "vulnerary",
+              "path": "res://data/items/vulnerary.tres",
+              "type": "item",
+              "uses": 3.0
+            }
+          ],
+          "level": 1.0,
+          "move_bonus": 0.0,
+          "stat_bonus": {
+            "def": 0.0,
+            "hp": 0.0,
+            "lck": 0.0,
+            "mag": 0.0,
+            "res": 0.0,
+            "skl": 0.0,
+            "spd": 0.0,
+            "str": 0.0
+          },
+          "xp": 78.0
+        },
+        "perrin": {
+          "class_override": "",
+          "id": "perrin",
+          "inventory": [
+            {
+              "id": "sig_perrin",
+              "path": "res://data/weapons/sig_perrin.tres",
+              "type": "weapon",
+              "uses": 34.0
+            },
+            {
+              "id": "heal",
+              "path": "res://data/weapons/heal.tres",
+              "type": "weapon",
+              "uses": 30.0
+            }
+          ],
+          "level": 3.0,
+          "move_bonus": 0.0,
+          "stat_bonus": {
+            "def": 0.0,
+            "hp": 0.0,
+            "lck": 1.0,
+            "mag": 1.0,
+            "res": 0.0,
+            "skl": 0.0,
+            "spd": 1.0,
+            "str": 1.0
+          },
+          "xp": 26.0
+        },
+        "rina": {
+          "class_override": "",
+          "id": "rina",
+          "inventory": [
+            {
+              "id": "sig_rina",
+              "path": "res://data/weapons/sig_rina.tres",
+              "type": "weapon",
+              "uses": 39.0
+            }
+          ],
+          "level": 2.0,
+          "move_bonus": 0.0,
+          "stat_bonus": {
+            "def": 0.0,
+            "hp": 0.0,
+            "lck": 0.0,
+            "mag": 0.0,
+            "res": 0.0,
+            "skl": 0.0,
+            "spd": 0.0,
+            "str": 0.0
+          },
+          "xp": 27.0
+        },
+        "serra": {
+          "class_override": "",
+          "id": "serra",
+          "inventory": [
+            {
+              "id": "iron_lance",
+              "path": "res://data/weapons/iron_lance.tres",
+              "type": "weapon",
+              "uses": 38.0
+            }
+          ],
+          "level": 2.0,
+          "move_bonus": 0.0,
+          "stat_bonus": {
+            "def": 0.0,
+            "hp": 0.0,
+            "lck": 0.0,
+            "mag": 0.0,
+            "res": 0.0,
+            "skl": 0.0,
+            "spd": 0.0,
+            "str": 0.0
+          },
+          "xp": 18.0
+        }
+      },
+      "week": 1
+    },
+    "roster": [
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 3,
+          "y": 10
+        },
+        "class_override": "",
+        "current_hp": 10,
+        "has_acted": true,
+        "id": "perrin",
+        "inventory": [
+          {
+            "id": "sig_perrin",
+            "path": "res://data/weapons/sig_perrin.tres",
+            "type": "weapon",
+            "uses": 33
+          },
+          {
+            "id": "heal",
+            "path": "res://data/weapons/heal.tres",
+            "type": "weapon",
+            "uses": 30
+          }
+        ],
+        "level": 3,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 1,
+          "mag": 1,
+          "res": 0,
+          "skl": 0,
+          "spd": 1,
+          "str": 1
+        },
+        "team": 0,
+        "xp": 50
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 3,
+          "y": 12
+        },
+        "class_override": "",
+        "current_hp": 24,
+        "has_acted": false,
+        "id": "kael",
+        "inventory": [
+          {
+            "id": "sig_kael",
+            "path": "res://data/weapons/sig_kael.tres",
+            "type": "weapon",
+            "uses": 40
+          },
+          {
+            "id": "iron_axe",
+            "path": "res://data/weapons/iron_axe.tres",
+            "type": "weapon",
+            "uses": 40
+          },
+          {
+            "id": "vulnerary",
+            "path": "res://data/items/vulnerary.tres",
+            "type": "item",
+            "uses": 3
+          },
+          {
+            "id": "promotion_seal",
+            "path": "res://data/items/promotion_seal.tres",
+            "type": "item",
+            "uses": 1
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 0,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 2,
+          "y": 13
+        },
+        "class_override": "",
+        "current_hp": 28,
+        "has_acted": false,
+        "id": "brenna",
+        "inventory": [
+          {
+            "id": "sig_brenna",
+            "path": "res://data/weapons/sig_brenna.tres",
+            "type": "weapon",
+            "uses": 40
+          },
+          {
+            "id": "vulnerary",
+            "path": "res://data/items/vulnerary.tres",
+            "type": "item",
+            "uses": 3
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 0,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 3,
+          "y": 13
+        },
+        "class_override": "",
+        "current_hp": 6,
+        "has_acted": false,
+        "id": "wren",
+        "inventory": [
+          {
+            "id": "sig_wren",
+            "path": "res://data/weapons/sig_wren.tres",
+            "type": "weapon",
+            "uses": 40
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 0,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 1,
+          "y": 13
+        },
+        "class_override": "",
+        "current_hp": 28,
+        "has_acted": false,
+        "id": "dain",
+        "inventory": [
+          {
+            "id": "sig_dain",
+            "path": "res://data/weapons/sig_dain.tres",
+            "type": "weapon",
+            "uses": 40
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 0,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 2,
+          "y": 11
+        },
+        "class_override": "",
+        "current_hp": 18,
+        "has_acted": false,
+        "id": "liora",
+        "inventory": [
+          {
+            "id": "sig_liora",
+            "path": "res://data/weapons/sig_liora.tres",
+            "type": "weapon",
+            "uses": 40
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 0,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 2,
+          "y": 12
+        },
+        "class_override": "",
+        "current_hp": 26,
+        "has_acted": false,
+        "id": "kai",
+        "inventory": [
+          {
+            "id": "sig_kai",
+            "path": "res://data/weapons/sig_kai.tres",
+            "type": "weapon",
+            "uses": 37
+          },
+          {
+            "id": "crownspark",
+            "path": "res://data/weapons/crownspark.tres",
+            "type": "weapon",
+            "uses": 999
+          },
+          {
+            "id": "vulnerary",
+            "path": "res://data/items/vulnerary.tres",
+            "type": "item",
+            "uses": 3
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 0,
+        "xp": 78
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 15,
+          "y": 9
+        },
+        "class_override": "",
+        "current_hp": 20,
+        "has_acted": false,
+        "id": "rina",
+        "inventory": [
+          {
+            "id": "sig_rina",
+            "path": "res://data/weapons/sig_rina.tres",
+            "type": "weapon",
+            "uses": 38
+          }
+        ],
+        "level": 2,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 2,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 10,
+          "y": 12
+        },
+        "class_override": "",
+        "current_hp": 20,
+        "has_acted": false,
+        "id": "thessaly",
+        "inventory": [
+          {
+            "id": "sig_thessaly",
+            "path": "res://data/weapons/sig_thessaly.tres",
+            "type": "weapon",
+            "uses": 39
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 2,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 9,
+          "y": 12
+        },
+        "class_override": "",
+        "current_hp": 9,
+        "has_acted": false,
+        "id": "marlow",
+        "inventory": [
+          {
+            "id": "sig_marlow",
+            "path": "res://data/weapons/sig_marlow.tres",
+            "type": "weapon",
+            "uses": 38
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 2,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 12,
+          "y": 11
+        },
+        "class_override": "",
+        "current_hp": 18,
+        "has_acted": false,
+        "id": "vesper",
+        "inventory": [
+          {
+            "id": "sig_vesper",
+            "path": "res://data/weapons/sig_vesper.tres",
+            "type": "weapon",
+            "uses": 40
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 2,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 12,
+          "y": 12
+        },
+        "class_override": "",
+        "current_hp": 27,
+        "has_acted": false,
+        "id": "rurik",
+        "inventory": [
+          {
+            "id": "sig_rurik",
+            "path": "res://data/weapons/sig_rurik.tres",
+            "type": "weapon",
+            "uses": 40
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 2,
+        "xp": 0
+      },
+      {
+        "ai_awake": true,
+        "cell": {
+          "x": 16,
+          "y": 7
+        },
+        "class_override": "",
+        "current_hp": 12,
+        "has_acted": false,
+        "id": "nilu",
+        "inventory": [
+          {
+            "id": "claw",
+            "path": "res://data/weapons/claw.tres",
+            "type": "weapon",
+            "uses": 997
+          }
+        ],
+        "level": 1,
+        "move_bonus": 0,
+        "stat_bonus": {
+          "def": 0,
+          "hp": 0,
+          "lck": 0,
+          "mag": 0,
+          "res": 0,
+          "skl": 0,
+          "spd": 0,
+          "str": 0
+        },
+        "team": 2,
+        "xp": 0
+      }
+    ],
+    "supports": {
+      "consents": {},
+      "points": {
+        "kai_kael": 10,
+        "kai_liora": 0
+      },
+      "ranks": {
+        "kai_kael": "",
+        "kai_liora": ""
+      },
+      "romances": {},
+      "viewed": {}
+    },
+    "version": 1
+  },
+  "phase": 2,
+  "scene": "res://scenes/battle/mock_battle.tscn",
+  "selected": "wren",
+  "stats": true,
+  "units": [
+    {
+      "cell": [
+        3,
+        10
+      ],
+      "id": "perrin",
+      "screen": [
+        251.993743896484,
+        36.0035400390625
+      ]
+    },
+    {
+      "cell": [
+        3,
+        12
+      ],
+      "id": "kael",
+      "screen": [
+        251.993743896484,
+        180.003540039062
+      ]
+    },
+    {
+      "cell": [
+        2,
+        13
+      ],
+      "id": "brenna",
+      "screen": [
+        179.993743896484,
+        252.003540039062
+      ]
+    },
+    {
+      "cell": [
+        3,
+        13
+      ],
+      "id": "wren",
+      "screen": [
+        251.993743896484,
+        252.003540039062
+      ]
+    },
+    {
+      "cell": [
+        1,
+        13
+      ],
+      "id": "dain",
+      "screen": [
+        107.993751525879,
+        252.003540039062
+      ]
+    },
+    {
+      "cell": [
+        2,
+        11
+      ],
+      "id": "liora",
+      "screen": [
+        179.993743896484,
+        108.003540039062
+      ]
+    },
+    {
+      "cell": [
+        2,
+        12
+      ],
+      "id": "kai",
+      "screen": [
+        179.993743896484,
+        180.003540039062
+      ]
+    },
+    {
+      "cell": [
+        15,
+        9
+      ],
+      "id": "rina",
+      "screen": [
+        1115.99377441406,
+        -35.9964599609375
+      ]
+    },
+    {
+      "cell": [
+        10,
+        12
+      ],
+      "id": "thessaly",
+      "screen": [
+        755.993774414062,
+        180.003540039062
+      ]
+    },
+    {
+      "cell": [
+        9,
+        12
+      ],
+      "id": "marlow",
+      "screen": [
+        683.993774414062,
+        180.003540039062
+      ]
+    },
+    {
+      "cell": [
+        12,
+        11
+      ],
+      "id": "vesper",
+      "screen": [
+        899.993774414062,
+        108.003540039062
+      ]
+    },
+    {
+      "cell": [
+        12,
+        12
+      ],
+      "id": "rurik",
+      "screen": [
+        899.993774414062,
+        180.003540039062
+      ]
+    },
+    {
+      "cell": [
+        16,
+        7
+      ],
+      "id": "nilu",
+      "screen": [
+        1187.99377441406,
+        -179.996459960938
+      ]
+    }
+  ]
+}

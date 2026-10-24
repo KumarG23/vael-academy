@@ -17,6 +17,13 @@ var _def := {}
 var _atk_doubles := false
 var _def_doubles := false
 var _def_can_counter := true
+var _text_rows: Array[Dictionary] = []
+var _layout_width := 0.0
+
+
+func _init() -> void:
+	size = PANEL_SIZE
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func show_forecast(
@@ -32,6 +39,8 @@ func show_forecast(
 	_def_doubles = exchange["defender_doubles"]
 	_def_can_counter = exchange["defender_can_counter"]
 	visible = true
+	_layout_width = 0.0
+	fit_width(PANEL_SIZE.x)
 	queue_redraw()
 
 
@@ -39,39 +48,45 @@ func hide_panel() -> void:
 	visible = false
 
 
-func _draw() -> void:
-	var rect := Rect2(Vector2.ZERO, PANEL_SIZE)
-	UITheme.draw_panel(self, rect, PANEL_BG)  # AW-56: the shared noble frame
-
-	var col_a := 18.0
-	var col_b := PANEL_SIZE.x * 0.5 + 8.0
-	_draw_side(col_a, _attacker_name, _attacker_hp, _atk, _atk_doubles, true)
-	_draw_side(col_b, _defender_name, _defender_hp, _def, _def_doubles, _def_can_counter)
-
-	# Divider.
-	var mid := PANEL_SIZE.x * 0.5
-	draw_line(Vector2(mid, 12), Vector2(mid, PANEL_SIZE.y - 12), Color(1, 1, 1, 0.15), 1.0)
-
-
-func _draw_side(
-	x: float, unit_name: String, hp: String, stats: Dictionary, doubles: bool, active: bool
-) -> void:
-	var font := UITheme.font()
-	var white := Color.WHITE
-	var dim := Color(0.7, 0.72, 0.78)
-	var y := 30.0
-	draw_string(font, Vector2(x, y), unit_name, HORIZONTAL_ALIGNMENT_LEFT, 150, 20, white)
-	y += 26
-	draw_string(font, Vector2(x, y), hp, HORIZONTAL_ALIGNMENT_LEFT, 150, 16, dim)
-	y += 30
-	if not active:
-		draw_string(font, Vector2(x, y), "no counter", HORIZONTAL_ALIGNMENT_LEFT, 150, 16, dim)
+func fit_width(width: float) -> void:
+	if _layout_width == width:
 		return
+	_layout_width = width
+	_text_rows.clear()
+	var a_height := _layout_side(22, _attacker_name, _attacker_hp, _atk, _atk_doubles, true, width)
+	var b_height := _layout_side(width * 0.5 + 16, _defender_name, _defender_hp, _def, _def_doubles, _def_can_counter, width)
+	size = Vector2(width, maxf(PANEL_SIZE.y, maxf(a_height, b_height) + 20))
+	queue_redraw()
+
+
+func _layout_side(x: float, unit_name: String, hp: String, stats: Dictionary, doubles: bool, active: bool, width: float) -> float:
+	var available := width * 0.5 - 38
+	var y := _add_text(unit_name, 20, Vector2(x, 16), available, Color.WHITE) + 4
+	y = _add_text(hp, 16, Vector2(x, y), available, Color(0.7, 0.72, 0.78)) + 12
+	if stats.is_empty():
+		return y
+	if not active:
+		return _add_text("no counter", 16, Vector2(x, y), available, Color(0.7, 0.72, 0.78))
 	var dmg_text := "Dmg  %d" % int(stats["damage"])
 	if doubles:
 		dmg_text += "  x2"
-	draw_string(font, Vector2(x, y), dmg_text, HORIZONTAL_ALIGNMENT_LEFT, 160, 18, white)
-	y += 24
-	draw_string(font, Vector2(x, y), "Hit   %d%%" % int(stats["hit"]), HORIZONTAL_ALIGNMENT_LEFT, 160, 18, white)
-	y += 24
-	draw_string(font, Vector2(x, y), "Crit  %d%%" % int(stats["crit"]), HORIZONTAL_ALIGNMENT_LEFT, 160, 18, white)
+	for text in [dmg_text, "Hit   %d%%" % int(stats["hit"]), "Crit  %d%%" % int(stats["crit"])]:
+		y = _add_text(text, 18, Vector2(x, y), available, Color.WHITE) + 3
+	return y
+
+
+func _add_text(text: String, font_size: int, at: Vector2, width: float, color: Color) -> float:
+	var paragraph := TextParagraph.new()
+	paragraph.width = width
+	paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+	paragraph.add_string(text, UITheme.font(), font_size)
+	_text_rows.append({"text": text, "paragraph": paragraph, "at": at, "color": color})
+	return at.y + paragraph.get_size().y
+
+
+func _draw() -> void:
+	UITheme.draw_panel(self, Rect2(Vector2.ZERO, size), PANEL_BG, 112.0)
+	for row in _text_rows:
+		row.paragraph.draw(get_canvas_item(), row.at, row.color)
+	var mid := size.x * 0.5
+	draw_line(Vector2(mid, 12), Vector2(mid, size.y - 12), Color(1, 1, 1, 0.15), 1.0)
