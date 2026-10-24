@@ -432,24 +432,24 @@ func _draw_hover_info() -> void:
 	var font := UITheme.font()
 	var rect := Rect2(Vector2.ZERO, _hover_info.size)
 	var team_col := Color(0.16, 0.25, 0.55, 0.92) if u.team == 0 else Color(0.5, 0.14, 0.14, 0.92)
-	UITheme.draw_panel(_hover_info, rect, Color(0.08, 0.09, 0.13, 0.92))  # AW-56
-	_hover_info.draw_rect(Rect2(8, 6, rect.size.x - 16, 26), team_col, true)
+	UITheme.draw_panel(_hover_info, rect, Color(0.08, 0.09, 0.13, 0.92), 112.0)  # complete source corners, confined to the frame
+	_hover_info.draw_rect(Rect2(22, 18, rect.size.x - 44, 24), team_col, true)
 	var cls := u.unit_def.char_class.display_name if u.unit_def != null and u.unit_def.char_class != null else ""
-	_hover_info.draw_string(font, Vector2(12, 22), u.unit_def.display_name,
+	_hover_info.draw_string(font, Vector2(22, 36), u.unit_def.display_name,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.98, 0.96, 0.9))
-	_hover_info.draw_string(font, Vector2(12, 50), "%s   Lv %d" % [cls, u.level],
+	_hover_info.draw_string(font, Vector2(22, 60), "%s   Lv %d" % [cls, u.level],
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.85, 0.85, 0.9))
-	_hover_info.draw_string(font, Vector2(12, 76), "HP  %d / %d" % [u.current_hp, u.max_hp()],
+	_hover_info.draw_string(font, Vector2(22, 86), "HP  %d / %d" % [u.current_hp, u.max_hp()],
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.95, 0.7))
 	# HP bar
-	_hover_info.draw_rect(Rect2(120, 64, 118, 14), Color(0.2, 0.1, 0.1), true)
+	_hover_info.draw_rect(Rect2(120, 74, 108, 14), Color(0.2, 0.1, 0.1), true)
 	var hp_frac := clampf(float(u.current_hp) / maxf(u.max_hp(), 1), 0.0, 1.0)
-	_hover_info.draw_rect(Rect2(120, 64, 118 * hp_frac, 14), Color(0.4, 0.85, 0.4), true)
+	_hover_info.draw_rect(Rect2(120, 74, 108 * hp_frac, 14), Color(0.4, 0.85, 0.4), true)
 	# XP bar (100 per level)
-	_hover_info.draw_string(font, Vector2(12, 104), "XP  %d / 100" % (u.xp % 100),
+	_hover_info.draw_string(font, Vector2(22, 114), "XP  %d / 100" % (u.xp % 100),
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.95, 0.9, 0.55))
-	_hover_info.draw_rect(Rect2(120, 92, 118, 12), Color(0.15, 0.13, 0.05), true)
-	_hover_info.draw_rect(Rect2(120, 92, 118 * (float(u.xp % 100) / 100.0), 12), Color(0.95, 0.82, 0.35), true)
+	_hover_info.draw_rect(Rect2(120, 102, 108, 12), Color(0.15, 0.13, 0.05), true)
+	_hover_info.draw_rect(Rect2(120, 102, 108 * (float(u.xp % 100) / 100.0), 12), Color(0.95, 0.82, 0.35), true)
 
 
 ## Field-only shortcuts use the same gate for input and discoverability.
@@ -1645,6 +1645,7 @@ func _end_combat_cam(pace: ExchangeSkip = null) -> void:
 
 func _process(delta: float) -> void:
 	_input_hint.visible = _can_cycle_unit()
+	_layout_reference_ui()
 	if not chapter.visits.is_empty():
 		queue_redraw()  # visit markers pulse
 	if _camera == null or _grid == null or _combat_cam_active:
@@ -1677,11 +1678,6 @@ func _setup_ui() -> void:
 	_input_hint.add_theme_constant_override("outline_size", 6)
 	_input_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_input_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_input_hint.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
-	_input_hint.offset_left = -370
-	_input_hint.offset_top = -90
-	_input_hint.offset_right = -12
-	_input_hint.offset_bottom = -12
 	_ui_layer.add_child(_input_hint)
 	# Persistent objective readout so a first-time player knows what to do (WO-4.1).
 	_objective_label = Label.new()
@@ -1697,7 +1693,7 @@ func _setup_ui() -> void:
 	# hover info box (playtest 3: point at a unit, see its stats)
 	_hover_info = Control.new()
 	_hover_info.position = Vector2(16, get_viewport_rect().size.y - 150)
-	_hover_info.size = Vector2(250, 128)
+	_hover_info.size = Vector2(250, 144)
 	_hover_info.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hover_info.visible = false
 	_hover_info.draw.connect(_draw_hover_info)
@@ -1731,7 +1727,42 @@ func _setup_ui() -> void:
 	_stats_panel.position = Vector2(40, vp.y * 0.5 - UnitStatsPanel.PANEL_SIZE.y * 0.5)
 	_stats_panel.closed.connect(_on_stats_closed)
 	_ui_layer.add_child(_stats_panel)
+	get_viewport().size_changed.connect(_layout_reference_ui)
+	_layout_reference_ui()
 	_apply_house_theme()
+
+
+## Only reference presentation belongs here: no cursor, camera, action or save writes.
+## At 640px the existing 250px hover and 360px forecast fit side by side.
+## Inspection takes the left lane and hover the right; header text wraps above.
+func _layout_reference_ui() -> void:
+	if _stats_panel == null:
+		return
+	var vp := get_viewport_rect().size
+	var compact := vp.x < 900.0
+	var width := vp.x - 24.0
+	_debug_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_debug_label.position = Vector2(12, 10)
+	_debug_label.size = Vector2(width if compact else width * 0.6, 0)
+	_objective_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_objective_label.position = Vector2(12, 14 + _debug_label.get_minimum_size().y) if compact else Vector2(vp.x * 0.62, 10)
+	_objective_label.size = Vector2(width if compact else vp.x * 0.38 - 12, 0)
+	_input_hint.position = Vector2(vp.x - 370, vp.y - 90)
+	_input_hint.size = Vector2(358, 78)
+	_hover_info.position = Vector2(vp.x - 260 if _stats_panel.visible else 10.0, vp.y - _hover_info.size.y - 10)
+	_forecast_panel.fit_width(360)
+	_forecast_panel.position = vp - _forecast_panel.size - Vector2(10, 10)
+	var header_bottom := maxf(60, _objective_label.position.y + _objective_label.get_minimum_size().y)
+	_stats_panel.fit_width(360 if compact else 400, vp.y - header_bottom - 14 if compact else INF, vp.x - 20 if compact else 0)
+	_stats_panel.position = Vector2(10, maxf(10, (vp.y - _stats_panel.size.y) * 0.5))
+	if compact:
+		_stats_panel.position.y = vp.y - _stats_panel.size.y - 10
+		if _stats_panel.visible and _stats_panel._wide_layout:
+			# Leave the upper right for the same hover box, above the wide sheet.
+			_hover_info.position = Vector2(vp.x - 260, 0)
+			_debug_label.size = Vector2(vp.x - 280, 0)
+			_objective_label.position = Vector2(12, 14 + _debug_label.get_minimum_size().y)
+			_objective_label.size = Vector2(vp.x - 280, 0)
 
 
 ## Flash the objective (field menu → Objective).
